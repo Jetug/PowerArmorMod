@@ -1,0 +1,5 @@
+{
+  "loader": "forge:obj",
+  "model": "begining:models/block/power_armor.obj",
+  "flip-v": true
+}
