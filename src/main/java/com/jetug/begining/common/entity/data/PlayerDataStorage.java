@@ -23,12 +23,4 @@ public class PlayerDataStorage implements Capability.IStorage<IPlayerData> {
     public void readNBT(Capability<IPlayerData> capability, IPlayerData instance, Direction side, INBT nbt) {
         instance.setIsInPowerArmor(((CompoundNBT)nbt).getBoolean(IS_IN_POWER_ARMOR));
     }
-//
-//    public void saveNBTData(CompoundNBT compound){
-//        compound.putBoolean(IS_IN_POWER_ARMOR, isInPowerArmor);
-//    }
-//
-//    public void loadNBTData(CompoundNBT compound){
-//        isInPowerArmor = compound.getBoolean(IS_IN_POWER_ARMOR);
-//    }
 }

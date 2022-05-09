@@ -3,6 +3,7 @@ package com.jetug.begining.common.entity.data;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.world.storage.PlayerData;
 
 import javax.annotation.Nullable;
 

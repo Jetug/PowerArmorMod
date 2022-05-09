@@ -5,44 +5,25 @@ import com.jetug.begining.common.entity.entity_type.PowerArmorEntity;
 import com.jetug.begining.client.model.PowerArmorModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.ai.attributes.AttributeModifierManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-import javax.annotation.Nullable;
-
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static com.jetug.begining.common.util.constants.Attributes.*;
 import static com.jetug.begining.common.util.constants.Resources.*;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
-    private static final PowerArmorModel powerArmorModel = new PowerArmorModel();
+    public static final PowerArmorModel POWER_ARMOR_MODEL = new PowerArmorModel();
     private static final ArmorModel armorModel = new ArmorModel();
 
     public PowerArmorRenderer(EntityRendererManager renderManager) {
-        super(renderManager, powerArmorModel);
+        super(renderManager, POWER_ARMOR_MODEL);
     }
-
-//    @Override
-//    public RenderType getRenderType(PowerArmorEntity entity, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-//        ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
-//        PointOfView pov = Minecraft.getInstance().options. getCameraType();
-//
-//        if(entity.isVehicle() && entity.hasPassenger(clientPlayer) && pov == PointOfView.FIRST_PERSON)
-//            return RenderType.entityTranslucent(INVISIBLE_TEXTURE);
-//        else
-//            return RenderType.entityTranslucent(POWER_ARMOR_TEXTURE_LOCATION);
-//    }
 
     @Override
     public void renderEarly(PowerArmorEntity entity, MatrixStack stackIn, float ticks, IRenderTypeBuffer renderTypeBuffer,
@@ -98,7 +79,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void attachBones(ArrayList<Tuple<String, String>> boneList){
         boneList.forEach(tuple ->{
-            GeoBone body = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
+            GeoBone body = (GeoBone) POWER_ARMOR_MODEL.getAnimationProcessor().getBone(tuple.getA());
             armorModel.getModel(ARMOR_MODEL_LOCATION).getBone(tuple.getB()).ifPresent(bodyArmor -> body.childBones.add(bodyArmor));
         });
     }

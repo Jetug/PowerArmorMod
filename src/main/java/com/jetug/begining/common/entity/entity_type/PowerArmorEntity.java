@@ -1,26 +1,21 @@
 package com.jetug.begining.common.entity.entity_type;
 
 import com.jetug.begining.common.entity.data.IPlayerData;
-import com.jetug.begining.common.entity.data.PlayerDataProvider;
+import com.jetug.begining.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.entity.PartEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -30,10 +25,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.Random;
-import java.util.UUID;
 
-import static com.jetug.begining.common.entity.data.ModPlayerData.getPlayerData;
+import static com.jetug.begining.common.entity.data.ModPlayerData.*;
 import static com.jetug.begining.common.util.constants.Attributes.*;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount
@@ -42,29 +35,33 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
-    private boolean allowStandSliding;
 
-    public boolean isJumping() {
-        return this.isJumping;
-    }
-
-    public void setIsJumping(boolean p_110255_1_) {
-        this.isJumping = p_110255_1_;
-    }
+    private final PowerArmorPartEntity[] subEntities;
+    public final PowerArmorPartEntity head;
+    private final PowerArmorPartEntity body;
+    private final PowerArmorPartEntity leftArm;
+    private final PowerArmorPartEntity rightArm;
+    private final PowerArmorPartEntity leftLeg;
+    private final PowerArmorPartEntity rightLeg;
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
+        head   =   new PowerArmorPartEntity(this, BodyPart.HEAD, 0.7f, 0.7f);
+        body   =   new PowerArmorPartEntity(this, BodyPart.BODY, 1.1f, 1.0f);
+        leftArm  = new PowerArmorPartEntity(this, BodyPart.LEFT_ARM, 0.9f, 1.0f);
+        rightArm = new PowerArmorPartEntity(this, BodyPart.RIGHT_ARM, 0.9f, 1.0f);
+        leftLeg  = new PowerArmorPartEntity(this, BodyPart.LEFT_LEG, 0.6f, 1.0f);
+        rightLeg = new PowerArmorPartEntity(this, BodyPart.RIGHT_LEG, 0.6f, 1.0f);
+        subEntities = new PowerArmorPartEntity[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
+
+//       GeoBone headBone = POWER_ARMOR_MODEL.getBoneAP(HEAD_BONE_NAME);
+//       PlayerEntity player = Minecraft.getInstance().player;
+//       if(headBone == null)
+//           player.sendMessage(new StringTextComponent("null"), this.getUUID());
+//       else
+//           player.sendMessage(new StringTextComponent("not null"), this.getUUID());
+        tickPart(head,-5, 36, -5);
         this.noCulling = true;
-    }
-
-    @Override
-    public boolean isInvisible() {
-        ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
-        PointOfView pov = Minecraft.getInstance().options.getCameraType();
-
-        if(hasPassenger(clientPlayer) && pov == PointOfView.FIRST_PERSON)
-            return true;
-        return super.isInvisible();
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
@@ -83,6 +80,72 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
                 .add(RIGHT_LEG_ARMOR_HEALTH, 1.0D);
     }
 
+    public boolean isJumping() {
+        return this.isJumping;
+    }
+
+    public void setIsJumping(boolean p_110255_1_) {
+        this.isJumping = p_110255_1_;
+    }
+
+    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+        if (damage < 0.01F) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
+        part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
+    }
+
+    @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
+        for(int j = 0; j < this.subEntities.length; ++j) {
+            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
+        }
+
+        float rotation = this.yRot * ((float)Math.PI / 180F);
+        float xPos = MathHelper.cos(rotation);
+        float zPos = MathHelper.sin(rotation);
+        float armPos = 0.5f;
+        float legPos = 0.2f;
+
+        this.tickPart(this.head, 0, 2.1,0);
+        this.tickPart(this.body, 0, 1.2, 0);
+        this.tickPart(this.rightArm, xPos * -armPos, 1.1, zPos * -armPos);
+        this.tickPart(this.leftArm, xPos * armPos, 1.1, zPos * armPos);
+        this.tickPart(this.rightLeg, xPos * -legPos, 0, zPos * -legPos);
+        this.tickPart(this.leftLeg, xPos * legPos, 0, zPos * legPos);
+
+        for(int l = 0; l < this.subEntities.length; ++l) {
+            this.subEntities[l].xo = aVector3d[l].x;
+            this.subEntities[l].yo = aVector3d[l].y;
+            this.subEntities[l].zo = aVector3d[l].z;
+            this.subEntities[l].xOld = aVector3d[l].x;
+            this.subEntities[l].yOld = aVector3d[l].y;
+            this.subEntities[l].zOld = aVector3d[l].z;
+        }
+    }
+
+    @Override
+    public PartEntity<?>[] getParts() {
+        return this.subEntities;
+    }
 
     @Override
     public boolean causeFallDamage(float height, float p_225503_2_) {
@@ -107,16 +170,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         }
     }
 
-    protected void doPlayerRide(PlayerEntity player) {
-        if (!this.level.isClientSide) {
-            player.yRot = this.yRot;
-            player.xRot = this.xRot;
-            player.startRiding(this);
+    @Override
+    public boolean isInvisible() {
+        ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
+        PointOfView pov = Minecraft.getInstance().options.getCameraType();
 
-            IPlayerData data = getPlayerData(player);
-            data.setIsInPowerArmor(true);
-            player.sendMessage(new StringTextComponent("message"), this.getUUID());
-        }
+        if(hasPassenger(clientPlayer) && pov == PointOfView.FIRST_PERSON)
+            return true;
+        return super.isInvisible();
     }
 
     @Override
@@ -146,9 +207,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
-//    public boolean canBeControlledByRider() {
-//        return this.getControllingPassenger() instanceof LivingEntity;
-//    }
+    public boolean canBeControlledByRider() {
+        return this.getControllingPassenger() instanceof LivingEntity;
+    }
 
     public double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
@@ -157,7 +218,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     @Override
     public void travel(Vector3d sVector3d) {
         if (this.isAlive()) {
-            if (this.isVehicle() /*&& this.canBeControlledByRider()*/) {
+            if (this.isVehicle() && this.canBeControlledByRider()) {
                 LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
                 this.yRot = livingentity.yRot;
                 this.yRotO = this.yRot;
@@ -171,11 +232,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 //                if (f1 <= 0.0F) {
 //                    f1 *= 0.25F;
 //                }
-
-                if (this.onGround && this.playerJumpPendingScale == 0.0F && /*this.isStanding() &&*/ !this.allowStandSliding) {
-                    f = 0.0F;
-                    f1 = 0.0F;
-                }
 
                 if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
                     double jump = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
@@ -249,9 +305,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     public void onPlayerJump(int p_110206_1_) {
         if (p_110206_1_ < 0) {
             p_110206_1_ = 0;
-        } else {
-            this.allowStandSliding = true;
-            //this.stand();
         }
 
         if (p_110206_1_ >= 90) {
@@ -268,13 +321,23 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     @Override
     public void handleStartJump(int p_184775_1_) {
-        this.allowStandSliding = true;
-        //this.stand();
-        //this.playJumpSound();
+
     }
 
     @Override
     public void handleStopJump() {
 
+    }
+
+    private void doPlayerRide(PlayerEntity player) {
+        if (!this.level.isClientSide) {
+            player.yRot = this.yRot;
+            player.xRot = this.xRot;
+            player.startRiding(this);
+
+            IPlayerData data = getPlayerData(player);
+            data.setIsInPowerArmor(true);
+            player.sendMessage(new StringTextComponent("message"), this.getUUID());
+        }
     }
 }

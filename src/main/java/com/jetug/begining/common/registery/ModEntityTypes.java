@@ -1,10 +1,7 @@
 package com.jetug.begining.common.registery;
 
 import com.jetug.begining.ExampleMod;
-import com.jetug.begining.common.entity.entity_type.GeckoEntity;
-import com.jetug.begining.common.entity.entity_type.PlayerPowerArmorEntity;
-import com.jetug.begining.common.entity.entity_type.PowerArmorEntity;
-import com.jetug.begining.common.entity.entity_type.TestEntity;
+import com.jetug.begining.common.entity.entity_type.*;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -18,8 +15,13 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
             ENTITY_TYPES.register("power_armor", () -> EntityType.Builder.of(PowerArmorEntity::new, EntityClassification.CREATURE)
-                    .sized(1f, 3f)
+                    .sized(1f, 2.5f)
                     .build(new ResourceLocation(ExampleMod.MOD_ID, "power_armor").toString()));
+
+//    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_BODY_PART =
+//            ENTITY_TYPES.register("power_armor_body_part", () -> EntityType.Builder.of(PowerArmorPartEntity::new, EntityClassification.CREATURE)
+//                    .sized(1f, 3f)
+//                    .build(new ResourceLocation(ExampleMod.MOD_ID, "power_armor").toString()));
 
     public static final RegistryObject<EntityType<TestEntity>> TEST_ENTITY =
             ENTITY_TYPES.register("test_model", () -> EntityType.Builder.of(TestEntity::new, EntityClassification.CREATURE)

@@ -35,7 +35,7 @@ public class EventHandler {
         else
             message = "you are not in PA";
 
-        player.sendMessage(new StringTextComponent(message), UUID.fromString(message));
+        player.sendMessage(new StringTextComponent(message), player.getUUID());
     }
 
     @SubscribeEvent

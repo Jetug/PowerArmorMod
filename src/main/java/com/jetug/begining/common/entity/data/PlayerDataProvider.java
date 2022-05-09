@@ -15,7 +15,6 @@ public class PlayerDataProvider implements ICapabilitySerializable<CompoundNBT> 
 
     @CapabilityInject(ModPlayerData.class)
     public static final Capability<IPlayerData> PLAYER_DATA = null;
-    //private IPlayerData instance = PLAYER_DATA.getDefaultInstance();
     private LazyOptional<IPlayerData> instance = LazyOptional.of(PLAYER_DATA::getDefaultInstance);
 
     @Nonnull
@@ -34,46 +33,3 @@ public class PlayerDataProvider implements ICapabilitySerializable<CompoundNBT> 
         PLAYER_DATA.getStorage().readNBT(PLAYER_DATA, instance.orElseThrow(() -> new IllegalArgumentException("at deserialize")), null, nbt);
     }
 }
-
-//public class PlayerDataProvider implements ICapabilityProvider, INBTSerializable
-//{
-//    @CapabilityInject(ModPlayerData.class)
-//    public static Capability<ModPlayerData> PLAYER_DATA = null;
-//
-//    private ModPlayerData playerData = null;
-//    private final LazyOptional<ModPlayerData> opt = LazyOptional.of(this::createPlayerData);
-//
-//    @Nonnull
-//    private ModPlayerData createPlayerData(){
-//        if(playerData == null){
-//            playerData = new ModPlayerData();
-//        }
-//        return playerData;
-//    }
-//
-//
-//    @Override
-//    public INBT serializeNBT() {
-//        return null;
-//    }
-//
-//    @Override
-//    public void deserializeNBT(INBT nbt) {
-//
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-//        if(cap == PLAYER_DATA){
-//            return opt.cast();
-//        }
-//        return LazyOptional;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
-//        return ICapabilityProvider.super.getCapability(cap);
-//    }
-//}

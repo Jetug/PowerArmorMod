@@ -1,13 +1,19 @@
 package com.jetug.begining.client.model;
 
 import com.jetug.begining.common.entity.entity_type.PowerArmorEntity;
+import com.jetug.begining.common.util.enums.BodyPart;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
+import java.util.Optional;
+
+import static com.jetug.begining.client.render.PowerArmorRenderer.POWER_ARMOR_MODEL;
+import static com.jetug.begining.common.util.constants.Constants.HEAD_BONE_NAME;
 import static com.jetug.begining.common.util.constants.Resources.*;
 
 public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
@@ -27,7 +33,19 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
         return POWER_ARMOR_ANIMATION_LOCATION;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+//    public GeoBone getBone(BodyPart bodyPart){
+//
+//    }
+
+    public GeoBone getBoneAP(String boneName){
+        return (GeoBone) POWER_ARMOR_MODEL.getAnimationProcessor().getBone(boneName);
+    }
+
+    public GeoBone getBone(String boneName){
+        Optional<GeoBone> opt = this.getModel(ARMOR_MODEL_LOCATION).getBone(boneName);
+        return opt.orElse(null);
+    }
+
     @Override
     public void setLivingAnimations(Type entity, Integer uniqueID, AnimationEvent customPredicate) {
 //        AttributeModifierManager attr = entity.getAttributes();
@@ -44,7 +62,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
     }
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
-        IBone head = this.getAnimationProcessor().getBone("head");
+        IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
         //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head").get();
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
