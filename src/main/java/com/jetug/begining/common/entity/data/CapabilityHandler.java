@@ -11,18 +11,18 @@ import net.minecraftforge.fml.common.Mod;
 import static com.jetug.begining.ExampleMod.MOD_ID;
 import static com.jetug.begining.common.util.constants.Resources.*;
 
-@Mod.EventBusSubscriber
-public class CapabilityHandler {
-    @SubscribeEvent
-    public void attachCapability(AttachCapabilitiesEvent<Entity> event)
-    {
-        Entity entity = event.getObject();
-
-        if (entity instanceof PlayerEntity) {
-            PlayerDataProvider.attach(event);
-        }
-        else if(entity instanceof PowerArmorPartEntity){
-            event.addCapability(POWER_ARMOR_PART_DATA_LOCATION, new PowerArmorDataProvider());
-        }
-    }
-}
+//@Mod.EventBusSubscriber()
+//public class CapabilityHandler {
+//    @SubscribeEvent
+//    public void attachCapability(AttachCapabilitiesEvent<Entity> event)
+//    {
+//        Entity entity = event.getObject();
+//
+//        if (entity instanceof PlayerEntity) {
+//            event.addCapability(PLAYER_DATA_LOCATION, new PlayerDataProvider());
+//        }
+//        else if(entity instanceof PowerArmorPartEntity){
+//            event.addCapability(POWER_ARMOR_PART_DATA_LOCATION, new PowerArmorDataProvider());
+//        }
+//    }
+//}

@@ -24,9 +24,9 @@ public class DataManager {
         return player.getCapability(PlayerDataProvider.PLAYER_DATA, null).orElse(null);
     }
 
-    public static IPlayerData getPlayerData(PlayerEntity player, @Nullable Direction facing){
-        return player.getCapability(PlayerDataProvider.PLAYER_DATA, facing).orElse(null);
-    }
+//    public static IPlayerData getPlayerData(PlayerEntity player, @Nullable Direction facing){
+//        return player.getCapability(PlayerDataProvider.PLAYER_DATA, facing).orElse(null);
+//    }
 
     public static IPowerArmorPartData getPowerArmorPartData(PowerArmorPartEntity entity){
         return entity.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);

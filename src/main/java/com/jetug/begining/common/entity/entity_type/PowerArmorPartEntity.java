@@ -1,6 +1,9 @@
 package com.jetug.begining.common.entity.entity_type;
 
+import com.jetug.begining.common.entity.data.IPlayerData;
 import com.jetug.begining.common.entity.data.IPowerArmorPartData;
+import com.jetug.begining.common.entity.data.PlayerDataProvider;
+import com.jetug.begining.common.entity.data.PowerArmorDataProvider;
 import com.jetug.begining.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -28,10 +31,15 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.parentMob = parent;
         this.bodyPart = bodyPart;
 
-//        if(getDefense() == -1 || getDurability() == -1){
-//            setDefense(10);
-//            setDurability(20);
-//        }
+        if(getDefense() == -1 || getDurability() == -1){
+            setDefense(10);
+            setDurability(20);
+        }
+
+        IPowerArmorPartData dataPA = this.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
+
+        PlayerEntity player = Minecraft.getInstance().player;
+        player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability()), this.getUUID());
     }
 
     private double getDefense(){

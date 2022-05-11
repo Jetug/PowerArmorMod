@@ -1,20 +1,34 @@
 package com.jetug.begining.common.entity.data;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.jetug.begining.common.util.constants.Resources.PLAYER_DATA_LOCATION;
+import static com.jetug.begining.common.util.constants.Resources.POWER_ARMOR_PART_DATA_LOCATION;
 
 public class PowerArmorDataProvider  implements ICapabilitySerializable<CompoundNBT>
 {
     @CapabilityInject(IPowerArmorPartData.class)
     public static final Capability<IPowerArmorPartData> POWER_ARMOR_PART_DATA = null;
     private LazyOptional<IPowerArmorPartData> instance = LazyOptional.of(POWER_ARMOR_PART_DATA::getDefaultInstance);
+
+    public static void register() {
+        CapabilityManager.INSTANCE.register(IPowerArmorPartData.class, new PowerArmorPartDataStorage(), PowerArmorPartData::new);
+    }
+
+    public static void attach(AttachCapabilitiesEvent<Entity> event) {
+        event.addCapability(POWER_ARMOR_PART_DATA_LOCATION, new PowerArmorDataProvider());
+    }
 
     @Nonnull
     @Override
