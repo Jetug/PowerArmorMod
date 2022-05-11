@@ -4,8 +4,8 @@ public class PowerArmorPartData implements IPowerArmorPartData{
     public static final String DURABILITY = "durability";
     public static final String DEFENSE = "defense";
 
-    private double durability;
-    private double defense;
+    private double durability = -1;
+    private double defense = -1;
 
     @Override
     public double getDurability() {

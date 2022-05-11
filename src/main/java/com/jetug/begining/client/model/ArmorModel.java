@@ -8,7 +8,6 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import static com.jetug.begining.common.util.constants.Resources.*;
 
 public class ArmorModel <Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type> {
-
     @Override
     public ResourceLocation getModelLocation(Type object) {
         return ARMOR_MODEL_LOCATION;

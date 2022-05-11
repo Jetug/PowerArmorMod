@@ -27,10 +27,27 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.refreshDimensions();
         this.parentMob = parent;
         this.bodyPart = bodyPart;
+
+//        if(getDefense() == -1 || getDurability() == -1){
+//            setDefense(10);
+//            setDurability(20);
+//        }
+    }
+
+    private double getDefense(){
+        return getPowerArmorPartData(this).getDefense();
+    }
+
+    private void setDefense(double value){
+        getPowerArmorPartData(this).setDefense(value);
     }
 
     public double getDurability(){
         return getPowerArmorPartData(this).getDurability();
+    }
+
+    public void setDurability(double value){
+        getPowerArmorPartData(this).setDurability(value);
     }
 
     public void damage(double damage){
@@ -59,6 +76,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public boolean hurt(DamageSource damageSource, float damage) {
         PlayerEntity player = Minecraft.getInstance().player;
         player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + damage), this.getUUID());
+        //damage(damage);
         return this.isInvulnerableTo(damageSource) ? false : this.parentMob.hurt(this, damageSource, damage);
     }
 

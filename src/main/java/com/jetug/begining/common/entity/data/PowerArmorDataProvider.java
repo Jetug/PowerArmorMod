@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 
 public class PowerArmorDataProvider  implements ICapabilitySerializable<CompoundNBT>
 {
-    @CapabilityInject(PowerArmorPartData.class)
+    @CapabilityInject(IPowerArmorPartData.class)
     public static final Capability<IPowerArmorPartData> POWER_ARMOR_PART_DATA = null;
     private LazyOptional<IPowerArmorPartData> instance = LazyOptional.of(POWER_ARMOR_PART_DATA::getDefaultInstance);
 

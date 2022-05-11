@@ -2,7 +2,6 @@ package com.jetug.begining.common.events;
 
 import com.jetug.begining.ExampleMod;
 import com.jetug.begining.common.entity.entity_type.GeckoEntity;
-import com.jetug.begining.common.entity.entity_type.PlayerPowerArmorEntity;
 import com.jetug.begining.common.entity.entity_type.PowerArmorEntity;
 import com.jetug.begining.common.entity.entity_type.TestEntity;
 import com.jetug.begining.common.registery.ModEntityTypes;

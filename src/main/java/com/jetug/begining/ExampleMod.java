@@ -1,10 +1,7 @@
 package com.jetug.begining;
 
 import com.jetug.begining.client.Messages;
-import com.jetug.begining.common.entity.data.CapabilityHandler;
-import com.jetug.begining.common.entity.data.IPlayerData;
-import com.jetug.begining.common.entity.data.ModPlayerData;
-import com.jetug.begining.common.entity.data.PlayerDataStorage;
+import com.jetug.begining.common.entity.data.*;
 import com.jetug.begining.common.events.EventHandler;
 import com.jetug.begining.common.registery.ModEntityTypes;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,5 +35,6 @@ public class ExampleMod
     private void setup(final FMLCommonSetupEvent event) {
         //Messages.register();
         CapabilityManager.INSTANCE.register(IPlayerData.class, new PlayerDataStorage(), ModPlayerData::new);
+        CapabilityManager.INSTANCE.register(IPowerArmorPartData.class, new PowerArmorPartDataStorage(), PowerArmorPartData::new);
     }
 }

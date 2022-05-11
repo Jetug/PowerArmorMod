@@ -26,6 +26,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
+import static com.jetug.begining.common.entity.data.DataManager.getPlayerData;
 import static com.jetug.begining.common.entity.data.ModPlayerData.*;
 import static com.jetug.begining.common.util.constants.Attributes.*;
 
@@ -38,18 +39,18 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     private final PowerArmorPartEntity[] subEntities;
     public final PowerArmorPartEntity head;
-    private final PowerArmorPartEntity body;
-    private final PowerArmorPartEntity leftArm;
-    private final PowerArmorPartEntity rightArm;
-    private final PowerArmorPartEntity leftLeg;
-    private final PowerArmorPartEntity rightLeg;
+    public final PowerArmorPartEntity body;
+    public final PowerArmorPartEntity leftArm;
+    public final PowerArmorPartEntity rightArm;
+    public final PowerArmorPartEntity leftLeg;
+    public final PowerArmorPartEntity rightLeg;
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         head   =   new PowerArmorPartEntity(this, BodyPart.HEAD, 0.7f, 0.7f);
-        body   =   new PowerArmorPartEntity(this, BodyPart.BODY, 1.1f, 1.0f);
-        leftArm  = new PowerArmorPartEntity(this, BodyPart.LEFT_ARM, 0.9f, 1.0f);
-        rightArm = new PowerArmorPartEntity(this, BodyPart.RIGHT_ARM, 0.9f, 1.0f);
+        body   =   new PowerArmorPartEntity(this, BodyPart.BODY, 1.0f, 1.0f);
+        leftArm  = new PowerArmorPartEntity(this, BodyPart.LEFT_ARM, 0.7f, 1.0f);
+        rightArm = new PowerArmorPartEntity(this, BodyPart.RIGHT_ARM, 0.7f, 1.0f);
         leftLeg  = new PowerArmorPartEntity(this, BodyPart.LEFT_LEG, 0.6f, 1.0f);
         rightLeg = new PowerArmorPartEntity(this, BodyPart.RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
@@ -63,6 +64,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         tickPart(head,-5, 36, -5);
         this.noCulling = true;
     }
+
+//    private void setupPowerArmorParts(PowerArmorPartEntity[] parts){
+//        for(PowerArmorPartEntity part: parts){
+//            part
+//        }
+//    }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
@@ -122,7 +129,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float rotation = this.yRot * ((float)Math.PI / 180F);
         float xPos = MathHelper.cos(rotation);
         float zPos = MathHelper.sin(rotation);
-        float armPos = 0.5f;
+        float armPos = 0.7f;
         float legPos = 0.2f;
 
         this.tickPart(this.head, 0, 2.1,0);
