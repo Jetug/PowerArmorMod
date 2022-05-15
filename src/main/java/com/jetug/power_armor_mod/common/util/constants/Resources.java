@@ -20,5 +20,21 @@ public class Resources {
     public static final ResourceLocation HELMET_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_head.geo.json");
     public static final ResourceLocation HELMET_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_head.png");
 
+    public static final ResourceLocation BODY_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_body.geo.json");
+    public static final ResourceLocation BODY_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_body.png");
+
+    public static final ResourceLocation LEFT_ARM_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_left_arm.geo.json");
+    public static final ResourceLocation LEFT_ARM_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_left_arm.png");
+
+    public static final ResourceLocation RIGHT_ARM_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_right_arm.geo.json");
+    public static final ResourceLocation RIGHT_ARM_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_right_arm.png");
+
+    public static final ResourceLocation LEFT_LEG_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_left_leg.geo.json");
+    public static final ResourceLocation LEFT_LEG_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_left_leg.png");
+
+    public static final ResourceLocation RIGHT_LEG_MODEL_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "geo/armor_right_leg.geo.json");
+    public static final ResourceLocation RIGHT_LEG_TEXTURE_LOCATION = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/armor_right_leg.png");
+
+
     public static final ResourceLocation INVISIBLE_TEXTURE = new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/power_armor_invisible.png");
 }

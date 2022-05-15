@@ -55,7 +55,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         rightLeg = new PowerArmorPartEntity(this, BodyPart.RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
-//       GeoBone headBone = POWER_ARMOR_MODEL.getBoneAP(HEAD_BONE_NAME);
+//       GeoBone headBone = powerArmorModel.getBoneAP(HEAD_BONE_NAME);
 //       PlayerEntity player = Minecraft.getInstance().player;
 //       if(headBone == null)
 //           player.sendMessage(new StringTextComponent("null"), this.getUUID());

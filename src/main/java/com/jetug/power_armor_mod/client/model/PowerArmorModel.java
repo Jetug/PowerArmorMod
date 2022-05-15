@@ -36,7 +36,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 //    }
 
 //    public GeoBone getBoneAP(String boneName){
-//        return (GeoBone) POWER_ARMOR_MODEL.getAnimationProcessor().getBone(boneName);
+//        return (GeoBone) powerArmorModel.getAnimationProcessor().getBone(boneName);
 //    }
 
     public GeoBone getBone(String boneName){

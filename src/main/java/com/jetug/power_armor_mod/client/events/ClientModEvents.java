@@ -23,7 +23,7 @@ public final class ClientModEvents {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), manager -> new PowerArmorRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), PowerArmorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.TEST_ENTITY.get(), TestRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GECKO_ENTITY.get(), GeckoRenderer::new);
         //RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.PLAYER_POWER_ARMOR.get(), PlayerPowerArmorRenderer::new);

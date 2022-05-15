@@ -19,10 +19,11 @@ import net.minecraftforge.entity.PartEntity;
 import static com.jetug.power_armor_mod.common.entity.data.DataManager.*;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
-
     public final PowerArmorEntity parentMob;
     public final BodyPart bodyPart;
     private final EntitySize size;
+
+    private ArmorPartsEvents events = null;
 
     public PowerArmorPartEntity(PowerArmorEntity parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
@@ -41,6 +42,10 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //        }
     }
 
+    public void subscribeEvents(ArmorPartsEvents events){
+        this.events = events;
+    }
+
     public double getDurability(){
         IPowerArmorPartData data = getPowerArmorPartData(this);
         if(data.getDurability() == -1)
@@ -50,6 +55,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public void setDurability(double value){
         getPowerArmorPartData(this).setDurability(value);
+        if(events != null)
+            events.onDurabilityChanged(value);
     }
 
     public void damage(double damage){
