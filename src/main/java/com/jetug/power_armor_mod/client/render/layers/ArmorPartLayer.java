@@ -43,7 +43,7 @@ public class ArmorPartLayer extends GeoLayerRenderer {
         //Move or scale the model as you see fit
         matrixStackIn.scale(1.0f, 1.0f, 1.0f);
         matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-        this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entityLivingBaseIn, partialTicks, cameo, matrixStackIn, bufferIn,
+        this.getRenderer().render(this.getEntityModel().getModel(model), entityLivingBaseIn, partialTicks, cameo, matrixStackIn, bufferIn,
                 bufferIn.getBuffer(cameo), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
         matrixStackIn.popPose();
     }
