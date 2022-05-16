@@ -8,11 +8,14 @@ import com.mojang.blaze3d.matrix.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.util.*;
+import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import static com.jetug.power_armor_mod.common.util.constants.Constants.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
@@ -28,7 +31,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 //    }
 
 //    private final PowerArmorModel powerArmorModel;
-//    private final ArmorModel armorModel = new ArmorModel();
+    private final ArmorModel armorModel = new ArmorModel();
 //    private final HelmetModel helmetModel = new HelmetModel();
     private final ArmorPartLayer headLayer;
     private final ArmorPartLayer bodyLayer;
@@ -145,14 +148,14 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
                 boneList.add(new Tuple<>("right_lower_arm", "right_forearm_armor"   ));
                 break;
             case LEFT_LEG:
-                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"));
-                boneList.add(new Tuple<>("left_lower_leg", "left_knee"));
-                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"));
+                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"   ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_knee"              ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"   ));
                 break;
             case RIGHT_LEG:
-                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor"));
-                boneList.add(new Tuple<>("right_lower_leg", "right_knee"));
-                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor"));
+                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor" ));
+                boneList.add(new Tuple<>("right_lower_leg", "right_knee"            ));
+                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor" ));
                 break;
         }
         return boneList;
@@ -169,13 +172,14 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void addArmorPart(ArmorPartLayer layer){
         attachBones(layer);
-        //addLayer(layer);
+        addLayer(layer);
     }
 
     private void removeArmorPart(ArmorPartLayer layer){
         detachBones(layer);
-        //removeLayer(layer);
+        removeLayer(layer);
     }
+
 
     private void attachBones(ArmorPartLayer layer){
         handleLayer(layer, true);
@@ -185,15 +189,34 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         handleLayer(layer, false);
     }
 
+    private GeoBone getBone(String name){
+        ArrayList<IBone> list = (ArrayList<IBone>) getPowerArmorModel().getAnimationProcessor().getModelRendererList();
+        for (IBone item: list){
+            String buff = item.getName();
+            if (Objects.equals(buff, name))
+                return (GeoBone)item;
+        }
+        return null;
+    }
+
     private void handleLayer(ArmorPartLayer layer, Boolean isAttaching){
         layer.boneAttachments.forEach(tuple ->{
-            GeoBone bone1 = (GeoBone)getPowerArmorModel().getAnimationProcessor().getBone(tuple.getA());
+            //GeoBone bone1 = (GeoBone)getPowerArmorModel().getBone(tuple.getA());
             //GeoBone bone1 = getPowerArmorModel().getModel(POWER_ARMOR_MODEL_LOCATION).getBone(tuple.getA()).orElse(null);
-            GeoBone bone2 = getPowerArmorModel().getModel(layer.model).getBone(tuple.getB()).orElse(null);
-            if(bone1 != null) {
-                if (isAttaching) bone1.childBones.add(bone2);
+
+            //GeoBone bone1 = getBone(tuple.getA());
+            GeoBone bone1 = (GeoBone)getPowerArmorModel().getAnimationProcessor().getBone(tuple.getA());
+            GeoBone bone2 = armorModel.getModel(layer.model).getBone(tuple.getB()).orElse(null);
+
+            //getPowerArmorModel().getAnimationProcessor().registerModelRenderer(bone2);
+
+            //if(bone1 != null) {
+                if (isAttaching) {
+                    bone2.parent = bone1;
+                    bone1.childBones.add(bone2);
+                }
                 else bone1.childBones.remove(bone2);
-            }
+            //}
         });
     }
 

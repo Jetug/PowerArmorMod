@@ -54,7 +54,6 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 //                bone.setHidden(true);
 //            }
 //        }
-
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         setupHeadAnimation(customPredicate);
     }
