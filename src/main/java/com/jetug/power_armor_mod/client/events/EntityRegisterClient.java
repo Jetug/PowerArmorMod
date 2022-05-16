@@ -1,8 +1,11 @@
 package com.jetug.power_armor_mod.client.events;
 
+import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,5 +23,17 @@ public class EntityRegisterClient
         if(isWearingPowerArmor(player)){
             player.setInvisible(true);
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void onRenderLiving(RenderLivingEvent event)
+    {
+//        Entity entity = event.getEntity();
+//
+//        if(entity instanceof PowerArmorEntity){
+//            event.getRenderer()
+//            ((PowerArmorEntity)entity).
+//        }
     }
 }

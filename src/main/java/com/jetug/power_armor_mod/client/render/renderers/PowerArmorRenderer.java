@@ -1,48 +1,44 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.ibm.icu.impl.Pair;
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.entity.entity_type.*;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.mojang.blaze3d.matrix.*;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.util.*;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.jetug.power_armor_mod.common.util.constants.Constants.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
-    private class ArmorLayers{
-        public ArmorPartLayer headLayer;
-        public ArmorPartLayer bodyLayer;
-        public ArmorPartLayer leftArmLayer;
-        public ArmorPartLayer rightArmLayer;
-        public ArmorPartLayer leftLegLayer ;
-        public ArmorPartLayer rightLegLayer;
-    }
+//    private class ArmorLayers{
+//        public ArmorPartLayer headLayer;
+//        public ArmorPartLayer bodyLayer;
+//        public ArmorPartLayer leftArmLayer;
+//        public ArmorPartLayer rightArmLayer;
+//        public ArmorPartLayer leftLegLayer ;
+//        public ArmorPartLayer rightLegLayer;
+//    }
 
 //    private final PowerArmorModel powerArmorModel;
 //    private final ArmorModel armorModel = new ArmorModel();
 //    private final HelmetModel helmetModel = new HelmetModel();
-//    private final ArmorPartLayer headLayer;
-//    private final ArmorPartLayer bodyLayer;
-//    private final ArmorPartLayer leftArmLayer;
-//    private final ArmorPartLayer rightArmLayer;
-//    private final ArmorPartLayer leftLegLayer ;
-//    private final ArmorPartLayer rightLegLayer;
+    private final ArmorPartLayer headLayer;
+    private final ArmorPartLayer bodyLayer;
+    private final ArmorPartLayer leftArmLayer;
+    private final ArmorPartLayer rightArmLayer;
+    private final ArmorPartLayer leftLegLayer ;
+    private final ArmorPartLayer rightLegLayer;
 //    private boolean armorAttached = false;
 
-    private final HashMap<PowerArmorEntity, ArmorLayers> entityArmorLayers = new HashMap<>();
+   // private final HashMap<PowerArmorEntity, ArmorLayers> entityArmorLayers = new HashMap<>();
 
     private PowerArmorModel getPowerArmorModel(){
         return (PowerArmorModel)getGeoModelProvider();
@@ -51,23 +47,19 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     public PowerArmorRenderer(EntityRendererManager renderManager) {
         super(renderManager,  new PowerArmorModel());
 //        powerArmorModel = (PowerArmorModel)getGeoModelProvider();
-//        headLayer     = new ArmorPartLayer (this, HELMET_MODEL_LOCATION, HELMET_TEXTURE_LOCATION, getAttachments(BodyPart.HEAD));
-//        bodyLayer     = new ArmorPartLayer (this, BODY_MODEL_LOCATION, BODY_TEXTURE_LOCATION, getAttachments(BodyPart.BODY));
-//        leftArmLayer  = new ArmorPartLayer (this, LEFT_ARM_MODEL_LOCATION, LEFT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_ARM));
-//        rightArmLayer = new ArmorPartLayer (this, RIGHT_ARM_MODEL_LOCATION, RIGHT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_ARM));
-//        leftLegLayer  = new ArmorPartLayer (this, LEFT_LEG_MODEL_LOCATION, LEFT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_LEG));
-//        rightLegLayer = new ArmorPartLayer (this, RIGHT_LEG_MODEL_LOCATION, RIGHT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_LEG));
-    }
+        headLayer     = new ArmorPartLayer (this, HELMET_MODEL_LOCATION, HELMET_TEXTURE_LOCATION, getAttachments(BodyPart.HEAD));
+        bodyLayer     = new ArmorPartLayer (this, BODY_MODEL_LOCATION, BODY_TEXTURE_LOCATION, getAttachments(BodyPart.BODY));
+        leftArmLayer  = new ArmorPartLayer (this, LEFT_ARM_MODEL_LOCATION, LEFT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_ARM));
+        rightArmLayer = new ArmorPartLayer (this, RIGHT_ARM_MODEL_LOCATION, RIGHT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_ARM));
+        leftLegLayer  = new ArmorPartLayer (this, LEFT_LEG_MODEL_LOCATION, LEFT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_LEG));
+        rightLegLayer = new ArmorPartLayer (this, RIGHT_LEG_MODEL_LOCATION, RIGHT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_LEG));
 
-    private ArmorLayers createLayers(){
-        ArmorLayers armorLayers = new ArmorLayers();
-        armorLayers.headLayer     = new ArmorPartLayer (this, HELMET_MODEL_LOCATION, HELMET_TEXTURE_LOCATION, getAttachments(BodyPart.HEAD));
-        armorLayers.bodyLayer     = new ArmorPartLayer (this, BODY_MODEL_LOCATION, BODY_TEXTURE_LOCATION, getAttachments(BodyPart.BODY));
-        armorLayers.leftArmLayer  = new ArmorPartLayer (this, LEFT_ARM_MODEL_LOCATION, LEFT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_ARM));
-        armorLayers.rightArmLayer = new ArmorPartLayer (this, RIGHT_ARM_MODEL_LOCATION, RIGHT_ARM_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_ARM));
-        armorLayers.leftLegLayer  = new ArmorPartLayer (this, LEFT_LEG_MODEL_LOCATION, LEFT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.LEFT_LEG));
-        armorLayers.rightLegLayer = new ArmorPartLayer (this, RIGHT_LEG_MODEL_LOCATION, RIGHT_LEG_TEXTURE_LOCATION, getAttachments(BodyPart.RIGHT_LEG));
-        return armorLayers;
+//        addLayer(headLayer    );
+//        addLayer(bodyLayer    );
+//        addLayer(leftArmLayer );
+//        addLayer(rightArmLayer);
+//        addLayer(leftLegLayer );
+//        addLayer(rightLegLayer);
     }
 
     @Override
@@ -83,25 +75,26 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        if(!entityArmorLayers.containsKey(entity)){
-            entityArmorLayers.put(entity, createLayers());
-        }
-        else{
-            handleArmorDamage(entityArmorLayers.get(entity).headLayer, entity.head.getDurability());
-            handleArmorDamage(entityArmorLayers.get(entity).bodyLayer, entity.body.getDurability());
-            handleArmorDamage(entityArmorLayers.get(entity).leftArmLayer, entity.leftArm.getDurability());
-            handleArmorDamage(entityArmorLayers.get(entity).rightArmLayer, entity.rightArm.getDurability());
-            handleArmorDamage(entityArmorLayers.get(entity).leftLegLayer, entity.leftLeg.getDurability());
-            handleArmorDamage(entityArmorLayers.get(entity).rightLegLayer, entity.rightLeg.getDurability());
-        }
+//        if(!entityArmorLayers.containsKey(entity)){
+//            entityArmorLayers.put(entity, createLayers());
+//        }
+
+        double dur = entity.head_.getDurability();
+
+        handleArmorDamage(headLayer, entity.head_.getDurability());
+        handleArmorDamage(bodyLayer, entity.body.getDurability());
+        handleArmorDamage(leftArmLayer, entity.leftArm.getDurability());
+        handleArmorDamage(rightArmLayer, entity.rightArm.getDurability());
+        handleArmorDamage(leftLegLayer, entity.leftLeg.getDurability());
+        handleArmorDamage(rightLegLayer, entity.rightLeg.getDurability());
     }
 
     public void renderArmor(PowerArmorEntity entity){
         //attachBones(getBoneAttachments(entity));
     }
 
-//    private void initArmorParts(PowerArmorEntity entity){
-//        entity.head.subscribeEvents(durability ->     handleArmorDamage(headLayer, durability));
+    private void initArmorParts(PowerArmorEntity entity){
+//        entity.head_.subscribeEvents(durability ->     handleArmorDamage(headLayer, durability));
 //        entity.body.subscribeEvents(durability ->     handleArmorDamage(bodyLayer, durability));
 //        entity.leftArm.subscribeEvents(durability ->  handleArmorDamage(leftArmLayer, durability));
 //        entity.rightArm.subscribeEvents(durability -> handleArmorDamage(rightArmLayer, durability));
@@ -109,10 +102,10 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 //        entity.rightLeg.subscribeEvents(durability -> handleArmorDamage(rightLegLayer, durability));
 //
 //        updateArmor(entity);
-//    }
+    }
 
 //    private void initArmor(PowerArmorEntity entity){
-//        if(entity.head.getDurability() > 0.0D) {
+//        if(entity.head_.getDurability() > 0.0D) {
 //            addArmorPart(headLayer);
 //        }
 //        if(entity.body.getDurability() > 0.0D)
@@ -175,13 +168,13 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void addArmorPart(ArmorPartLayer layer){
-        //attachBones(layer);
-        addLayer(layer);
+        attachBones(layer);
+        //addLayer(layer);
     }
 
     private void removeArmorPart(ArmorPartLayer layer){
-        //detachBones(layer);
-        removeLayer(layer);
+        detachBones(layer);
+        //removeLayer(layer);
     }
 
     private void attachBones(ArmorPartLayer layer){
@@ -194,11 +187,13 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void handleLayer(ArmorPartLayer layer, Boolean isAttaching){
         layer.boneAttachments.forEach(tuple ->{
-            //Tuple<GeoBone, GeoBone> bones = getBones(layer, tuple);
-            GeoBone bone1 = getPowerArmorModel().getModel(POWER_ARMOR_MODEL_LOCATION).getBone(tuple.getA()).orElse(null);
+            GeoBone bone1 = (GeoBone)getPowerArmorModel().getAnimationProcessor().getBone(tuple.getA());
+            //GeoBone bone1 = getPowerArmorModel().getModel(POWER_ARMOR_MODEL_LOCATION).getBone(tuple.getA()).orElse(null);
             GeoBone bone2 = getPowerArmorModel().getModel(layer.model).getBone(tuple.getB()).orElse(null);
-            if(isAttaching) bone1.childBones.add(bone2);
-            else bone1.childBones.remove(bone2);
+            if(bone1 != null) {
+                if (isAttaching) bone1.childBones.add(bone2);
+                else bone1.childBones.remove(bone2);
+            }
         });
     }
 

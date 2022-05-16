@@ -28,7 +28,7 @@ public class GeckoEntity extends CreatureEntity implements IAnimatable {
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 25.0D)
-                .add(Attributes.MAX_HEALTH, 11.0D)
+                .add(Attributes.MAX_HEALTH, 5.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D);

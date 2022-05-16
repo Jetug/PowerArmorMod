@@ -8,7 +8,6 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
@@ -28,7 +27,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.common.entity.data.DataManager.getPlayerData;
-import static com.jetug.power_armor_mod.common.util.constants.Attributes.*;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount
 {
@@ -38,7 +36,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     protected float playerJumpPendingScale;
 
     private final PowerArmorPartEntity[] subEntities;
-    public final PowerArmorPartEntity head;
+    public final PowerArmorPartEntity head_;
     public final PowerArmorPartEntity body;
     public final PowerArmorPartEntity leftArm;
     public final PowerArmorPartEntity rightArm;
@@ -47,13 +45,13 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
-        head   =   new PowerArmorPartEntity(this, BodyPart.HEAD, 0.7f, 0.7f);
+        head_ =   new PowerArmorPartEntity(this, BodyPart.HEAD, 0.7f, 0.7f);
         body   =   new PowerArmorPartEntity(this, BodyPart.BODY, 1.0f, 1.0f);
         leftArm  = new PowerArmorPartEntity(this, BodyPart.LEFT_ARM, 0.7f, 1.0f);
         rightArm = new PowerArmorPartEntity(this, BodyPart.RIGHT_ARM, 0.7f, 1.0f);
         leftLeg  = new PowerArmorPartEntity(this, BodyPart.LEFT_LEG, 0.6f, 1.0f);
         rightLeg = new PowerArmorPartEntity(this, BodyPart.RIGHT_LEG, 0.6f, 1.0f);
-        subEntities = new PowerArmorPartEntity[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
+        subEntities = new PowerArmorPartEntity[]{head_, body, leftArm, rightArm, leftLeg, rightLeg};
 
 //       GeoBone headBone = powerArmorModel.getBoneAP(HEAD_BONE_NAME);
 //       PlayerEntity player = Minecraft.getInstance().player;
@@ -73,7 +71,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 1000.0D)
+                .add(Attributes.MAX_HEALTH, 10.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
@@ -126,7 +124,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float armPos = 0.8f;
         float legPos = 0.2f;
 
-        this.tickPart(this.head, 0, 2.1,0);
+        this.tickPart(this.head_, 0, 2.1,0);
         this.tickPart(this.body, 0, 1.2, 0);
         this.tickPart(this.rightArm, xPos * -armPos, 1.1, zPos * -armPos);
         this.tickPart(this.leftArm, xPos * armPos, 1.1, zPos * armPos);
@@ -159,10 +157,13 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
+        for(int j = 0; j < this.subEntities.length; ++j) {
+            this.subEntities[j].setDurability(1);
+        }
+
         this.doPlayerRide(player);
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
-
 
     //AbstractHorseEntity
 

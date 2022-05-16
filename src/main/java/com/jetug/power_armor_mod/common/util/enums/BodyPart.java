@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.util.enums;
 
 public enum BodyPart{
-    HEAD("head"),
+    HEAD("head_"),
     BODY("body"),
     LEFT_ARM("left_arm"),
     RIGHT_ARM("right_arm"),

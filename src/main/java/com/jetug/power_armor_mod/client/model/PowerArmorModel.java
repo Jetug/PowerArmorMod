@@ -39,10 +39,10 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 //        return (GeoBone) powerArmorModel.getAnimationProcessor().getBone(boneName);
 //    }
 
-    public GeoBone getBone(String boneName){
-        Optional<GeoBone> opt = this.getModel(ARMOR_MODEL_LOCATION).getBone(boneName);
-        return opt.orElse(null);
-    }
+//    public GeoBone getBone(String boneName){
+//        Optional<GeoBone> opt = this.getModel(ARMOR_MODEL_LOCATION).getBone(boneName);
+//        return opt.orElse(null);
+//    }
 
     @Override
     public void setLivingAnimations(Type entity, Integer uniqueID, AnimationEvent customPredicate) {
@@ -61,7 +61,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
-        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head").get();
+        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head_").get();
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

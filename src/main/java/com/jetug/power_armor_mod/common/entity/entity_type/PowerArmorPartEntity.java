@@ -48,8 +48,9 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public double getDurability(){
         IPowerArmorPartData data = getPowerArmorPartData(this);
-        if(data.getDurability() == -1)
-            return 10;
+//        if(data.getDurability() < 0) {
+//            setDurability(10);
+//        }
         return data.getDurability();
     }
 
@@ -65,11 +66,13 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         if(durability < 0)
             durability = 0;
         setDurability(durability);
+
+        double dur = getDurability();
     }
 
     private double getDefense(){
         IPowerArmorPartData data = getPowerArmorPartData(this);
-        if(data.getDefense() == -1)
+        if(data.getDefense() < 0)
             return 20;
         return getPowerArmorPartData(this).getDefense();
     }
