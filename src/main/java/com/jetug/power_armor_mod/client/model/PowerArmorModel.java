@@ -16,6 +16,10 @@ import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 
 public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {
+    public PowerArmorModel(){
+        super();
+    }
+
     @Override
     public ResourceLocation getModelLocation(Type object) {
         return POWER_ARMOR_MODEL_LOCATION;

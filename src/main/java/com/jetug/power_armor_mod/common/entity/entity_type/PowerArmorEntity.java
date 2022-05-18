@@ -26,7 +26,12 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
+
 import static com.jetug.power_armor_mod.common.entity.data.DataManager.getPlayerData;
+import static com.jetug.power_armor_mod.common.util.constants.Constants.BODY_BONE_NAME;
+import static com.jetug.power_armor_mod.common.util.constants.Constants.HEAD_BONE_NAME;
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount
 {
@@ -45,7 +50,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
-        head_ =   new PowerArmorPartEntity(this, BodyPart.HEAD, 0.7f, 0.7f);
+        head_ =   new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
         body   =   new PowerArmorPartEntity(this, BodyPart.BODY, 1.0f, 1.0f);
         leftArm  = new PowerArmorPartEntity(this, BodyPart.LEFT_ARM, 0.7f, 1.0f);
         rightArm = new PowerArmorPartEntity(this, BodyPart.RIGHT_ARM, 0.7f, 1.0f);
@@ -77,6 +82,24 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.JUMP_STRENGTH, 2.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+    }
+
+    public PowerArmorPartEntity getArmorPart(BodyPart part){
+        switch (part){
+            case HEAD:
+                return head_;
+            case BODY:
+                return body;
+            case LEFT_ARM:
+                return leftArm;
+            case RIGHT_ARM:
+                return rightArm;
+            case LEFT_LEG:
+                return leftLeg;
+            case RIGHT_LEG:
+                return rightLeg;
+        }
+        return null;
     }
 
     public boolean isJumping() {

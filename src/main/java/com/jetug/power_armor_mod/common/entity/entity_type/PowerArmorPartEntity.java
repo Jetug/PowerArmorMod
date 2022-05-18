@@ -66,7 +66,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         if(durability < 0)
             durability = 0;
         setDurability(durability);
-
         double dur = getDurability();
     }
 
