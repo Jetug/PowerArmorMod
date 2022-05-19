@@ -19,11 +19,12 @@ import net.minecraftforge.entity.PartEntity;
 import static com.jetug.power_armor_mod.common.entity.data.DataManager.*;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
+    public final EntitySize size;
     public final PowerArmorEntity parentMob;
     public final BodyPart bodyPart;
-    private final EntitySize size;
 
     private ArmorPartsEvents events = null;
+    public boolean isArmorAttached = false;
 
     public PowerArmorPartEntity(PowerArmorEntity parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
@@ -31,19 +32,14 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.refreshDimensions();
         this.parentMob = parent;
         this.bodyPart = bodyPart;
-
-//        PlayerEntity player = Minecraft.getInstance().player;
-//        player.sendMessage(new StringTextComponent(bodyPart.getName() + "Dur : " + getDurability()), this.getUUID());
-//        player.sendMessage(new StringTextComponent(bodyPart.getName() + "Def : " + getDefense()), this.getUUID());
-//
-//        if(getDefense() == -1 || getDurability() == -1){
-//            setDefense(10);
-//            setDurability(20);
-//        }
     }
 
     public void subscribeEvents(ArmorPartsEvents events){
         this.events = events;
+    }
+
+    public boolean hasArmor(){
+        return getDurability() > 0;
     }
 
     public double getDurability(){
