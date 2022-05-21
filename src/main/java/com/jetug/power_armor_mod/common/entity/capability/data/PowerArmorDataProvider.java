@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.data;
+package com.jetug.power_armor_mod.common.entity.capability.data;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,8 +15,7 @@ import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_PART_DATA_LOCATION;
 
-public class PowerArmorDataProvider  implements ICapabilitySerializable<CompoundNBT>
-{
+public class PowerArmorDataProvider implements ICapabilitySerializable<CompoundNBT> {
     @CapabilityInject(IPowerArmorPartData.class)
     public static final Capability<IPowerArmorPartData> POWER_ARMOR_PART_DATA = null;
     private LazyOptional<IPowerArmorPartData> instance = LazyOptional.of(POWER_ARMOR_PART_DATA::getDefaultInstance);
@@ -37,11 +36,13 @@ public class PowerArmorDataProvider  implements ICapabilitySerializable<Compound
 
     @Override
     public CompoundNBT serializeNBT() {
-        return (CompoundNBT) POWER_ARMOR_PART_DATA.getStorage().writeNBT(POWER_ARMOR_PART_DATA, instance.orElseThrow(() -> new IllegalArgumentException("at serialize")), null);
+        return (CompoundNBT) POWER_ARMOR_PART_DATA.getStorage().writeNBT(POWER_ARMOR_PART_DATA, instance.orElseThrow(() ->
+                new IllegalArgumentException("at serialize")), null);
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        POWER_ARMOR_PART_DATA.getStorage().readNBT(POWER_ARMOR_PART_DATA, instance.orElseThrow(() -> new IllegalArgumentException("at deserialize")), null, nbt);
+        POWER_ARMOR_PART_DATA.getStorage().readNBT(POWER_ARMOR_PART_DATA, instance.orElseThrow(() ->
+                new IllegalArgumentException("at deserialize")), null, nbt);
     }
 }

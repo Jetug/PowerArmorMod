@@ -1,6 +1,9 @@
 package com.jetug.power_armor_mod.common.entity.entity_type;
 
-import com.jetug.power_armor_mod.common.entity.data.IPlayerData;
+import com.jetug.power_armor_mod.common.entity.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.entity.capability.data.IPowerArmorPartData;
+import com.jetug.power_armor_mod.common.entity.capability.data.PowerArmorDataProvider;
+import com.jetug.power_armor_mod.common.util.MinecraftUtils;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -26,11 +29,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-
-import static com.jetug.power_armor_mod.common.entity.data.DataManager.getPlayerData;
-import static com.jetug.power_armor_mod.common.util.constants.Constants.BODY_BONE_NAME;
-import static com.jetug.power_armor_mod.common.util.constants.Constants.HEAD_BONE_NAME;
+import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.getPlayerData;
+import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.getPowerArmorPartData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount
@@ -57,22 +57,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         leftLeg  = new PowerArmorPartEntity(this, BodyPart.LEFT_LEG, 0.6f, 1.0f);
         rightLeg = new PowerArmorPartEntity(this, BodyPart.RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{head_, body, leftArm, rightArm, leftLeg, rightLeg};
-
-//       GeoBone headBone = powerArmorModel.getBoneAP(HEAD_BONE_NAME);
-//       PlayerEntity player = Minecraft.getInstance().player;
-//       if(headBone == null)
-//           player.sendMessage(new StringTextComponent("null"), this.getUUID());
-//       else
-//           player.sendMessage(new StringTextComponent("not null"), this.getUUID());
-
         this.noCulling = true;
     }
-
-//    private void setupPowerArmorParts(PowerArmorPartEntity[] parts){
-//        for(PowerArmorPartEntity part: parts){
-//            part
-//        }
-//    }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
@@ -122,15 +108,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
     }
 
-    @Override
-    public boolean isMultipartEntity() {
-        return true;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
 
     @Override
     public void aiStep() {
@@ -170,6 +147,16 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
     @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
+    @Override
     public boolean isInvisible() {
         ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
         PointOfView pov = Minecraft.getInstance().options.getCameraType();
@@ -183,8 +170,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         for(int j = 0; j < this.subEntities.length; ++j) {
             this.subEntities[j].setDurability(1);
         }
-
         this.doPlayerRide(player);
+
+        IPowerArmorPartData data = this.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
+
+        MinecraftUtils.sendMessage("" + data.getDurability(), this);
+
+        data.setDurability(data.getDurability() + 1);
+
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
 
@@ -357,7 +350,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
             IPlayerData data = getPlayerData(player);
             data.setIsInPowerArmor(true);
-            player.sendMessage(new StringTextComponent("message"), this.getUUID());
+            player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), this.getUUID());
         }
     }
 }

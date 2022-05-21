@@ -1,11 +1,12 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.entity.data.IPlayerData;
-import com.jetug.power_armor_mod.common.entity.data.PlayerDataProvider;
+import com.jetug.power_armor_mod.common.entity.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.entity.capability.data.PlayerDataProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -44,5 +45,16 @@ public class EventHandler {
             });
         });
     }
+
+//    @SubscribeEvent
+//    public static void onEntityCloned(EntityEvent event){
+//
+//        event.getPlayer().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(oldStore->{
+//            event.getOriginal().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(newStore ->{
+//                newStore.copyFrom(oldStore);
+//            });
+//        });
+//    }
+//
 
 }

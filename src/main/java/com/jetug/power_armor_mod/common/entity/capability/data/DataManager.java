@@ -1,8 +1,9 @@
-package com.jetug.power_armor_mod.common.entity.data;
+package com.jetug.power_armor_mod.common.entity.capability.data;
 
 import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class DataManager {
@@ -20,11 +21,7 @@ public class DataManager {
         return player.getCapability(PlayerDataProvider.PLAYER_DATA, null).orElse(null);
     }
 
-//    public static IPlayerData getPlayerData(PlayerEntity player, @Nullable Direction facing){
-//        return player.getCapability(PlayerDataProvider.PLAYER_DATA, facing).orElse(null);
-//    }
-
-    public static IPowerArmorPartData getPowerArmorPartData(PowerArmorPartEntity entity){
+    public static IPowerArmorPartData getPowerArmorPartData(Entity entity){
         return entity.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
     }
 

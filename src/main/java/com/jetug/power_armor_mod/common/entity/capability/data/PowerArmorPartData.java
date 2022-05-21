@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.data;
+package com.jetug.power_armor_mod.common.entity.capability.data;
 
 public class PowerArmorPartData implements IPowerArmorPartData{
     public static final String DURABILITY = "durability";

@@ -1,8 +1,9 @@
 package com.jetug.power_armor_mod.common.entity.entity_type;
 
-import com.jetug.power_armor_mod.common.entity.data.IPowerArmorPartData;
-import com.jetug.power_armor_mod.common.entity.data.PowerArmorDataProvider;
+import com.jetug.power_armor_mod.common.entity.capability.data.IPowerArmorPartData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import jdk.jfr.internal.LogLevel;
+import jdk.jfr.internal.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -16,7 +17,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.entity.PartEntity;
 
-import static com.jetug.power_armor_mod.common.entity.data.DataManager.*;
+import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.*;
+import static jdk.jfr.internal.LogTag.JFR_SYSTEM;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public final EntitySize size;
@@ -44,9 +46,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public double getDurability(){
         IPowerArmorPartData data = getPowerArmorPartData(this);
-//        if(data.getDurability() < 0) {
-//            setDurability(10);
-//        }
+
+        Logger.log(JFR_SYSTEM, LogLevel.DEBUG, "" + data.getDurability());
         return data.getDurability();
     }
 
@@ -58,11 +59,11 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public void damage(double damage){
         IPowerArmorPartData data = getPowerArmorPartData(this);
+
         double durability = data.getDurability() - damage;
         if(durability < 0)
             durability = 0;
         setDurability(durability);
-        double dur = getDurability();
     }
 
     private double getDefense(){
@@ -102,6 +103,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability()), this.getUUID());
         return this.isInvulnerableTo(damageSource) ? false : this.parentMob.hurt(this, damageSource, damage);
     }
+
 
     @Override
     public boolean is(Entity entity) {

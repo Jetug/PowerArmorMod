@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.data;
+package com.jetug.power_armor_mod.common.entity.capability.data;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -7,7 +7,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
-import static com.jetug.power_armor_mod.common.entity.data.PowerArmorPartData.*;
+import static com.jetug.power_armor_mod.common.entity.capability.data.PowerArmorPartData.*;
 
 public class PowerArmorPartDataStorage  implements Capability.IStorage<IPowerArmorPartData> {
     @Nullable
