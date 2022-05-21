@@ -36,17 +36,17 @@ public class ArmorPartLayer extends GeoLayerRenderer {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-//        PowerArmorEntity entity = (PowerArmorEntity)entityLivingBaseIn;
-//        if(entity.getArmorPart(bodyPart).hasArmor()) {
-//            RenderType cameo = RenderType.armorCutoutNoCull(texture);
-//            matrixStackIn.pushPose();
-//            //Move or scale the model as you see fit
-//            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
-//            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-//            this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entityLivingBaseIn, partialTicks, cameo, matrixStackIn, bufferIn,
-//                    bufferIn.getBuffer(cameo), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
-//            matrixStackIn.popPose();
-//        }
+        PowerArmorEntity entity = (PowerArmorEntity)entityLivingBaseIn;
+        if(entity.getArmorPart(bodyPart).hasArmor()) {
+            RenderType cameo = RenderType.armorCutoutNoCull(texture);
+            matrixStackIn.pushPose();
+            //Move or scale the model as you see fit
+            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
+            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
+            this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entityLivingBaseIn, partialTicks, cameo, matrixStackIn, bufferIn,
+                    bufferIn.getBuffer(cameo), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+            matrixStackIn.popPose();
+        }
     }
 
     private ArrayList<Tuple<String, String>> getAttachments(BodyPart bodyPart){
@@ -59,24 +59,24 @@ public class ArmorPartLayer extends GeoLayerRenderer {
                 boneList.add(new Tuple<>(BODY_BONE_NAME, "body_top_armor"));
                 break;
             case LEFT_ARM:
-                boneList.add(new Tuple<>("left_upper_arm", "left_shoulder_armor"    ));
-                boneList.add(new Tuple<>("left_upper_arm", "left_upper_arm_armor"   ));
-                boneList.add(new Tuple<>("left_lower_arm", "left_forearm_armor"     ));
+                boneList.add(new Tuple<>("left_upper_arm", "left_shoulder_armor"   ));
+                boneList.add(new Tuple<>("left_upper_arm", "left_upper_arm_armor"  ));
+                boneList.add(new Tuple<>("left_lower_arm", "left_forearm_armor"    ));
                 break;
             case RIGHT_ARM:
-                boneList.add(new Tuple<>("right_upper_arm", "right_shoulder_armor"  ));
-                boneList.add(new Tuple<>("right_upper_arm", "right_upper_arm_armor" ));
-                boneList.add(new Tuple<>("right_lower_arm", "right_forearm_armor"   ));
+                boneList.add(new Tuple<>("right_upper_arm", "right_shoulder_armor" ));
+                boneList.add(new Tuple<>("right_upper_arm", "right_upper_arm_armor"));
+                boneList.add(new Tuple<>("right_lower_arm", "right_forearm_armor"  ));
                 break;
             case LEFT_LEG:
-                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"   ));
-                boneList.add(new Tuple<>("left_lower_leg", "left_knee"              ));
-                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"   ));
+                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"  ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_knee"             ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"  ));
                 break;
             case RIGHT_LEG:
-                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor" ));
-                boneList.add(new Tuple<>("right_lower_leg", "right_knee"            ));
-                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor" ));
+                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor"));
+                boneList.add(new Tuple<>("right_lower_leg", "right_knee"           ));
+                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor"));
                 break;
         }
         return boneList;

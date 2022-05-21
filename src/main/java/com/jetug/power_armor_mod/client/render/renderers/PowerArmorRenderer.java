@@ -97,9 +97,11 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
             GeoBone bone2 = armorModel.getModel(layer.model).getBone(tuple.getB()).orElse(null);
 
             if(bone1 != null && bone2 != null) {
-                if (isAttaching && !bone1.childBones.contains(bone2)) {
-                    bone2.parent = bone1;
-                    bone1.childBones.add(bone2);
+                if (isAttaching) {
+                    if(!bone1.childBones.contains(bone2)) {
+                        bone2.parent = bone1;
+                        bone1.childBones.add(bone2);
+                    }
                 }
                 else bone1.childBones.remove(bone2);
             }
