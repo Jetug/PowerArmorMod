@@ -19,8 +19,6 @@ import static com.jetug.power_armor_mod.common.util.constants.Constants.HEAD_BON
 public class abc {
 
     //Logger.log(JFR_SYSTEM, LogLevel.DEBUG, "" + entity.getDurability());
-
-
     //    private class ArmorLayers{
 //        public ArmorPartLayer headLayer;
 //        public ArmorPartLayer bodyLayer;
