@@ -12,6 +12,10 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
@@ -31,11 +35,18 @@ import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.getPowerArmorPartData;
+import static com.jetug.power_armor_mod.common.entity.capability.data.PowerArmorPartData.DURABILITY;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount
 {
+    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
+    public static final String DURABILITY_ARRAY = "durability_array";
+
+
     private AnimationFactory factory = new AnimationFactory(this);
+    private float durability;
+    private float[] armorPartsDurability = getDefaultArmorPartArray();
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
@@ -47,6 +58,11 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     public final PowerArmorPartEntity rightArm;
     public final PowerArmorPartEntity leftLeg;
     public final PowerArmorPartEntity rightLeg;
+
+//    @Override
+//    public void load(CompoundNBT p_70020_1_) {
+//        super.load(p_70020_1_);
+//    }
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
@@ -62,12 +78,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D)
-                .add(Attributes.ATTACK_DAMAGE, 0.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.20D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.JUMP_STRENGTH, 2.0D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+            .add(Attributes.MAX_HEALTH, 10.0D)
+            .add(Attributes.ATTACK_DAMAGE, 0.0D)
+            .add(Attributes.MOVEMENT_SPEED, 0.20D)
+            .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+            .add(Attributes.JUMP_STRENGTH, 2.0D)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     public PowerArmorPartEntity getArmorPart(BodyPart part){
@@ -166,15 +182,84 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         return super.isInvisible();
     }
 
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        //entityData.define(DATA_DURABILITY, 0f);
+    }
+
+    private float[] arrayIntToFloat(int[] array){
+        float[] result = new float[array.length];
+        for (int i = 0; i < array.length ;i++){
+            result[i] = Float.intBitsToFloat(array[i]);
+        }
+        return result;
+    }
+
+    private int[] arrayFloatToInt(float[] array){
+        int[] result = new int[array.length];
+        for (int i = 0; i < array.length ;i++){
+            result[i] = Float.floatToIntBits(array[i]);
+        }
+        return result;
+    }
+
+    @Override
+    public void load(CompoundNBT nbt) {
+        durability = nbt.getFloat(DURABILITY);
+        if(nbt.contains(DURABILITY_ARRAY))
+            armorPartsDurability = arrayIntToFloat(nbt.getIntArray(DURABILITY_ARRAY));
+        super.load(nbt);
+    }
+
+    @Override
+    public boolean save(CompoundNBT nbt) {
+        nbt.putFloat(DURABILITY, durability);
+        nbt.putIntArray(DURABILITY_ARRAY, arrayFloatToInt(armorPartsDurability));
+        return super.save(nbt);
+    }
+
+    private float[] getDefaultArmorPartArray(){
+        return new float[6];
+    }
+
+    public float getArmorPartDurability(BodyPart bodyPart){
+        if(armorPartsDurability.length == 0)
+            armorPartsDurability = getDefaultArmorPartArray();
+        int i = bodyPart.getId();
+        return armorPartsDurability[i];
+    }
+
+    public void setArmorPartDurability(BodyPart bodyPart, float value){
+        if(armorPartsDurability.length == 0)
+            armorPartsDurability = getDefaultArmorPartArray();
+        int i = bodyPart.getId();
+        armorPartsDurability[i] = value;
+    }
+
+    public void damageArmor(BodyPart bodyPart, float damage){
+        float durability = getArmorPartDurability(bodyPart) - damage;
+        if(durability < 0)
+            durability = 0;
+
+        setArmorPartDurability(bodyPart, durability);
+    }
+
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
         for(int j = 0; j < this.subEntities.length; ++j) {
             this.subEntities[j].setDurability(1);
         }
         this.doPlayerRide(player);
 
-        IPowerArmorPartData data = this.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
-        MinecraftUtils.sendMessage("" + data.getDurability(), this);
-        data.setDurability(data.getDurability() + 1);
+//        IPowerArmorPartData data = this.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
+//        MinecraftUtils.sendMessage("" + data.getDurability(), this);
+//        data.setDurability(data.getDurability() + 1);
+
+        MinecraftUtils.sendMessage("" + durability, this);
+        durability += 1;
+//        entityData.set(DATA_DURABILITY, entityData.get(DATA_DURABILITY) + 1);
+
+
 
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
