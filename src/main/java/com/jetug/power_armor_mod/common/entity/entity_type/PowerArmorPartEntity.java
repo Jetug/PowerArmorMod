@@ -4,13 +4,19 @@ import com.jetug.power_armor_mod.common.entity.capability.data.IPowerArmorPartDa
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import jdk.jfr.internal.LogLevel;
 import jdk.jfr.internal.Logger;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
@@ -21,6 +27,9 @@ import static com.jetug.power_armor_mod.common.entity.capability.data.DataManage
 import static jdk.jfr.internal.LogTag.JFR_SYSTEM;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
+    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(AbstractMinecartEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> DATA_DEFENCE = EntityDataManager.defineId(AbstractMinecartEntity.class, DataSerializers.FLOAT);
+
     public final EntitySize size;
     public final PowerArmorEntity parentMob;
     public final BodyPart bodyPart;
@@ -40,33 +49,37 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.events = events;
     }
 
-    public boolean hasArmor(){
+    public boolean  hasArmor(){
         return getDurability() > 0;
     }
 
-    public double getDurability(){
-        IPowerArmorPartData data = getPowerArmorPartData(this);
+    public float getDurability(){
+        return entityData.get(DATA_DURABILITY);
 
-        Logger.log(JFR_SYSTEM, LogLevel.DEBUG, "" + data.getDurability());
-        return data.getDurability();
+//        IPowerArmorPartData data = getPowerArmorPartData(this);
+//
+//        Logger.log(JFR_SYSTEM, LogLevel.DEBUG, "" + data.getDurability());
+//        return data.getDurability();
     }
 
-    public void setDurability(double value){
-        getPowerArmorPartData(this).setDurability(value);
+    public void setDurability(float value){
+        entityData.set(DATA_DURABILITY, value);
+
+//        getPowerArmorPartData(this).setDurability(value);
         if(events != null)
             events.onDurabilityChanged(value);
     }
 
-    public void damage(double damage){
-        IPowerArmorPartData data = getPowerArmorPartData(this);
+    public void damage(float damage){
+        //IPowerArmorPartData data = getPowerArmorPartData(this);
 
-        double durability = data.getDurability() - damage;
+        float durability = getDurability() - damage;
         if(durability < 0)
             durability = 0;
         setDurability(durability);
     }
 
-    private double getDefense(){
+    public double getDefense(){
         IPowerArmorPartData data = getPowerArmorPartData(this);
         if(data.getDefense() < 0)
             return 20;
@@ -83,10 +96,15 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     @Override
-    protected void defineSynchedData(){}
+    protected void defineSynchedData(){
+        this.entityData.define(DATA_DURABILITY,0f);
+        this.entityData.define(DATA_DEFENCE, 0f);
+    }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT p_70037_1_){}
+    protected void readAdditionalSaveData(CompoundNBT p_70037_1_){
+
+    }
 
     @Override
     protected void addAdditionalSaveData(CompoundNBT p_213281_1_){}

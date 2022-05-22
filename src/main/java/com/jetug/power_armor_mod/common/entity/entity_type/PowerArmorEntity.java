@@ -173,9 +173,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         this.doPlayerRide(player);
 
         IPowerArmorPartData data = this.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
-
         MinecraftUtils.sendMessage("" + data.getDurability(), this);
-
         data.setDurability(data.getDurability() + 1);
 
         return ActionResultType.sidedSuccess(this.level.isClientSide);
