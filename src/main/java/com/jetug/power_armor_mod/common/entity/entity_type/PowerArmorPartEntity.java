@@ -28,8 +28,8 @@ import static com.jetug.power_armor_mod.common.entity.capability.data.PowerArmor
 import static jdk.jfr.internal.LogTag.JFR_SYSTEM;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
-    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> DATA_DEFENCE = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
+//    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
+//    private static final DataParameter<Float> DATA_DEFENCE = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
 
     public final EntitySize size;
     public final PowerArmorEntity parentMob;
@@ -105,13 +105,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     @Override
     protected void defineSynchedData(){
-//        CompoundNBT nbt = serializeNBT();
-        float dur = 0f;
-//        if(nbt.contains(DURABILITY)){
-//            dur = nbt.getFloat(DURABILITY);
-//        }
-        this.entityData.define(DATA_DURABILITY,dur);
-        this.entityData.define(DATA_DEFENCE, 0f);
+//        this.entityData.define(DATA_DURABILITY,dur);
+//        this.entityData.define(DATA_DEFENCE, 0f);
     }
 
     @Override
@@ -128,18 +123,18 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         //nbt.putFloat(DURABILITY, entityData.get(DATA_DURABILITY));
         return nbt;
     }
-
-    @Override
-    public void load(CompoundNBT nbt) {
-        durability = nbt.getFloat(DURABILITY);
-        super.load(nbt);
-    }
-
-    @Override
-    public boolean save(CompoundNBT nbt) {
-        nbt.putFloat(DURABILITY, durability);
-        return super.save(nbt);
-    }
+//
+//    @Override
+//    public void load(CompoundNBT nbt) {
+//        durability = nbt.getFloat(DURABILITY);
+//        super.load(nbt);
+//    }
+//
+//    @Override
+//    public boolean save(CompoundNBT nbt) {
+//        nbt.putFloat(DURABILITY, durability);
+//        return super.save(nbt);
+//    }
 
     @Override
     protected void readAdditionalSaveData(CompoundNBT nbt){

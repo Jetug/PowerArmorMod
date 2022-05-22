@@ -66,12 +66,12 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        handleArmorDamage(entity.head_   , headLayer,    entity.head_.getDurability());
-        handleArmorDamage(entity.body    , bodyLayer,    entity.body.getDurability());
-        handleArmorDamage(entity.leftArm , leftArmLayer, entity.leftArm.getDurability());
-        handleArmorDamage(entity.rightArm, rightArmLayer,entity.rightArm.getDurability());
-        handleArmorDamage(entity.leftLeg , leftLegLayer, entity.leftLeg.getDurability());
-        handleArmorDamage(entity.rightLeg, rightLegLayer,entity.rightLeg.getDurability());
+        handleArmorDamage(entity.head_   , headLayer,     entity.getArmorPartDurability(BodyPart.HEAD) /*entity.head_   .getDurability()*/  );
+        handleArmorDamage(entity.body    , bodyLayer,     entity.getArmorPartDurability(BodyPart.HEAD) /*entity.body    .getDurability()*/  );
+        handleArmorDamage(entity.leftArm , leftArmLayer,  entity.getArmorPartDurability(BodyPart.HEAD) /*entity.leftArm .getDurability()*/  );
+        handleArmorDamage(entity.rightArm, rightArmLayer, entity.getArmorPartDurability(BodyPart.HEAD) /*entity.rightArm.getDurability()*/  );
+        handleArmorDamage(entity.leftLeg , leftLegLayer,  entity.getArmorPartDurability(BodyPart.HEAD) /*entity.leftLeg .getDurability()*/  );
+        handleArmorDamage(entity.rightLeg, rightLegLayer, entity.getArmorPartDurability(BodyPart.HEAD) /*entity.rightLeg.getDurability()*/  );
     }
 
     private void handleArmorDamage(PowerArmorPartEntity entity, ArmorPartLayer layer, double durability){
