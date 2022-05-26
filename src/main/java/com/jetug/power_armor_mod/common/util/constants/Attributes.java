@@ -17,4 +17,5 @@ public class Attributes {
             = new RangedAttribute(PowerArmorMod.MOD_ID + ".left_leg_armor_health", 10.0D, 0.0D, Double.MAX_VALUE).setSyncable(true);
     public static final Attribute RIGHT_LEG_ARMOR_HEALTH
             = new RangedAttribute(PowerArmorMod.MOD_ID + ".right_leg_armor_health", 10.0D, 0.0D, Double.MAX_VALUE).setSyncable(true);
+
 }

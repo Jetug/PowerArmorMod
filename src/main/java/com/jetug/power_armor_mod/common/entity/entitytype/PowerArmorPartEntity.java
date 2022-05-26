@@ -1,31 +1,23 @@
-package com.jetug.power_armor_mod.common.entity.entity_type;
+package com.jetug.power_armor_mod.common.entity.entitytype;
 
-import com.jetug.power_armor_mod.common.entity.capability.data.IPowerArmorPartData;
+import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import jdk.jfr.internal.LogLevel;
 import jdk.jfr.internal.Logger;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.entity.PartEntity;
 
-import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.*;
-import static com.jetug.power_armor_mod.common.entity.capability.data.PowerArmorPartData.DURABILITY;
-import static jdk.jfr.internal.LogTag.JFR_SYSTEM;
+import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPowerArmorPartData;
+import static com.jetug.power_armor_mod.common.capability.data.ArmorPartData.DURABILITY;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
@@ -54,41 +46,42 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         return getDurability() > 0;
     }
 
-    public float getDurability(){
-        float dur = parentMob.getArmorPartDurability(bodyPart);
+    public double getDurability(){
+        double dur = parentMob.getArmorDurability(bodyPart);
         return dur;
 
         //return durability;
         //return entityData.get(DATA_DURABILITY);
 
-//        IPowerArmorPartData data = getPowerArmorPartData(this);
-//
-//        Logger.log(JFR_SYSTEM, LogLevel.DEBUG, "" + data.getDurability());
+//        IArmorPartData data = getPowerArmorPartData(this);
+//        data.syncWithAll();
 //        return data.getDurability();
     }
 
-    public void setDurability(float value){
-        parentMob.setArmorPartDurability(bodyPart, value);
+    public void setDurability(double value){
+        parentMob.setArmorDurability(bodyPart, value);
 //        durability = value;
 //        entityData.set(DATA_DURABILITY, value);
 
-//        getPowerArmorPartData(this).setDurability(value);
+//        IArmorPartData data = getPowerArmorPartData(this);
+//        data.setDurability(value);
+//        data.syncWithAll();
         if(events != null)
             events.onDurabilityChanged(value);
     }
 
-    public void damage(float damage){
+    public void damage(double damage){
         parentMob.damageArmor(bodyPart, damage);
 
-        //IPowerArmorPartData data = getPowerArmorPartData(this);
-//        float durability = getDurability() - damage;
+        //IArmorPartData data = getPowerArmorPartData(this);
+//        double durability = getDurability() - damage;
 //        if(durability < 0)
 //            durability = 0;
 //        setDurability(durability);
     }
 
     public double getDefense(){
-        IPowerArmorPartData data = getPowerArmorPartData(this);
+        IArmorPartData data = getPowerArmorPartData(this);
         if(data.getDefense() < 0)
             return 20;
         return getPowerArmorPartData(this).getDefense();

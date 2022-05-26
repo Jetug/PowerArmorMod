@@ -1,6 +1,6 @@
-package com.jetug.power_armor_mod.common.entity.capability.data;
+package com.jetug.power_armor_mod.common.capability.data;
 
-public interface IPlayerData extends IData {
+public interface IPlayerData{
     boolean getIsInPowerArmor();
     void setIsInPowerArmor(boolean value);
     void copyFrom(IPlayerData source);

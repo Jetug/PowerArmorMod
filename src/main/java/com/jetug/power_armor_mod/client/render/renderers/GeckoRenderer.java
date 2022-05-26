@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.common.entity.entity_type.GeckoEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.GeckoEntity;
 import com.jetug.power_armor_mod.client.model.GeckoModel;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;

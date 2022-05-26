@@ -1,6 +1,5 @@
-package com.jetug.power_armor_mod.common.entity.capability.data;
+package com.jetug.power_armor_mod.common.capability.data;
 
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -21,8 +20,8 @@ public class DataManager {
         return player.getCapability(PlayerDataProvider.PLAYER_DATA, null).orElse(null);
     }
 
-    public static IPowerArmorPartData getPowerArmorPartData(Entity entity){
-        return entity.getCapability(PowerArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
+    public static IArmorPartData getPowerArmorPartData(Entity entity){
+        return entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA, null).orElse(null);
     }
 
     public static IPlayerData getClientPlayerData(){

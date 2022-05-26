@@ -1,12 +1,14 @@
 package com.jetug.power_armor_mod;
 
-import com.jetug.power_armor_mod.common.entity.capability.data.IPlayerData;
-import com.jetug.power_armor_mod.common.entity.capability.data.PlayerDataProvider;
-import com.jetug.power_armor_mod.common.entity.capability.data.PowerArmorDataProvider;
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.capability.data.PlayerDataProvider;
+import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.registery.ModEntityTypes;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
-import static com.jetug.power_armor_mod.common.entity.capability.data.DataManager.getPlayerData;
+import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(PowerArmorMod.MOD_ID)
@@ -50,8 +52,12 @@ public class PowerArmorMod
         Entity entity = event.getObject();
         if (entity instanceof PlayerEntity)
             PlayerDataProvider.attach(event);
-        else if(entity instanceof PowerArmorPartEntity || entity instanceof PowerArmorEntity)
-            PowerArmorDataProvider.attach(event);
+//        else if(entity instanceof PowerArmorPartEntity || entity instanceof PowerArmorEntity)
+//            ArmorDataProvider.attach(event);
+
+        if(event.getObject() instanceof LivingEntity) {
+            ArmorDataProvider.attach(event);
+        }
     }
 
     @SubscribeEvent
@@ -64,6 +70,7 @@ public class PowerArmorMod
 
     private void setup(final FMLCommonSetupEvent event) {
         PlayerDataProvider.register();
-        PowerArmorDataProvider.register();
+        ArmorDataProvider.register();
+        PacketHandler.register();
     }
 }

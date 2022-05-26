@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.registery;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.common.entity.entity_type.*;
+import com.jetug.power_armor_mod.common.entity.entitytype.*;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;

@@ -1,7 +1,5 @@
 package com.jetug.power_armor_mod.client.events;
 
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

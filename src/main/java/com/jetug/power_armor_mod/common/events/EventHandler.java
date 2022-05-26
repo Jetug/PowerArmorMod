@@ -1,12 +1,11 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.entity.capability.data.IPlayerData;
-import com.jetug.power_armor_mod.common.entity.capability.data.PlayerDataProvider;
+import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.capability.data.PlayerDataProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

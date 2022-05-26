@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.entity_type;
+package com.jetug.power_armor_mod.common.entity.entitytype;
 
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureEntity;

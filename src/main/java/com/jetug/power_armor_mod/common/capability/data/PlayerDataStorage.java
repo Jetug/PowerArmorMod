@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.capability.data;
+package com.jetug.power_armor_mod.common.capability.data;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;

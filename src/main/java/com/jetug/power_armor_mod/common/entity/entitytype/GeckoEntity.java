@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.entity_type;
+package com.jetug.power_armor_mod.common.entity.entitytype;
 
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -18,35 +18,20 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class PowerArmorBoss extends CreatureEntity implements IAnimatable
-{
+public class GeckoEntity extends CreatureEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
 
-    public PowerArmorBoss(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public GeckoEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
     }
-
-//    public PowerArmorBoss(EntityType<? extends PathfinderMob> type, Level worldIn) {
-//        super(type, worldIn);
-//        this.noCulling = true;
-//    }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return CreatureEntity.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 25.0D)
-                .add(Attributes.MAX_HEALTH, 11.0D)
+                .add(Attributes.MAX_HEALTH, 5.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
-    }
-
-    protected void doPlayerRide(PlayerEntity p_110237_1_) {
-        if (!this.level.isClientSide) {
-            p_110237_1_.yRot = this.yRot;
-            p_110237_1_.xRot = this.xRot;
-            p_110237_1_.startRiding(this);
-        }
-
     }
 
     @Override
@@ -59,7 +44,8 @@ public class PowerArmorBoss extends CreatureEntity implements IAnimatable
 
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<PowerArmorBoss>(this, "controller", 0, this::predicate);
+        AnimationController controller = new AnimationController<GeckoEntity>(this, "controller", 0, this::predicate);
+        //controller.animationSpeed = 3D;
         data.addAnimationController(controller);
     }
 
@@ -71,7 +57,7 @@ public class PowerArmorBoss extends CreatureEntity implements IAnimatable
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
-            event.getController().animationSpeed = 4.0D;
+            event.getController().animationSpeed = 3.0D;
             return PlayState.CONTINUE;
         }
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));

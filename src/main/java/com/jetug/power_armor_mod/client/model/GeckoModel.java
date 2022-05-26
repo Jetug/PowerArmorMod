@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.model;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.common.entity.entity_type.GeckoEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.GeckoEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;

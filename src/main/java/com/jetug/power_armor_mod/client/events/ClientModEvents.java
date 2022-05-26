@@ -28,8 +28,5 @@ public final class ClientModEvents {
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), PowerArmorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.TEST_ENTITY.get(), TestRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GECKO_ENTITY.get(), GeckoRenderer::new);
-        //RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.PLAYER_POWER_ARMOR.get(), PlayerPowerArmorRenderer::new);
-
-        //RenderingRegistry.registerEntityRenderingHandler(EntityType.PLAYER, TestRenderer::new);
     }
 }

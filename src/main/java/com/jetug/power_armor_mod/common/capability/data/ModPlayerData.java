@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.entity.capability.data;
+package com.jetug.power_armor_mod.common.capability.data;
 
 public class ModPlayerData implements IPlayerData{
     public static final String IS_IN_POWER_ARMOR = "isInPowerArmor";

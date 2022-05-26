@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

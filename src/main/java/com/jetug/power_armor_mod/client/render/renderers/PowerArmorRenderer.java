@@ -2,28 +2,17 @@ package com.jetug.power_armor_mod.client.render.renderers;
 
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.render.layers.*;
-import com.jetug.power_armor_mod.common.entity.entity_type.*;
+import com.jetug.power_armor_mod.common.entity.entitytype.*;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.mojang.blaze3d.matrix.*;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import jdk.jfr.internal.LogLevel;
-import jdk.jfr.internal.LogTag;
-import jdk.jfr.internal.Logger;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.util.*;
-import software.bernie.geckolib3.core.processor.AnimationProcessor;
-import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
 
-import static com.jetug.power_armor_mod.common.util.constants.Constants.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
-import static jdk.jfr.internal.LogTag.JFR_SYSTEM;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel powerArmorModel;
@@ -66,12 +55,12 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        handleArmorDamage(entity.head_   , headLayer,     entity.getArmorPartDurability(BodyPart.HEAD) /*entity.head_   .getDurability()*/  );
-        handleArmorDamage(entity.body    , bodyLayer,     entity.getArmorPartDurability(BodyPart.HEAD) /*entity.body    .getDurability()*/  );
-        handleArmorDamage(entity.leftArm , leftArmLayer,  entity.getArmorPartDurability(BodyPart.HEAD) /*entity.leftArm .getDurability()*/  );
-        handleArmorDamage(entity.rightArm, rightArmLayer, entity.getArmorPartDurability(BodyPart.HEAD) /*entity.rightArm.getDurability()*/  );
-        handleArmorDamage(entity.leftLeg , leftLegLayer,  entity.getArmorPartDurability(BodyPart.HEAD) /*entity.leftLeg .getDurability()*/  );
-        handleArmorDamage(entity.rightLeg, rightLegLayer, entity.getArmorPartDurability(BodyPart.HEAD) /*entity.rightLeg.getDurability()*/  );
+        handleArmorDamage(entity.head_   , headLayer,     /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.head_   .getDurability()  );
+        handleArmorDamage(entity.body    , bodyLayer,     /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.body    .getDurability()  );
+        handleArmorDamage(entity.leftArm , leftArmLayer,  /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.leftArm .getDurability()  );
+        handleArmorDamage(entity.rightArm, rightArmLayer, /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.rightArm.getDurability()  );
+        handleArmorDamage(entity.leftLeg , leftLegLayer,  /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.leftLeg .getDurability()  );
+        handleArmorDamage(entity.rightLeg, rightLegLayer, /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.rightLeg.getDurability()  );
     }
 
     private void handleArmorDamage(PowerArmorPartEntity entity, ArmorPartLayer layer, double durability){

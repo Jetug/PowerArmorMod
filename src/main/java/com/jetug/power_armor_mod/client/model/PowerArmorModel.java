@@ -1,15 +1,12 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
-
-import java.util.Optional;
 
 import static com.jetug.power_armor_mod.common.util.constants.Constants.HEAD_BONE_NAME;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;

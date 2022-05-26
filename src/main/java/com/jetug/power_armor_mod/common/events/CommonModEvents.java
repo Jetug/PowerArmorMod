@@ -1,9 +1,9 @@
 package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.common.entity.entity_type.GeckoEntity;
-import com.jetug.power_armor_mod.common.entity.entity_type.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.entity.entity_type.TestEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.GeckoEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.TestEntity;
 import com.jetug.power_armor_mod.common.registery.ModEntityTypes;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
