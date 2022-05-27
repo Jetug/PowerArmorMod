@@ -23,12 +23,12 @@ public class EventHandlerTest {
         PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
 
         //Jet
-        Entity entity = event.getEntity();
-        IArmorPartData cap = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        player.sendMessage(new StringTextComponent("Server : " + cap.getDurability()), player.getUUID());
-        cap.setDurability(cap.getDurability() + 1);
-        //cap.sync((ServerPlayerEntity) player);
-        cap.sync((ServerPlayerEntity)player);
+//        Entity entity = event.getEntity();
+//        IArmorPartData cap = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+//        player.sendMessage(new StringTextComponent("Server : " + cap.getDurability()), player.getUUID());
+//        cap.setDurability(, cap.getDurability() + 1);
+//        //cap.sync((ServerPlayerEntity) player);
+//        cap.sync((ServerPlayerEntity)player);
         ///
     }
 }

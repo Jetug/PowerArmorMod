@@ -3,7 +3,6 @@ package com.jetug.power_armor_mod.common.entity.entitytype;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
-import com.jetug.power_armor_mod.common.util.MinecraftUtils;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -12,7 +11,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -242,18 +240,19 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         return arrayIntToFloat(nbt.getIntArray(DURABILITY_ARRAY));
     }
 
-    public double getArmorDurability(BodyPart bodyPart){
+    public float getArmorDurability(BodyPart bodyPart){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        return cap.getDurability();
+        return cap.getDurability(bodyPart);
     }
 
-    public void setArmorDurability(BodyPart bodyPart, double value){
+
+    public void setArmorDurability(BodyPart bodyPart, float value){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        cap.setDurability(value);
+        cap.setDurability(bodyPart, value);
     }
 
-    public void damageArmor(BodyPart bodyPart, double damage){
-        double durability = getArmorDurability(bodyPart) - damage;
+    public void damageArmor(BodyPart bodyPart, float damage){
+        float durability = getArmorDurability(bodyPart) - damage;
         if(durability < 0)
             durability = 0;
 
@@ -411,11 +410,11 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     @Override
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        boolean bool = player.level.isClientSide();
-        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        player.sendMessage(new StringTextComponent("Combat Level : " + cap.getDurability()), player.getUUID());
-        cap.setDurability(cap.getDurability() + 1);
+//        PlayerEntity player = Minecraft.getInstance().player;
+//        boolean bool = player.level.isClientSide();
+//        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+//        player.sendMessage(new StringTextComponent("Combat Level : " + cap.getDurability()), player.getUUID());
+//        cap.setDurability(, cap.getDurability() + 1);
         //cap.sync((ServerPlayerEntity) player);
         //cap.syncWithAll();
         return super.hurt(p_70097_1_, p_70097_2_);

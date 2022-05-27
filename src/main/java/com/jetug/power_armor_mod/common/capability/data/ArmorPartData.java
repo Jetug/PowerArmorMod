@@ -3,19 +3,21 @@ package com.jetug.power_armor_mod.common.capability.data;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
-import net.minecraft.client.Minecraft;
+import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+
+import static com.jetug.power_armor_mod.common.util.extensions.Array.arrayFloatToInt;
+import static com.jetug.power_armor_mod.common.util.extensions.Array.arrayIntToFloat;
 
 public class ArmorPartData implements IArmorPartData {
     public static final String DURABILITY = "durability";
     public static final String DEFENSE = "defense";
+    private static final int size = 6;
 
     private final Entity entity;
-    private double durability;
+    private float[] durability = new float[size];
     private double defense;
 
     public ArmorPartData(Entity entity) {
@@ -23,13 +25,26 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
-    public double getDurability() {
+    public float[] getDurabilityArray() {
         return durability;
     }
 
     @Override
-    public void setDurability(double value) {
-        durability = value;
+    public void setDurabilityArray(float[] array) {
+        if(array != null && array.length == size)
+            durability = array;
+    }
+
+    @Override
+    public float getDurability(BodyPart part) {
+        if (durability == null || durability.length != size)
+            durability = new float[size];
+        return durability[part.getId()];
+    }
+
+    @Override
+    public void setDurability(BodyPart part, float value) {
+        durability[part.getId()] = value;
     }
 
     @Override
@@ -49,22 +64,29 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public void copyFrom(IArmorPartData source) {
-        durability = source.getDurability();
+        durability = source.getDurabilityArray();
         defense = source.getDefense();
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        CompoundNBT data = new CompoundNBT();
-        data.putDouble(DURABILITY, durability);
-        data.putDouble(DEFENSE, defense);
-        return data;
+        CompoundNBT nbt = new CompoundNBT();
+//        nbt.putDouble(DURABILITY, durability);
+//        nbt.putDouble(DEFENSE, defense);
+
+        nbt.putIntArray(ArmorPartData.DURABILITY, arrayFloatToInt(getDurabilityArray()));
+        nbt.putDouble(ArmorPartData.DEFENSE, getDefense());
+
+        return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT data) {
-        durability = data.getDouble(DURABILITY);
-        defense = data.getDouble(DEFENSE);
+    public void deserializeNBT(CompoundNBT nbt) {
+        durability = arrayIntToFloat((nbt).getIntArray(ArmorPartData.DURABILITY));
+        defense = (nbt).getDouble(ArmorPartData.DEFENSE);
+//
+//        durability = data.getDouble(DURABILITY);
+//        defense = data.getDouble(DEFENSE);
     }
 
     @Override

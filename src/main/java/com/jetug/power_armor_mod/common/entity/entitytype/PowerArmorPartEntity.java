@@ -46,7 +46,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         return getDurability() > 0;
     }
 
-    public double getDurability(){
+    public float getDurability(){
         //double dur = parentMob.getArmorDurability(bodyPart);
         return parentMob.getArmorDurability(bodyPart);
 
@@ -57,7 +57,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //        return data.getDurability();
     }
 
-    public void setDurability(double value){
+    public void setDurability(float value){
         parentMob.setArmorDurability(bodyPart, value);
 
 //        IArmorPartData data = getPowerArmorPartData(this);
@@ -67,7 +67,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
             events.onDurabilityChanged(value);
     }
 
-    public void damage(double damage){
+    public void damage(float damage){
         parentMob.damageArmor(bodyPart, damage);
 
         //IArmorPartData data = getPowerArmorPartData(this);
