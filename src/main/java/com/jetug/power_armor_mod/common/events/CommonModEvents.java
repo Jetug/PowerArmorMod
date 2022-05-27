@@ -16,6 +16,5 @@ public class CommonModEvents {
         event.put(ModEntityTypes.POWER_ARMOR.get(), PowerArmorEntity.createAttributes().build());
         event.put(ModEntityTypes.TEST_ENTITY.get(), TestEntity.createAttributes().build());
         event.put(ModEntityTypes.GECKO_ENTITY.get(), GeckoEntity.createAttributes().build());
-        //event.put(ModEntityTypes.PLAYER_POWER_ARMOR.get(), PlayerPowerArmorEntity.createAttributes().build());
     }
 }

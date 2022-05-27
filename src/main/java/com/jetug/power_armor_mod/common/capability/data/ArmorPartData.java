@@ -43,6 +43,11 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
+    public Entity getEntity() {
+        return entity;
+    }
+
+    @Override
     public void copyFrom(IArmorPartData source) {
         durability = source.getDurability();
         defense = source.getDefense();
@@ -51,23 +56,23 @@ public class ArmorPartData implements IArmorPartData {
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT data = new CompoundNBT();
-        data.putDouble("dur", durability);
-        data.putDouble("def", defense);
+        data.putDouble(DURABILITY, durability);
+        data.putDouble(DEFENSE, defense);
         return data;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT data) {
-        durability = data.getDouble("dur");
-        defense = data.getDouble("def");
+        durability = data.getDouble(DURABILITY);
+        defense = data.getDouble(DEFENSE);
     }
 
     @Override
     public void sync(ServerPlayerEntity player) {
-        boolean isClientSide = player.level.isClientSide;
-        PacketHandler.sendToAllPlayers(new ArmorPartPacket(serializeNBT()), player.server);
-//        ArmorPartPacket packet = new ArmorPartPacket(serializeNBT());
-//        PacketHandler.sendTo(packet, player);
+//        boolean isClientSide = player.level.isClientSide;
+//        PacketHandler.sendToAllPlayers(new ArmorPartPacket(this), player.server);
+        ArmorPartPacket packet = new ArmorPartPacket(this);
+        PacketHandler.sendTo(packet, player);
     }
 
     @Override

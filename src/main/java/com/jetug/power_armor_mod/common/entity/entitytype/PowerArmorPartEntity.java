@@ -47,25 +47,22 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     public double getDurability(){
-        double dur = parentMob.getArmorDurability(bodyPart);
-        return dur;
+        //double dur = parentMob.getArmorDurability(bodyPart);
+        return parentMob.getArmorDurability(bodyPart);
 
         //return durability;
         //return entityData.get(DATA_DURABILITY);
 
 //        IArmorPartData data = getPowerArmorPartData(this);
-//        data.syncWithAll();
 //        return data.getDurability();
     }
 
     public void setDurability(double value){
         parentMob.setArmorDurability(bodyPart, value);
-//        durability = value;
-//        entityData.set(DATA_DURABILITY, value);
 
 //        IArmorPartData data = getPowerArmorPartData(this);
 //        data.setDurability(value);
-//        data.syncWithAll();
+
         if(events != null)
             events.onDurabilityChanged(value);
     }
@@ -101,32 +98,20 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //        this.entityData.define(DATA_DURABILITY,dur);
 //        this.entityData.define(DATA_DEFENCE, 0f);
     }
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        super.deserializeNBT(nbt);
-        durability = nbt.getFloat(DURABILITY);
-        //entityData.set(DATA_DURABILITY, nbt.getFloat(DURABILITY));
-    }
-
-    @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = super.serializeNBT();
-        nbt.putFloat(DURABILITY, durability);
-        //nbt.putFloat(DURABILITY, entityData.get(DATA_DURABILITY));
-        return nbt;
-    }
 //
 //    @Override
-//    public void load(CompoundNBT nbt) {
+//    public void deserializeNBT(CompoundNBT nbt) {
+//        super.deserializeNBT(nbt);
 //        durability = nbt.getFloat(DURABILITY);
-//        super.load(nbt);
+//        //entityData.set(DATA_DURABILITY, nbt.getFloat(DURABILITY));
 //    }
 //
 //    @Override
-//    public boolean save(CompoundNBT nbt) {
+//    public CompoundNBT serializeNBT() {
+//        CompoundNBT nbt = super.serializeNBT();
 //        nbt.putFloat(DURABILITY, durability);
-//        return super.save(nbt);
+//        //nbt.putFloat(DURABILITY, entityData.get(DATA_DURABILITY));
+//        return nbt;
 //    }
 
     @Override

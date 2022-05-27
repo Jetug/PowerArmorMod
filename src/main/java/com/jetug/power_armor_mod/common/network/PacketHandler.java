@@ -25,9 +25,14 @@ public class PacketHandler {
 		int disc = 0;
 		HANDLER.registerMessage(disc++,
 				ArmorPartPacket.class,
-				ArmorPartPacket::encode,
-				ArmorPartPacket::decode,
-				ArmorPartPacket.Handler::handle);
+				ArmorPartPacket::write,
+				p -> {
+					final ArmorPartPacket msg = new ArmorPartPacket();
+					msg.read(p);
+					return msg;
+				},
+				ArmorPartPacket::handle);
+
 		HANDLER.registerMessage(disc++,
 				ArmorPartClientPacket.class,
 				ArmorPartClientPacket::encode,

@@ -15,14 +15,6 @@ import software.bernie.example.registry.EntityRegistry;
 
 @Mod.EventBusSubscriber(modid = PowerArmorMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientModEvents {
-    private ClientModEvents(){}
-
-    @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event){
-        //event.registerLayerDefinition(PowerArmorModel.LAYER_LOCATION, PowerArmorModel::createBodyLayer);
-        //event.registerLayerDefinition(TestModel.LAYER_LOCATION, TestModel::createBodyLayer);
-    }
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), PowerArmorRenderer::new);

@@ -22,16 +22,4 @@ public class EntityRegisterClient
             player.setInvisible(true);
         }
     }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void onRenderLiving(RenderLivingEvent event)
-    {
-//        Entity entity = event.getEntity();
-//
-//        if(entity instanceof PowerArmorEntity){
-//            event.getRenderer()
-//            ((PowerArmorEntity)entity).
-//        }
-    }
 }

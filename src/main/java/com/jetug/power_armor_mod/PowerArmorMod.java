@@ -55,7 +55,7 @@ public class PowerArmorMod
 //        else if(entity instanceof PowerArmorPartEntity || entity instanceof PowerArmorEntity)
 //            ArmorDataProvider.attach(event);
 
-        if(event.getObject() instanceof LivingEntity) {
+        if(event.getObject() instanceof Entity) {
             ArmorDataProvider.attach(event);
         }
     }

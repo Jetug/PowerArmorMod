@@ -248,9 +248,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
     public void setArmorDurability(BodyPart bodyPart, double value){
-//        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-//        cap.setDurability(value);
-//        cap.syncWithAll();
+        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+        cap.setDurability(value);
     }
 
     public void damageArmor(BodyPart bodyPart, double damage){
@@ -418,7 +417,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         player.sendMessage(new StringTextComponent("Combat Level : " + cap.getDurability()), player.getUUID());
         cap.setDurability(cap.getDurability() + 1);
         //cap.sync((ServerPlayerEntity) player);
-        cap.syncWithAll();
+        //cap.syncWithAll();
         return super.hurt(p_70097_1_, p_70097_2_);
     }
 
