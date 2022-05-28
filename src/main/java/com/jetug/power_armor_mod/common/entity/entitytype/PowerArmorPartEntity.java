@@ -51,23 +51,27 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public float getDurability(){
         //double dur = parentMob.getArmorDurability(bodyPart);
-        //return parentMob.getArmorDurability(bodyPart);
+        return parentMob.getArmorDurability(bodyPart);
 
         //return durability;
 //        return entityData.get(DATA_DURABILITY);
 
-        IArmorPartData data = getPowerArmorPartData(this);
-        return (float) data.getDefense();
+//        IArmorPartData data = getPowerArmorPartData(this);
+//        float dur = data.getDurability();
+//        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("getDurability: " + dur + " isClientSide: " + level.isClientSide), getUUID());
+//        return dur;
     }
 
     public void setDurability(float value){
-        //parentMob.setArmorDurability(bodyPart, value);
+        parentMob.setArmorDurability(bodyPart, value);
 
-        IArmorPartData data = getPowerArmorPartData(this);
-        data.setDefense(value);
+//        IArmorPartData data = getPowerArmorPartData(this);
+//        data.setDurability(value);
+//        data.syncWithServer();
 
+        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("setDurability: " + value + " isClientSide: " + level.isClientSide), getUUID());
 
- //       entityData.set(DATA_DURABILITY, value);
+        //       entityData.set(DATA_DURABILITY, value);
 
         if(events != null)
             events.onDurabilityChanged(value);
@@ -76,7 +80,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public void damage(float damage){
         //parentMob.damageArmor(bodyPart, damage);
 
-        //IArmorPartData data = getPowerArmorPartData(this);
         float durability = getDurability() - damage;
         if(durability < 0)
             durability = 0;
@@ -139,7 +142,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public boolean hurt(DamageSource damageSource, float damage) {
         PlayerEntity player = Minecraft.getInstance().player;
         damage(damage);
-        player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability()), this.getUUID());
+        player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide), this.getUUID());
         return this.isInvulnerableTo(damageSource) ? false : this.parentMob.hurt(this, damageSource, damage);
     }
 

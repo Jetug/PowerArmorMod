@@ -35,9 +35,13 @@ public class PacketHandler {
 
 		HANDLER.registerMessage(disc++,
 				ArmorPartClientPacket.class,
-				ArmorPartClientPacket::encode,
-				ArmorPartClientPacket::decode,
-				ArmorPartClientPacket.Handler::handle);
+				ArmorPartClientPacket::write,
+				p -> {
+					final ArmorPartClientPacket msg = new ArmorPartClientPacket();
+					msg.read(p);
+					return msg;
+				},
+				ArmorPartClientPacket::handle);
 	}
 	
 	/**

@@ -243,14 +243,16 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     public float getArmorDurability(BodyPart bodyPart){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
         //return (float) cap.getDefense();
-        return cap.getDurability(bodyPart);
+        return cap.getDurability();
     }
 
     public void setArmorDurability(BodyPart bodyPart, float value){
         if(level.isClientSide) {
             IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
             //cap.setDefense(value);
-            cap.setDurability(bodyPart, value);
+            cap.setDurability(value);
+            if(level.isClientSide)
+                cap.syncWithServer();
         }
     }
 
@@ -281,7 +283,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 //            IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
 //            player.sendMessage(new StringTextComponent("Combat Level : " + cap.getDurability()), player.getUUID());
 //            cap.setDurability(cap.getDurability() + 1);
-//            cap.sync((ServerPlayerEntity) player);
+//            cap.syncWithClient((ServerPlayerEntity) player);
 //        }
         //cap.syncWithAll();
 
@@ -418,8 +420,11 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 //        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
 //        player.sendMessage(new StringTextComponent("Combat Level : " + cap.getDurability()), player.getUUID());
 //        cap.setDurability(, cap.getDurability() + 1);
-        //cap.sync((ServerPlayerEntity) player);
+        //cap.syncWithClient((ServerPlayerEntity) player);
         //cap.syncWithAll();
+
+        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("OnHurt: " + " isClientSide: " + level.isClientSide), getUUID());
+
         return super.hurt(p_70097_1_, p_70097_2_);
     }
 

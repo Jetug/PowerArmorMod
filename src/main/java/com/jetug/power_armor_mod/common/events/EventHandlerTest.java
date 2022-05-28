@@ -29,8 +29,8 @@ public class EventHandlerTest {
 //        IArmorPartData cap = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
 //        player.sendMessage(new StringTextComponent("Server : " + cap.getDurability()), player.getUUID());
 //        cap.setDurability(, cap.getDurability() + 1);
-//        //cap.sync((ServerPlayerEntity) player);
-//        cap.sync((ServerPlayerEntity)player);
+//        //cap.syncWithClient((ServerPlayerEntity) player);
+//        cap.syncWithClient((ServerPlayerEntity)player);
         ///
 
 

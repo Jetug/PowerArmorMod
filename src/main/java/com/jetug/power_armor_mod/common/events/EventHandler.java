@@ -47,18 +47,16 @@ public class EventHandler {
         final Entity entity = event.getTarget();
         final PlayerEntity playerEntity = event.getPlayer();
         if (playerEntity instanceof ServerPlayerEntity) {
-
             if(entity instanceof PowerArmorEntity){
+//                for (PowerArmorPartEntity part : ((PowerArmorEntity) entity).subEntities) {
+//                    part.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
+//                            PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
+//                    );
+//                }
 
-                for (PowerArmorPartEntity part : ((PowerArmorEntity) entity).subEntities) {
-                    part.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
-                            PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
-                    );
-                }
-
-//                entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
-//                        PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
-//                );
+                entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
+                        PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
+                );
             }
 
 

@@ -19,7 +19,7 @@ public class ArmorPartPacket {
 
 	private int entityID = -1;
 	private CompoundNBT nbt = null;
-	
+
 
 	public ArmorPartPacket(final IArmorPartData capability) {
 		this.capability = capability;
@@ -33,7 +33,7 @@ public class ArmorPartPacket {
 		buffer.writeInt(capability.getEntity().getId());
 		buffer.writeNbt(capability.serializeNBT());
 	}
-	
+
 	public ArmorPartPacket read(PacketBuffer buffer) {
 		entityID = buffer.readInt();
 		nbt = buffer.readNbt();
@@ -45,6 +45,7 @@ public class ArmorPartPacket {
 			LOGGER.error("Capability message sent to the wrong side!", new Exception());
 		else {
 			final Entity entity = Minecraft.getInstance().player.level.getEntity(entityID);
+
 			if (entity != null) {
 				entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(cap ->
 						cap.deserializeNBT(nbt)

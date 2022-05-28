@@ -17,7 +17,7 @@ public class ArmorPartData implements IArmorPartData {
     private static final int size = 6;
 
     private final Entity entity;
-    private float[] durability = new float[size];
+    private float durability;
     private double defense;
 
     public ArmorPartData(Entity entity) {
@@ -36,15 +36,13 @@ public class ArmorPartData implements IArmorPartData {
 //    }
 
     @Override
-    public float getDurability(BodyPart part) {
-        if (durability == null || durability.length != size)
-            durability = new float[size];
-        return durability[part.getId()];
+    public float getDurability() {
+        return durability;
     }
 
     @Override
-    public void setDurability(BodyPart part, float value) {
-        durability[part.getId()] = value;
+    public void setDurability(float value) {
+        durability = value;
     }
 
     @Override
@@ -74,7 +72,7 @@ public class ArmorPartData implements IArmorPartData {
 //        nbt.putDouble(DURABILITY, durability);
 //        nbt.putDouble(DEFENSE, defense);
 
-        nbt.putIntArray(ArmorPartData.DURABILITY, arrayFloatToInt(durability));
+        nbt.putFloat(DURABILITY, durability);
         nbt.putDouble(DEFENSE, defense);
 
         return nbt;
@@ -82,7 +80,7 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        durability = arrayIntToFloat((nbt).getIntArray(ArmorPartData.DURABILITY));
+        durability = nbt.getFloat(ArmorPartData.DURABILITY);
         defense = nbt.getDouble(ArmorPartData.DEFENSE);
 //
 //        durability = data.getDouble(DURABILITY);
@@ -90,7 +88,7 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
-    public void sync(ServerPlayerEntity player) {
+    public void syncWithClient(ServerPlayerEntity player) {
         PacketHandler.sendTo(new ArmorPartPacket(this), player);
 
 //        boolean isClientSide = player.level.isClientSide;
@@ -100,16 +98,12 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
+    public void syncWithServer() {
+        PacketHandler.sendToServer(new ArmorPartClientPacket(this));
+    }
+
+    @Override
     public boolean syncWithAll() {
-//        World world = Minecraft.getInstance().level;
-//        if(world instanceof ServerWorld) {
-//            PacketHandler.sendToAllPlayers(new ArmorPartPacket(serializeNBT()), world.getServer());
-//            return true;
-//        }
-       //PacketHandler.sendToAllPlayers(new ArmorPartPacket(serializeNBT()), player.server);
-
-        PacketHandler.sendToServer(new ArmorPartClientPacket(serializeNBT()));
-
         return false;
     }
 }

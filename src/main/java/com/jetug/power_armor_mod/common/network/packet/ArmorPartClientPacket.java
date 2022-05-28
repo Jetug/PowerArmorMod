@@ -1,40 +1,57 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+import static software.bernie.geckolib3.GeckoLib.LOGGER;
+
 public class ArmorPartClientPacket{
-    private final CompoundNBT nbt;
+    IArmorPartData capability = null;
 
-    public ArmorPartClientPacket(CompoundNBT nbt) {
-        this.nbt = nbt;
+    private int entityID = -1;
+    private CompoundNBT nbt = null;
+
+
+    public ArmorPartClientPacket(final IArmorPartData capability) {
+        this.capability = capability;
     }
 
-    public static void encode(ArmorPartClientPacket msg, PacketBuffer buf) {
-        buf.writeNbt(msg.nbt);
+    public ArmorPartClientPacket() {
+
     }
 
-    public static ArmorPartClientPacket decode(PacketBuffer buf) {
-        return new ArmorPartClientPacket(buf.readNbt());
+    public void write(PacketBuffer buffer) {
+        buffer.writeInt(capability.getEntity().getId());
+        buffer.writeNbt(capability.serializeNBT());
     }
 
-    public static class Handler{
-        public static void handle(final ArmorPartClientPacket msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> {
+    public ArmorPartClientPacket read(PacketBuffer buffer) {
+        entityID = buffer.readInt();
+        nbt = buffer.readNbt();
+        return this;
+    }
 
-                ServerPlayerEntity player = ctx.get().getSender();
+    public void handle(final Supplier<NetworkEvent.Context> contextSupplier) {
+        //contextSupplier.get().enqueueWork(() -> {
+        Entity entity = contextSupplier.get().getSender().level.getEntity(entityID);
 
-                player.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(cap -> cap.deserializeNBT(msg.nbt));
-                PacketHandler.sendTo(new ArmorPartClientPacket(msg.nbt), player);
-            });
-            ctx.get().setPacketHandled(true);
+        if (entity != null) {
+            entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(cap ->
+                    cap.deserializeNBT(nbt)
+            );
         }
+       // });
+
+        contextSupplier.get().setPacketHandled(true);
     }
 }
