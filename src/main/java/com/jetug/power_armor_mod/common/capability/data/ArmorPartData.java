@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.capability.data;
 
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorPartEntity;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
@@ -7,6 +8,8 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+
+import java.util.ArrayList;
 
 public class ArmorPartData implements IArmorPartData {
     public static final String DURABILITY = "durability";
@@ -23,9 +26,18 @@ public class ArmorPartData implements IArmorPartData {
     private float rightArm;
     private float leftLeg ;
     private float rightLeg;
+    private final ArrayList<Float> durabilityArray = new ArrayList<Float>(){};
+
 
     public ArmorPartData(Entity entity) {
         this.entity = entity;
+        durabilityArray.add(head    );
+        durabilityArray.add(body    );
+        durabilityArray.add(leftArm );
+        durabilityArray.add(rightArm);
+        durabilityArray.add(leftLeg );
+        durabilityArray.add(rightLeg);
+
     }
 
 //    @Override
@@ -41,52 +53,55 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public float getDurability(BodyPart part) {
-        switch (part){
-            case HEAD:
-                return head;
-                //break;
-            case BODY:
-                return body;
-                //break;
-            case LEFT_ARM:
-                return leftArm;
-                //break;
-            case RIGHT_ARM:
-                return rightArm;
-                //break;
-            case LEFT_LEG:
-                return leftLeg;
-                //break;
-            case RIGHT_LEG:
-                return rightLeg;
-                //break;
-        }
-        return head;
+        return durabilityArray.get(part.getId());
+
+//        switch (part){
+//            case HEAD:
+//                return head;
+//                //break;
+//            case BODY:
+//                return body;
+//                //break;
+//            case LEFT_ARM:
+//                return leftArm;
+//                //break;
+//            case RIGHT_ARM:
+//                return rightArm;
+//                //break;
+//            case LEFT_LEG:
+//                return leftLeg;
+//                //break;
+//            case RIGHT_LEG:
+//                return rightLeg;
+//                //break;
+//        }
+//        return head;
     }
 
     @Override
     public void setDurability(BodyPart part, float value) {
-        switch (part){
-            case HEAD:
-                head = value;
-                break;
-            case BODY:
-                body = value;
-                break;
-            case LEFT_ARM:
-                leftArm = value;
-                break;
-            case RIGHT_ARM:
-                rightArm = value;
-                break;
-            case LEFT_LEG:
-                leftLeg = value;
-                break;
-            case RIGHT_LEG:
-                rightLeg = value;
-                break;
-        }
-        durability = value;
+        durabilityArray.set(part.getId(), value);
+//        switch (part){
+//            case HEAD:
+//                head = value;
+//                break;
+//            case BODY:
+//                body = value;
+//                break;
+//            case LEFT_ARM:
+//                leftArm = value;
+//                break;
+//            case RIGHT_ARM:
+//                rightArm = value;
+//                break;
+//            case LEFT_LEG:
+//                leftLeg = value;
+//                break;
+//            case RIGHT_LEG:
+//                rightLeg = value;
+//                break;
+//        }
+//        durability = value;
     }
 
     @Override
@@ -115,12 +130,12 @@ public class ArmorPartData implements IArmorPartData {
         CompoundNBT nbt = new CompoundNBT();
 
         int count = -1;
-        nbt.putFloat(DURABILITY + count++, head     );
-        nbt.putFloat(DURABILITY + count++, body     );
-        nbt.putFloat(DURABILITY + count++, leftArm  );
-        nbt.putFloat(DURABILITY + count++, rightArm );
-        nbt.putFloat(DURABILITY + count++, leftLeg  );
-        nbt.putFloat(DURABILITY + count++, rightLeg );
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
 
         //nbt.putFloat(DURABILITY, durability);
         nbt.putDouble(DEFENSE, defense);
@@ -132,12 +147,12 @@ public class ArmorPartData implements IArmorPartData {
     public void deserializeNBT(CompoundNBT nbt) {
         int count = -1;
 
-        head     = nbt.getFloat(ArmorPartData.DURABILITY + count++);
-        body     = nbt.getFloat(ArmorPartData.DURABILITY + count++);
-        leftArm  = nbt.getFloat(ArmorPartData.DURABILITY + count++);
-        rightArm = nbt.getFloat(ArmorPartData.DURABILITY + count++);
-        leftLeg  = nbt.getFloat(ArmorPartData.DURABILITY + count++);
-        rightLeg = nbt.getFloat(ArmorPartData.DURABILITY + count++);
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
 
         //durability = nbt.getFloat(ArmorPartData.DURABILITY);
         defense = nbt.getDouble(ArmorPartData.DEFENSE);
