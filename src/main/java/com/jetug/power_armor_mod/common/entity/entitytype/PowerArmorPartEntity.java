@@ -31,7 +31,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public final BodyPart bodyPart;
 
     private ArmorPartsEvents events = null;
-    private float durability;
 
     public PowerArmorPartEntity(PowerArmorEntity parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
@@ -45,45 +44,23 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.events = events;
     }
 
-    public boolean  hasArmor(){
+    public boolean hasArmor(){
         return getDurability() > 0;
     }
 
     public float getDurability(){
-        //double dur = parentMob.getArmorDurability(bodyPart);
         return parentMob.getArmorDurability(bodyPart);
-
-        //return durability;
-//        return entityData.get(DATA_DURABILITY);
-
-//        IArmorPartData data = getPowerArmorPartData(this);
-//        float dur = data.getDurability();
-//        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("getDurability: " + dur + " isClientSide: " + level.isClientSide), getUUID());
-//        return dur;
     }
 
     public void setDurability(float value){
         parentMob.setArmorDurability(bodyPart, value);
-
-//        IArmorPartData data = getPowerArmorPartData(this);
-//        data.setDurability(value);
-//        data.syncWithServer();
-
-        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("setDurability: " + value + " isClientSide: " + level.isClientSide), getUUID());
-
-        //       entityData.set(DATA_DURABILITY, value);
 
         if(events != null)
             events.onDurabilityChanged(value);
     }
 
     public void damage(float damage){
-        //parentMob.damageArmor(bodyPart, damage);
-
-        float durability = getDurability() - damage;
-        if(durability < 0)
-            durability = 0;
-        setDurability(durability);
+        parentMob.damageArmor(bodyPart, damage);
     }
 
     public double getDefense(){
@@ -107,31 +84,12 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.entityData.define(DATA_DURABILITY, 0f);
         this.entityData.define(DATA_DEFENCE, 0f);
     }
-//
-//    @Override
-//    public void deserializeNBT(CompoundNBT nbt) {
-//        super.deserializeNBT(nbt);
-//        durability = nbt.getFloat(DURABILITY);
-//        //entityData.set(DATA_DURABILITY, nbt.getFloat(DURABILITY));
-//    }
-//
-//    @Override
-//    public CompoundNBT serializeNBT() {
-//        CompoundNBT nbt = super.serializeNBT();
-//        nbt.putFloat(DURABILITY, durability);
-//        //nbt.putFloat(DURABILITY, entityData.get(DATA_DURABILITY));
-//        return nbt;
-//    }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT nbt){
-        //entityData.set(DATA_DURABILITY, nbt.getFloat(DURABILITY));
-    }
+    protected void readAdditionalSaveData(CompoundNBT nbt){}
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT nbt){
-        //nbt.putFloat(DURABILITY, entityData.get(DATA_DURABILITY));
-    }
+    protected void addAdditionalSaveData(CompoundNBT nbt){}
 
     @Override
     public boolean isPickable() {

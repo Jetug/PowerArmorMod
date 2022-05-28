@@ -200,8 +200,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         entityData.define(DATA_DURABILITY_LIST, nbt);
     }
 
-    
-
     private float[] arrayIntToFloat(int[] array){
         float[] result = new float[array.length];
         for (int i = 0; i < array.length ;i++){
@@ -209,16 +207,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         }
         return result;
     }
-
-//    private void arrayIntToFloat(int[] array1, float array2[]){
-//        for (int i = 0; i < array1.length ;i++){
-//            float val = Float.intBitsToFloat(array1[i]);
-//            if(val == 0)
-//                val = 1.0f;
-//            array2[i] = val;
-//        }
-//    }
-
 
     private int[] arrayFloatToInt(float[] array){
         int[] result = new int[array.length];
@@ -231,15 +219,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         return result;
     }
 
-    private float[] getDefaultArmorPartArray(){
-        return new float[6];//{1,1,1,1,1,1};
-    }
-
-    public float[] getDurabilityArray(){
-        CompoundNBT nbt = entityData.get(DATA_DURABILITY_LIST);
-        return arrayIntToFloat(nbt.getIntArray(DURABILITY_ARRAY));
-    }
-
     public float getArmorDurability(BodyPart bodyPart){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
         cap.syncFromServer();
@@ -249,7 +228,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     public void setArmorDurability(BodyPart bodyPart, float value){
         if(level.isClientSide) {
             IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-            //cap.setDefense(value);
             cap.setDurability(bodyPart, value);
             if(level.isClientSide)
                 cap.syncWithServer();

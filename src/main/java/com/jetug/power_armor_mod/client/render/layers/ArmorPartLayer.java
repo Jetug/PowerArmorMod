@@ -3,14 +3,17 @@ package com.jetug.power_armor_mod.client.render.layers;
 import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import java.util.ArrayList;
 
@@ -37,7 +40,7 @@ public class ArmorPartLayer extends GeoLayerRenderer {
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         PowerArmorEntity entity = (PowerArmorEntity)entityLivingBaseIn;
-        if(entity.getArmorPart(bodyPart).hasArmor()) {
+        if(entity.getArmorPart(bodyPart).hasArmor() && !entity.isInvisible()) {
             RenderType cameo = RenderType.armorCutoutNoCull(texture);
             matrixStackIn.pushPose();
             //Move or scale the model as you see fit

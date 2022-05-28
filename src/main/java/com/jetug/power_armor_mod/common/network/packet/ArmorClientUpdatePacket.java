@@ -15,7 +15,7 @@ public class ArmorClientUpdatePacket{
     IArmorPartData capability = null;
 
     private int entityID = -1;
-    private CompoundNBT nbt = null;
+    //private CompoundNBT nbt = null;
 
     public ArmorClientUpdatePacket(final IArmorPartData capability) {
         this.capability = capability;
@@ -25,12 +25,10 @@ public class ArmorClientUpdatePacket{
 
     public void write(PacketBuffer buffer) {
         buffer.writeInt(capability.getEntity().getId());
-        buffer.writeNbt(capability.serializeNBT());
     }
 
     public ArmorClientUpdatePacket read(PacketBuffer buffer) {
         entityID = buffer.readInt();
-        nbt = buffer.readNbt();
         return this;
     }
 
