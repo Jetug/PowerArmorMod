@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.network;
 
+import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -42,6 +43,16 @@ public class PacketHandler {
 					return msg;
 				},
 				ArmorPartClientPacket::handle);
+
+		HANDLER.registerMessage(disc++,
+				ArmorClientUpdatePacket.class,
+				ArmorClientUpdatePacket::write,
+				p -> {
+					final ArmorClientUpdatePacket msg = new ArmorClientUpdatePacket();
+					msg.read(p);
+					return msg;
+				},
+				ArmorClientUpdatePacket::handle);
 	}
 	
 	/**

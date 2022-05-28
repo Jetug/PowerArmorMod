@@ -25,5 +25,7 @@ public interface IArmorPartData {
 
     public void syncWithServer();
 
+    public void syncFromServer();
+
     public boolean syncWithAll();
 }

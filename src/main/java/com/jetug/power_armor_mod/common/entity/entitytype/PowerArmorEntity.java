@@ -242,7 +242,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public float getArmorDurability(BodyPart bodyPart){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        //return (float) cap.getDefense();
+        cap.syncFromServer();
         return cap.getDurability(bodyPart);
     }
 

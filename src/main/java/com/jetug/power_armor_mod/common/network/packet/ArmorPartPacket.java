@@ -25,9 +25,7 @@ public class ArmorPartPacket {
 		this.capability = capability;
 	}
 
-	public ArmorPartPacket() {
-
-	}
+	public ArmorPartPacket() {}
 
 	public void write(PacketBuffer buffer) {
 		buffer.writeInt(capability.getEntity().getId());
@@ -44,15 +42,13 @@ public class ArmorPartPacket {
 		if (contextSupplier.get().getDirection() != NetworkDirection.PLAY_TO_CLIENT)
 			LOGGER.error("Capability message sent to the wrong side!", new Exception());
 		else {
-			final Entity entity = Minecraft.getInstance().player.level.getEntity(entityID);
+			Entity entity = Minecraft.getInstance().player.level.getEntity(entityID);
 
 			if (entity != null) {
-				entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(cap ->
-						cap.deserializeNBT(nbt)
-				);
+				entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA)
+						.ifPresent(cap -> cap.deserializeNBT(nbt));
 			}
 		}
-
 		contextSupplier.get().setPacketHandled(true);
 	}
 }

@@ -2,12 +2,14 @@ package com.jetug.power_armor_mod.common.capability.data;
 
 import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorPartEntity;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
+import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
 
@@ -26,17 +28,17 @@ public class ArmorPartData implements IArmorPartData {
     private float rightArm;
     private float leftLeg ;
     private float rightLeg;
-    private final ArrayList<Float> durabilityArray = new ArrayList<Float>(){};
+    private final float[] durabilityArray = new float[6];
 
 
     public ArmorPartData(Entity entity) {
         this.entity = entity;
-        durabilityArray.add(head    );
-        durabilityArray.add(body    );
-        durabilityArray.add(leftArm );
-        durabilityArray.add(rightArm);
-        durabilityArray.add(leftLeg );
-        durabilityArray.add(rightLeg);
+//        durabilityArray.add(head    );
+//        durabilityArray.add(body    );
+//        durabilityArray.add(leftArm );
+//        durabilityArray.add(rightArm);
+//        durabilityArray.add(leftLeg );
+//        durabilityArray.add(rightLeg);
 
     }
 
@@ -53,7 +55,7 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public float getDurability(BodyPart part) {
-        return durabilityArray.get(part.getId());
+        return durabilityArray[part.getId()];
 
 //        switch (part){
 //            case HEAD:
@@ -80,7 +82,7 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public void setDurability(BodyPart part, float value) {
-        durabilityArray.set(part.getId(), value);
+        durabilityArray[part.getId()] = value;
 //        switch (part){
 //            case HEAD:
 //                head = value;
@@ -129,15 +131,18 @@ public class ArmorPartData implements IArmorPartData {
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
 
-        int count = -1;
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
-        nbt.putFloat(DURABILITY + ++count, durabilityArray.get(count));
+        for(int i = 0; i < durabilityArray.length; i++) {
+            nbt.putFloat(DURABILITY + i, durabilityArray[i]);
+        }
+//        int count = -1;
 
-        //nbt.putFloat(DURABILITY, durability);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+//        nbt.putFloat(DURABILITY + ++count, durabilityArray[count]);
+
         nbt.putDouble(DEFENSE, defense);
 
         return nbt;
@@ -145,16 +150,18 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        int count = -1;
+        for(int i = 0; i < durabilityArray.length; i++) {
+            durabilityArray[i] = nbt.getFloat(DURABILITY + i);
+        }
+//        int count = -1;
 
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
-        durabilityArray.set( ++count, nbt.getFloat(ArmorPartData.DURABILITY + count) );
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
+//        durabilityArray[++count] = nbt.getFloat(ArmorPartData.DURABILITY + count);
 
-        //durability = nbt.getFloat(ArmorPartData.DURABILITY);
         defense = nbt.getDouble(ArmorPartData.DEFENSE);
 //
 //        durability = data.getDouble(DURABILITY);
@@ -164,16 +171,16 @@ public class ArmorPartData implements IArmorPartData {
     @Override
     public void syncWithClient(ServerPlayerEntity player) {
         PacketHandler.sendTo(new ArmorPartPacket(this), player);
-
-//        boolean isClientSide = player.level.isClientSide;
-//        PacketHandler.sendToAllPlayers(new ArmorPartPacket(this), player.server);
-//        ArmorPartPacket packet = new ArmorPartPacket(this);
-//        PacketHandler.sendTo(packet, player);
     }
 
     @Override
     public void syncWithServer() {
         PacketHandler.sendToServer(new ArmorPartClientPacket(this));
+    }
+
+    @Override
+    public void syncFromServer() {
+        PacketHandler.sendToServer(new ArmorClientUpdatePacket(this));
     }
 
     @Override
