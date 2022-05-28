@@ -7,14 +7,15 @@ import net.minecraft.nbt.CompoundNBT;
 
 public interface IArmorPartData {
 
-    float[] getDurabilityArray();
-    void setDurabilityArray(float[] array);
+//    float[] getDurabilityArray();
+//    void setDurabilityArray(float[] array);
     float getDurability(BodyPart part);
     void setDurability(BodyPart part, float value);
     double getDefense();
     void setDefense(double value);
     Entity getEntity();
-    void copyFrom(IArmorPartData source);
+
+//    void copyFrom(IArmorPartData source);
 
     public CompoundNBT serializeNBT();
 

@@ -4,6 +4,8 @@ import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.capability.data.PlayerDataProvider;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorPartEntity;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import net.minecraft.entity.Entity;
@@ -44,14 +46,22 @@ public class EventHandler {
     public static void onTrack(final PlayerEvent.StartTracking event) {
         final Entity entity = event.getTarget();
         final PlayerEntity playerEntity = event.getPlayer();
+        if (playerEntity instanceof ServerPlayerEntity) {
 
-        if (playerEntity instanceof ServerPlayerEntity)
-        {
-            final IArmorPartData capability = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-            if (capability != null)
-            {
-                PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity);
+            if(entity instanceof PowerArmorEntity){
+
+                for (PowerArmorPartEntity part : ((PowerArmorEntity) entity).subEntities) {
+                    part.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
+                            PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
+                    );
+                }
+
+//                entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
+//                        PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity)
+//                );
             }
+
+
         }
     }
 }

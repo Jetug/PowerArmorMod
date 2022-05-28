@@ -13,18 +13,12 @@ public class ArmorPartDataStorage implements Capability.IStorage<IArmorPartData>
     @Nullable
     @Override
     public INBT writeNBT(Capability<IArmorPartData> capability, IArmorPartData data, Direction side) {
-        CompoundNBT nbt = new CompoundNBT();
-        nbt = data.serializeNBT();
-//        nbt.putIntArray(ArmorPartData.DURABILITY, arrayFloatToInt(data.getDurabilityArray()));
-//        nbt.putDouble(ArmorPartData.DEFENSE, data.getDefense());
-        return nbt;
+        return data.serializeNBT();
     }
 
     @Override
     public void readNBT(Capability<IArmorPartData> capability, IArmorPartData data, Direction side, INBT nbt) {
         data.deserializeNBT((CompoundNBT)nbt);
-//        data.setDurabilityArray(arrayIntToFloat(((CompoundNBT)nbt).getIntArray(ArmorPartData.DURABILITY)));
-//        data.setDefense(((CompoundNBT)nbt).getDouble(ArmorPartData.DEFENSE));
     }
 
 }

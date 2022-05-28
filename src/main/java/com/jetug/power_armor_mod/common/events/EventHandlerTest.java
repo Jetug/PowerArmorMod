@@ -2,6 +2,8 @@ package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
+import com.jetug.power_armor_mod.common.network.PacketHandler;
+import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,11 +18,11 @@ import static com.jetug.power_armor_mod.PowerArmorMod.MOD_ID;
 public class EventHandlerTest {
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent event) {
-        if(!(event.getSource().getEntity() instanceof PlayerEntity)) {
-            return;
-        }
-
-        PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
+//        if(!(event.getSource().getEntity() instanceof PlayerEntity)) {
+//            return;
+//        }
+//
+//        PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
 
         //Jet
 //        Entity entity = event.getEntity();
@@ -30,5 +32,17 @@ public class EventHandlerTest {
 //        //cap.sync((ServerPlayerEntity) player);
 //        cap.sync((ServerPlayerEntity)player);
         ///
+
+
+//        final Entity entity = event.getEntity();
+//        final Entity playerEntity = event.getSource().getEntity();
+//
+//        if (playerEntity instanceof ServerPlayerEntity) {
+//            final IArmorPartData capability = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+//            if (capability != null) {
+//                PacketHandler.sendTo( new ArmorPartPacket(capability),(ServerPlayerEntity) playerEntity);
+//            }
+//        }
+
     }
 }

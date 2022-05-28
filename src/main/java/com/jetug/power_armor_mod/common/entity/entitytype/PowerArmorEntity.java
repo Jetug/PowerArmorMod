@@ -52,7 +52,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     protected boolean isJumping;
     protected float playerJumpPendingScale;
 
-    private final PowerArmorPartEntity[] subEntities;
+    public final PowerArmorPartEntity[] subEntities;
     public final PowerArmorPartEntity head_;
     public final PowerArmorPartEntity body;
     public final PowerArmorPartEntity leftArm;
@@ -242,13 +242,16 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public float getArmorDurability(BodyPart bodyPart){
         IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+        //return (float) cap.getDefense();
         return cap.getDurability(bodyPart);
     }
 
-
     public void setArmorDurability(BodyPart bodyPart, float value){
-        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-        cap.setDurability(bodyPart, value);
+        if(level.isClientSide) {
+            IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+            //cap.setDefense(value);
+            cap.setDurability(bodyPart, value);
+        }
     }
 
     public void damageArmor(BodyPart bodyPart, float damage){
@@ -260,8 +263,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
-        for(int j = 0; j < this.subEntities.length; ++j) {
-            this.subEntities[j].setDurability(1);
+        for (PowerArmorPartEntity subEntity : this.subEntities) {
+            subEntity.setDurability(1);
         }
         this.doPlayerRide(player);
 

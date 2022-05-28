@@ -24,16 +24,16 @@ public class ArmorPartData implements IArmorPartData {
         this.entity = entity;
     }
 
-    @Override
-    public float[] getDurabilityArray() {
-        return durability;
-    }
-
-    @Override
-    public void setDurabilityArray(float[] array) {
-        if(array != null && array.length == size)
-            durability = array;
-    }
+//    @Override
+//    public float[] getDurabilityArray() {
+//        return durability;
+//    }
+//
+//    @Override
+//    public void setDurabilityArray(float[] array) {
+//        if(array != null && array.length == size)
+//            durability = array;
+//    }
 
     @Override
     public float getDurability(BodyPart part) {
@@ -62,11 +62,11 @@ public class ArmorPartData implements IArmorPartData {
         return entity;
     }
 
-    @Override
-    public void copyFrom(IArmorPartData source) {
-        durability = source.getDurabilityArray();
-        defense = source.getDefense();
-    }
+//    @Override
+//    public void copyFrom(IArmorPartData source) {
+//        durability = source.getDurabilityArray();
+//        defense = source.getDefense();
+//    }
 
     @Override
     public CompoundNBT serializeNBT() {
@@ -74,8 +74,8 @@ public class ArmorPartData implements IArmorPartData {
 //        nbt.putDouble(DURABILITY, durability);
 //        nbt.putDouble(DEFENSE, defense);
 
-        nbt.putIntArray(ArmorPartData.DURABILITY, arrayFloatToInt(getDurabilityArray()));
-        nbt.putDouble(ArmorPartData.DEFENSE, getDefense());
+        nbt.putIntArray(ArmorPartData.DURABILITY, arrayFloatToInt(durability));
+        nbt.putDouble(DEFENSE, defense);
 
         return nbt;
     }
@@ -83,7 +83,7 @@ public class ArmorPartData implements IArmorPartData {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         durability = arrayIntToFloat((nbt).getIntArray(ArmorPartData.DURABILITY));
-        defense = (nbt).getDouble(ArmorPartData.DEFENSE);
+        defense = nbt.getDouble(ArmorPartData.DEFENSE);
 //
 //        durability = data.getDouble(DURABILITY);
 //        defense = data.getDouble(DEFENSE);
@@ -91,10 +91,12 @@ public class ArmorPartData implements IArmorPartData {
 
     @Override
     public void sync(ServerPlayerEntity player) {
+        PacketHandler.sendTo(new ArmorPartPacket(this), player);
+
 //        boolean isClientSide = player.level.isClientSide;
 //        PacketHandler.sendToAllPlayers(new ArmorPartPacket(this), player.server);
-        ArmorPartPacket packet = new ArmorPartPacket(this);
-        PacketHandler.sendTo(packet, player);
+//        ArmorPartPacket packet = new ArmorPartPacket(this);
+//        PacketHandler.sendTo(packet, player);
     }
 
     @Override
