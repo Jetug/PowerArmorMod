@@ -41,13 +41,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        for (ArmorSlot armorPart : entity.armorParts) {
+        for (ArmorSlot armorPart : entity.armorParts)
             handleArmorDamage(armorPart);
-        }
-//
-//        for (int i = 0; i < entity.armorParts.length; i++) {
-//            handleArmorDamage(entity.armorParts[i]);
-//        }
     }
 
     private void handleArmorDamage(ArmorSlot slot){
