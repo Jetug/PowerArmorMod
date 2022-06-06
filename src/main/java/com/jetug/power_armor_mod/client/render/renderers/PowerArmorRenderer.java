@@ -1,51 +1,37 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
 import com.jetug.power_armor_mod.client.model.*;
+import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.client.render.layers.*;
-import com.jetug.power_armor_mod.common.entity.entitytype.*;
+import com.jetug.power_armor_mod.common.minecraft.entity.ArmorSlot;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.mojang.blaze3d.matrix.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
-import java.util.ArrayList;
-
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
-
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
-    private final PowerArmorModel powerArmorModel;
-    private final ArmorModel armorModel = new ArmorModel();
-    private final ArmorPartLayer headLayer;
-    private final ArmorPartLayer bodyLayer;
-    private final ArmorPartLayer leftArmLayer;
-    private final ArmorPartLayer rightArmLayer;
-    private final ArmorPartLayer leftLegLayer ;
-    private final ArmorPartLayer rightLegLayer;
-
-    private final ArrayList<PowerArmorEntity> entities = new ArrayList<>();
-
-    private PowerArmorModel getPowerArmorModel(){
-        return (PowerArmorModel)getGeoModelProvider();
-    }
+    private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
+    private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
+    private final ArmorPartLayer headLayer      = new ArmorPartLayer(this, BodyPart.HEAD     );
+    private final ArmorPartLayer bodyLayer      = new ArmorPartLayer(this, BodyPart.BODY     );
+    private final ArmorPartLayer leftArmLayer   = new ArmorPartLayer(this, BodyPart.LEFT_ARM );
+    private final ArmorPartLayer rightArmLayer  = new ArmorPartLayer(this, BodyPart.RIGHT_ARM);
+    private final ArmorPartLayer leftLegLayer   = new ArmorPartLayer(this, BodyPart.LEFT_LEG );
+    private final ArmorPartLayer rightLegLayer  = new ArmorPartLayer(this, BodyPart.RIGHT_LEG);
+    private final ArmorPartLayer[] armorLayers = new ArmorPartLayer[]{headLayer, bodyLayer, leftArmLayer, rightArmLayer, leftLegLayer, rightLegLayer};
 
     public PowerArmorRenderer(EntityRendererManager renderManager) {
-        super(renderManager,  new PowerArmorModel());
-        powerArmorModel = (PowerArmorModel)getGeoModelProvider();
-        headLayer     = new ArmorPartLayer(this, BodyPart.HEAD      ,HELMET_MODEL_LOCATION,    HELMET_TEXTURE_LOCATION    );
-        bodyLayer     = new ArmorPartLayer(this, BodyPart.BODY      ,BODY_MODEL_LOCATION,      BODY_TEXTURE_LOCATION      );
-        leftArmLayer  = new ArmorPartLayer(this, BodyPart.LEFT_ARM  ,LEFT_ARM_MODEL_LOCATION,  LEFT_ARM_TEXTURE_LOCATION  );
-        rightArmLayer = new ArmorPartLayer(this, BodyPart.RIGHT_ARM ,RIGHT_ARM_MODEL_LOCATION, RIGHT_ARM_TEXTURE_LOCATION );
-        leftLegLayer  = new ArmorPartLayer(this, BodyPart.LEFT_LEG  ,LEFT_LEG_MODEL_LOCATION,  LEFT_LEG_TEXTURE_LOCATION  );
-        rightLegLayer = new ArmorPartLayer(this, BodyPart.RIGHT_LEG ,RIGHT_LEG_MODEL_LOCATION, RIGHT_LEG_TEXTURE_LOCATION );
+        super(renderManager,  new PowerArmorModel<>());
 
-        addLayer(headLayer    );
-        addLayer(bodyLayer    );
-        addLayer(leftArmLayer );
-        addLayer(rightArmLayer);
-        addLayer(leftLegLayer );
-        addLayer(rightLegLayer);
+        powerArmorModel = (PowerArmorModel<PowerArmorEntity>)getGeoModelProvider();
+
+        for (ArmorPartLayer armorLayer : armorLayers) {
+            addLayer(armorLayer);
+        }
     }
 
     @Override
@@ -55,44 +41,45 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        handleArmorDamage(entity.head_   , headLayer,     /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.head_   .getDurability()  );
-        handleArmorDamage(entity.body    , bodyLayer,     /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.body    .getDurability()  );
-        handleArmorDamage(entity.leftArm , leftArmLayer,  /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.leftArm .getDurability()  );
-        handleArmorDamage(entity.rightArm, rightArmLayer, /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.rightArm.getDurability()  );
-        handleArmorDamage(entity.leftLeg , leftLegLayer,  /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.leftLeg .getDurability()  );
-        handleArmorDamage(entity.rightLeg, rightLegLayer, /*entity.getArmorDurability(BodyPart.HEAD)*/ entity.rightLeg.getDurability()  );
-    }
-
-    private void handleArmorDamage(PowerArmorPartEntity entity, ArmorPartLayer layer, double durability){
-        if(entity.hasArmor()){
-            attachBones(layer, entity);
+        for (ArmorSlot armorPart : entity.armorParts) {
+            handleArmorDamage(armorPart);
         }
-        else if(!entity.hasArmor()){
-            detachBones(layer, entity);
-        }
+//
+//        for (int i = 0; i < entity.armorParts.length; i++) {
+//            handleArmorDamage(entity.armorParts[i]);
+//        }
     }
 
-    private void attachBones(ArmorPartLayer layer, PowerArmorPartEntity entity){
-        handleLayer(layer, entity,true);
+    private void handleArmorDamage(ArmorSlot slot){
+        if(slot.hasArmor())
+            attachBones(slot);
+        else if(!slot.hasArmor())
+            detachBones(slot);
     }
 
-    private void detachBones(ArmorPartLayer layer, PowerArmorPartEntity entity){
-        handleLayer(layer, entity,false);
+    private void attachBones(ArmorSlot slot){
+        handleModel(slot, true);
     }
 
-    private void handleLayer(ArmorPartLayer layer, PowerArmorPartEntity entity, Boolean isAttaching){
-        layer.boneAttachments.forEach(tuple ->{
-            GeoBone bone1 = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
-            GeoBone bone2 = armorModel.getModel(layer.model).getBone(tuple.getB()).orElse(null);
+    private void detachBones(ArmorSlot slot){
+        handleModel(slot, false);
+    }
 
-            if(bone1 != null && bone2 != null) {
+    private void handleModel(ArmorSlot slot, Boolean isAttaching){
+        slot.getAttachments().forEach(tuple ->{
+            ResourceLocation model = ResourceHelper.getModel(slot.getArmorPart(), slot.getType());
+
+            GeoBone frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
+            GeoBone armorBone = armorModel.getModel(model).getBone(tuple.getB()).orElse(null);
+
+            if(frameBone != null && armorBone != null) {
                 if (isAttaching) {
-                    if(!bone1.childBones.contains(bone2)) {
-                        bone2.parent = bone1;
-                        bone1.childBones.add(bone2);
+                    if(!frameBone.childBones.contains(armorBone)) {
+                        armorBone.parent = frameBone;
+                        frameBone.childBones.add(armorBone);
                     }
                 }
-                else bone1.childBones.remove(bone2);
+                else frameBone.childBones.remove(armorBone);
             }
         });
     }

@@ -1,6 +1,6 @@
 {
-  "item.begining.dick": "Dick",
-  "block.begining.dick_block": "Dick Block",
-  "entity.begining.power_armor": "Power Armor",
+  "item.power_armor_mod.test": "Dick",
+  "block.power_armor_mod.test_block": "Dick Block",
+  "entity.power_armor_mod.power_armor": "Power Armor",
   "itemGroup.xxx": "XXX"
 }

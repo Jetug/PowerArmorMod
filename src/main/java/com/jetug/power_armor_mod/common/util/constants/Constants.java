@@ -7,5 +7,4 @@ public class Constants {
     public static final String RIGHT_ARM_BONE_NAME = "right_arm" ;
     public static final String LEFT_LEG_BONE_NAME  = "left_leg" ;
     public static final String RIGHT_LEG_BONE_NAME = "right_leg" ;
-
 }

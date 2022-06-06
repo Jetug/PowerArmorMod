@@ -1,14 +1,16 @@
 package com.jetug.power_armor_mod;
 
+import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.capability.data.PlayerDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
-import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.minecraft.registery.ModBlocks;
+import com.jetug.power_armor_mod.common.minecraft.registery.ModItems;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.registery.ModEntityTypes;
+import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,45 +34,21 @@ public class PowerArmorMod
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "power_armor_mod";
 
-    public PowerArmorMod()
-    {
+    public PowerArmorMod() {
         GeckoLib.initialize();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::setup);
-        /*
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
-         */
         ModEntityTypes.register(eventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @SubscribeEvent
-    public void attachCapabilitiesEntity(final AttachCapabilitiesEvent<Entity> event)
-    {
-        Entity entity = event.getObject();
-        if (entity instanceof PlayerEntity)
-            PlayerDataProvider.attach(event);
-//        else if(entity instanceof PowerArmorPartEntity || entity instanceof PowerArmorEntity)
-//            ArmorDataProvider.attach(event);
-
-        if(event.getObject() instanceof Entity) {
-            ArmorDataProvider.attach(event);
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerPickups(PlayerEvent.ItemPickupEvent event) {
-        PlayerEntity player = event.getPlayer();
-        IPlayerData data = getPlayerData(player);
-        player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), player.getUUID());
-        data.setIsInPowerArmor(!data.getIsInPowerArmor());
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         PlayerDataProvider.register();
         ArmorDataProvider.register();
         PacketHandler.register();
+        ResourceHelper.register();
     }
 }

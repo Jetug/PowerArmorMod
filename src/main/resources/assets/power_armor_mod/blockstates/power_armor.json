@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "begining:block/power_armor" }
+    "": { "model": "power_armor_mod:block/power_armor" }
   }
 }

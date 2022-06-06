@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.model;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.common.entity.entitytype.GeckoEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.GeckoEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -32,7 +32,7 @@ public class GeckoModel<T extends GeckoEntity> extends AnimatedGeoModel<GeckoEnt
     @Override
     public void setLivingAnimations(GeckoEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head_");
+        IBone head = this.getAnimationProcessor().getBone("head");
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

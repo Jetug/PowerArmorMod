@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -51,7 +51,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 //        if(attr.hasAttribute(BODY_ARMOR_HEALTH)){
 //            double value = entity.getAttributes().getValue(BODY_ARMOR_HEALTH);
 //            if(value == 0.0D){
-//                GeoBone bone = this.getModel(POWER_ARMOR_MODEL_LOCATION).getBone("body").get();
+//                GeoBone bone = this.getModel(POWER_ARMOR_MODEL_LOCATION).getBone("bodyHitBox").get();
 //                bone.setHidden(true);
 //            }
 //        }
@@ -61,7 +61,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
-        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head_").get();
+        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head").get();
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.util.extensions;
 
-import com.jetug.power_armor_mod.common.entity.entitytype.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PlayerExtension {

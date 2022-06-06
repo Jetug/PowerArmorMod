@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "begining:block/obsidian_obj" }
+    "": { "model": "power_armor_mod:block/obsidian_obj" }
   }
 }
