@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,32 +133,40 @@ public class ResourceHelper {
 
     public static ArrayList<Tuple<String, String>> getAttachments(BodyPart bodyPart){
         ArrayList<Tuple<String, String>> boneList = new ArrayList<>();
+        
         switch (bodyPart){
             case HEAD:
                 boneList.add(new Tuple<>(HEAD_BONE_NAME, "helmet"));
                 break;
             case BODY:
-                boneList.add(new Tuple<>(BODY_BONE_NAME, "body_top_armor"));
+                boneList.add(new Tuple<>("body_top"      , "body_top_armor"         ));
+                boneList.add(new Tuple<>("body_bottom"   , "body_bottom_armor"      ));
+                boneList.add(new Tuple<>("front_plate"   , "front_plate_armor"      ));
+                boneList.add(new Tuple<>("back_plate"    , "back_plate_armor"       ));
                 break;
             case LEFT_ARM:
-                boneList.add(new Tuple<>("left_upper_arm", "left_shoulder_armor"   ));
-                boneList.add(new Tuple<>("left_upper_arm", "left_upper_arm_armor"  ));
-                boneList.add(new Tuple<>("left_lower_arm", "left_forearm_armor"    ));
+                boneList.add(new Tuple<>("left_upper_arm", "left_shoulder_armor"    ));
+                boneList.add(new Tuple<>("left_upper_arm", "left_upper_arm_armor"   ));
+                boneList.add(new Tuple<>("left_lower_arm", "left_forearm_armor"     ));
                 break;
             case RIGHT_ARM:
-                boneList.add(new Tuple<>("right_upper_arm", "right_shoulder_armor" ));
-                boneList.add(new Tuple<>("right_upper_arm", "right_upper_arm_armor"));
-                boneList.add(new Tuple<>("right_lower_arm", "right_forearm_armor"  ));
+                boneList.add(new Tuple<>("right_upper_arm", "right_shoulder_armor"  ));
+                boneList.add(new Tuple<>("right_upper_arm", "right_upper_arm_armor" ));
+                boneList.add(new Tuple<>("right_lower_arm", "right_forearm_armor"   ));
                 break;
             case LEFT_LEG:
-                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"  ));
-                boneList.add(new Tuple<>("left_lower_leg", "left_knee"             ));
-                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"  ));
+                boneList.add(new Tuple<>("left_upper_leg", "left_upper_leg_armor"   ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_knee"              ));
+                boneList.add(new Tuple<>("left_lower_leg", "left_lower_leg_armor"   ));
+                boneList.add(new Tuple<>("left_shoe"     , "left_shoe_armor"        ));
+                boneList.add(new Tuple<>("left_toes"     , "left_toes_armor"        ));
                 break;
             case RIGHT_LEG:
-                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor"));
-                boneList.add(new Tuple<>("right_lower_leg", "right_knee"           ));
-                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor"));
+                boneList.add(new Tuple<>("right_upper_leg", "right_upper_leg_armor" ));
+                boneList.add(new Tuple<>("right_lower_leg", "right_knee"            ));
+                boneList.add(new Tuple<>("right_lower_leg", "right_lower_leg_armor" ));
+                boneList.add(new Tuple<>("right_shoe"     , "right_shoe_armor"      ));
+                boneList.add(new Tuple<>("right_toes"     , "right_toes_armor"      ));
                 break;
         }
         return boneList;
