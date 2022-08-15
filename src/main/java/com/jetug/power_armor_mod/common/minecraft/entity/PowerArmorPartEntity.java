@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.common.minecraft.entity;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -16,6 +17,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.entity.PartEntity;
 
@@ -37,6 +39,11 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.refreshDimensions();
         this.parentMob = parent;
         this.bodyPart = bodyPart;
+    }
+
+    @Override
+    public boolean isColliding(BlockPos p_242278_1_, BlockState p_242278_2_) {
+        return true;
     }
 
     public void subscribeEvents(ArmorPartsEvents events){
