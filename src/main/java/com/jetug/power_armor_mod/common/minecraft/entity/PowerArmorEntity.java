@@ -40,13 +40,13 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     protected boolean isJumping;
     protected float playerJumpPendingScale;
 
-//    public final PowerArmorPartEntity[] subEntities;
-//    public final PowerArmorPartEntity headHitBox;
-//    public final PowerArmorPartEntity bodyHitBox;
-//    public final PowerArmorPartEntity leftArmHitBox;
-//    public final PowerArmorPartEntity rightArmHitBox;
-//    public final PowerArmorPartEntity leftLegHitBox;
-//    public final PowerArmorPartEntity rightLegHitBox;
+    public final PowerArmorPartEntity[] subEntities;
+    public final PowerArmorPartEntity headHitBox;
+    public final PowerArmorPartEntity bodyHitBox;
+    public final PowerArmorPartEntity leftArmHitBox;
+    public final PowerArmorPartEntity rightArmHitBox;
+    public final PowerArmorPartEntity leftLegHitBox;
+    public final PowerArmorPartEntity rightLegHitBox;
 
     public final ArmorSlot head      = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
     public final ArmorSlot body      = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
@@ -57,19 +57,18 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     public final EquipmentSlot leftHand  = new EquipmentSlot(this, LEFT_HAND , EquipmentType.STANDARD);
     public final EquipmentSlot rightHand = new EquipmentSlot(this, RIGHT_HAND, EquipmentType.STANDARD);
 
-
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
     public PowerArmorEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
 
-//        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
-//        bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
-//        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
-//        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.7f, 1.0f);
-//        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
-//        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
-//        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
+        bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
+        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
+        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.7f, 1.0f);
+        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
+        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
         this.noCulling = true;
     }
 
