@@ -133,24 +133,24 @@ public class HitboxTestEntity extends AnimalEntity implements IAnimatable, IJump
         this.playSound(SoundEvents.PIG_STEP, 0.15F, 1.0F);
     }
 
-    public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        boolean flag = this.isFood(p_230254_1_.getItemInHand(p_230254_2_));
-        if (!flag && this.isSaddled() && !this.isVehicle() && !p_230254_1_.isSecondaryUseActive()) {
-            if (!this.level.isClientSide) {
-                p_230254_1_.startRiding(this);
-            }
-
-            return ActionResultType.sidedSuccess(this.level.isClientSide);
-        } else {
-            ActionResultType actionresulttype = super.mobInteract(p_230254_1_, p_230254_2_);
-            if (!actionresulttype.consumesAction()) {
-                ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
-                return itemstack.getItem() == Items.SADDLE ? itemstack.interactLivingEntity(p_230254_1_, this, p_230254_2_) : ActionResultType.PASS;
-            } else {
-                return actionresulttype;
-            }
-        }
-    }
+//    public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+//        boolean flag = this.isFood(p_230254_1_.getItemInHand(p_230254_2_));
+//        if (!flag && this.isSaddled() && !this.isVehicle() && !p_230254_1_.isSecondaryUseActive()) {
+//            if (!this.level.isClientSide) {
+//                p_230254_1_.startRiding(this);
+//            }
+//
+//            return ActionResultType.sidedSuccess(this.level.isClientSide);
+//        } else {
+//            ActionResultType actionresulttype = super.mobInteract(p_230254_1_, p_230254_2_);
+//            if (!actionresulttype.consumesAction()) {
+//                ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
+//                return itemstack.getItem() == Items.SADDLE ? itemstack.interactLivingEntity(p_230254_1_, this, p_230254_2_) : ActionResultType.PASS;
+//            } else {
+//                return actionresulttype;
+//            }
+//        }
+//    }
 
     public boolean isSaddleable() {
         return this.isAlive() && !this.isBaby();
@@ -268,11 +268,11 @@ public class HitboxTestEntity extends AnimalEntity implements IAnimatable, IJump
         }
     }
 
-//    @Override
-//    public ActionResultType mobInteract(PlayerEntity player, Hand p_230254_2_) {
-//        this.doPlayerRide(player);
-//        return ActionResultType.sidedSuccess(this.level.isClientSide);
-//    }
+    @Override
+    public ActionResultType mobInteract(PlayerEntity player, Hand p_230254_2_) {
+        this.doPlayerRide(player);
+        return ActionResultType.sidedSuccess(this.level.isClientSide);
+    }
 
     @Override
     public boolean isInvisible() {
