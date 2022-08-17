@@ -56,6 +56,7 @@ public class HitboxTestEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
 
+
     public void doPlayerRide(PlayerEntity player) {
         if (!this.level.isClientSide) {
             player.yRot = this.yRot;
