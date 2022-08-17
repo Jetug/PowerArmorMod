@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.common.minecraft.registery;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.common.minecraft.entity.GeckoEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.HitboxTestEntity;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.minecraft.entity.TestEntity;
 import net.minecraft.entity.EntityClassification;
@@ -20,10 +21,10 @@ public class ModEntityTypes {
                     .sized(1.7f, 2.5f)
                     .build(new ResourceLocation(PowerArmorMod.MOD_ID, "power_armor").toString()));
 
-//    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_BODY_PART =
-//            ENTITY_TYPES.register("power_armor_body_part", () -> EntityType.Builder.of(PowerArmorPartEntity::new, EntityClassification.CREATURE)
-//                    .sized(1f, 3f)
-//                    .build(new ResourceLocation(ExampleMod.MOD_ID, "power_armor").toString()));
+    public static final RegistryObject<EntityType<HitboxTestEntity>> HITBOX_TEST_ENTITY =
+            ENTITY_TYPES.register("hitbox_test", () -> EntityType.Builder.of(HitboxTestEntity::new, EntityClassification.CREATURE)
+                    .sized(1.7f, 2.5f)
+                    .build(new ResourceLocation(PowerArmorMod.MOD_ID, "hitbox_test").toString()));
 
     public static final RegistryObject<EntityType<TestEntity>> TEST_ENTITY =
             ENTITY_TYPES.register("test_model", () -> EntityType.Builder.of(TestEntity::new, EntityClassification.CREATURE)
@@ -34,18 +35,6 @@ public class ModEntityTypes {
             ENTITY_TYPES.register("gecko_model", () -> EntityType.Builder.of(GeckoEntity::new, EntityClassification.CREATURE)
                     .sized(1f, 3f)
                     .build(new ResourceLocation(PowerArmorMod.MOD_ID, "gecko_model").toString()));
-
-//    public static final RegistryObject<EntityType<PlayerPowerArmorEntity>> PLAYER_POWER_ARMOR =
-//            ENTITY_TYPES.register("player_power_armor", () -> EntityType.Builder.of(PlayerPowerArmorEntity::new, EntityClassification.MISC)
-//                    .sized(1f, 3f)
-//                    .build(new ResourceLocation(ExampleMod.MOD_ID, "player_power_armor").toString()));
-
-//    public static final RegistryObject<EntityType<PlayerExtension>> PLAYER =
-//            ENTITY_TYPES.register("player", () -> EntityType.Builder.of(PlayerExtension::new, EntityClassification.MISC)
-//                    .clientTrackingRange(32)
-//                    .updateInterval(2))
-//                    .sized(1f, 3f)
-//                    .build(new ResourceLocation(ExampleMod.MOD_ID, "player").toString()));
 
     public static void register(IEventBus eventBus){
         ENTITY_TYPES.register(eventBus);

@@ -11,6 +11,7 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.entity.PartEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -32,21 +34,19 @@ import javax.annotation.Nullable;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
-public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount, IPowerArmor {
-    private static int count = 0;
-    private int id;
-    private AnimationFactory factory = new AnimationFactory(this);
+public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJumpingMount, IPowerArmor {
+    private final AnimationFactory factory = new AnimationFactory(this);
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
 
-    public final PowerArmorPartEntity[] subEntities;
-    public final PowerArmorPartEntity headHitBox;
-    public final PowerArmorPartEntity bodyHitBox;
-    public final PowerArmorPartEntity leftArmHitBox;
-    public final PowerArmorPartEntity rightArmHitBox;
-    public final PowerArmorPartEntity leftLegHitBox;
-    public final PowerArmorPartEntity rightLegHitBox;
+//    public final PowerArmorPartEntity[] subEntities;
+//    public final PowerArmorPartEntity headHitBox;
+//    public final PowerArmorPartEntity bodyHitBox;
+//    public final PowerArmorPartEntity leftArmHitBox;
+//    public final PowerArmorPartEntity rightArmHitBox;
+//    public final PowerArmorPartEntity leftLegHitBox;
+//    public final PowerArmorPartEntity rightLegHitBox;
 
     public final ArmorSlot head      = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
     public final ArmorSlot body      = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
@@ -60,17 +60,16 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
-    public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public PowerArmorEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
 
-        id = count++;
-        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
-        bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
-        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
-        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.7f, 1.0f);
-        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
-        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
-        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+//        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
+//        bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
+//        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
+//        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.7f, 1.0f);
+//        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
+//        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+//        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
         this.noCulling = true;
     }
 
@@ -142,37 +141,43 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         this.isJumping = p_110255_1_;
     }
 
+    @Nullable
     @Override
-    public void aiStep() {
-        super.aiStep();
-
-        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
-        for (int j = 0; j < this.subEntities.length; ++j) {
-            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
-        }
-
-        float rotation = this.yRot * ((float) Math.PI / 180F);
-        float xPos = MathHelper.cos(rotation);
-        float zPos = MathHelper.sin(rotation);
-        float armPos = 0.8f;
-        float legPos = 0.2f;
-
-        this.tickPart(this.headHitBox, 0, 2.1, 0);
-        this.tickPart(this.bodyHitBox, 0, 1.2, 0);
-        this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
-        this.tickPart(this.leftArmHitBox, xPos * armPos, 1.1, zPos * armPos);
-        this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-        this.tickPart(this.leftLegHitBox, xPos * legPos, 0, zPos * legPos);
-
-        for (int l = 0; l < this.subEntities.length; ++l) {
-            this.subEntities[l].xo = aVector3d[l].x;
-            this.subEntities[l].yo = aVector3d[l].y;
-            this.subEntities[l].zo = aVector3d[l].z;
-            this.subEntities[l].xOld = aVector3d[l].x;
-            this.subEntities[l].yOld = aVector3d[l].y;
-            this.subEntities[l].zOld = aVector3d[l].z;
-        }
+    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+        return null;
     }
+
+//    @Override
+//    public void aiStep() {
+//        super.aiStep();
+//
+//        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
+//        for (int j = 0; j < this.subEntities.length; ++j) {
+//            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
+//        }
+//
+//        float rotation = this.yRot * ((float) Math.PI / 180F);
+//        float xPos = MathHelper.cos(rotation);
+//        float zPos = MathHelper.sin(rotation);
+//        float armPos = 0.8f;
+//        float legPos = 0.2f;
+//
+//        this.tickPart(this.headHitBox, 0, 2.1, 0);
+//        this.tickPart(this.bodyHitBox, 0, 1.2, 0);
+//        this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
+//        this.tickPart(this.leftArmHitBox, xPos * armPos, 1.1, zPos * armPos);
+//        this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+//        this.tickPart(this.leftLegHitBox, xPos * legPos, 0, zPos * legPos);
+//
+//        for (int l = 0; l < this.subEntities.length; ++l) {
+//            this.subEntities[l].xo = aVector3d[l].x;
+//            this.subEntities[l].yo = aVector3d[l].y;
+//            this.subEntities[l].zo = aVector3d[l].z;
+//            this.subEntities[l].xOld = aVector3d[l].x;
+//            this.subEntities[l].yOld = aVector3d[l].y;
+//            this.subEntities[l].zOld = aVector3d[l].z;
+//        }
+//    }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
         part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
@@ -180,19 +185,19 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     //Settings
     //{
-    @Override
-    public PartEntity<?>[] getParts() {
-        return this.subEntities;
-    }
-
-    @Override
-    public boolean isMultipartEntity() {
-        return true;
-    }
+//    @Override
+//    public PartEntity<?>[] getParts() {
+//        return this.subEntities;
+//    }
+//
+//    @Override
+//    public boolean isMultipartEntity() {
+//        return true;
+//    }
 
     @Override
     public boolean isPickable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -223,9 +228,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     //}
 
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
-        for (ArmorSlot subEntity : this.armorParts) {
-            subEntity.setDurability(1);
-        }
+//        for (ArmorSlot subEntity : this.armorParts) {
+//            subEntity.setDurability(1);
+//        }
         this.doPlayerRide(player);
 
         return ActionResultType.sidedSuccess(this.level.isClientSide);
@@ -356,6 +361,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         //Minecraft.getInstance().player.sendMessage(new StringTextComponent("OnHurt: " + " isClientSide: " + level.isClientSide), getUUID());
 
         return super.hurt(p_70097_1_, p_70097_2_);
+    }
+
+    @Override
+    public ActionResultType mobInteract(PlayerEntity player, Hand p_230254_2_) {
+        this.doPlayerRide(player);
+        return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
 
     @Override
