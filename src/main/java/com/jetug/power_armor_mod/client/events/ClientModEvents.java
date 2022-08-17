@@ -1,10 +1,8 @@
 package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.PowerArmorMod;
+import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
-import com.jetug.power_armor_mod.client.render.renderers.GeckoRenderer;
-import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
-import com.jetug.power_armor_mod.client.render.renderers.TestRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -15,6 +13,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public final class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.HITBOX_TEST_ENTITY.get(), HitboxTestRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), PowerArmorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.TEST_ENTITY.get(), TestRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GECKO_ENTITY.get(), GeckoRenderer::new);
