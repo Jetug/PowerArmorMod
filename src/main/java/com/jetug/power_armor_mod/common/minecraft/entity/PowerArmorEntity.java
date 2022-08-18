@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
@@ -11,6 +12,7 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
@@ -39,14 +41,13 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
-
-    public final PowerArmorPartEntity[] subEntities;
     public final PowerArmorPartEntity headHitBox;
     public final PowerArmorPartEntity bodyHitBox;
     public final PowerArmorPartEntity leftArmHitBox;
     public final PowerArmorPartEntity rightArmHitBox;
     public final PowerArmorPartEntity leftLegHitBox;
     public final PowerArmorPartEntity rightLegHitBox;
+    public final PowerArmorPartEntity[] subEntities;
 
     public final ArmorSlot head      = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
     public final ArmorSlot body      = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
@@ -54,14 +55,14 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     public final ArmorSlot rightArm  = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
     public final ArmorSlot leftLeg   = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
     public final ArmorSlot rightLeg  = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
-    public final EquipmentSlot leftHand  = new EquipmentSlot(this, LEFT_HAND , EquipmentType.STANDARD);
-    public final EquipmentSlot rightHand = new EquipmentSlot(this, RIGHT_HAND, EquipmentType.STANDARD);
-
+//    public final EquipmentSlot leftHand  = new EquipmentSlot(this, LEFT_HAND , EquipmentType.STANDARD);
+//    public final EquipmentSlot rightHand = new EquipmentSlot(this, RIGHT_HAND, EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
+
+
 
     public PowerArmorEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
-
         headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
         bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
         leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
@@ -146,37 +147,37 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
         return null;
     }
 
-//    @Override
-//    public void aiStep() {
-//        super.aiStep();
-//
-//        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
-//        for (int j = 0; j < this.subEntities.length; ++j) {
-//            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
-//        }
-//
-//        float rotation = this.yRot * ((float) Math.PI / 180F);
-//        float xPos = MathHelper.cos(rotation);
-//        float zPos = MathHelper.sin(rotation);
-//        float armPos = 0.8f;
-//        float legPos = 0.2f;
-//
-//        this.tickPart(this.headHitBox, 0, 2.1, 0);
-//        this.tickPart(this.bodyHitBox, 0, 1.2, 0);
-//        this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
-//        this.tickPart(this.leftArmHitBox, xPos * armPos, 1.1, zPos * armPos);
-//        this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-//        this.tickPart(this.leftLegHitBox, xPos * legPos, 0, zPos * legPos);
-//
-//        for (int l = 0; l < this.subEntities.length; ++l) {
-//            this.subEntities[l].xo = aVector3d[l].x;
-//            this.subEntities[l].yo = aVector3d[l].y;
-//            this.subEntities[l].zo = aVector3d[l].z;
-//            this.subEntities[l].xOld = aVector3d[l].x;
-//            this.subEntities[l].yOld = aVector3d[l].y;
-//            this.subEntities[l].zOld = aVector3d[l].z;
-//        }
-//    }
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
+        for (int j = 0; j < this.subEntities.length; ++j) {
+            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
+        }
+
+        float rotation = this.yRot * ((float) Math.PI / 180F);
+        float xPos = MathHelper.cos(rotation);
+        float zPos = MathHelper.sin(rotation);
+        float armPos = 0.8f;
+        float legPos = 0.2f;
+
+        this.tickPart(this.headHitBox, 0, 2.1, 0);
+        this.tickPart(this.bodyHitBox, 0, 1.2, 0);
+        this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
+        this.tickPart(this.leftArmHitBox, xPos * armPos, 1.1, zPos * armPos);
+        this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+        this.tickPart(this.leftLegHitBox, xPos * legPos, 0, zPos * legPos);
+
+        for (int l = 0; l < this.subEntities.length; ++l) {
+            this.subEntities[l].xo = aVector3d[l].x;
+            this.subEntities[l].yo = aVector3d[l].y;
+            this.subEntities[l].zo = aVector3d[l].z;
+            this.subEntities[l].xOld = aVector3d[l].x;
+            this.subEntities[l].yOld = aVector3d[l].y;
+            this.subEntities[l].zOld = aVector3d[l].z;
+        }
+    }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
         part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
@@ -184,19 +185,19 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
 
     //Settings
     //{
-//    @Override
-//    public PartEntity<?>[] getParts() {
-//        return this.subEntities;
-//    }
-//
-//    @Override
-//    public boolean isMultipartEntity() {
-//        return true;
-//    }
+    @Override
+    public PartEntity<?>[] getParts() {
+        return this.subEntities;
+    }
+
+    @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
 
     @Override
     public boolean isPickable() {
-        return true;
+        return false;
     }
 
     @Override
