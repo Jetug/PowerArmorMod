@@ -1,5 +1,7 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.block.BlockState;
@@ -51,11 +53,18 @@ public class HitboxTestEntity extends CreatureEntity implements IAnimatable, IJu
         super(type, world);
     }
 
+    protected boolean isJumping;
+    protected float playerJumpPendingScale;
+
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
+        return CreatureEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.20D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+                .add(Attributes.JUMP_STRENGTH, 2.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
-
-
 
     public void doPlayerRide(PlayerEntity player) {
         if (!this.level.isClientSide) {
@@ -75,6 +84,50 @@ public class HitboxTestEntity extends CreatureEntity implements IAnimatable, IJu
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
 
+    public float getArmorDurability(BodyPart bodyPart) {
+        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+        cap.syncFromServer();
+        return cap.getDurability(bodyPart);
+    }
+
+    public void setArmorDurability(BodyPart bodyPart, float value) {
+        if (level.isClientSide) {
+            IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+            cap.setDurability(bodyPart, value);
+            if (level.isClientSide)
+                cap.syncWithServer();
+        }
+    }
+
+    public void damageArmor(BodyPart bodyPart, float damage) {
+        float durability = getArmorDurability(bodyPart) - damage;
+        if (durability < 0)
+            durability = 0;
+
+        setArmorDurability(bodyPart, durability);
+    }
+
+    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+        if (damage < 0.01F) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isJumping() {
+        return this.isJumping;
+    }
+
+    public void setIsJumping(boolean p_110255_1_) {
+        this.isJumping = p_110255_1_;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
+
     @Override
     public boolean isInvisible() {
         ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
@@ -86,20 +139,60 @@ public class HitboxTestEntity extends CreatureEntity implements IAnimatable, IJu
     }
 
     @Override
-    public float getArmorDurability(BodyPart bodyPart) {
-        return 0;
+    public boolean isInvulnerableTo(DamageSource damageSource) {
+        if (super.isInvulnerableTo(damageSource)) {
+            return true;
+        } else if (damageSource.getEntity() == getControllingPassenger()) {
+            return true;
+        }
+        return false;
+    }
+//
+//    @Override
+//    protected void defineSynchedData() {
+//        super.defineSynchedData();
+//    }
+
+    //}
+
+    public ActionResultType onInteract(PlayerEntity player, Hand hand) {
+//        for (ArmorSlot subEntity : this.armorParts) {
+//            subEntity.setDurability(1);
+//        }
+        this.doPlayerRide(player);
+
+        return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
 
+    @Nullable
+    public Entity getControllingPassenger() {
+        return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+    }
+
+    public boolean canBeControlledByRider() {
+        return this.getControllingPassenger() instanceof LivingEntity;
+    }
+
+//    public double getCustomJump() {
+//        return this.getAttributeValue(Attributes.JUMP_STRENGTH);
+//    }
+//
     @Override
-    public void setArmorDurability(BodyPart bodyPart, float value) {
+    public void positionRider(Entity entity) {
+        super.positionRider(entity);
 
+//        float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
+//        float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
+//        double posXZ = 0.1;
+//        double posY = 0.9;
+//        entity.setPos(this.getX() + (posXZ * posX),
+//                this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
+//                this.getZ() - (posXZ * posZ));
+//        if (entity instanceof LivingEntity) {
+//            ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+//        }
     }
-
-    @Override
-    public void damageArmor(BodyPart bodyPart, float damage) {
-
-    }
-
+//
     @Override
     public void onPlayerJump(int p_110206_1_) {
 

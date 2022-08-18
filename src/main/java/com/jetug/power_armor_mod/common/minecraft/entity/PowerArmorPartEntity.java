@@ -50,20 +50,9 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         this.events = events;
     }
 
-//    public boolean hasArmor(){
-//        return getDurability() > 0;
-//    }
-
     public float getDurability(){
         return parentMob.getArmorDurability(bodyPart);
     }
-
-//    public void setDurability(float value){
-//        parentMob.setArmorDurability(bodyPart, value);
-//
-//        if(events != null)
-//            events.onDurabilityChanged(value);
-//    }
 
     public void damage(float damage){
         parentMob.damageArmor(bodyPart, damage);
