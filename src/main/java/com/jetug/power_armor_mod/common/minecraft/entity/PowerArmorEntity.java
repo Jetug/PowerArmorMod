@@ -8,6 +8,7 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -23,6 +24,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -36,7 +38,7 @@ import javax.annotation.Nullable;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
-public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJumpingMount, IPowerArmor {
+public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount, IPowerArmor {
     private final AnimationFactory factory = new AnimationFactory(this);
 
     protected boolean isJumping;
@@ -55,13 +57,9 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     public final ArmorSlot rightArm  = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
     public final ArmorSlot leftLeg   = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
     public final ArmorSlot rightLeg  = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
-//    public final EquipmentSlot leftHand  = new EquipmentSlot(this, LEFT_HAND , EquipmentType.STANDARD);
-//    public final EquipmentSlot rightHand = new EquipmentSlot(this, RIGHT_HAND, EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
-
-
-    public PowerArmorEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+    public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
         bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
@@ -141,12 +139,6 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
         this.isJumping = p_110255_1_;
     }
 
-    @Nullable
-    @Override
-    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-        return null;
-    }
-
     @Override
     public void aiStep() {
         super.aiStep();
@@ -219,18 +211,12 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
         }
         return false;
     }
-//
-//    @Override
-//    protected void defineSynchedData() {
-//        super.defineSynchedData();
-//    }
 
-    //}
 
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
-//        for (ArmorSlot subEntity : this.armorParts) {
-//            subEntity.setDurability(1);
-//        }
+        for (ArmorSlot subEntity : this.armorParts) {
+            subEntity.setDurability(1);
+        }
         this.doPlayerRide(player);
 
         return ActionResultType.sidedSuccess(this.level.isClientSide);
@@ -352,18 +338,6 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     }
 
     @Override
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-//        PlayerEntity player = Minecraft.getInstance().player;
-//        boolean bool = player.level.isClientSide();
-//        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
-//
-//        player.sendMessage(new StringTextComponent("OverlayTexture : " + OverlayTexture.NO_OVERLAY), getUUID());
-        //Minecraft.getInstance().player.sendMessage(new StringTextComponent("OnHurt: " + " isClientSide: " + level.isClientSide), getUUID());
-
-        return super.hurt(p_70097_1_, p_70097_2_);
-    }
-
-    @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand p_230254_2_) {
         this.doPlayerRide(player);
         return ActionResultType.sidedSuccess(this.level.isClientSide);
@@ -393,8 +367,6 @@ public class PowerArmorEntity extends AnimalEntity implements IAnimatable, IJump
     @Override
     public void handleStopJump() {}
 
-    //Animation
-    //{
     @Override
     public void registerControllers(AnimationData data) {
         AnimationController controller = new AnimationController<PowerArmorEntity>(this, "controller", 0, this::predicate);

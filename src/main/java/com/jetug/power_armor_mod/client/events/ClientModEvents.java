@@ -4,9 +4,12 @@ import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import net.minecraft.advancements.criterion.PlayerHurtEntityTrigger;
+import net.minecraft.client.renderer.debug.GameTestDebugRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +25,7 @@ public final class ClientModEvents {
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GECKO_ENTITY.get(), GeckoRenderer::new);
     }
 
-    public static void onClientSetup(RenderArmEvent e){
+    public static void onClientSetup(GameTestDebugRenderer e){
 
     }
 }
