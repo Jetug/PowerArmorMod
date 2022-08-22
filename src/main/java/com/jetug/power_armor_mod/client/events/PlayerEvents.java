@@ -17,8 +17,8 @@ public class PlayerEvents
     public static void onRenderPlayer(RenderPlayerEvent.Pre event)
     {
         PlayerEntity player = event.getPlayer();
-        if(isWearingPowerArmor(player)){
-            player.setInvisible(true);
-        }
+//        if(isWearingPowerArmor(player)){
+//            player.setInvisible(true);
+//        }
     }
 }
