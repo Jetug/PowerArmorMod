@@ -181,10 +181,19 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float f4  = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F );
         float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
 
-        this.tickPart(this.headHitBox, (f4 * 0.5F * xPos2), 2.1, (-f19 * 0.5F * xPos2)); //
+        //this.tickPart(this.headHitBox, (f4 * 0.5F * xPos2), 2.1, (-f19 * 0.5F * xPos2)); //
 
-        //this.tickPart(this.headHitBox, xPos2 * 0.5, 2.1, zPos2 * -0.5);
-        this.tickPart(this.bodyHitBox, 0, 1.2, 0);
+
+        float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
+        float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
+
+        double posXZ = 0.2;
+
+        this.headHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 2.1, -this.getZ() - (posXZ * posZ));
+        this.bodyHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 1.2, this.getZ() - (posXZ * posZ));
+
+        this.tickPart(this.headHitBox, (posXZ * posX), 2.1, - (posXZ * posZ));
+        this.tickPart(this.bodyHitBox, (posXZ * posX), 1.2, - (posXZ * posZ));
         this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
         this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
         this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
@@ -271,7 +280,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
 
-        double posXZ = -0.2;
+        double posXZ = 1;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
                 this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
