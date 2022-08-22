@@ -61,7 +61,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
-        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
+        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
         bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
         leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
         rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
@@ -139,6 +139,25 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         this.isJumping = p_110255_1_;
     }
 
+    public int posPointer = -1;
+    public final double[][] positions = new double[64][3];
+
+    public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
+        if (this.isDeadOrDying()) {
+            p_70974_2_ = 0.0F;
+        }
+
+        p_70974_2_ = 1.0F - p_70974_2_;
+        int i = this.posPointer - p_70974_1_ & 63;
+        int j = this.posPointer - p_70974_1_ - 1 & 63;
+        double[] adouble = new double[3];
+        double d0 = this.positions[i][1];
+        double d1 = this.positions[j][1] - d0;
+        adouble[1] = d0 + d1 * (double)p_70974_2_;
+
+        return adouble;
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -153,13 +172,23 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float zPos = MathHelper.sin(rotation);
         float armPos = 0.8f;
         float legPos = 0.2f;
+//EnderDragonEntity
 
-        this.tickPart(this.headHitBox, 0, 2.1, 0);
+        float rotation2 = (float)(this.getLatencyPos(2, 1.0F)[1] - this.getLatencyPos(2, 1.0F)[1]) * 2.0F * ((float)Math.PI / 180F);
+        float xPos2 = MathHelper.cos(rotation2);
+        float zPos2 = MathHelper.sin(rotation2);
+
+        float f4  = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F );
+        float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+
+        this.tickPart(this.headHitBox, (f4 * 0.5F * xPos2), 2.1, (-f19 * 0.5F * xPos2)); //
+
+        //this.tickPart(this.headHitBox, xPos2 * 0.5, 2.1, zPos2 * -0.5);
         this.tickPart(this.bodyHitBox, 0, 1.2, 0);
         this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
-        this.tickPart(this.leftArmHitBox, xPos * armPos, 1.1, zPos * armPos);
+        this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
         this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-        this.tickPart(this.leftLegHitBox, xPos * legPos, 0, zPos * legPos);
+        this.tickPart(this.leftLegHitBox , xPos * legPos , 0, zPos * legPos);
 
         for (int l = 0; l < this.subEntities.length; ++l) {
             this.subEntities[l].xo = aVector3d[l].x;
@@ -241,7 +270,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
 
         float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
-        double posXZ = 0.1;
+
+        double posXZ = -0.2;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
                 this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
