@@ -280,7 +280,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
 
-        double posXZ = 1;
+        double posXZ = -0.1;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
                 this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
