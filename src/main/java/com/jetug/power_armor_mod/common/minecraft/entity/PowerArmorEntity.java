@@ -62,9 +62,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         headHitBox = new PowerArmorPartEntity(this, HEAD, 0.7f, 0.7f);
-        bodyHitBox = new PowerArmorPartEntity(this, BODY, 1.0f, 1.0f);
-        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.7f, 1.0f);
-        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.7f, 1.0f);
+        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
+        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
+        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
         leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
         rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
