@@ -71,7 +71,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.JUMP_STRENGTH, 2.0D)
+                .add(Attributes.JUMP_STRENGTH, 1.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
@@ -183,7 +183,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
 
-        double posXZ = 0.2;
+        double posXZ = 0.3;
 
         this.headHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 2.1, -this.getZ() - (posXZ * posZ));
         this.bodyHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 1.2, this.getZ() - (posXZ * posZ));
