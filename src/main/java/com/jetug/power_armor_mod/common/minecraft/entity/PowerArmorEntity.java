@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.google.common.collect.ImmutableList;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
@@ -8,13 +7,10 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
@@ -22,9 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -38,7 +32,7 @@ import javax.annotation.Nullable;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
-public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJumpingMount, IPowerArmor {
+public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
     private final AnimationFactory factory = new AnimationFactory(this);
 
     protected boolean isJumping;
@@ -104,6 +98,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         cap.syncFromServer();
         return cap.getDurability(bodyPart);
     }
+
+
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
         if (level.isClientSide) {
@@ -318,7 +314,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
                     this.setIsJumping(true);
                     this.hasImpulse = true;
 
-                    //ForgeHooks.onLivingJump(this);
+                    //ForgeHooks.onLivingJump(this);ю.
 
                     if (f1 > 0.0F) {
                         float f2 = MathHelper.sin(this.yRot * ((float)Math.PI / 180F));
@@ -382,33 +378,39 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, IJu
         return ActionResultType.sidedSuccess(this.level.isClientSide);
     }
 
-    @Override
-    public void onPlayerJump(int jump) {
-        if (jump < 0) {
-            jump = 0;
-        }
-
-        if (jump >= 90) {
-            this.playerJumpPendingScale = 1.0F;
-        } else {
-            this.playerJumpPendingScale = 0.4F + 0.4F * (float)jump / 90.0F;
-        }
+    public void jump(){
+        this.playerJumpPendingScale = 1.0F;
     }
 
-    @Override
-    public boolean canJump() {
-        return true;
-    }
 
-    @Override
-    public void handleStartJump(int p_184775_1_) {}
+//    @Override
+//    public void onPlayerJump(int jump) {
+//        if (jump < 0) {
+//            jump = 0;
+//        }
+//
+//        if (jump >= 90) {
+//            this.playerJumpPendingScale = 1.0F;
+//        } else {
+//            this.playerJumpPendingScale = 0.4F + 0.4F * (float)jump / 90.0F;
+//        }
+//    }
+//
 
-    @Override
-    public void handleStopJump() {}
-
+//    @Override
+//    public boolean canJump() {
+//        return true;
+//    }
+//
+//    @Override
+//    public void handleStartJump(int p_184775_1_) {}
+//
+//    @Override
+//    public void handleStopJump() {}
+//
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<PowerArmorEntity>(this, "controller", 0, this::predicate);
+        AnimationController<PowerArmorEntity> controller = new AnimationController(this, "controller", 0, this::predicate);
         data.addAnimationController(controller);
     }
 

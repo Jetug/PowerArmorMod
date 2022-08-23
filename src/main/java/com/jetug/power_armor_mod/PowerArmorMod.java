@@ -41,7 +41,6 @@ public class PowerArmorMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModEntityTypes.register(eventBus);
-
         MinecraftForge.EVENT_BUS.register(this);
     }
 
