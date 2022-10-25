@@ -20,7 +20,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.entity.PartEntity;
+import org.apache.logging.log4j.Level;
 
+import static com.jetug.power_armor_mod.PowerArmorMod.LOGGER;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPowerArmorPartData;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
@@ -95,8 +97,13 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public boolean hurt(DamageSource damageSource, float damage) {
         PlayerEntity player = Minecraft.getInstance().player;
         damage(damage);
-        player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide), this.getUUID());
+        try{
+            player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide), this.getUUID());
+        } catch (Exception e) {
+            LOGGER.log(Level.ERROR, e);
+        }
         return this.isInvulnerableTo(damageSource) ? false : this.parentMob.hurt(this, damageSource, damage);
+
     }
 
     @Override
