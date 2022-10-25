@@ -10,8 +10,11 @@ import com.mojang.blaze3d.matrix.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.Level;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
+
+import static com.jetug.power_armor_mod.PowerArmorMod.LOGGER;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
@@ -36,20 +39,22 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        updateArmor(entity);
-        super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
+        try{
+            updateArmor(entity);
+            super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
+        } catch (Exception e) {
+            LOGGER.log(Level.ERROR, e);
+        }
+
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        for (ArmorSlot armorPart : entity.armorParts)
-            handleArmorDamage(armorPart);
-    }
-
-    private void handleArmorDamage(ArmorSlot slot){
-        if(slot.hasArmor())
-            attachBones(slot);
-        else if(!slot.hasArmor())
-            detachBones(slot);
+        for (ArmorSlot armorPart : entity.armorParts) {
+            if (armorPart.hasArmor())
+                attachBones(armorPart);
+            else if (!armorPart.hasArmor())
+                detachBones(armorPart);
+        }
     }
 
     private void attachBones(ArmorSlot slot){

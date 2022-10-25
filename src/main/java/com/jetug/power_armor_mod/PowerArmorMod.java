@@ -31,7 +31,7 @@ import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPl
 @Mod(PowerArmorMod.MOD_ID)
 public class PowerArmorMod
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "power_armor_mod";
 
     public PowerArmorMod() {
