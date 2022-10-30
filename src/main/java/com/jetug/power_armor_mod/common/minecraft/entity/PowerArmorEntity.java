@@ -11,6 +11,7 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
@@ -100,7 +101,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
 
-
     public void setArmorDurability(BodyPart bodyPart, float value) {
         if (level.isClientSide) {
             IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
@@ -166,31 +166,16 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         float rotation = this.yRot * ((float) Math.PI / 180F);
         float xPos = MathHelper.cos(rotation);
         float zPos = MathHelper.sin(rotation);
+        float posX = MathHelper.sin(rotation);
+        float posZ = MathHelper.cos(rotation);
+        //EnderDragonEntity
+        float posXZ = 0.3F;
         float armPos = 0.8f;
         float legPos = 0.2f;
-//EnderDragonEntity
 
-        float rotation2 = (float)(this.getLatencyPos(2, 1.0F)[1] - this.getLatencyPos(2, 1.0F)[1]) * 2.0F * ((float)Math.PI / 180F);
-        float xPos2 = MathHelper.cos(rotation2);
-        float zPos2 = MathHelper.sin(rotation2);
-
-        float f4  = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F );
-        float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
-
-        //this.tickPart(this.headHitBox, (f4 * 0.5F * xPos2), 2.1, (-f19 * 0.5F * xPos2)); //
-
-
-        float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
-        float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
-
-        double posXZ = 0.3;
-
-        this.headHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 2.1, -this.getZ() - (posXZ * posZ));
-        this.bodyHitBox.setPos(this.getX() + (posXZ * posX), this.getY() + 1.2, this.getZ() - (posXZ * posZ));
-
-        this.tickPart(this.headHitBox, (posXZ * posX), 2.1, - (posXZ * posZ));
-        this.tickPart(this.bodyHitBox, (posXZ * posX), 1.2, - (posXZ * posZ));
-        this.tickPart(this.rightArmHitBox, xPos * -armPos, 1.1, zPos * -armPos);
+        this.tickPart(this.headHitBox, posXZ * posX + posX * 2, 2.1, - (posXZ * posZ));
+        this.tickPart(this.bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
+        this.tickPart(this.rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
         this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
         this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
         this.tickPart(this.leftLegHitBox , xPos * legPos , 0, zPos * legPos);
@@ -276,7 +261,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
 
-        double posXZ = -0.1;
+        double posXZ = -0.3;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
                 this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
