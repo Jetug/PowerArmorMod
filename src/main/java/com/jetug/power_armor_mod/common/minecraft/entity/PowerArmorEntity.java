@@ -154,6 +154,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         return adouble;
     }
 
+    private float rotWrap(double p_70973_1_) {
+        return (float)MathHelper.wrapDegrees(p_70973_1_);
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -173,7 +177,40 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         float armPos = 0.8f;
         float legPos = 0.2f;
 
-        this.tickPart(this.headHitBox, posXZ * posX + posX * 2, 2.1, - (posXZ * posZ));
+        ////
+//        float f15 = (float)(this.getLatencyPos(5, 1.0F)[1] - this.getLatencyPos(10, 1.0F)[1]) * 10.0F * ((float)Math.PI / 180F);
+//        float f16 = MathHelper.cos(f15);
+//        float f2 = MathHelper.sin(f15);
+//
+//        int k = 0;
+//        double[] adouble = this.getLatencyPos(5, 1.0F);
+//        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
+//
+//        float f17 = this.yRot * ((float)Math.PI / 180F);
+//        float f7 = this.yRot * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
+//
+//        float f3 = MathHelper.sin(f17);
+//        float f18 = MathHelper.cos(f17);
+//
+//        float f20 = MathHelper.sin(f7);
+//        float f21 = MathHelper.cos(f7);
+//
+//        float f23 = (float)(k + 1);// * 2.0F;
+//
+//        this.tickPart(this.headHitBox,
+//                -(f3 * 2 + f20 * 1) * -2,
+//                1.2,
+//                (f18 * 2 + f21 * 1) * -2);
+//
+
+//        float f4 = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+//        float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+//        float f5 = 1;//this.getHeadYOffset();
+//
+//        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
+
+        ///
+        this.tickPart(this.headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
         this.tickPart(this.bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
         this.tickPart(this.rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
         this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);

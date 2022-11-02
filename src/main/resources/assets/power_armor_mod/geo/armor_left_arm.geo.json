@@ -25,11 +25,6 @@
 					]
 				},
 				{
-					"name": "bone17",
-					"parent": "left_shoulder_armor",
-					"pivot": [-45.25, 35.75, -0.5]
-				},
-				{
 					"name": "left_upper_arm_armor",
 					"pivot": [6.9875, 34.375, -22.4375],
 					"cubes": [
