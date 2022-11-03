@@ -118,6 +118,15 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         setArmorDurability(bodyPart, durability);
     }
 
+    public void dash() {
+        if(getControllingPassenger() instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) getControllingPassenger();
+            Vector3d vc = player.getViewVector(1.0F);
+            push(vc.x * 5, vc.y * 5, vc.z * 5);
+        }
+
+    }
+
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
         if (damage < 0.01F) {
             return false;
@@ -373,9 +382,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     @Override
     public boolean causeFallDamage(float height, float p_225503_2_) {
-        if (height > 1.0F) {
-            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
-        }
+//        if (height > 1.0F) {
+//            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
+//        }
 
         int immune = 3;
         int damage = this.calculateFallDamage(height, p_225503_2_);

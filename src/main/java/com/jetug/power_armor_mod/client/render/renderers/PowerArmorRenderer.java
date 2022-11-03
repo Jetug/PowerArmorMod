@@ -45,7 +45,6 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e);
         }
-
     }
 
     private void updateArmor(PowerArmorEntity entity){

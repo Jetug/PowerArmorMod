@@ -2,5 +2,8 @@
   "item.power_armor_mod.test": "XXX",
   "block.power_armor_mod.test_block": "XXX",
   "entity.power_armor_mod.power_armor": "Power Armor",
-  "itemGroup.xxx": "XXX"
+  "itemGroup.xxx": "XXX",
+
+  "key.categories.armor": "Armor controls",
+  "key.dash": "Dash"
 }

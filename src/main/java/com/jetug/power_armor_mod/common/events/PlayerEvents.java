@@ -22,10 +22,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onPlayerPickups(PlayerEvent.ItemPickupEvent event){
-//        PlayerEntity player = event.getPlayer();
-//        IPlayerData data = getPlayerData(player);
-//        player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), player.getUUID());
-//        data.setIsInPowerArmor(!data.getIsInPowerArmor());
+
     }
 
     @SubscribeEvent
