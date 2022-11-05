@@ -400,6 +400,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 //        if (height > 1.0F) {
 //            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
 //        }
+
+        animateHurt();
+
         double x = position().x;
         double y = position().y;
         double z = position().z;
@@ -483,17 +486,21 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if(event.isMoving()){
+        if (hurtTime > 0){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", false));
+            return PlayState.CONTINUE;
+        }
+        else if(event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
             event.getController().animationSpeed = speed + 1 * 4.0D;
             return PlayState.CONTINUE;
         }
-        else if (isFallFlying()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
-            return PlayState.CONTINUE;
-        }
+//        else if (isFallFlying()){
+//            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
+//            return PlayState.CONTINUE;
+//        }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
         return PlayState.CONTINUE;
     }
 

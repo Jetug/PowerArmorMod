@@ -21,11 +21,6 @@ public class PlayerEvents {
     public static void onPlayerLogsIn(PlayerEvent.PlayerLoggedInEvent event){}
 
     @SubscribeEvent
-    public static void onPlayerPickups(PlayerEvent.ItemPickupEvent event){
-
-    }
-
-    @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event){
         event.getPlayer().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(oldStore->{
             event.getOriginal().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(newStore ->{
@@ -45,10 +40,5 @@ public class PlayerEvents {
                 );
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void onTrack(){
-
     }
 }

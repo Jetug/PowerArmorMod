@@ -971,7 +971,7 @@
 			}
 		},
 		"dash": {
-			"loop": "hold_on_last_frame",
+			"loop": true,
 			"animation_length": 0.5,
 			"bones": {
 				"model": {
