@@ -18,7 +18,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
             ENTITY_TYPES.register("power_armor", () -> EntityType.Builder.of(PowerArmorEntity::new, EntityClassification.CREATURE)
-                    .sized(1.7f, 2.5f)
+                    .sized(1.0f, 2.5f)
                     .build(new ResourceLocation(PowerArmorMod.MOD_ID, "power_armor").toString()));
 
     public static final RegistryObject<EntityType<HitboxTestEntity>> HITBOX_TEST_ENTITY =

@@ -37,7 +37,7 @@ public class PlayerEvents
         }
     }
 
-    //@OnlyIn(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onAttack(AttackEntityEvent event)
     {
@@ -46,8 +46,21 @@ public class PlayerEvents
 
         if(isWearingPowerArmor(player)){
             Vector3d vc = player.getViewVector(1.0F);
-            target.push(vc.x * 20, vc.y * 20, vc.z * 20);
+            target.push(vc.x * 20, vc.y * 0, vc.z * 20);
         }
     }
 
+
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent()
+//    public static void onCollide( event)
+//    {
+//        PlayerEntity player = event.getPlayer();
+//        Entity target = event.getTarget();
+//
+//        if(isWearingPowerArmor(player)){
+//            Vector3d vc = player.getViewVector(1.0F);
+//            target.push(vc.x * 20, vc.y * 20, vc.z * 20);
+//        }
+//    }
 }
