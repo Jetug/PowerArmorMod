@@ -5,6 +5,7 @@ import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,9 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.entity.PartEntity;
@@ -34,7 +37,9 @@ import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.CalculateDistance;
+import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
+import static net.minecraft.util.math.MathHelper.cos;
+import static net.minecraft.util.math.MathHelper.sin;
 import static org.apache.logging.log4j.Level.DEBUG;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
@@ -126,13 +131,84 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         setArmorDurability(bodyPart, durability);
     }
 
-    public void dash() {
-        if(getControllingPassenger() instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity) getControllingPassenger();
-            Vector3d vc = player.getViewVector(1.0F);
-            push(vc.x , vc.y , vc.z);
+    public void dash(DashDirection direction) {
+        if (!(getControllingPassenger() instanceof PlayerEntity))
+            return;
+
+        PlayerEntity player = (PlayerEntity) getControllingPassenger();
+        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
+        float x = sin(rotation);
+        float z = cos(rotation);
+
+        Vector3d vector = new Vector3d(-x, 0, z);
+
+        switch (direction){
+            case FORWARD:
+                vector = new Vector3d(-x, 0, z);
+                break;
+            case BACK:
+                vector = new Vector3d(x, 0, -z);
+                break;
+            case RIGHT:
+                float rot1 = (player.getViewYRot(1) + 90) * ((float)Math.PI / 180F);
+                vector = new Vector3d(-sin(rot1), 0, cos(rot1));
+                break;
+            case LEFT:
+                float rot2 = (player.getViewYRot(1) - 90) * ((float)Math.PI / 180F);
+                vector = new Vector3d(-sin(rot2), 0, cos(rot2));
+                break;
         }
+
+        push(vector);
     }
+
+
+    public void dash(double angle) {
+        if (!(getControllingPassenger() instanceof PlayerEntity))
+            return;
+
+        PlayerEntity player = (PlayerEntity) getControllingPassenger();
+        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
+        float x = sin(rotation);
+        float z = cos(rotation);
+
+        Vector3d vector = new Vector3d(-x, 0, z);
+        push(vector.x , vector.y , vector.z);
+    }
+
+
+//    public void dash(DashDirection direction) {
+//
+//        switch (direction){
+//            case FORWARD:
+//                dash(0);
+//                break;
+//            case BACK:
+//                dash(180);
+//                break;
+//            case RIGHT:
+//                dash(90);
+//                break;
+//            case LEFT:
+//                dash(270);
+//                break;
+//        }
+//    }
+//
+//    public void dash(double angle) {
+//        if (!(getControllingPassenger() instanceof PlayerEntity))
+//            return;
+//
+//        PlayerEntity player = (PlayerEntity) getControllingPassenger();
+//        Vector3d vector = player.getViewVector(1.0F);
+//        vector = VectorHelper.rotateVector(vector, angle);
+//        push(vector.x , vector.y , vector.z);
+//    }
+
+    public void push(Vector3d vector){
+        push(vector.x , vector.y , vector.z);
+    }
+
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
         if (damage < 0.01F) {
@@ -157,9 +233,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     @Override
     public void tick() {
         super.tick();
-        speed = CalculateDistance(previousPosition, position());
+        speed = calculateDistance(previousPosition, position());
         previousPosition = position();
-        PowerArmorMod.LOGGER.log(DEBUG, speed);
+        //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
 
     public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
@@ -186,16 +262,20 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public void aiStep() {
         super.aiStep();
 
-        Vector3d[] aVector3d = new Vector3d[this.subEntities.length];
-        for (int j = 0; j < this.subEntities.length; ++j) {
-            aVector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
+        Vector3d[] aVector3d = new Vector3d[subEntities.length];
+        for (int j = 0; j < subEntities.length; ++j) {
+            aVector3d[j] = new Vector3d(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
         }
 
-        float rotation = this.yRot * ((float) Math.PI / 180F);
-        float xPos = MathHelper.cos(rotation);
-        float zPos = MathHelper.sin(rotation);
-        float posX = MathHelper.sin(rotation);
-        float posZ = MathHelper.cos(rotation);
+        float rotation = yRot * ((float) Math.PI / 180F);
+
+        PowerArmorMod.LOGGER.log(DEBUG, "yRot: " + yRot);
+        PowerArmorMod.LOGGER.log(DEBUG, "rotation: " +rotation);
+
+        float xPos = cos(rotation);
+        float zPos = sin(rotation);
+        float posX = sin(rotation);
+        float posZ = cos(rotation);
         //EnderDragonEntity
         float posXZ = 0.3F;
         float armPos = 0.8f;
@@ -234,20 +314,20 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 //        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
 
         ///
-        this.tickPart(this.headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
-        this.tickPart(this.bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
-        this.tickPart(this.rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
-        this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
-        this.tickPart(this.rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-        this.tickPart(this.leftLegHitBox , xPos * legPos , 0, zPos * legPos);
+        tickPart(headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
+        tickPart(bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
+        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
+        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
+        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
 
-        for (int l = 0; l < this.subEntities.length; ++l) {
-            this.subEntities[l].xo = aVector3d[l].x;
-            this.subEntities[l].yo = aVector3d[l].y;
-            this.subEntities[l].zo = aVector3d[l].z;
-            this.subEntities[l].xOld = aVector3d[l].x;
-            this.subEntities[l].yOld = aVector3d[l].y;
-            this.subEntities[l].zOld = aVector3d[l].z;
+        for (int l = 0; l < subEntities.length; ++l) {
+            subEntities[l].xo = aVector3d[l].x;
+            subEntities[l].yo = aVector3d[l].y;
+            subEntities[l].zo = aVector3d[l].z;
+            subEntities[l].xOld = aVector3d[l].x;
+            subEntities[l].yOld = aVector3d[l].y;
+            subEntities[l].zOld = aVector3d[l].z;
         }
     }
 
@@ -319,8 +399,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        float posX = MathHelper.sin(this.yBodyRot * ((float) Math.PI / 180F));
-        float posZ = MathHelper.cos(this.yBodyRot * ((float) Math.PI / 180F));
+        float posX = sin(this.yBodyRot * ((float) Math.PI / 180F));
+        float posZ = cos(this.yBodyRot * ((float) Math.PI / 180F));
 
         double posXZ = -0.3;
         double posY = 0.9;
@@ -363,8 +443,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                     //ForgeHooks.onLivingJump(this);ю.
 
                     if (f1 > 0.0F) {
-                        float f2 = MathHelper.sin(this.yRot * ((float)Math.PI / 180F));
-                        float f3 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F));
+                        float f2 = sin(this.yRot * ((float)Math.PI / 180F));
+                        float f3 = cos(this.yRot * ((float)Math.PI / 180F));
                         this.setDeltaMovement(this.getDeltaMovement().add(
                                 -0.4F * f2 * this.playerJumpPendingScale
                                 ,0.0D
@@ -415,7 +495,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         {
             if (entity != this && entity != getControllingPassenger()){
                 double push = 0.5;
-                Vector3d direction = VectorHelper.GetDirection(position(), entity.position());
+                Vector3d direction = VectorHelper.getDirection(position(), entity.position());
                 entity.push(direction.x * push, 0.5, direction.z * push);
                 entity.hurt(DamageSource.ANVIL, 10);
             }
