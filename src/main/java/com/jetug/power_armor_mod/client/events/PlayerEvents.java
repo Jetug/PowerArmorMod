@@ -16,6 +16,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 
 import java.lang.reflect.Field;
@@ -31,66 +32,35 @@ public class PlayerEvents
     public static void onRenderPlayer(RenderPlayerEvent.Pre event)
     {
         PlayerEntity player = event.getPlayer();
-//        if(isWearingPowerArmor(player)){
-//            player.setInvisible(true);
-//        }
+        if(isWearingPowerArmor(player)){
+            player.setInvisible(true);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onEvent(InputEvent.KeyInputEvent event)
-    {
-        int key = event.getKey();
-        PlayerEntity player = Minecraft.getInstance().player;
-        //player.sendMessage(new StringTextComponent("" + key), player.getUUID());
-
-        if(key == Minecraft.getInstance().options.keyJump.getKey().getValue()){
-
-            Entity entity = player.getVehicle();
-
-            if(player.isPassenger() && entity instanceof PowerArmorEntity){
-                ((PowerArmorEntity) entity).jump();
-            }
-
-        }
-    }
-
-//    private static Field KEYBIND_ARRAY = null;
-//
-//    @SubscribeEvent (priority = EventPriority.LOWEST)
-//    public static void onClientTick(TickEvent.ClientTickEvent event) throws Exception {
-//        PlayerEntity player = Minecraft.getInstance().player;
-//
-//        if(KEYBIND_ARRAY == null){
-//            KEYBIND_ARRAY = KeyBinding.class.getDeclaredField("KEYBIND_ARRAY");
-//            KEYBIND_ARRAY.setAccessible(true);
-//        }
-//        if(event.phase.equals(TickEvent.Phase.END)){
-//            Map<String, KeyBinding> binds = (Map<String, KeyBinding>) KEYBIND_ARRAY.get(null);
-//            for (String bind : binds.keySet()) {
-//                if(binds.get(bind).isDown()){
-//                    String str = bind + " - " + binds.get(bind).getName();
-//                    System.out.println(str);
-//
-//                    player.sendMessage(new StringTextComponent(str), player.getUUID());
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
-    //@OnlyIn(Dist.CLIENT)
-    @SubscribeEvent()
-    public static void onEvent2(AttackEntityEvent event)
+    public static void onAttack(AttackEntityEvent event)
     {
         PlayerEntity player = event.getPlayer();
         Entity target = event.getTarget();
 
         if(isWearingPowerArmor(player)){
             Vector3d vc = player.getViewVector(1.0F);
-            target.push(vc.x * 20, vc.y * 20, vc.z * 20);
+            target.push(vc.x * 20, vc.y * 0, vc.z * 20);
         }
-
     }
 
+
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent()
+//    public static void onCollide( event)
+//    {
+//        PlayerEntity player = event.getPlayer();
+//        Entity target = event.getTarget();
+//
+//        if(isWearingPowerArmor(player)){
+//            Vector3d vc = player.getViewVector(1.0F);
+//            target.push(vc.x * 20, vc.y * 20, vc.z * 20);
+//        }
+//    }
 }

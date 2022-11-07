@@ -86,7 +86,10 @@ public class ResourceHelper {
                 Texture texture = field.getAnnotation(Texture.class);
                 if(texture.ArmorPart() == part && texture.Type() == type){
                     ResourceLocation resource = null;
-                    try { resource = (ResourceLocation)field.get(null); } catch (IllegalAccessException e) {}
+                    try {
+                        resource = (ResourceLocation)field.get(null);
+                    }
+                    catch (IllegalAccessException ignored) {}
                     return resource;
                 }
             }

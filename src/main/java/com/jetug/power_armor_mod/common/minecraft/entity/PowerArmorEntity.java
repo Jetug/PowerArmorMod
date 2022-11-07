@@ -1,20 +1,22 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
+import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,6 +34,8 @@ import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.CalculateDistance;
+import static org.apache.logging.log4j.Level.DEBUG;
 
 public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
     private final AnimationFactory factory = new AnimationFactory(this);
@@ -53,6 +57,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public final ArmorSlot leftLeg   = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
     public final ArmorSlot rightLeg  = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
+
+    private Vector3d previousPosition = position();
+    private double speed = 0D;
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
@@ -108,6 +115,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             if (level.isClientSide)
                 cap.syncWithServer();
         }
+
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
@@ -116,6 +124,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             durability = 0;
 
         setArmorDurability(bodyPart, durability);
+    }
+
+    public void dash() {
+        if(getControllingPassenger() instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) getControllingPassenger();
+            Vector3d vc = player.getViewVector(1.0F);
+            push(vc.x , vc.y , vc.z);
+        }
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
@@ -138,6 +154,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public int posPointer = -1;
     public final double[][] positions = new double[64][3];
 
+    @Override
+    public void tick() {
+        super.tick();
+        speed = CalculateDistance(previousPosition, position());
+        previousPosition = position();
+        PowerArmorMod.LOGGER.log(DEBUG, speed);
+    }
+
     public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
         if (this.isDeadOrDying()) {
             p_70974_2_ = 0.0F;
@@ -152,6 +176,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         adouble[1] = d0 + d1 * (double)p_70974_2_;
 
         return adouble;
+    }
+
+    private float rotWrap(double p_70973_1_) {
+        return (float)MathHelper.wrapDegrees(p_70973_1_);
     }
 
     @Override
@@ -173,7 +201,40 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         float armPos = 0.8f;
         float legPos = 0.2f;
 
-        this.tickPart(this.headHitBox, posXZ * posX + posX * 2, 2.1, - (posXZ * posZ));
+        ////
+//        float f15 = (float)(this.getLatencyPos(5, 1.0F)[1] - this.getLatencyPos(10, 1.0F)[1]) * 10.0F * ((float)Math.PI / 180F);
+//        float f16 = MathHelper.cos(f15);
+//        float f2 = MathHelper.sin(f15);
+//
+//        int k = 0;
+//        double[] adouble = this.getLatencyPos(5, 1.0F);
+//        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
+//
+//        float f17 = this.yRot * ((float)Math.PI / 180F);
+//        float f7 = this.yRot * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
+//
+//        float f3 = MathHelper.sin(f17);
+//        float f18 = MathHelper.cos(f17);
+//
+//        float f20 = MathHelper.sin(f7);
+//        float f21 = MathHelper.cos(f7);
+//
+//        float f23 = (float)(k + 1);// * 2.0F;
+//
+//        this.tickPart(this.headHitBox,
+//                -(f3 * 2 + f20 * 1) * -2,
+//                1.2,
+//                (f18 * 2 + f21 * 1) * -2);
+//
+
+//        float f4 = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+//        float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+//        float f5 = 1;//this.getHeadYOffset();
+//
+//        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
+
+        ///
+        this.tickPart(this.headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
         this.tickPart(this.bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
         this.tickPart(this.rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
         this.tickPart(this.leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
@@ -336,12 +397,32 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     @Override
     public boolean causeFallDamage(float height, float p_225503_2_) {
-        if (height > 1.0F) {
-            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
+//        if (height > 1.0F) {
+//            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
+//        }
+
+        animateHurt();
+
+        double x = position().x;
+        double y = position().y;
+        double z = position().z;
+
+        PowerArmorMod.LOGGER.log(DEBUG, "FALL");
+        boolean bb = level.isClientSide;
+
+        for(Entity entity : this.level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(position(), position())
+                .inflate(3, 1, 3)))
+        {
+            if (entity != this && entity != getControllingPassenger()){
+                double push = 0.5;
+                Vector3d direction = VectorHelper.GetDirection(position(), entity.position());
+                entity.push(direction.x * push, 0.5, direction.z * push);
+                entity.hurt(DamageSource.ANVIL, 10);
+            }
         }
 
         int immune = 3;
-        int damage = this.calculateFallDamage(height, p_225503_2_);
+        int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
         if (damage <= immune) {
             return false;
         } else {
@@ -351,7 +432,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                     entity.hurt(DamageSource.FALL, (float) damage - immune);
                 }
             }
-
+            //BeaconBlock
             this.playBlockFallSound();
             return true;
         }
@@ -405,12 +486,21 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if(event.isMoving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
-            event.getController().animationSpeed = 4.0D;
+        if (hurtTime > 0){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", false));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+        else if(event.isMoving()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
+            event.getController().animationSpeed = speed + 1 * 4.0D;
+            return PlayState.CONTINUE;
+        }
+//        else if (isFallFlying()){
+//            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
+//            return PlayState.CONTINUE;
+//        }
+
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
         return PlayState.CONTINUE;
     }
 
