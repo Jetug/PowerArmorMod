@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.PowerArmorMod;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 public class TestModel<T extends Entity> extends EntityModel<T> {
-    public static final ModelResourceLocation LAYER_LOCATION = new ModelResourceLocation(new ResourceLocation(PowerArmorMod.MOD_ID, "test_model"), "main");
+    public static final ModelResourceLocation LAYER_LOCATION = new ModelResourceLocation(new ResourceLocation(Global.MOD_ID, "test_model"), "main");
 
     private final ModelRenderer head;
     private final ModelRenderer helmet;

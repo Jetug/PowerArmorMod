@@ -9,17 +9,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.jetug.power_armor_mod.common.util.constants.Constants.BODY_BONE_NAME;
-import static com.jetug.power_armor_mod.common.util.constants.Constants.HEAD_BONE_NAME;
+import static com.jetug.power_armor_mod.common.util.constants.Bones.HEAD_BONE_NAME;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.HELMET_MODEL_LOCATION;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.HELMET_TEXTURE_LOCATION;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.HEAD;
-import static com.jetug.power_armor_mod.common.util.enums.EquipmentType.STANDARD;
 
 public class ResourceHelper {
 

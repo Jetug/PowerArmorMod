@@ -2,10 +2,8 @@ package com.jetug.power_armor_mod.common.capability.data;
 
 import com.jetug.power_armor_mod.common.capability.SerializableCapabilityProvider;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -13,7 +11,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.jetug.power_armor_mod.PowerArmorMod.MOD_ID;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_PART_DATA_LOCATION;
 
 public class ArmorDataProvider implements ICapabilitySerializable<CompoundNBT> {

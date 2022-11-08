@@ -1,13 +1,15 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
+import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
+import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.PointOfView;
@@ -19,9 +21,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.entity.PartEntity;
@@ -65,6 +65,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     private Vector3d previousPosition = position();
     private double speed = 0D;
+    private boolean isDashing = false;
+    private final TickTimer clientTimer = new TickTimer();
 
     public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
@@ -135,6 +137,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         if (!(getControllingPassenger() instanceof PlayerEntity))
             return;
 
+        //if(level.isClientSide) {
+            isDashing = true;
+            clientTimer.addTimer(new PlayOnceTimerTask(10, () ->
+                    isDashing = false
+            ));
+        //}
         PlayerEntity player = (PlayerEntity) getControllingPassenger();
         float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
         float x = sin(rotation);
@@ -162,20 +170,18 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         push(vector);
     }
 
-
-    public void dash(double angle) {
-        if (!(getControllingPassenger() instanceof PlayerEntity))
-            return;
-
-        PlayerEntity player = (PlayerEntity) getControllingPassenger();
-        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
-        float x = sin(rotation);
-        float z = cos(rotation);
-
-        Vector3d vector = new Vector3d(-x, 0, z);
-        push(vector.x , vector.y , vector.z);
-    }
-
+//    public void dash(double angle) {
+//        if (!(getControllingPassenger() instanceof PlayerEntity))
+//            return;
+//
+//        PlayerEntity player = (PlayerEntity) getControllingPassenger();
+//        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
+//        float x = sin(rotation);
+//        float z = cos(rotation);
+//
+//        Vector3d vector = new Vector3d(-x, 0, z);
+//        push(vector);
+//    }
 
 //    public void dash(DashDirection direction) {
 //
@@ -209,15 +215,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         push(vector.x , vector.y , vector.z);
     }
 
-
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-        if (damage < 0.01F) {
-            return false;
-        } else {
-            return true;
-        }
+        return hurt(damageSource, damage);
     }
-
 
     public boolean isJumping() {
         return this.isJumping;
@@ -235,6 +235,11 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         super.tick();
         speed = calculateDistance(previousPosition, position());
         previousPosition = position();
+
+        //if(level.isClientSide){
+            clientTimer.tick();
+        //}
+
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
 
@@ -269,8 +274,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
         float rotation = yRot * ((float) Math.PI / 180F);
 
-        PowerArmorMod.LOGGER.log(DEBUG, "yRot: " + yRot);
-        PowerArmorMod.LOGGER.log(DEBUG, "rotation: " +rotation);
+        Global.LOGGER.log(DEBUG, "yRot: " + yRot);
+        Global.LOGGER.log(DEBUG, "rotation: " +rotation);
 
         float xPos = cos(rotation);
         float zPos = sin(rotation);
@@ -487,7 +492,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         double y = position().y;
         double z = position().z;
 
-        PowerArmorMod.LOGGER.log(DEBUG, "FALL");
+        Global.LOGGER.log(DEBUG, "FALL");
         boolean bb = level.isClientSide;
 
         for(Entity entity : this.level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(position(), position())
@@ -566,8 +571,13 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+        if(isDashing){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash", false));
+            return PlayState.CONTINUE;
+        }
         if (hurtTime > 0){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", false));
+            event.getController().animationSpeed =  0.5D;
             return PlayState.CONTINUE;
         }
         else if(event.isMoving()){
@@ -575,6 +585,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             event.getController().animationSpeed = speed + 1 * 4.0D;
             return PlayState.CONTINUE;
         }
+
 //        else if (isFallFlying()){
 //            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 //            return PlayState.CONTINUE;

@@ -22,7 +22,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.entity.PartEntity;
 import org.apache.logging.log4j.Level;
 
-import static com.jetug.power_armor_mod.PowerArmorMod.LOGGER;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPowerArmorPartData;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {

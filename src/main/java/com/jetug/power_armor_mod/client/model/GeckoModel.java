@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.common.minecraft.entity.GeckoEntity;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -13,19 +13,19 @@ public class GeckoModel<T extends GeckoEntity> extends AnimatedGeoModel<GeckoEnt
     @Override
     public ResourceLocation getModelLocation(GeckoEntity object)
     {
-        return new ResourceLocation(PowerArmorMod.MOD_ID, "geo/gecko_model.geo.json");
+        return new ResourceLocation(Global.MOD_ID, "geo/gecko_model.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureLocation(GeckoEntity object)
     {
-        return new ResourceLocation(PowerArmorMod.MOD_ID, "textures/entities/gecko_model.png");
+        return new ResourceLocation(Global.MOD_ID, "textures/entities/gecko_model.png");
     }
 
     @Override
     public ResourceLocation getAnimationFileLocation(GeckoEntity object)
     {
-        return new ResourceLocation(PowerArmorMod.MOD_ID, "animations/gecko_model.animation.json");
+        return new ResourceLocation(Global.MOD_ID, "animations/gecko_model.animation.json");
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

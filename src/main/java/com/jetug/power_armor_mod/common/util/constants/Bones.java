@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.util.constants;
 
-public class Constants {
+public class Bones {
     public static final String HEAD_BONE_NAME      = "head" ;
     public static final String BODY_BONE_NAME      = "body" ;
     public static final String LEFT_ARM_BONE_NAME  = "left_arm" ;
