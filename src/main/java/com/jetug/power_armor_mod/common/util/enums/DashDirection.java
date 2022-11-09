@@ -4,5 +4,6 @@ public enum DashDirection {
     FORWARD,
     BACK,
     RIGHT,
-    LEFT
+    LEFT,
+    UP
 }

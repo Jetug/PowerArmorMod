@@ -18,6 +18,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -165,54 +166,21 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                 float rot2 = (player.getViewYRot(1) - 90) * ((float)Math.PI / 180F);
                 vector = new Vector3d(-sin(rot2), 0, cos(rot2));
                 break;
+            case UP:
+                vector = new Vector3d(0,2,0);
+                break;
         }
 
         push(vector);
     }
 
-//    public void dash(double angle) {
-//        if (!(getControllingPassenger() instanceof PlayerEntity))
-//            return;
-//
-//        PlayerEntity player = (PlayerEntity) getControllingPassenger();
-//        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
-//        float x = sin(rotation);
-//        float z = cos(rotation);
-//
-//        Vector3d vector = new Vector3d(-x, 0, z);
-//        push(vector);
-//    }
-
-//    public void dash(DashDirection direction) {
-//
-//        switch (direction){
-//            case FORWARD:
-//                dash(0);
-//                break;
-//            case BACK:
-//                dash(180);
-//                break;
-//            case RIGHT:
-//                dash(90);
-//                break;
-//            case LEFT:
-//                dash(270);
-//                break;
-//        }
-//    }
-//
-//    public void dash(double angle) {
-//        if (!(getControllingPassenger() instanceof PlayerEntity))
-//            return;
-//
-//        PlayerEntity player = (PlayerEntity) getControllingPassenger();
-//        Vector3d vector = player.getViewVector(1.0F);
-//        vector = VectorHelper.rotateVector(vector, angle);
-//        push(vector.x , vector.y , vector.z);
-//    }
+    @Override
+    public void stopRiding() {
+    }
 
     public void push(Vector3d vector){
-        push(vector.x , vector.y , vector.z);
+        setDeltaMovement(this.getDeltaMovement().add(vector));
+        //push(vector.x , vector.y , vector.z);
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
@@ -571,19 +539,25 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+        event.getController().animationSpeed =  1.0D;
+
         if(isDashing){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", true));
             return PlayState.CONTINUE;
         }
         if (hurtTime > 0){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", false));
-            event.getController().animationSpeed =  0.5D;
-            return PlayState.CONTINUE;
+            event.getController().animationSpeed =  1.0D;
+            return PlayState.STOP;
         }
         else if(event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
             event.getController().animationSpeed = speed + 1 * 4.0D;
             return PlayState.CONTINUE;
+        }
+        else{
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
         }
 
 //        else if (isFallFlying()){
@@ -591,7 +565,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 //            return PlayState.CONTINUE;
 //        }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
         return PlayState.CONTINUE;
     }
 

@@ -34,7 +34,7 @@ credits="Jetug" #optional
 authors="Jetug" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This is mod adds power armor
+This is mod adds mechanical armor
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.power_armor_mod]] #optional

@@ -58,6 +58,10 @@ public class InputEvents {
                 if (isEqual(key, options.keyRight)) {
                     ((PowerArmorEntity) entity).dash(DashDirection.RIGHT);
                 }
+
+                if (isEqual(key, options.keyJump)) {
+                    ((PowerArmorEntity) entity).dash(DashDirection.UP);
+                }
             }
 
             if (isEqual(key, options.keyJump)) {
