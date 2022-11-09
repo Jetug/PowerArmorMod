@@ -1,7 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.registery;
 
-import com.jetug.power_armor_mod.common.minecraft.block.ObsidianOBJ;
-import com.jetug.power_armor_mod.common.minecraft.block.PowerArmorBlock;
 import com.jetug.power_armor_mod.common.minecraft.item.ModCreativeModeTab;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -15,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.PowerArmorMod.MOD_ID;
+import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);

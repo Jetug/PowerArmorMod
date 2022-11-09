@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Level;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
-import static com.jetug.power_armor_mod.PowerArmorMod.LOGGER;
+import static com.jetug.power_armor_mod.common.util.constants.Global.LOGGER;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;

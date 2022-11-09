@@ -17,7 +17,8 @@ public class KeyBindings {
 
         for (Field field: KeyBindings.class.getFields()) {
             try {
-                keys.add((KeyBinding)field.get(null));
+                if (field.get(null) instanceof KeyBinding)
+                    keys.add((KeyBinding)field.get(null));
             }
             catch (IllegalAccessException ignored) {}
         }

@@ -1,9 +1,8 @@
 package com.jetug.power_armor_mod.client.events;
 
-import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.client.KeyBindings;
 import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static com.jetug.power_armor_mod.client.KeyBindings.*;
 
-@Mod.EventBusSubscriber(modid = PowerArmorMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
