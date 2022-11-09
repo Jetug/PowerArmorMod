@@ -1,52 +1,49 @@
 package com.jetug.power_armor_mod.common.util.helpers;
 
-import com.jetug.power_armor_mod.PowerArmorMod;
-import com.jetug.power_armor_mod.client.render.ResourceHelper;
-import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
-import com.jetug.power_armor_mod.common.capability.data.PlayerDataProvider;
-import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
-import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import java.util.Timer;
+import static com.jetug.power_armor_mod.common.util.extensions.Key.isEqual;
+import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 public class DoubleClickHelper{
-    private KeyBinding key1;
-
     private static final int maxTicks = 10;
 
+    private Integer lastKey;
     private int ticks = maxTicks;
 
     public DoubleClickHelper(){
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        eventBus.addListener(this::onTick);
+//        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//        eventBus.addListener(this::onTick);
+
+        MinecraftForge.EVENT_BUS.addListener(this::onTick);
     }
 
     private void onTick(final TickEvent.ClientTickEvent event) {
-        if (key1 != null)
-            ticks -= 1;
+        if (lastKey == null) 
+            return;
+        ticks -= 1;
+        if (ticks <= 0)
+            lastKey = null;
     }
 
-    public boolean onClick(KeyBinding key){
-        if (key1 == null || key.getKey().getValue() != key1.getKey().getValue()){
-            key1 = key;
+    public boolean isDoubleClick(int key){
+        if(lastKey == null || lastKey != key) {
+            lastKey = key;
+            ticks = maxTicks;
             return false;
         }
-        else if(key.getKey().getValue() == key1.getKey().getValue()){
-            key1 = null;
-            ticks = maxTicks;
+        else if(ticks > 0 && lastKey == key) {
+            lastKey = null;
             return true;
         }
-
         return false;
     }
-
-    public void isDoublePressed(KeyBinding key){
-
-    }
+    
+//    private boolean isEqual(KeyBinding key1, KeyBinding key2){
+//        return key1.getKey().getValue() == key2.getKey().getValue();
+//    }
 }
