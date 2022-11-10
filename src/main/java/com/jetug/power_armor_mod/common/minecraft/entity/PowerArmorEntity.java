@@ -36,6 +36,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
+import java.util.List;
+
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
@@ -56,12 +58,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public final PowerArmorPartEntity rightLegHitBox;
     public final PowerArmorPartEntity[] subEntities;
 
-    public final ArmorSlot head      = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
-    public final ArmorSlot body      = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
-    public final ArmorSlot leftArm   = new ArmorSlot(this, LEFT_ARM  , EquipmentType.STANDARD);
-    public final ArmorSlot rightArm  = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
-    public final ArmorSlot leftLeg   = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
-    public final ArmorSlot rightLeg  = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
+    public final ArmorSlot head         = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
+    public final ArmorSlot body         = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
+    public final ArmorSlot leftArm      = new ArmorSlot(this, LEFT_ARM  , EquipmentType.STANDARD);
+    public final ArmorSlot rightArm     = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
+    public final ArmorSlot leftLeg      = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
+    public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
     private Vector3d previousPosition = position();
@@ -208,27 +210,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             clientTimer.tick();
         //}
 
+//        if(isDashing)
+//            pushEntities();
+
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
-    }
-
-    public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
-        if (this.isDeadOrDying()) {
-            p_70974_2_ = 0.0F;
-        }
-
-        p_70974_2_ = 1.0F - p_70974_2_;
-        int i = this.posPointer - p_70974_1_ & 63;
-        int j = this.posPointer - p_70974_1_ - 1 & 63;
-        double[] adouble = new double[3];
-        double d0 = this.positions[i][1];
-        double d1 = this.positions[j][1] - d0;
-        adouble[1] = d0 + d1 * (double)p_70974_2_;
-
-        return adouble;
-    }
-
-    private float rotWrap(double p_70973_1_) {
-        return (float)MathHelper.wrapDegrees(p_70973_1_);
     }
 
     @Override
@@ -456,23 +441,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
         animateHurt();
 
-        double x = position().x;
-        double y = position().y;
-        double z = position().z;
-
         Global.LOGGER.log(DEBUG, "FALL");
         boolean bb = level.isClientSide;
 
-        for(Entity entity : this.level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(position(), position())
-                .inflate(3, 1, 3)))
-        {
-            if (entity != this && entity != getControllingPassenger()){
-                double push = 0.5;
-                Vector3d direction = VectorHelper.getDirection(position(), entity.position());
-                entity.push(direction.x * push, 0.5, direction.z * push);
-                entity.hurt(DamageSource.ANVIL, 10);
-            }
-        }
+        pushEntities();
 
         int immune = 3;
         int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
@@ -489,6 +461,21 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             this.playBlockFallSound();
             return true;
         }
+    }
+
+    public void pushEntities(){
+        for(Entity entity : getEntitiesOfClass(3,1,3)) {
+            if (entity != this && entity != getControllingPassenger()){
+                double push = 0.5;
+                Vector3d direction = VectorHelper.getDirection(position(), entity.position());
+                entity.push(direction.x * push, 0.5, direction.z * push);
+                entity.hurt(DamageSource.GENERIC, 10);
+            }
+        }
+    }
+
+    private List<Entity> getEntitiesOfClass(double x, double y, double z) {
+        return this.level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(position(), position()).inflate(x, y, z));
     }
 
     @Override
