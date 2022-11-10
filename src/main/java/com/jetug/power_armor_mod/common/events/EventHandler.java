@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -26,6 +27,13 @@ public class EventHandler {
                 break;
             case RENDER:
                 break;
+        }
+    }
+
+    @SubscribeEvent()
+    public static void onMount(EntityMountEvent event) {
+        if (event.isDismounting()){
+            //event.setCanceled(true);
         }
     }
 }

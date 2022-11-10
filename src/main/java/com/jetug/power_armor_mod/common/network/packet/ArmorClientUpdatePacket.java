@@ -15,7 +15,6 @@ public class ArmorClientUpdatePacket{
     IArmorPartData capability = null;
 
     private int entityID = -1;
-    //private CompoundNBT nbt = null;
 
     public ArmorClientUpdatePacket(final IArmorPartData capability) {
         this.capability = capability;

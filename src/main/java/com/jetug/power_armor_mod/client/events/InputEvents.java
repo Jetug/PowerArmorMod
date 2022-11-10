@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Level;
@@ -73,10 +74,6 @@ public class InputEvents {
         }
     }
 
-    public static void ttt(InputEvent event)
-    {
-
-    }
 
     private static void onJump(Entity entity){
         ((PowerArmorEntity)entity).jump();

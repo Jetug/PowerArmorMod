@@ -18,10 +18,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -38,6 +36,7 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
+import static com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider.*;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
@@ -112,7 +111,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     public float getArmorDurability(BodyPart bodyPart) {
-        IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+        IArmorPartData cap = getCapability(POWER_ARMOR_PART_DATA).orElse(null);
         cap.syncFromServer();
         return cap.getDurability(bodyPart);
     }
@@ -120,12 +119,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
         if (level.isClientSide) {
-            IArmorPartData cap = this.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+            IArmorPartData cap = getCapability(POWER_ARMOR_PART_DATA).orElse(null);
             cap.setDurability(bodyPart, value);
-            if (level.isClientSide)
-                cap.syncWithServer();
+            cap.syncWithServer();
         }
-
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
@@ -178,6 +175,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     @Override
     public void stopRiding() {
+
     }
 
     public void push(Vector3d vector){
@@ -197,21 +195,22 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         this.isJumping = p_110255_1_;
     }
 
-    public int posPointer = -1;
-    public final double[][] positions = new double[64][3];
-
     @Override
     public void tick() {
         super.tick();
         speed = calculateDistance(previousPosition, position());
         previousPosition = position();
 
+        boolean bb = level.isClientSide;
+
+        if(isDashing && !bb) {
+            pushEntitiesAround();
+        }
+
         //if(level.isClientSide){
-            clientTimer.tick();
+        clientTimer.tick();
         //}
 
-//        if(isDashing)
-//            pushEntities();
 
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
@@ -444,7 +443,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         Global.LOGGER.log(DEBUG, "FALL");
         boolean bb = level.isClientSide;
 
-        pushEntities();
+        pushEntitiesAround();
 
         int immune = 3;
         int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
@@ -463,14 +462,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         }
     }
 
-    public void pushEntities(){
+    public void pushEntitiesAround(){
         for(Entity entity : getEntitiesOfClass(3,1,3)) {
-            if (entity != this && entity != getControllingPassenger()){
-                double push = 0.5;
-                Vector3d direction = VectorHelper.getDirection(position(), entity.position());
-                entity.push(direction.x * push, 0.5, direction.z * push);
-                entity.hurt(DamageSource.GENERIC, 10);
-            }
+            if (entity == this || entity == getControllingPassenger())
+                continue;
+            double push = 0.5;
+            Vector3d direction = VectorHelper.getDirection(position(), entity.position());
+            entity.push(direction.x * push, 0.5, direction.z * push);
+            entity.hurt(DamageSource.ANVIL, 10);
         }
     }
 
