@@ -71,9 +71,13 @@ public class InputEvents {
             else if(isEqual(key, DASH) ){
                 onDash(entity);
             }
+
+            if (options.keyShift.isDown() && player.getVehicle() instanceof PowerArmorEntity) {
+                minecraft.options.keyShift.setDown(false);
+                //onDash(entity);
+            }
         }
     }
-
 
     private static void onJump(Entity entity){
         ((PowerArmorEntity)entity).jump();
