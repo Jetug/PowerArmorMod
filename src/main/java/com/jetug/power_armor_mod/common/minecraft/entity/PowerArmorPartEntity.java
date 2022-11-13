@@ -101,7 +101,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e);
         }
-        return this.isInvulnerableTo(damageSource) ? false : this.parentMob.hurt(this, damageSource, damage);
+        return !this.isInvulnerableTo(damageSource) && this.parentMob.hurt(this, damageSource, damage);
 
     }
 
