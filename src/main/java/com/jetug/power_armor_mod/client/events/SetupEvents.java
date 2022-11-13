@@ -1,34 +1,37 @@
 package com.jetug.power_armor_mod.client.events;
 
-import com.jetug.power_armor_mod.client.render.renderers.*;
-import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
+import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import static com.jetug.power_armor_mod.client.KeyBindings.*;
+import static com.jetug.power_armor_mod.client.KeyBindings.getKeys;
+import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.POWER_ARMOR;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
-    @OnlyIn(Dist.CLIENT)
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent
+//    public static void onClientSetup(FMLClientSetupEvent event){
+//        RenderingRegistry.registerEntityRenderingHandler(POWER_ARMOR.get(), PowerArmorRenderer::new);
+//    }
+
     @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event){
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.HITBOX_TEST_ENTITY.get(), HitboxTestRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.POWER_ARMOR.get(), PowerArmorRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.TEST_ENTITY.get(), TestRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GECKO_ENTITY.get(), GeckoRenderer::new);
+    public static void onClientSetup(EntityRenderersEvent.RegisterRenderers event){
+        event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);
     }
+
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientSetup( FMLClientSetupEvent event) {
-        for (KeyBinding key: getKeys())
+        for (KeyMapping key: getKeys())
             ClientRegistry.registerKeyBinding(key);
     }
 }

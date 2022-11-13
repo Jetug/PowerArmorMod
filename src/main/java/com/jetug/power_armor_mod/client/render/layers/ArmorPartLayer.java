@@ -4,18 +4,18 @@ import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 import java.util.ArrayList;
 
-import static com.jetug.power_armor_mod.client.render.ResourceHelper.*;
+import static com.jetug.power_armor_mod.client.render.ResourceHelper.getAttachments;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
 
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
@@ -33,8 +33,7 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, PowerArmorEntity entity,
-                       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.getArmorPart(bodyPart).hasArmor() && !entity.isInvisible()) {
             int overlay = OverlayTexture.NO_OVERLAY;
             RenderType cameo = RenderType.armorCutoutNoCull(texture);

@@ -5,9 +5,9 @@ import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public class ArmorPartData implements IArmorPartData {
     public static final String DURABILITY = "durability";
@@ -61,8 +61,8 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
 
         for(int i = 0; i < durabilityArray.length; i++)
             nbt.putFloat(DURABILITY + i, durabilityArray[i]);
@@ -71,14 +71,14 @@ public class ArmorPartData implements IArmorPartData {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         for(int i = 0; i < durabilityArray.length; i++)
             durabilityArray[i] = nbt.getFloat(DURABILITY + i);
         defense = nbt.getDouble(ArmorPartData.DEFENSE);
     }
 
     @Override
-    public void syncWithClient(ServerPlayerEntity player) {
+    public void syncWithClient(ServerPlayer player) {
         PacketHandler.sendTo(new ArmorPartPacket(this), player);
     }
 

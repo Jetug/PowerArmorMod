@@ -1,18 +1,19 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.client.model.*;
+import com.jetug.power_armor_mod.client.model.ArmorModel;
+import com.jetug.power_armor_mod.client.model.PowerArmorModel;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
-import com.jetug.power_armor_mod.client.render.layers.*;
+import com.jetug.power_armor_mod.client.render.layers.ArmorPartLayer;
 import com.jetug.power_armor_mod.common.minecraft.entity.ArmorSlot;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.enums.*;
-import com.mojang.blaze3d.matrix.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.util.ResourceLocation;
+import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Level;
-import software.bernie.geckolib3.geo.render.built.*;
-import software.bernie.geckolib3.renderers.geo.*;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import static com.jetug.power_armor_mod.common.util.constants.Global.LOGGER;
 
@@ -27,7 +28,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final ArmorPartLayer rightLegLayer  = new ArmorPartLayer(this, BodyPart.RIGHT_LEG);
     private final ArmorPartLayer[] armorLayers = new ArmorPartLayer[]{headLayer, bodyLayer, leftArmLayer, rightArmLayer, leftLegLayer, rightLegLayer};
 
-    public PowerArmorRenderer(EntityRendererManager renderManager) {
+    public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,  new PowerArmorModel<>());
 
         powerArmorModel = (PowerArmorModel<PowerArmorEntity>)getGeoModelProvider();
@@ -38,10 +39,10 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void render(PowerArmorEntity entity, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         try{
             updateArmor(entity);
-            super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
+            super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e);
         }

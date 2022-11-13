@@ -5,7 +5,7 @@ import com.jetug.power_armor_mod.common.util.annotations.Texture;
 import com.jetug.power_armor_mod.common.util.constants.Resources;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 
 import javax.annotation.Nullable;

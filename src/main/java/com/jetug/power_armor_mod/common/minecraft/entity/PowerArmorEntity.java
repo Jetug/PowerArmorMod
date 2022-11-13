@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
@@ -9,19 +8,21 @@ import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.settings.PointOfView;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -30,21 +31,21 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider.*;
-import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
+import static com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider.POWER_ARMOR_PART_DATA;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
-import static net.minecraft.util.math.MathHelper.cos;
-import static net.minecraft.util.math.MathHelper.sin;
+import static net.minecraft.util.Mth.cos;
+import static net.minecraft.util.Mth.sin;
 import static org.apache.logging.log4j.Level.DEBUG;
+import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
-    private final AnimationFactory factory = new AnimationFactory(this);
+public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
@@ -64,12 +65,12 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
-    private Vector3d previousPosition = position();
+    private Vec3 previousPosition = position();
     private double speed = 0D;
     private boolean isDashing = false;
     private final TickTimer clientTimer = new TickTimer();
 
-    public PowerArmorEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
         headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
         bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
@@ -81,9 +82,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         this.noCulling = true;
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return CreatureEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D)
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 100.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
@@ -133,7 +134,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof PlayerEntity))
+        if (!(getControllingPassenger() instanceof Player))
             return;
 
         //if(level.isClientSide) {
@@ -142,37 +143,37 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                     isDashing = false
             ));
         //}
-        PlayerEntity player = (PlayerEntity) getControllingPassenger();
+        Player player = (Player)getControllingPassenger();
         float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
         float x = sin(rotation);
         float z = cos(rotation);
 
-        Vector3d vector = new Vector3d(-x, 0, z);
+        Vec3 vector = new Vec3(-x, 0, z);
 
         switch (direction){
             case FORWARD:
-                vector = new Vector3d(-x, 0, z);
+                vector = new Vec3(-x, 0, z);
                 break;
             case BACK:
-                vector = new Vector3d(x, 0, -z);
+                vector = new Vec3(x, 0, -z);
                 break;
             case RIGHT:
                 float rot1 = (player.getViewYRot(1) + 90) * ((float)Math.PI / 180F);
-                vector = new Vector3d(-sin(rot1), 0, cos(rot1));
+                vector = new Vec3(-sin(rot1), 0, cos(rot1));
                 break;
             case LEFT:
                 float rot2 = (player.getViewYRot(1) - 90) * ((float)Math.PI / 180F);
-                vector = new Vector3d(-sin(rot2), 0, cos(rot2));
+                vector = new Vec3(-sin(rot2), 0, cos(rot2));
                 break;
             case UP:
-                vector = new Vector3d(0,2,0);
+                vector = new Vec3(0,2,0);
                 break;
         }
 
         push(vector);
     }
 
-    public void push(Vector3d vector){
+    public void push(Vec3 vector){
         setDeltaMovement(this.getDeltaMovement().add(vector));
         //push(vector.x , vector.y , vector.z);
     }
@@ -213,14 +214,14 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     public void aiStep() {
         super.aiStep();
 
-        Vector3d[] aVector3d = new Vector3d[subEntities.length];
+        Vec3[] aVector3d = new Vec3[subEntities.length];
         for (int j = 0; j < subEntities.length; ++j) {
-            aVector3d[j] = new Vector3d(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
+            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
         }
 
-        float rotation = yRot * ((float) Math.PI / 180F);
+        float rotation = getYRot() * ((float) Math.PI / 180F);
 
-        Global.LOGGER.log(DEBUG, "yRot: " + yRot);
+        Global.LOGGER.log(DEBUG, "getYRot(): " + getYRot());
         Global.LOGGER.log(DEBUG, "rotation: " +rotation);
 
         float xPos = cos(rotation);
@@ -241,8 +242,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 //        double[] adouble = this.getLatencyPos(5, 1.0F);
 //        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
 //
-//        float f17 = this.yRot * ((float)Math.PI / 180F);
-//        float f7 = this.yRot * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
+//        float f17 = this.getYRot() * ((float)Math.PI / 180F);
+//        float f7 = this.getYRot() * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
 //
 //        float f3 = MathHelper.sin(f17);
 //        float f18 = MathHelper.cos(f17);
@@ -258,8 +259,8 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 //                (f18 * 2 + f21 * 1) * -2);
 //
 
-//        float f4 = MathHelper.sin(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
-//        float f19 = MathHelper.cos(this.yRot * ((float)Math.PI / 180F) - this.yRot * 0.01F);
+//        float f4 = MathHelper.sin(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
+//        float f19 = MathHelper.cos(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
 //        float f5 = 1;//this.getHeadYOffset();
 //
 //        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
@@ -305,10 +306,10 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
 
     @Override
     public boolean isInvisible() {
-        ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
-        PointOfView pov = Minecraft.getInstance().options.getCameraType();
+        var clientPlayer = Minecraft.getInstance().player;
+        var pov = Minecraft.getInstance().options.getCameraType();
 
-        if (hasPassenger(clientPlayer) && pov == PointOfView.FIRST_PERSON)
+        if (hasPassenger(clientPlayer) && pov == CameraType.FIRST_PERSON)
             return true;
         return super.isInvisible();
     }
@@ -323,13 +324,13 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         return false;
     }
 
-    public ActionResultType onInteract(PlayerEntity player, Hand hand) {
+    public InteractionResult onInteract(Player player, InteractionHand hand) {
         for (ArmorSlot subEntity : this.armorParts) {
             subEntity.setDurability(1);
         }
         this.doPlayerRide(player);
 
-        return ActionResultType.sidedSuccess(this.level.isClientSide);
+        return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
     @Nullable
@@ -363,38 +364,32 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     @Override
-    public void travel(Vector3d sVector3d) {
+    public void travel(Vec3 sVector3d) {
         if (this.isAlive()) {
             if (this.isVehicle() && this.canBeControlledByRider()) {
                 LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
-                this.yRot = livingentity.yRot;
-                this.yRotO = this.yRot;
-                this.xRot = livingentity.xRot * 0.5F;
-                this.setRot(this.yRot, this.xRot);
-                this.yBodyRot = this.yRot;
+                this.setYRot(livingentity.getYRot());
+                this.yRotO = this.getYRot();
+                this.setXRot(livingentity.getXRot() * 0.5F);
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = this.getYRot();
                 this.yHeadRot = this.yBodyRot;
                 float f = livingentity.xxa /* * 0.5F*/;
                 float f1 = livingentity.zza;
 
                 if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
                     double jump = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
-                    double d1;
-                    if (this.hasEffect(Effects.JUMP)) {
-                        d1 = jump + (double)((float)(this.getEffect(Effects.JUMP).getAmplifier() + 1) * 0.1F);
-                    } else {
-                        d1 = jump;
-                    }
 
-                    Vector3d vector3d = this.getDeltaMovement();
-                    this.setDeltaMovement(vector3d.x, d1, vector3d.z);
+                    Vec3 vector3d = this.getDeltaMovement();
+                    this.setDeltaMovement(vector3d.x, jump, vector3d.z);
                     this.setIsJumping(true);
                     this.hasImpulse = true;
 
                     //ForgeHooks.onLivingJump(this);ю.
 
                     if (f1 > 0.0F) {
-                        float f2 = sin(this.yRot * ((float)Math.PI / 180F));
-                        float f3 = cos(this.yRot * ((float)Math.PI / 180F));
+                        float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
+                        float f3 = cos(this.getYRot() * ((float)Math.PI / 180F));
                         this.setDeltaMovement(this.getDeltaMovement().add(
                                 -0.4F * f2 * this.playerJumpPendingScale
                                 ,0.0D
@@ -407,9 +402,9 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
                     this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                    super.travel(new Vector3d(f, sVector3d.y, f1));
-                } else if (livingentity instanceof PlayerEntity) {
-                    this.setDeltaMovement(Vector3d.ZERO);
+                    super.travel(new Vec3(f, sVector3d.y, f1));
+                } else if (livingentity instanceof Player) {
+                    this.setDeltaMovement(Vec3.ZERO);
                 }
 
                 if (this.onGround) {
@@ -426,7 +421,7 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
     }
 
     @Override
-    public boolean causeFallDamage(float height, float p_225503_2_) {
+    public boolean causeFallDamage(float height, float p_225503_2_, DamageSource p_147189_) {
 //        if (height > 1.0F) {
 //            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
 //        }
@@ -460,26 +455,25 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
             if (entity == this || entity == getControllingPassenger())
                 continue;
             double push = 0.5;
-            Vector3d direction = VectorHelper.getDirection(position(), entity.position());
+            Vec3 direction = VectorHelper.getDirection(position(), entity.position());
             entity.push(direction.x * push, 0.5, direction.z * push);
             entity.hurt(DamageSource.ANVIL, 10);
         }
     }
 
     private List<Entity> getEntitiesOfClass(double x, double y, double z) {
-        return this.level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(position(), position()).inflate(x, y, z));
+        return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
     }
 
     @Override
-    public ActionResultType mobInteract(PlayerEntity player, Hand p_230254_2_) {
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
         this.doPlayerRide(player);
-        return ActionResultType.sidedSuccess(this.level.isClientSide);
+        return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
     public void jump(){
         this.playerJumpPendingScale = 1.0F;
     }
-
 
 //    @Override
 //    public void onPlayerJump(int jump) {
@@ -521,22 +515,22 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         event.getController().animationSpeed =  1.0D;
 
         if(isDashing){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward", false));
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward", HOLD_ON_LAST_FRAME));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", LOOP));
             return PlayState.CONTINUE;
         }
         if (hurtTime > 0){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", PLAY_ONCE));
             event.getController().animationSpeed =  1.0D;
             return PlayState.STOP;
         }
         else if(event.isMoving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", LOOP));
             event.getController().animationSpeed = speed + 1 * 4.0D;
             return PlayState.CONTINUE;
         }
         else{
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", LOOP));
         }
 
 //        else if (isFallFlying()){
@@ -547,15 +541,15 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         return PlayState.CONTINUE;
     }
 
-    public void doPlayerRide(PlayerEntity player) {
+    public void doPlayerRide(Player player) {
         if (!this.level.isClientSide) {
-            player.yRot = this.yRot;
-            player.xRot = this.xRot;
+            player.setYRot(getYRot());
+            player.setXRot(getXRot());
             player.startRiding(this);
 
-            IPlayerData data = getPlayerData(player);
-            data.setIsInPowerArmor(true);
-            player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), this.getUUID());
+//            IPlayerData data = getPlayerData(player);
+//            data.setIsInPowerArmor(true);
+            //player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), this.getUUID());
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.jetug.power_armor_mod.common.capability.data;
 
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public interface IArmorPartData {
 
@@ -21,11 +21,11 @@ public interface IArmorPartData {
 
     void copyFrom(IArmorPartData source);
 
-    public CompoundNBT serializeNBT();
+    public CompoundTag serializeNBT();
 
-    public void deserializeNBT(CompoundNBT data);
+    public void deserializeNBT(CompoundTag data);
 
-    public void syncWithClient(ServerPlayerEntity player);
+    public void syncWithClient(ServerPlayer player);
 
     public void syncWithServer();
 

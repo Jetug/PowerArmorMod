@@ -1,13 +1,13 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
+import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,7 +18,7 @@ public class ArmorPartPacket {
 	IArmorPartData capability = null;
 
 	private int entityID = -1;
-	private CompoundNBT nbt = null;
+	private CompoundTag nbt = null;
 
 
 	public ArmorPartPacket(final IArmorPartData capability) {
@@ -27,12 +27,12 @@ public class ArmorPartPacket {
 
 	public ArmorPartPacket() {}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(capability.getEntity().getId());
 		buffer.writeNbt(capability.serializeNBT());
 	}
 
-	public ArmorPartPacket read(PacketBuffer buffer) {
+	public ArmorPartPacket read(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		nbt = buffer.readNbt();
 		return this;

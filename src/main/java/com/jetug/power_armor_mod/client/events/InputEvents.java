@@ -3,22 +3,19 @@ package com.jetug.power_armor_mod.client.events;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import com.jetug.power_armor_mod.common.util.helpers.DoubleClickHelper;
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Options;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.glfw.GLFW;
 
+import static com.jetug.power_armor_mod.client.KeyBindings.LEAVE;
 import static com.jetug.power_armor_mod.common.util.constants.Global.LOGGER;
-import static com.jetug.power_armor_mod.client.KeyBindings.*;
-import static com.jetug.power_armor_mod.common.util.extensions.Key.isEqual;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 import static java.lang.System.out;
 
@@ -32,13 +29,13 @@ public class InputEvents {
     {
         if (event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft minecraft = Minecraft.getInstance();
-            PlayerEntity player = minecraft.player;
-            GameSettings options = minecraft.options;
+            var player = minecraft.player;
+            var options = minecraft.options;
 
             if (player == null) return;
             if (!isWearingPowerArmor(player)) return;
 
-            Entity entity = player.getVehicle();
+            var entity = player.getVehicle();
             int key = event.getKey();
 
             if(doubleClickHelper.isDoubleClick(key)) {
@@ -65,7 +62,7 @@ public class InputEvents {
                 }
             }
 
-            if (isEqual(key, options.keyJump)) {
+            if (options.keyJump.isDown()) {
                 onJump(entity);
             }
             else if (LEAVE.isDown()){
@@ -86,7 +83,7 @@ public class InputEvents {
     }
 
     private static void onDash(Entity entity){
-        GameSettings options = Minecraft.getInstance().options;
+        Options options = Minecraft.getInstance().options;
 
         if (options.keyDown.isDown()){
             ((PowerArmorEntity)entity).dash(DashDirection.BACK);

@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.util.helpers.timer;
 
 import com.jetug.power_armor_mod.common.util.interfaces.SimplePredicate;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 public class PlayOnceTimerTask implements TimerTask {
     private final SimplePredicate predicate;

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.capability;
 
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * {@link https://github.com/Choonster-Minecraft-Mods/TestMod3/blob/1.16.x/src/main/java/choonster/testmod3/capability/SimpleCapabilityProvider.java}
  * {@link https://github.com/Choonster-Minecraft-Mods/TestMod3/blob/1.16.x/src/main/java/choonster/testmod3/capability/SerializableCapabilityProvider.java}
  * */
-public class SerializableCapabilityProvider<HANDLER> implements ICapabilitySerializable<INBT>{
+public class SerializableCapabilityProvider<HANDLER> implements ICapabilitySerializable<Tag>{
 
 	/**The {@link Capability} instance to provide the handler for.*/
 	protected final Capability<HANDLER> capability;
@@ -100,9 +100,9 @@ public class SerializableCapabilityProvider<HANDLER> implements ICapabilitySeria
 	
 	@Nullable
 	@Override
-	public INBT serializeNBT() {
+	public Tag serializeNBT() {
 		final HANDLER instance = getInstance();
-		
+
 		if(instance == null) {
 			return null;
 		}
@@ -110,7 +110,7 @@ public class SerializableCapabilityProvider<HANDLER> implements ICapabilitySeria
 	}
 
 	@Override
-	public void deserializeNBT(INBT nbt) {
+	public void deserializeNBT(Tag nbt) {
 		final HANDLER instance = getInstance();
 		
 		if(instance == null) {

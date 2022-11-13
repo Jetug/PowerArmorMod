@@ -1,12 +1,12 @@
 package com.jetug.power_armor_mod;
 
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
-import com.jetug.power_armor_mod.common.capability.providers.PlayerDataProvider;
 import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.providers.PlayerDataProvider;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModBlocks;
+import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModItems;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;

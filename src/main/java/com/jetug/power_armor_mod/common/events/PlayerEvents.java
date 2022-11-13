@@ -3,9 +3,9 @@ package com.jetug.power_armor_mod.common.events;
 import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.providers.PlayerDataProvider;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,11 +27,11 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void onTrack(final PlayerEvent.StartTracking event){
         final Entity entity = event.getTarget();
-        final PlayerEntity playerEntity = event.getPlayer();
-        if (playerEntity instanceof ServerPlayerEntity) {
+        final Player playerEntity = event.getPlayer();
+        if (playerEntity instanceof ServerPlayer) {
             if(entity instanceof PowerArmorEntity){
                 entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).ifPresent(capability ->
-                        capability.syncWithClient((ServerPlayerEntity)playerEntity)
+                        capability.syncWithClient((ServerPlayer)playerEntity)
                 );
             }
         }

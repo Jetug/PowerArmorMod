@@ -4,13 +4,13 @@ import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class PacketHandler {
 	 * Sends a packet to a specific player.<br>
 	 * Must be called server side.
 	 * */
-	public static void sendTo(Object msg, ServerPlayerEntity player) {
+	public static void sendTo(Object msg, ServerPlayer player) {
 		if(!(player instanceof FakePlayer)) {
 			HANDLER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
 		}
@@ -76,8 +76,8 @@ public class PacketHandler {
 	
 	/**Server side.*/
 	public static void sendToAllPlayers(Object msg, MinecraftServer server) {
-		List<ServerPlayerEntity> list = server.getPlayerList().getPlayers();
-		for(ServerPlayerEntity e : list) {
+		List<ServerPlayer> list = server.getPlayerList().getPlayers();
+		for(ServerPlayer e : list) {
 			sendTo(msg, e);
 		}
 	}

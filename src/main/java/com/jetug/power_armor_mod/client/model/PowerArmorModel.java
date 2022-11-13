@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.model;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.IPowerArmor;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -45,19 +45,26 @@ public class PowerArmorModel<Type extends IPowerArmor & IAnimatable> extends Ani
 //        return opt.orElse(null);
 //    }
 
+
     @Override
-    public void setLivingAnimations(Type entity, Integer uniqueID, AnimationEvent customPredicate) {
-//        AttributeModifierManager attr = entity.getAttributes();
-//        if(attr.hasAttribute(BODY_ARMOR_HEALTH)){
-//            double value = entity.getAttributes().getValue(BODY_ARMOR_HEALTH);
-//            if(value == 0.0D){
-//                GeoBone bone = this.getModel(POWER_ARMOR_MODEL_LOCATION).getBone("bodyHitBox").get();
-//                bone.setHidden(true);
-//            }
-//        }
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
-        setupHeadAnimation(customPredicate);
+    public void setCustomAnimations(Type animatable, int instanceId, AnimationEvent animationEvent) {
+        super.setCustomAnimations(animatable, instanceId, animationEvent);
+        setupHeadAnimation(animationEvent);
     }
+
+//    @Override
+//    public void setLivingAnimations(Type entity, Integer uniqueID, AnimationEvent customPredicate) {
+////        AttributeModifierManager attr = entity.getAttributes();
+////        if(attr.hasAttribute(BODY_ARMOR_HEALTH)){
+////            double value = entity.getAttributes().getValue(BODY_ARMOR_HEALTH);
+////            if(value == 0.0D){
+////                GeoBone bone = this.getModel(POWER_ARMOR_MODEL_LOCATION).getBone("bodyHitBox").get();
+////                bone.setHidden(true);
+////            }
+////        }
+//        super.setLivingAnimations(entity, uniqueID, customPredicate);
+//        setupHeadAnimation(customPredicate);
+//    }
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);

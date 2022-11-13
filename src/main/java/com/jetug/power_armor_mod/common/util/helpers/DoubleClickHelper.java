@@ -1,13 +1,7 @@
 package com.jetug.power_armor_mod.common.util.helpers;
 
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import static com.jetug.power_armor_mod.common.util.extensions.Key.isEqual;
-import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 public class DoubleClickHelper{
     private static final int maxTicks = 10;

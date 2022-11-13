@@ -1,11 +1,7 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
-import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
 
 public class ArmorSlot extends Slot {
     public ArmorSlot(IPowerArmor parent, BodyPart part, EquipmentType type) {

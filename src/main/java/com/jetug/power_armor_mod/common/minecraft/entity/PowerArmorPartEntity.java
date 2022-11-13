@@ -1,34 +1,29 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import net.minecraft.block.BlockState;
+import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.entity.PartEntity;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPowerArmorPartData;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
-    private static final DataParameter<Float> DATA_DURABILITY = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> DATA_DEFENCE = EntityDataManager.defineId(PowerArmorPartEntity.class, DataSerializers.FLOAT);
-
-    public final EntitySize size;
+    public final EntityDimensions size;
     public final PowerArmorEntity parentMob;
     public final BodyPart bodyPart;
 
@@ -36,16 +31,19 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public PowerArmorPartEntity(PowerArmorEntity parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
-        this.size = EntitySize.scalable(xz, y);
+        this.size = EntityDimensions.scalable(xz, y);
         this.refreshDimensions();
         this.parentMob = parent;
         this.bodyPart = bodyPart;
     }
 
     @Override
-    public boolean isColliding(BlockPos p_242278_1_, BlockState p_242278_2_) {
+    public boolean isColliding(@NotNull BlockPos p_20040_, @NotNull BlockState p_20041_) {
         return true;
     }
+
+    @Override
+    protected void defineSynchedData() {}
 
     public void subscribeEvents(ArmorPartsEvents events){
         this.events = events;
@@ -71,21 +69,15 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     @Override
-    public ActionResultType interact(PlayerEntity player, Hand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         return parentMob.onInteract(player, hand);
     }
 
     @Override
-    protected void defineSynchedData(){
-        this.entityData.define(DATA_DURABILITY, 0f);
-        this.entityData.define(DATA_DEFENCE, 0f);
-    }
+    protected void readAdditionalSaveData(CompoundTag nbt){}
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT nbt){}
-
-    @Override
-    protected void addAdditionalSaveData(CompoundNBT nbt){}
+    protected void addAdditionalSaveData(CompoundTag nbt){}
 
     @Override
     public boolean isPickable() {
@@ -94,29 +86,22 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         damage(damage);
-        try{
-            player.sendMessage(new StringTextComponent(bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide), this.getUUID());
-        } catch (Exception e) {
-            LOGGER.log(Level.ERROR, e);
-        }
+            Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
         return !this.isInvulnerableTo(damageSource) && this.parentMob.hurt(this, damageSource, damage);
-
     }
 
     @Override
-    public boolean is(Entity entity) {
+    public boolean is(@NotNull Entity entity) {
         return this == entity || this.parentMob == entity;
     }
 
-    @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public EntitySize getDimensions(Pose p_213305_1_) {
-        return this.size;
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose p_31023_) {
+        return size;
     }
 }
