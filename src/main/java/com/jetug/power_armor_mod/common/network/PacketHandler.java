@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.common.network;
 import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,7 @@ public class PacketHandler {
 
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
 	private static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder
-									.named(new ResourceLocation("gielinorcraft", "main_channel"))
+									.named(new ResourceLocation(Global.MOD_ID, "main_channel"))
 									.clientAcceptedVersions(PROTOCOL_VERSION::equals)
 									.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 									.networkProtocolVersion(() -> PROTOCOL_VERSION)

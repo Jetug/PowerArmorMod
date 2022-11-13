@@ -1,7 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 
 public interface IPowerArmor {

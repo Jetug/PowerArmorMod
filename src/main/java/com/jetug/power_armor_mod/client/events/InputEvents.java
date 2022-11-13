@@ -44,23 +44,23 @@ public class InputEvents {
             if(doubleClickHelper.isDoubleClick(key)) {
                 assert entity != null;
 
-                if (isEqual(key, options.keyUp)) {
+                if (options.keyUp.isDown()) {
                     ((PowerArmorEntity) entity).dash(DashDirection.FORWARD);
                 }
 
-                if (isEqual(key, options.keyDown)) {
+                if (options.keyDown.isDown()) {
                     ((PowerArmorEntity) entity).dash(DashDirection.BACK);
                 }
 
-                if (isEqual(key, options.keyLeft)) {
+                if (options.keyLeft.isDown()) {
                     ((PowerArmorEntity) entity).dash(DashDirection.LEFT);
                 }
 
-                if (isEqual(key, options.keyRight)) {
+                if (options.keyRight.isDown()) {
                     ((PowerArmorEntity) entity).dash(DashDirection.RIGHT);
                 }
 
-                if (isEqual(key, options.keyJump)) {
+                if (options.keyJump.isDown()) {
                     ((PowerArmorEntity) entity).dash(DashDirection.UP);
                 }
             }
@@ -68,8 +68,8 @@ public class InputEvents {
             if (isEqual(key, options.keyJump)) {
                 onJump(entity);
             }
-            else if(isEqual(key, DASH) ){
-                onDash(entity);
+            else if (LEAVE.isDown()){
+                player.stopRiding();
             }
 
             if (options.keyShift.isDown() && player.getVehicle() instanceof PowerArmorEntity) {

@@ -9,7 +9,7 @@ public interface IArmorPartData {
 
     float[] getDurabilityArray();
 
-    //    float[] getDurabilityArray();
+//    float[] getDurabilityArray();
 //    void setDurabilityArray(float[] array);
     float getDurability(BodyPart part);
     void setDurability(BodyPart part, float value);

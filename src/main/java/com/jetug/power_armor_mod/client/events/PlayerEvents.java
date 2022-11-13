@@ -11,6 +11,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderArmEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -50,6 +52,20 @@ public class PlayerEvents
         }
     }
 
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent()
+    public static void onHandRender(RenderArmEvent event)
+    {
+
+    }
+
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent()
+//    public static void onItemRender( event)
+//    {
+//
+//    }
 
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent()

@@ -1,4 +1,7 @@
-package com.jetug.power_armor_mod.common.capability.data;
+package com.jetug.power_armor_mod.common.capability.providers;
+import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
+import com.jetug.power_armor_mod.common.capability.data.ModPlayerData;
+import com.jetug.power_armor_mod.common.capability.storages.PlayerDataStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

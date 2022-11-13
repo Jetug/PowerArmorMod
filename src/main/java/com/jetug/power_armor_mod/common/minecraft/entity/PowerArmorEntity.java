@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
@@ -36,7 +35,7 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.capability.data.ArmorDataProvider.*;
+import static com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider.*;
 import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPlayerData;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
@@ -171,11 +170,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         }
 
         push(vector);
-    }
-
-    @Override
-    public void stopRiding() {
-
     }
 
     public void push(Vector3d vector){
@@ -328,7 +322,6 @@ public class PowerArmorEntity extends CreatureEntity implements IAnimatable, /*I
         }
         return false;
     }
-
 
     public ActionResultType onInteract(PlayerEntity player, Hand hand) {
         for (ArmorSlot subEntity : this.armorParts) {

@@ -1,6 +1,9 @@
-package com.jetug.power_armor_mod.common.capability.data;
+package com.jetug.power_armor_mod.common.capability.providers;
 
 import com.jetug.power_armor_mod.common.capability.SerializableCapabilityProvider;
+import com.jetug.power_armor_mod.common.capability.data.ArmorPartData;
+import com.jetug.power_armor_mod.common.capability.storages.ArmorPartDataStorage;
+import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -14,6 +17,7 @@ import javax.annotation.Nullable;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_PART_DATA_LOCATION;
 
 public class ArmorDataProvider implements ICapabilitySerializable<CompoundNBT> {
+
     @CapabilityInject(IArmorPartData.class)
     public static final Capability<IArmorPartData> POWER_ARMOR_PART_DATA = null;
     private LazyOptional<IArmorPartData> instance = LazyOptional.of(POWER_ARMOR_PART_DATA::getDefaultInstance);
@@ -25,7 +29,6 @@ public class ArmorDataProvider implements ICapabilitySerializable<CompoundNBT> {
     public static void attach(AttachCapabilitiesEvent<Entity> event) {
         final ArmorPartData data = new ArmorPartData(event.getObject());
         event.addCapability(POWER_ARMOR_PART_DATA_LOCATION, createProvider(data));
-        //event.addCapability(POWER_ARMOR_PART_DATA_LOCATION, new ArmorDataProvider());
     }
 
     private static ICapabilityProvider createProvider(ArmorPartData data) {
