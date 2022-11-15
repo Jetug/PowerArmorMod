@@ -6,30 +6,29 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public interface IArmorPartData {
-
     float[] getDurabilityArray();
 
-//    float[] getDurabilityArray();
-//    void setDurabilityArray(float[] array);
     float getDurability(BodyPart part);
-    void setDurability(BodyPart part, float value);
-    double getDefense();
-    void setDefense(double value);
-    Entity getEntity();
 
-//    void copyFrom(IArmorPartData source);
+    void setDurability(BodyPart part, float value);
+
+    double getDefense();
+
+    void setDefense(double value);
+
+    Entity getEntity();
 
     void copyFrom(IArmorPartData source);
 
-    public CompoundTag serializeNBT();
+    CompoundTag serializeNBT();
 
-    public void deserializeNBT(CompoundTag data);
+    void deserializeNBT(CompoundTag data);
 
-    public void syncWithClient(ServerPlayer player);
+    void syncWithClient(ServerPlayer player);
 
-    public void syncWithServer();
+    void syncWithServer();
 
-    public void syncFromServer();
+    void syncFromServer();
 
-    public boolean syncWithAll();
+    boolean syncWithAll();
 }
