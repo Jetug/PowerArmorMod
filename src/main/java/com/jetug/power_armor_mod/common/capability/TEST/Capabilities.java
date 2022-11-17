@@ -4,9 +4,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 
-public class Difficulty {
+public class Capabilities {
 
-	public static final Capability<IDifficulty> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<IArmorData> ARMOR_DATA = CapabilityManager.get(new CapabilityToken<>() {});
 
-	public Difficulty() { }
+	public Capabilities() { }
 }

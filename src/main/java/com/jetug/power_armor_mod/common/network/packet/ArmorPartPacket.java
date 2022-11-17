@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.TEST.IArmorData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,17 +10,18 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+import static com.jetug.power_armor_mod.common.capability.TEST.Capabilities.ARMOR_DATA;
 import static software.bernie.geckolib3.GeckoLib.LOGGER;
 
 public class ArmorPartPacket {
 
-	IArmorPartData capability = null;
+	IArmorData capability = null;
 
 	private int entityID = -1;
 	private CompoundTag nbt = null;
 
 
-	public ArmorPartPacket(final IArmorPartData capability) {
+	public ArmorPartPacket(final IArmorData capability) {
 		this.capability = capability;
 	}
 
@@ -45,7 +45,7 @@ public class ArmorPartPacket {
 			Entity entity = Minecraft.getInstance().player.level.getEntity(entityID);
 
 			if (entity != null) {
-				entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA)
+				entity.getCapability(ARMOR_DATA)
 						.ifPresent(cap -> cap.deserializeNBT(nbt));
 			}
 		}

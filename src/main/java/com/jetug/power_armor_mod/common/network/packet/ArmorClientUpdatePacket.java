@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.TEST.IArmorData;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,12 +9,13 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ArmorClientUpdatePacket{
-    IArmorPartData capability = null;
+import static com.jetug.power_armor_mod.common.capability.TEST.Capabilities.ARMOR_DATA;
 
+public class ArmorClientUpdatePacket{
+    IArmorData capability = null;
     private int entityID = -1;
 
-    public ArmorClientUpdatePacket(final IArmorPartData capability) {
+    public ArmorClientUpdatePacket(final IArmorData capability) {
         this.capability = capability;
     }
 
@@ -35,7 +35,7 @@ public class ArmorClientUpdatePacket{
         Entity entity = player.level.getEntity(entityID);
 
         if (entity != null) {
-            IArmorPartData cap = entity.getCapability(ArmorDataProvider.POWER_ARMOR_PART_DATA).orElse(null);
+            IArmorData cap = entity.getCapability(ARMOR_DATA).orElse(null);
             PacketHandler.sendTo(new ArmorPartPacket(cap), player);
         }
 

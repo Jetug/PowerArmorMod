@@ -1,8 +1,5 @@
 package com.jetug.power_armor_mod.common.capability.TEST;
 
-import com.jetug.power_armor_mod.common.capability.data.ArmorPartData;
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
 import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
@@ -10,10 +7,9 @@ import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-public class DifficultyImpl implements IDifficulty {
+public class ArmorDataImpl implements IArmorData {
 
 	public static final String DURABILITY = "durability";
 	public static final String DEFENSE = "defense";
@@ -23,7 +19,7 @@ public class DifficultyImpl implements IDifficulty {
 	private float[] durabilityArray = new float[SIZE];
 	private double defense;
 
-	public DifficultyImpl(Entity entity) {
+	public ArmorDataImpl(Entity entity) {
 		this.entity = entity;
 	}
 
@@ -58,7 +54,7 @@ public class DifficultyImpl implements IDifficulty {
 	}
 
 	@Override
-	public void copyFrom(IArmorPartData source) {
+	public void copyFrom(IArmorData source) {
 		float[] buff = source.getDurabilityArray();
 		if (buff != null && buff.length == SIZE)
 			durabilityArray = buff;
@@ -79,22 +75,22 @@ public class DifficultyImpl implements IDifficulty {
 	public void deserializeNBT(CompoundTag nbt) {
 		for(int i = 0; i < durabilityArray.length; i++)
 			durabilityArray[i] = nbt.getFloat(DURABILITY + i);
-		defense = nbt.getDouble(ArmorPartData.DEFENSE);
+		defense = nbt.getDouble(DEFENSE);
 	}
 
 	@Override
 	public void syncWithClient(ServerPlayer player) {
-		//PacketHandler.sendTo(new ArmorPartPacket(this), player);
+		PacketHandler.sendTo(new ArmorPartPacket(this), player);
 	}
 
 	@Override
 	public void syncWithServer() {
-		//PacketHandler.sendToServer(new ArmorPartClientPacket(this));
+		PacketHandler.sendToServer(new ArmorPartClientPacket(this));
 	}
 
 	@Override
 	public void syncFromServer() {
-		//PacketHandler.sendToServer(new ArmorClientUpdatePacket(this));
+		PacketHandler.sendToServer(new ArmorClientUpdatePacket(this));
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package com.jetug.power_armor_mod;
 
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
-import com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider;
-import com.jetug.power_armor_mod.common.capability.providers.PlayerDataProvider;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModBlocks;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModItems;
@@ -31,8 +29,8 @@ public class PowerArmorMod
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        PlayerDataProvider.register();
-        ArmorDataProvider.register();
+//        PlayerDataProvider.register();
+//        ArmorDataProvider.register();
         PacketHandler.register();
         ResourceHelper.register();
     }

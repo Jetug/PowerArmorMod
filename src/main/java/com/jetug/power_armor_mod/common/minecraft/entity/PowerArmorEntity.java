@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
@@ -36,7 +35,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.capability.providers.ArmorDataProvider.POWER_ARMOR_PART_DATA;
+import static com.jetug.power_armor_mod.common.capability.TEST.Capabilities.ARMOR_DATA;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
 import static net.minecraft.util.Mth.cos;
@@ -110,8 +109,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return null;
     }
 
+
     public float getArmorDurability(BodyPart bodyPart) {
-        IArmorPartData cap = getCapability(POWER_ARMOR_PART_DATA).orElse(null);
+        var cap = getCapability(ARMOR_DATA).orElse(null);
         cap.syncFromServer();
         return cap.getDurability(bodyPart);
     }
@@ -119,7 +119,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
         if (level.isClientSide) {
-            IArmorPartData cap = getCapability(POWER_ARMOR_PART_DATA).orElse(null);
+            var cap = getCapability(ARMOR_DATA).orElse(null);
             cap.setDurability(bodyPart, value);
             cap.syncWithServer();
         }

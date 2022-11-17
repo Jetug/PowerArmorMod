@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
@@ -58,7 +57,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     public double getDefense(){
-        IArmorPartData data = getPowerArmorPartData(this);
+        var data = getPowerArmorPartData(this);
         if(data.getDefense() < 0)
             return 20;
         return getPowerArmorPartData(this).getDefense();

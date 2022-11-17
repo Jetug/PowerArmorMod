@@ -1,13 +1,11 @@
 package com.jetug.power_armor_mod.common.capability.TEST;
 
-import com.jetug.power_armor_mod.common.capability.data.IArmorPartData;
-import com.jetug.power_armor_mod.common.capability.data.IPlayerData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
-public interface IDifficulty {
+public interface IArmorData {
 
 	float[] getDurabilityArray();
 
@@ -21,7 +19,7 @@ public interface IDifficulty {
 
 	Entity getEntity();
 
-	void copyFrom(IArmorPartData source);
+	void copyFrom(IArmorData source);
 
 	CompoundTag serializeNBT();
 
