@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Global {
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final String MOD_ID = "com/jetug/power_armor_mod";
+    public static final String MOD_ID = "power_armor_mod";
 
     public static final TickTimer CLIENT_TIMER = new TickTimer();
 }

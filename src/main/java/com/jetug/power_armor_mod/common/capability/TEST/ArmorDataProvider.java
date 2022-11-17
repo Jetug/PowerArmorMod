@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ArmorDataProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
-	public static final ResourceLocation IDENTIFIER = new ResourceLocation("Strings.Tags.DIFFICULTY");
+	public static final ResourceLocation IDENTIFIER = new ResourceLocation("armor_data");
 
 	private final IArmorData backend = new ArmorDataImpl(null);
 	private final LazyOptional<IArmorData> optionalData = LazyOptional.of(() -> backend);

@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.capability.data;
 
-import com.jetug.power_armor_mod.common.capability.TEST.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.capability.TEST.IArmorData;
 import net.minecraft.world.entity.Entity;
 
