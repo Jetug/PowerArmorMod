@@ -35,7 +35,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.capability.TEST.Capabilities.ARMOR_DATA;
+import static com.jetug.power_armor_mod.common.capability.Capabilities.ARMOR_DATA;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
 import static net.minecraft.util.Mth.cos;

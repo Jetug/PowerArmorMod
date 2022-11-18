@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.capability;
+package com.jetug.power_armor_mod.common.util.constants;
 
 public class NBT {
     public static final String DURABILITY = "durability";

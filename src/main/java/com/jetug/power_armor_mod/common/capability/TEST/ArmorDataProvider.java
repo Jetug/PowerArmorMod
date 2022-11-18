@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.capability.TEST;
 
+import com.jetug.power_armor_mod.common.capability.Capabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
