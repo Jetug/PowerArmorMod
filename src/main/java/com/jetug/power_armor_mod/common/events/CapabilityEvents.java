@@ -17,8 +17,8 @@ public class CapabilityEvents {
 //        if (entity instanceof Player)
 //            PlayerDataProvider.attach(event);
         //else
-            if (entity instanceof PowerArmorEntity)
-            event.addCapability(ARMOR_DATA_RESOURCE, new ArmorDataProvider());
+        if (entity instanceof PowerArmorEntity)
+            event.addCapability(ARMOR_DATA_RESOURCE, new ArmorDataProvider(entity));
             //ArmorDataProvider.attach(event);
     }
 }
