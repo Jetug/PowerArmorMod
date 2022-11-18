@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.jetug.power_armor_mod.common.capability.Capabilities.ARMOR_DATA;
+import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 
 @Mod.EventBusSubscriber
 public class PlayerEvents {

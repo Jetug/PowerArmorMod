@@ -19,7 +19,6 @@ import net.minecraftforge.entity.PartEntity;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.power_armor_mod.common.capability.data.DataManager.getPowerArmorPartData;
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public final EntityDimensions size;
@@ -54,17 +53,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     public void damage(float damage){
         parentMob.damageArmor(bodyPart, damage);
-    }
-
-    public double getDefense(){
-        var data = getPowerArmorPartData(this);
-        if(data.getDefense() < 0)
-            return 20;
-        return getPowerArmorPartData(this).getDefense();
-    }
-
-    private void setDefense(double value){
-        getPowerArmorPartData(this).setDefense(value);
     }
 
     @Override

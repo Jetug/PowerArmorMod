@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.capability.TEST;
 
-import com.jetug.power_armor_mod.common.capability.Capabilities;
+import com.jetug.power_armor_mod.common.capability.constants.Capabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -12,9 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ArmorDataProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
-
-	public static final ResourceLocation IDENTIFIER = new ResourceLocation("armor_data");
-
 	private final IArmorData backend = new ArmorDataImpl(null);
 	private final LazyOptional<IArmorData> optionalData = LazyOptional.of(() -> backend);
 

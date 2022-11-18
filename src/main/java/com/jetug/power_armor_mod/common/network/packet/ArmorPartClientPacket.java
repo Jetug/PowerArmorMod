@@ -8,7 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.capability.Capabilities.ARMOR_DATA;
+import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 
 public class ArmorPartClientPacket{
     IArmorData capability = null;
