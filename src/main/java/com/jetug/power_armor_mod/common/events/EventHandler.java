@@ -30,10 +30,10 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent()
-    public static void onMount(EntityMountEvent event) {
-        if (event.isDismounting()){
-            //event.setCanceled(true);
-        }
-    }
+//    @SubscribeEvent()
+//    public static void onMount(EntityMountEvent event) {
+//        if (event.isDismounting()){
+//            //event.setCanceled(true);
+//        }
+//    }
 }
