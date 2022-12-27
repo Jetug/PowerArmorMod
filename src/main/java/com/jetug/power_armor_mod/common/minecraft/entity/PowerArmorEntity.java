@@ -45,10 +45,6 @@ import static org.apache.logging.log4j.Level.DEBUG;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
-    protected boolean isJumping;
-    protected float playerJumpPendingScale;
     public final PowerArmorPartEntity headHitBox;
     public final PowerArmorPartEntity bodyHitBox;
     public final PowerArmorPartEntity leftArmHitBox;
@@ -65,6 +61,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
 
+    protected boolean isJumping;
+    protected float playerJumpPendingScale;
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private Vec3 previousPosition = position();
     private double speed = 0D;
     private boolean isDashing = false;

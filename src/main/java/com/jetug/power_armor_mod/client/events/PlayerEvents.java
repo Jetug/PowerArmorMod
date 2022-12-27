@@ -53,50 +53,50 @@ public class PlayerEvents
     @SubscribeEvent()
     public static void onHandRender2(RenderPlayerEvent.Pre event)
     {
-        event.setCanceled(true);
-        Minecraft mc = Minecraft.getInstance();
-
-        var ent = new PowerArmorEntity(EntityType.VEX, mc.level);
-
-        Minecraft.getInstance().getRenderManager().getRenderer(entity.getClass())
-                .doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
-
-
-        Entity entity = EntityType.byKey(GodsCrownItem.getSelectedMorphMobOf(stack).toString()).get().create(event.getEntity().world);
-        Minecraft.getInstance().levelRenderer.getRenderManager()
-                .getRenderer(entity.getClass()).doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
-
-
-        float x = 5.0F;
-        float y = 5.0F;
-        float z = 5.0F;
-        float width = 5.0F;
-        float height = 5.0F;
-
-        Minecraft mc = Minecraft.getInstance();
-
-        var renderManager = mc.levelRenderer;
-        LivingEntity player = mc.player;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(-renderManager.viewerPosX + x, -renderManager.viewerPosY + y, -renderManager.viewerPosZ + z);
-        GlStateManager.rotate(System.currentTimeMillis() / 5 % 360, 0, 1, 0);
-
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableCull();
-        GlStateManager.color(120.0F, 130.0F, 296.0F, 0.5F);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glVertex3f(0, 0, 0);
-        GL11.glVertex3f(0 + width, 0, 0);
-        GL11.glVertex3f(0 + width, 0 + height, 0);
-        GL11.glVertex3f(0, 0 + height, 0);
-        GL11.glEnd();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.enableCull();
-
-        GlStateManager.popMatrix();
+//        event.setCanceled(true);
+//        Minecraft mc = Minecraft.getInstance();
+//
+//        var ent = new PowerArmorEntity(EntityType.VEX, mc.level);
+//
+//        Minecraft.getInstance().getRenderManager().getRenderer(entity.getClass())
+//                .doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
+//
+//
+//        Entity entity = EntityType.byKey(GodsCrownItem.getSelectedMorphMobOf(stack).toString()).get().create(event.getEntity().world);
+//        Minecraft.getInstance().levelRenderer.getRenderManager()
+//                .getRenderer(entity.getClass()).doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
+//
+//
+//        float x = 5.0F;
+//        float y = 5.0F;
+//        float z = 5.0F;
+//        float width = 5.0F;
+//        float height = 5.0F;
+//
+//        Minecraft mc = Minecraft.getInstance();
+//
+//        var renderManager = mc.levelRenderer;
+//        LivingEntity player = mc.player;
+//
+//        GlStateManager.pushMatrix();
+//        GlStateManager.translate(-renderManager.viewerPosX + x, -renderManager.viewerPosY + y, -renderManager.viewerPosZ + z);
+//        GlStateManager.rotate(System.currentTimeMillis() / 5 % 360, 0, 1, 0);
+//
+//        GlStateManager.disableTexture2D();
+//        GlStateManager.enableBlend();
+//        GlStateManager.disableCull();
+//        GlStateManager.color(120.0F, 130.0F, 296.0F, 0.5F);
+//        GL11.glBegin(GL11.GL_QUADS);
+//        GL11.glVertex3f(0, 0, 0);
+//        GL11.glVertex3f(0 + width, 0, 0);
+//        GL11.glVertex3f(0 + width, 0 + height, 0);
+//        GL11.glVertex3f(0, 0 + height, 0);
+//        GL11.glEnd();
+//        GlStateManager.enableTexture2D();
+//        GlStateManager.disableBlend();
+//        GlStateManager.enableCull();
+//
+//        GlStateManager.popMatrix();
     }
 
     @OnlyIn(Dist.CLIENT)
