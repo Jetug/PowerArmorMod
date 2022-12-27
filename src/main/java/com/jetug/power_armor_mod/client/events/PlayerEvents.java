@@ -1,14 +1,6 @@
 package com.jetug.power_armor_mod.client.events;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +10,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 
@@ -43,8 +34,8 @@ public class PlayerEvents
         var target = event.getTarget();
 
         if(isWearingPowerArmor(player)){
-            Vec3 vc = player.getViewVector(1.0F);
-            target.push(vc.x * 20, vc.y * 0, vc.z * 20);
+            Vec3 vector = player.getViewVector(1.0F);
+            target.push(vector.x * 20, 0, vector.z * 20);
         }
     }
 

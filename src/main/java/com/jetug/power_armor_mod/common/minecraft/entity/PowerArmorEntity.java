@@ -45,13 +45,13 @@ import static org.apache.logging.log4j.Level.DEBUG;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
-    public final PowerArmorPartEntity headHitBox;
-    public final PowerArmorPartEntity bodyHitBox;
-    public final PowerArmorPartEntity leftArmHitBox;
-    public final PowerArmorPartEntity rightArmHitBox;
-    public final PowerArmorPartEntity leftLegHitBox;
-    public final PowerArmorPartEntity rightLegHitBox;
-    public final PowerArmorPartEntity[] subEntities;
+//    public final PowerArmorPartEntity headHitBox;
+//    public final PowerArmorPartEntity bodyHitBox;
+//    public final PowerArmorPartEntity leftArmHitBox;
+//    public final PowerArmorPartEntity rightArmHitBox;
+//    public final PowerArmorPartEntity leftLegHitBox;
+//    public final PowerArmorPartEntity rightLegHitBox;
+//    public final PowerArmorPartEntity[] subEntities;
 
     public final ArmorSlot head         = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
     public final ArmorSlot body         = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
@@ -72,13 +72,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
-        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
-        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
-        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
-        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
-        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
-        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
-        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+//        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
+//        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
+//        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
+//        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
+//        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
+//        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+//        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
         this.noCulling = true;
     }
 
@@ -206,8 +206,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         //if(level.isClientSide){
         clientTimer.tick();
         //}
-
-
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
 
@@ -215,73 +213,83 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void aiStep() {
         super.aiStep();
 
-        Vec3[] aVector3d = new Vec3[subEntities.length];
-        for (int j = 0; j < subEntities.length; ++j) {
-            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
-        }
+        var box = getBoundingBox();
+        box.setMinX(15);
+        box.setMinY(15);
+        box.setMinZ(15);
+        box.setMaxX(5);
+        box.setMaxY(5);
+        box.setMaxZ(5);
+        //box.move(5,5,5);
+        setBoundingBox(box);
 
-        float rotation = getYRot() * ((float) Math.PI / 180F);
-
-        Global.LOGGER.log(DEBUG, "getYRot(): " + getYRot());
-        Global.LOGGER.log(DEBUG, "rotation: " +rotation);
-
-        float xPos = cos(rotation);
-        float zPos = sin(rotation);
-        float posX = sin(rotation);
-        float posZ = cos(rotation);
-        //EnderDragonEntity
-        float posXZ = 0.3F;
-        float armPos = 0.8f;
-        float legPos = 0.2f;
-
-        ////
-//        float f15 = (float)(this.getLatencyPos(5, 1.0F)[1] - this.getLatencyPos(10, 1.0F)[1]) * 10.0F * ((float)Math.PI / 180F);
-//        float f16 = MathHelper.cos(f15);
-//        float f2 = MathHelper.sin(f15);
+//        Vec3[] aVector3d = new Vec3[subEntities.length];
+//        for (int j = 0; j < subEntities.length; ++j) {
+//            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
+//        }
 //
-//        int k = 0;
-//        double[] adouble = this.getLatencyPos(5, 1.0F);
-//        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
+//        float rotation = getYRot() * ((float) Math.PI / 180F);
 //
-//        float f17 = this.getYRot() * ((float)Math.PI / 180F);
-//        float f7 = this.getYRot() * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
+//        Global.LOGGER.log(DEBUG, "getYRot(): " + getYRot());
+//        Global.LOGGER.log(DEBUG, "rotation: " +rotation);
 //
-//        float f3 = MathHelper.sin(f17);
-//        float f18 = MathHelper.cos(f17);
+//        float xPos = cos(rotation);
+//        float zPos = sin(rotation);
+//        float posX = sin(rotation);
+//        float posZ = cos(rotation);
+//        //EnderDragonEntity
+//        float posXZ = 0.3F;
+//        float armPos = 0.8f;
+//        float legPos = 0.2f;
 //
-//        float f20 = MathHelper.sin(f7);
-//        float f21 = MathHelper.cos(f7);
+//        ////
+////        float f15 = (float)(this.getLatencyPos(5, 1.0F)[1] - this.getLatencyPos(10, 1.0F)[1]) * 10.0F * ((float)Math.PI / 180F);
+////        float f16 = MathHelper.cos(f15);
+////        float f2 = MathHelper.sin(f15);
+////
+////        int k = 0;
+////        double[] adouble = this.getLatencyPos(5, 1.0F);
+////        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
+////
+////        float f17 = this.getYRot() * ((float)Math.PI / 180F);
+////        float f7 = this.getYRot() * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
+////
+////        float f3 = MathHelper.sin(f17);
+////        float f18 = MathHelper.cos(f17);
+////
+////        float f20 = MathHelper.sin(f7);
+////        float f21 = MathHelper.cos(f7);
+////
+////        float f23 = (float)(k + 1);// * 2.0F;
+////
+////        this.tickPart(this.headHitBox,
+////                -(f3 * 2 + f20 * 1) * -2,
+////                1.2,
+////                (f18 * 2 + f21 * 1) * -2);
+////
 //
-//        float f23 = (float)(k + 1);// * 2.0F;
+////        float f4 = MathHelper.sin(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
+////        float f19 = MathHelper.cos(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
+////        float f5 = 1;//this.getHeadYOffset();
+////
+////        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
 //
-//        this.tickPart(this.headHitBox,
-//                -(f3 * 2 + f20 * 1) * -2,
-//                1.2,
-//                (f18 * 2 + f21 * 1) * -2);
+//        ///
+//        tickPart(headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
+//        tickPart(bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
+//        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
+//        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
+//        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+//        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
 //
-
-//        float f4 = MathHelper.sin(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
-//        float f19 = MathHelper.cos(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
-//        float f5 = 1;//this.getHeadYOffset();
-//
-//        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
-
-        ///
-        tickPart(headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
-        tickPart(bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
-        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
-        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
-        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
-
-        for (int l = 0; l < subEntities.length; ++l) {
-            subEntities[l].xo = aVector3d[l].x;
-            subEntities[l].yo = aVector3d[l].y;
-            subEntities[l].zo = aVector3d[l].z;
-            subEntities[l].xOld = aVector3d[l].x;
-            subEntities[l].yOld = aVector3d[l].y;
-            subEntities[l].zOld = aVector3d[l].z;
-        }
+//        for (int l = 0; l < subEntities.length; ++l) {
+//            subEntities[l].xo = aVector3d[l].x;
+//            subEntities[l].yo = aVector3d[l].y;
+//            subEntities[l].zo = aVector3d[l].z;
+//            subEntities[l].xOld = aVector3d[l].x;
+//            subEntities[l].yOld = aVector3d[l].y;
+//            subEntities[l].zOld = aVector3d[l].z;
+//        }
     }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
@@ -291,18 +299,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     //Settings
     //{
     @Override
-    public PartEntity<?>[] getParts() {
-        return this.subEntities;
-    }
+    public void checkDespawn() {}
 
-    @Override
-    public boolean isMultipartEntity() {
-        return true;
-    }
+//    @Override
+//    public PartEntity<?>[] getParts() {
+//        return this.subEntities;
+//    }
+
+//    @Override
+//    public boolean isMultipartEntity() {
+//        return true;
+//    }
 
     @Override
     public boolean isPickable() {
-        return false;
+        return true;
     }
 
     @Override

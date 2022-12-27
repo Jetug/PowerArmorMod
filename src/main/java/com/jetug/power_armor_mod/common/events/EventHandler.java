@@ -3,6 +3,8 @@ package com.jetug.power_armor_mod.common.events;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -30,10 +32,13 @@ public class EventHandler {
         }
     }
 
-//    @SubscribeEvent()
-//    public static void onMount(EntityMountEvent event) {
-//        if (event.isDismounting()){
-//            //event.setCanceled(true);
-//        }
-//    }
+    @SubscribeEvent()
+    public static void onHurt(LivingHurtEvent event) {
+        event.getEntity().getViewVector(1);
+    }
+
+    @SubscribeEvent()
+    public static void onPick(PlayerEvent event) {
+        event.getEntity().getViewVector(1);
+    }
 }
