@@ -68,6 +68,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private Vec3 previousPosition = position();
     private double speed = 0D;
     private boolean isDashing = false;
+    public boolean isPickable = true;
+
     private final TickTimer clientTimer = new TickTimer();
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
@@ -311,9 +313,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //        return true;
 //    }
 
+    public void setIsPickable(Boolean value){
+        isPickable = value;
+    }
+
     @Override
     public boolean isPickable() {
-        return true;
+        return isPickable;
     }
 
     @Override

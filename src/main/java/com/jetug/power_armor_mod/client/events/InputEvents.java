@@ -32,46 +32,45 @@ public class InputEvents {
             var player = minecraft.player;
             var options = minecraft.options;
 
-            if (player == null) return;
-            if (!isWearingPowerArmor(player)) return;
+            if (player != null && isWearingPowerArmor(player)) {
+                var entity = player.getVehicle();
+                int key = event.getKey();
 
-            var entity = player.getVehicle();
-            int key = event.getKey();
-
-            if(doubleClickHelper.isDoubleClick(key)) {
-                assert entity != null;
-
-                if (options.keyUp.isDown()) {
-                    ((PowerArmorEntity) entity).dash(DashDirection.FORWARD);
-                }
-
-                if (options.keyDown.isDown()) {
-                    ((PowerArmorEntity) entity).dash(DashDirection.BACK);
-                }
-
-                if (options.keyLeft.isDown()) {
-                    ((PowerArmorEntity) entity).dash(DashDirection.LEFT);
-                }
-
-                if (options.keyRight.isDown()) {
-                    ((PowerArmorEntity) entity).dash(DashDirection.RIGHT);
+                if (doubleClickHelper.isDoubleClick(key)) {
+                    assert entity != null;
+                    onDoubleClick(entity);
                 }
 
                 if (options.keyJump.isDown()) {
-                    ((PowerArmorEntity) entity).dash(DashDirection.UP);
+                    onJump(entity);
+                }
+                else if (options.keyShift.isDown()) {
+                    options.keyShift.setDown(false);
+                }
+                else if (LEAVE.isDown()) {
+                    player.stopRiding();
                 }
             }
+        }
+    }
 
-            if (options.keyJump.isDown()) {
-                onJump(entity);
-            }
-            else if (LEAVE.isDown()){
-                player.stopRiding();
-            }
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent()
+    public static void onMouseInput(InputEvent.MouseInputEvent event)
+    {
+        if (event.getAction() == GLFW.GLFW_PRESS) {
+            var minecraft = Minecraft.getInstance();
+            var player = minecraft.player;
+            var options = minecraft.options;
 
-            if (options.keyShift.isDown() && player.getVehicle() instanceof PowerArmorEntity) {
-                minecraft.options.keyShift.setDown(false);
-                //onDash(entity);
+            if (player != null && isWearingPowerArmor(player)) {
+                if(options.keyAttack.isDown()){
+
+                    var targetEntity = minecraft.crosshairPickEntity;
+                    if(targetEntity instanceof PowerArmorEntity){
+                        ((PowerArmorEntity) targetEntity).setIsPickable(false);
+                    }
+                }
             }
         }
     }
@@ -80,6 +79,31 @@ public class InputEvents {
         ((PowerArmorEntity)entity).jump();
         LOGGER.log(Level.DEBUG, "jump");
         out.println("Jump!");
+    }
+
+    private static void onDoubleClick(Entity entity){
+
+        var options = Minecraft.getInstance().options;
+
+        if (options.keyUp.isDown()) {
+            ((PowerArmorEntity) entity).dash(DashDirection.FORWARD);
+        }
+
+        if (options.keyDown.isDown()) {
+            ((PowerArmorEntity) entity).dash(DashDirection.BACK);
+        }
+
+        if (options.keyLeft.isDown()) {
+            ((PowerArmorEntity) entity).dash(DashDirection.LEFT);
+        }
+
+        if (options.keyRight.isDown()) {
+            ((PowerArmorEntity) entity).dash(DashDirection.RIGHT);
+        }
+
+        if (options.keyJump.isDown()) {
+            ((PowerArmorEntity) entity).dash(DashDirection.UP);
+        }
     }
 
     private static void onDash(Entity entity){
