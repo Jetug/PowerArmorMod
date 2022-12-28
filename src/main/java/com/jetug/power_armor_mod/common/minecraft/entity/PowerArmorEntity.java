@@ -205,6 +205,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             pushEntitiesAround();
         }
 
+        if(!Minecraft.getInstance().options.keyAttack.isDown()){
+            isPickable = true;
+        }
+
         //if(level.isClientSide){
         clientTimer.tick();
         //}
