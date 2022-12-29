@@ -58,21 +58,20 @@ public class InputEvents {
     @SubscribeEvent()
     public static void onMouseInput(InputEvent.MouseInputEvent event)
     {
-        if (event.getAction() == GLFW.GLFW_PRESS) {
-            var minecraft = Minecraft.getInstance();
-            var player = minecraft.player;
-            var options = minecraft.options;
-
-            if (player != null && isWearingPowerArmor(player)) {
-                if(options.keyAttack.isDown() || options.keyUse.isDown() || options.keyPickItem.isDown()){
-
-                    var targetEntity = minecraft.crosshairPickEntity;
-                    if(targetEntity instanceof PowerArmorEntity){
-                        ((PowerArmorEntity) targetEntity).setIsPickable(false);
-                    }
-                }
-            }
-        }
+//        if (event.getAction() == GLFW.GLFW_PRESS) {
+//            var minecraft = Minecraft.getInstance();
+//            var player = minecraft.player;
+//            var options = minecraft.options;
+//
+//            if (player != null && isWearingPowerArmor(player)) {
+//                if(options.keyAttack.isDown() || options.keyUse.isDown() || options.keyPickItem.isDown()){
+//                    var targetEntity = minecraft.crosshairPickEntity;
+//                    if(targetEntity instanceof PowerArmorEntity){
+//                        ((PowerArmorEntity) targetEntity).setIsPickable(false);
+//                    }
+//                }
+//            }
+//        }
     }
 
     private static void onJump(Entity entity){
