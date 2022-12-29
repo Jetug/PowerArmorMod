@@ -1,6 +1,5 @@
-package com.jetug.power_armor_mod.common.capability.TEST;
+package com.jetug.power_armor_mod.common.capability.armordata;
 
-import com.jetug.power_armor_mod.common.capability.constants.Capabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +19,7 @@ public class ArmorDataProvider implements ICapabilityProvider, ICapabilitySerial
 	//private LazyOptional<IArmorData> instance = LazyOptional.of(data);
 
 	public ArmorDataProvider(Entity entity){
-		this.data = new ArmorDataImpl(entity);
+		this.data = new ArmorData(entity);
 	}
 
 	@NotNull

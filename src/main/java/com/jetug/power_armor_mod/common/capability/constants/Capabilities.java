@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.capability.constants;
 
-import com.jetug.power_armor_mod.common.capability.TEST.IArmorData;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.capability.armordata.IArmorData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

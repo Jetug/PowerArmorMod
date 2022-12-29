@@ -64,7 +64,7 @@ public class InputEvents {
             var options = minecraft.options;
 
             if (player != null && isWearingPowerArmor(player)) {
-                if(options.keyAttack.isDown()){
+                if(options.keyAttack.isDown() || options.keyUse.isDown() || options.keyPickItem.isDown()){
 
                     var targetEntity = minecraft.crosshairPickEntity;
                     if(targetEntity instanceof PowerArmorEntity){

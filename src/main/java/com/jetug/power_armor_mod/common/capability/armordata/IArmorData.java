@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.capability.TEST;
+package com.jetug.power_armor_mod.common.capability.armordata;
 
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;

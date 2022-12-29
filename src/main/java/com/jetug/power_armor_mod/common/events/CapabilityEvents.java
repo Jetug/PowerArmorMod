@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.capability.TEST.ArmorDataProvider;
+import com.jetug.power_armor_mod.common.capability.armordata.ArmorDataProvider;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

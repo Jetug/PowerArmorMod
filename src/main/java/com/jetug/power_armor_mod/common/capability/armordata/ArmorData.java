@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.capability.TEST;
+package com.jetug.power_armor_mod.common.capability.armordata;
 
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
-public class ArmorDataImpl implements IArmorData {
+public class ArmorData implements IArmorData {
 
 	public static final String DURABILITY = "durability";
 	public static final String DEFENSE = "defense";
@@ -19,7 +19,7 @@ public class ArmorDataImpl implements IArmorData {
 	private float[] durabilityArray = new float[SIZE];
 	private double defense;
 
-	public ArmorDataImpl(Entity entity) {
+	public ArmorData(Entity entity) {
 		this.entity = entity;
 	}
 

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.capability.TEST.IArmorData;
+import com.jetug.power_armor_mod.common.capability.armordata.IArmorData;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
