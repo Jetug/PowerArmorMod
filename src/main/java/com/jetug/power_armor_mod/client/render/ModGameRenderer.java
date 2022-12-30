@@ -100,19 +100,20 @@ public class ModGameRenderer extends GameRenderer {
                     d0 = 0.0D;
                 }
             } else if (optional.isPresent()) {
-                Vec3 vec31 = optional.get();
-                double d1 = vector1.distanceToSqr(vec31);
+                var vec31 = optional.get();
+                var d1 = vector1.distanceToSqr(vec31);
 
                 if (d1 < d0 || d0 == 0.0D) {
-                    if (levelEntity.getRootVehicle() instanceof PowerArmorEntity){
-                    //if (levelEntity.getRootVehicle() == cameraEntity.getRootVehicle() && !levelEntity.canRiderInteract()) {
-
+                    //if(true){
+                    //if (levelEntity.getRootVehicle() instanceof PowerArmorEntity){
+                    if (levelEntity.getRootVehicle() == cameraEntity.getRootVehicle() && !levelEntity.canRiderInteract()) {
                         var t1 = levelEntity.getPassengers();
                         var tt1 = levelEntity.getVehicle();
                         var t2 = cameraEntity.getPassengers();
                         var tt2 = cameraEntity.getVehicle();
 
                         Global.LOGGER.info("PICK");
+
                         if (d0 == 0.0D) {
                             entity = levelEntity;
                             vec3 = vec31;
@@ -126,6 +127,9 @@ public class ModGameRenderer extends GameRenderer {
             }
         }
 
-        return entity == null ? null : new EntityHitResult(entity, vec3);
+        if(entity instanceof PowerArmorEntity)
+            return entity == null ? null : new EntityHitResult(entity, vector2);
+        else
+            return entity == null ? null : new EntityHitResult(entity, vec3);
     }
 }
