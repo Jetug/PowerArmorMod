@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.render;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -11,13 +11,17 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.function.Predicate;
+
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 
 public class ModGameRenderer extends GameRenderer {
     private final Minecraft minecraft;
@@ -34,42 +38,44 @@ public class ModGameRenderer extends GameRenderer {
         if (cameraEntity != null && this.minecraft.level != null) {
             this.minecraft.getProfiler().push("pick");
             this.minecraft.crosshairPickEntity = null;
-            double d0 = this.minecraft.gameMode.getPickRange();
-            this.minecraft.hitResult = cameraEntity.pick(d0, p_109088_, false);
-            Vec3 vec3 = cameraEntity.getEyePosition(p_109088_);
+            double pickRange = this.minecraft.gameMode.getPickRange();
+            this.minecraft.hitResult = cameraEntity.pick(pickRange, p_109088_, false);
+            Vec3 eyePosition = cameraEntity.getEyePosition(p_109088_);
             boolean flag = false;
-            double d1 = d0;
+            double finalPickRange = pickRange;
 
             if (this.minecraft.gameMode.hasFarPickRange()) {
-                d1 = 6.0D;
-                d0 = d1;
-            } else if (d0 > 3.0D) {
+                finalPickRange = 6.0D;
+                pickRange = finalPickRange;
+            } else if (pickRange > 3.0D) {
                 flag = true;
             }
 
-            d1 *= d1;
+            finalPickRange *= finalPickRange;
 
             if (this.minecraft.hitResult != null) {
-                d1 = this.minecraft.hitResult.getLocation().distanceToSqr(vec3);
+                finalPickRange = this.minecraft.hitResult.getLocation().distanceToSqr(eyePosition);
             }
 
-            Vec3 vec31 = cameraEntity.getViewVector(1.0F);
-            Vec3 vec32 = vec3.add(vec31.x * d0, vec31.y * d0, vec31.z * d0);
-            AABB aabb = cameraEntity.getBoundingBox().expandTowards(vec31.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+            Vec3 viewVector = cameraEntity.getViewVector(1.0F);
+            Vec3 pickVector = eyePosition.add(viewVector.x * pickRange, viewVector.y * pickRange, viewVector.z * pickRange);
+            AABB aabb = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
 
             EntityHitResult entityHitResult = getEntityHitResult(
-                    cameraEntity, vec3, vec32, aabb,
-                    (p_172770_) -> !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
+                    cameraEntity, eyePosition, pickVector, aabb,
+                    (entity) -> !entity.isSpectator() && entity.isPickable(), finalPickRange);
 
             if (entityHitResult != null) {
-                var hitEntity = entityHitResult.getEntity();
-                var vec33 = entityHitResult.getLocation();
-                var d2 = vec3.distanceToSqr(vec33);
+                Entity hitEntity = entityHitResult.getEntity();
+                Vec3 hitEntityLocation = entityHitResult.getLocation();
+                double distanceToHitEntity = eyePosition.distanceToSqr(hitEntityLocation);
 
-                if (flag && d2 > 9.0D) {
-                    this.minecraft.hitResult = BlockHitResult.miss(vec33,
-                            Direction.getNearest(vec31.x, vec31.y, vec31.z), new BlockPos(vec33));
-                } else if (d2 < d1 || this.minecraft.hitResult == null) {
+                if (flag && distanceToHitEntity > 9.0D) {
+                    this.minecraft.hitResult = BlockHitResult.miss(hitEntityLocation,
+                            Direction.getNearest(viewVector.x, viewVector.y, viewVector.z),
+                            new BlockPos(hitEntityLocation));
+
+                } else if (distanceToHitEntity < finalPickRange || this.minecraft.hitResult == null) {
                     this.minecraft.hitResult = entityHitResult;
                     if (hitEntity instanceof LivingEntity || hitEntity instanceof ItemFrame) {
                         this.minecraft.crosshairPickEntity = hitEntity;
@@ -81,55 +87,106 @@ public class ModGameRenderer extends GameRenderer {
         }
     }
 
+//                var distance = eyePosition.distanceToSqr(levelEntity.getEyePosition());
+//                var aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
+//
+//                Vec3 viewVector = cameraEntity.getViewVector(1.0F);
+//                Vec3 pickVector = eyePosition.add(viewVector.x * pickRange, viewVector.y * pickRange, viewVector.z * pickRange);
+//                var optional = aabb.clip(eyePosition, pickVector);
+
+//                if(distance < minDistance){
+//                    minDistance = distance;
+//                    entity = levelEntity;
+//                    vec3 = optional.orElse(eyePosition);
+//                }
+
     @Nullable
-    private static EntityHitResult getEntityHitResult(Entity cameraEntity, Vec3 vector1, Vec3 vector2,
-                                                     AABB box, Predicate<Entity> onGetEntity, double d) {
-        var level = cameraEntity.level;
-        var d0 = d;
+    private static EntityHitResult getEntityHitResult(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
+                                                      AABB box, Predicate<Entity> filter, double pickRange) {
+        Level level = cameraEntity.level;
+        double _pickRange = pickRange;
         Entity entity = null;
         Vec3 vec3 = null;
 
-        for(Entity levelEntity : level.getEntities(cameraEntity, box, onGetEntity)) {
-            var aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
-            var optional = aabb.clip(vector1, vector2);
+        var player = Minecraft.getInstance().player;
 
-            if (aabb.contains(vector1)) {
-                if (d0 >= 0.0D) {
+        for(Entity levelEntity : level.getEntities(cameraEntity, box, filter)) {
+            if(levelEntity instanceof PowerArmorEntity && player != null && player.getVehicle() == levelEntity)
+                continue;
+            if(levelEntity instanceof PowerArmorPartEntity && player != null && player.getVehicle() == ((PowerArmorPartEntity)levelEntity).parentMob)
+                continue;
+
+            AABB aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
+            Optional<Vec3> optional = aabb.clip(eyePosition, pickVector);
+
+            if (aabb.contains(eyePosition)) {
+                if (_pickRange >= 0.0D) {
                     entity = levelEntity;
-                    vec3 = optional.orElse(vector1);
-                    d0 = 0.0D;
+                    vec3 = optional.orElse(eyePosition);
+                    _pickRange = 0.0D;
                 }
             } else if (optional.isPresent()) {
-                var vec31 = optional.get();
-                var d1 = vector1.distanceToSqr(vec31);
+                Vec3 optionalVector = optional.get();
+                double distance = eyePosition.distanceToSqr(optionalVector);
 
-                if (d1 < d0 || d0 == 0.0D) {
-                    //if(true){
-                    //if (levelEntity.getRootVehicle() instanceof PowerArmorEntity){
+                if (distance < _pickRange || _pickRange == 0.0D) {
                     if (levelEntity.getRootVehicle() == cameraEntity.getRootVehicle() && !levelEntity.canRiderInteract()) {
-                        var t1 = levelEntity.getPassengers();
-                        var tt1 = levelEntity.getVehicle();
-                        var t2 = cameraEntity.getPassengers();
-                        var tt2 = cameraEntity.getVehicle();
-
-                        Global.LOGGER.info("PICK");
-
-                        if (d0 == 0.0D) {
+                        if (_pickRange == 0.0D) {
                             entity = levelEntity;
-                            vec3 = vec31;
+                            vec3 = optionalVector;
                         }
                     } else {
                         entity = levelEntity;
-                        vec3 = vec31;
-                        d0 = d1;
+                        vec3 = optionalVector;
+                        _pickRange = distance;
                     }
                 }
             }
         }
 
-        if(entity instanceof PowerArmorEntity)
-            return entity == null ? null : new EntityHitResult(entity, vector2);
-        else
-            return entity == null ? null : new EntityHitResult(entity, vec3);
+        return entity == null ? null : new EntityHitResult(entity, vec3);
     }
+
+//    @Nullable
+//    private static EntityHitResult getEntityHitResult(Entity cameraEntity, Vec3 eyePosition, Vec3 vector2,
+//                                                      AABB box, Predicate<Entity> filter, double pickRange1) {
+//        var level = cameraEntity.level;
+//        double _pickRange = pickRange1;
+//        Entity entity = null;
+//        Vec3 vec3 = null;
+//
+//        for(Entity levelEntity : level.getEntities(cameraEntity, box, filter)) {
+//            var aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
+//            var optional = aabb.clip(eyePosition, vector2);
+//
+//            if (aabb.contains(eyePosition)) {
+//                if (_pickRange >= 0.0D) {
+//                    entity = levelEntity;
+//                    vec3 = optional.orElse(eyePosition);
+//                    _pickRange = 0.0D;
+//                }
+//            } else if (optional.isPresent()) {
+//                var optionalVector = optional.get();
+//                var distance = eyePosition.distanceToSqr(optionalVector);
+//
+//                if (distance < _pickRange || _pickRange == 0.0D) {
+//                    if (levelEntity.getRootVehicle() == cameraEntity.getRootVehicle() && !levelEntity.canRiderInteract()) {
+//                        if (_pickRange == 0.0D) {
+//                            entity = levelEntity;
+//                            vec3 = optionalVector;
+//                        }
+//                    } else {
+//                        entity = levelEntity;
+//                        vec3 = optionalVector;
+//                        _pickRange = distance;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if(entity instanceof PowerArmorEntity && entity.getControllingPassenger() == Minecraft.getInstance().player)
+//            return new EntityHitResult(entity, vector2);
+//        else
+//            return entity == null ? null : new EntityHitResult(entity, vec3);
+//    }
 }

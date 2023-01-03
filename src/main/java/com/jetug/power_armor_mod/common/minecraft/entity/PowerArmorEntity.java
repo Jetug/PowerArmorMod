@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -45,13 +46,13 @@ import static org.apache.logging.log4j.Level.DEBUG;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
-//    public final PowerArmorPartEntity headHitBox;
-//    public final PowerArmorPartEntity bodyHitBox;
-//    public final PowerArmorPartEntity leftArmHitBox;
-//    public final PowerArmorPartEntity rightArmHitBox;
-//    public final PowerArmorPartEntity leftLegHitBox;
-//    public final PowerArmorPartEntity rightLegHitBox;
-//    public final PowerArmorPartEntity[] subEntities;
+    public final PowerArmorPartEntity headHitBox;
+    public final PowerArmorPartEntity bodyHitBox;
+    public final PowerArmorPartEntity leftArmHitBox;
+    public final PowerArmorPartEntity rightArmHitBox;
+    public final PowerArmorPartEntity leftLegHitBox;
+    public final PowerArmorPartEntity rightLegHitBox;
+    public final PowerArmorPartEntity[] subEntities;
 
     public final ArmorSlot head         = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
     public final ArmorSlot body         = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
@@ -74,13 +75,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
-//        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
-//        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
-//        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
-//        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
-//        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
-//        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
-//        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
+        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
+        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
+        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
+        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
+        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
         this.noCulling = true;
     }
 
@@ -90,7 +91,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.JUMP_STRENGTH, 1.0D)
+                .add(Attributes.JUMP_STRENGTH, 0.5D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
@@ -215,20 +216,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
 
-    @Override
-    public void aiStep() {
-        super.aiStep();
-
-        var box = getBoundingBox();
-        box.setMinX(15);
-        box.setMinY(15);
-        box.setMinZ(15);
-        box.setMaxX(5);
-        box.setMaxY(5);
-        box.setMaxZ(5);
-        //box.move(5,5,5);
-        setBoundingBox(box);
-
+//    @Override
+//    public void aiStep() {
+//        super.aiStep();
+//
 //        Vec3[] aVector3d = new Vec3[subEntities.length];
 //        for (int j = 0; j < subEntities.length; ++j) {
 //            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
@@ -296,7 +287,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //            subEntities[l].yOld = aVector3d[l].y;
 //            subEntities[l].zOld = aVector3d[l].z;
 //        }
-    }
+//    }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
         part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
@@ -307,15 +298,15 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     @Override
     public void checkDespawn() {}
 
-//    @Override
-//    public PartEntity<?>[] getParts() {
-//        return this.subEntities;
-//    }
+    @Override
+    public PartEntity<?>[] getParts() {
+        return this.subEntities;
+    }
 
-//    @Override
-//    public boolean isMultipartEntity() {
-//        return true;
-//    }
+    @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
 
     public void setIsPickable(Boolean value){
         isPickable = value;
@@ -323,7 +314,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     @Override
     public boolean isPickable() {
-        return isPickable;
+        return true;
     }
 
     @Override
@@ -340,16 +331,16 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public boolean isInvulnerableTo(DamageSource damageSource) {
         if (super.isInvulnerableTo(damageSource)) {
             return true;
-        } else if (damageSource.getEntity() == getControllingPassenger()) {
-            return true;
         }
-        return false;
+        else return damageSource.getEntity() == getControllingPassenger();
     }
+
 
     public InteractionResult onInteract(Player player, InteractionHand hand) {
         for (ArmorSlot subEntity : this.armorParts) {
             subEntity.setDurability(1);
         }
+
         this.doPlayerRide(player);
 
         return InteractionResult.sidedSuccess(this.level.isClientSide);
@@ -448,26 +439,22 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
 //        }
 
-        animateHurt();
-
         Global.LOGGER.log(DEBUG, "FALL");
-        boolean bb = level.isClientSide;
 
         pushEntitiesAround();
 
-        int immune = 3;
+        int immune = 5;
         int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
         if (damage <= immune) {
             return false;
         } else {
-            //this.hurt(DamageSource.FALL, (float) damage - immune);
             if (this.isVehicle()) {
-                for(Entity entity : this.getIndirectPassengers()) {
-                    entity.hurt(DamageSource.FALL, (float) damage - immune);
+                for(Entity entity : getIndirectPassengers()) {
+                    entity.hurt(DamageSource.FALL, damage - immune);
                 }
             }
-            //BeaconBlock
-            this.playBlockFallSound();
+            animateHurt();
+            playBlockFallSound();
             return true;
         }
     }
@@ -564,13 +551,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void doPlayerRide(Player player) {
-        if (!this.level.isClientSide) {
-            player.setYRot(getYRot());
-            player.setXRot(getXRot());
-            player.startRiding(this);
-//            IPlayerData data = getPlayerData(player);
-//            data.setIsInPowerArmor(true);
-            //player.sendMessage(new StringTextComponent("" + data.getIsInPowerArmor()), this.getUUID());
-        }
+        player.setYRot(getYRot());
+        player.setXRot(getXRot());
+        player.startRiding(this);
     }
 }
