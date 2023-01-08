@@ -81,13 +81,15 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
-        headHitBox = new PowerArmorPartEntity(this, HEAD, 0.6f, 0.6f);
-        bodyHitBox = new PowerArmorPartEntity(this, BODY, 0.7f, 1.0f);
-        leftArmHitBox = new PowerArmorPartEntity(this, LEFT_ARM, 0.5f, 1.0f);
-        rightArmHitBox = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
-        leftLegHitBox = new PowerArmorPartEntity(this, LEFT_LEG, 0.6f, 1.0f);
-        rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+
+        headHitBox      = new PowerArmorPartEntity(this, HEAD     , 0.6f, 0.6f);
+        bodyHitBox      = new PowerArmorPartEntity(this, BODY     , 0.7f, 1.0f);
+        leftArmHitBox   = new PowerArmorPartEntity(this, LEFT_ARM , 0.5f, 1.0f);
+        rightArmHitBox  = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
+        leftLegHitBox   = new PowerArmorPartEntity(this, LEFT_LEG , 0.6f, 1.0f);
+        rightLegHitBox  = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+
         this.noCulling = true;
         this.createInventory();
     }
@@ -108,7 +110,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         }
 
         this.inventory.addListener(this);
-        RecipeBookMenu
         //this.updateContainerEquipment();
         this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
     }
