@@ -9,8 +9,8 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,13 +18,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.entity.PartEntity;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -45,7 +48,7 @@ import static net.minecraft.util.Mth.sin;
 import static org.apache.logging.log4j.Level.DEBUG;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor {
+public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
     public final PowerArmorPartEntity headHitBox;
     public final PowerArmorPartEntity bodyHitBox;
     public final PowerArmorPartEntity leftArmHitBox;
@@ -64,14 +67,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
+    protected SimpleContainer inventory;
+    private LazyOptional<?> itemHandler = null;
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final TickTimer clientTimer = new TickTimer();
+
     private Vec3 previousPosition = position();
     private double speed = 0D;
     private boolean isDashing = false;
-    public boolean isPickable = true;
+    private boolean isPickable = true;
 
-    private final TickTimer clientTimer = new TickTimer();
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
@@ -83,11 +89,52 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         rightLegHitBox = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
         this.noCulling = true;
+        this.createInventory();
     }
+
+    private void createInventory() {
+        SimpleContainer simplecontainer = this.inventory;
+        this.inventory = new SimpleContainer(this.getInventorySize());
+        if (simplecontainer != null) {
+            simplecontainer.removeListener(this);
+            int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
+
+            for(int j = 0; j < i; ++j) {
+                ItemStack itemstack = simplecontainer.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    this.inventory.setItem(j, itemstack.copy());
+                }
+            }
+        }
+
+        this.inventory.addListener(this);
+        RecipeBookMenu
+        //this.updateContainerEquipment();
+        this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
+    }
+
+    protected int getInventorySize() {
+        return 2;
+    }
+
+//    protected void updateContainerEquipment() {
+//        if (!this.level.isClientSide) {
+//            this.setFlag(4, !this.inventory.getItem(0).isEmpty());
+//        }
+//    }
+//
+//    protected void setFlag(int p_30598_, boolean p_30599_) {
+//        byte b0 = this.entityData.get(DATA_ID_FLAGS);
+//        if (p_30599_) {
+//            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_30598_));
+//        } else {
+//            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_30598_));
+//        }
+//    }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 100.0D)
+                .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
@@ -131,6 +178,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public void damageArmor(BodyPart bodyPart, float damage) {
         float durability = getArmorDurability(bodyPart) - damage;
+
         if (durability < 0)
             durability = 0;
 
@@ -138,40 +186,30 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof Player))
+        if (!(getControllingPassenger() instanceof Player player))
             return;
 
-        //if(level.isClientSide) {
-            isDashing = true;
-            clientTimer.addTimer(new PlayOnceTimerTask(10, () ->
-                    isDashing = false
-            ));
-        //}
-        Player player = (Player)getControllingPassenger();
+        isDashing = true;
+        clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
+
         float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
         float x = sin(rotation);
         float z = cos(rotation);
 
         Vec3 vector = new Vec3(-x, 0, z);
 
-        switch (direction){
-            case FORWARD:
-                vector = new Vec3(-x, 0, z);
-                break;
-            case BACK:
-                vector = new Vec3(x, 0, -z);
-                break;
-            case RIGHT:
-                float rot1 = (player.getViewYRot(1) + 90) * ((float)Math.PI / 180F);
+        switch (direction) {
+            case FORWARD -> vector = new Vec3(-x, 0, z);
+            case BACK -> vector = new Vec3(x, 0, -z);
+            case RIGHT -> {
+                float rot1 = (player.getViewYRot(1) + 90) * ((float) Math.PI / 180F);
                 vector = new Vec3(-sin(rot1), 0, cos(rot1));
-                break;
-            case LEFT:
-                float rot2 = (player.getViewYRot(1) - 90) * ((float)Math.PI / 180F);
+            }
+            case LEFT -> {
+                float rot2 = (player.getViewYRot(1) - 90) * ((float) Math.PI / 180F);
                 vector = new Vec3(-sin(rot2), 0, cos(rot2));
-                break;
-            case UP:
-                vector = new Vec3(0,2,0);
-                break;
+            }
+            case UP -> vector = new Vec3(0, 1, 0);
         }
 
         push(vector);
@@ -216,81 +254,41 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
     }
 
-//    @Override
-//    public void aiStep() {
-//        super.aiStep();
-//
-//        Vec3[] aVector3d = new Vec3[subEntities.length];
-//        for (int j = 0; j < subEntities.length; ++j) {
-//            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
-//        }
-//
-//        float rotation = getYRot() * ((float) Math.PI / 180F);
-//
-//        Global.LOGGER.log(DEBUG, "getYRot(): " + getYRot());
-//        Global.LOGGER.log(DEBUG, "rotation: " +rotation);
-//
-//        float xPos = cos(rotation);
-//        float zPos = sin(rotation);
-//        float posX = sin(rotation);
-//        float posZ = cos(rotation);
-//        //EnderDragonEntity
-//        float posXZ = 0.3F;
-//        float armPos = 0.8f;
-//        float legPos = 0.2f;
-//
-//        ////
-////        float f15 = (float)(this.getLatencyPos(5, 1.0F)[1] - this.getLatencyPos(10, 1.0F)[1]) * 10.0F * ((float)Math.PI / 180F);
-////        float f16 = MathHelper.cos(f15);
-////        float f2 = MathHelper.sin(f15);
-////
-////        int k = 0;
-////        double[] adouble = this.getLatencyPos(5, 1.0F);
-////        double[] adouble1 = this.getLatencyPos(12 + k * 2, 1.0F);
-////
-////        float f17 = this.getYRot() * ((float)Math.PI / 180F);
-////        float f7 = this.getYRot() * ((float)Math.PI / 180F) + this.rotWrap(adouble1[0] - adouble[0]) * ((float)Math.PI / 180F);
-////
-////        float f3 = MathHelper.sin(f17);
-////        float f18 = MathHelper.cos(f17);
-////
-////        float f20 = MathHelper.sin(f7);
-////        float f21 = MathHelper.cos(f7);
-////
-////        float f23 = (float)(k + 1);// * 2.0F;
-////
-////        this.tickPart(this.headHitBox,
-////                -(f3 * 2 + f20 * 1) * -2,
-////                1.2,
-////                (f18 * 2 + f21 * 1) * -2);
-////
-//
-////        float f4 = MathHelper.sin(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
-////        float f19 = MathHelper.cos(this.getYRot() * ((float)Math.PI / 180F) - this.getYRot() * 0.01F);
-////        float f5 = 1;//this.getHeadYOffset();
-////
-////        this.tickPart(this.headHitBox, (double)(f4 * 6.5F * f16), (double)(f5 + f2 * 6.5F), (double)(-f19 * 6.5F * f16));
-//
-//        ///
-//        tickPart(headHitBox, posXZ * posX, 2.1, - (posXZ * posZ));
-//        tickPart(bodyHitBox, posXZ * posX, 1.2, - (posXZ * posZ));
-//        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
-//        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
-//        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-//        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
-//
-//        for (int l = 0; l < subEntities.length; ++l) {
-//            subEntities[l].xo = aVector3d[l].x;
-//            subEntities[l].yo = aVector3d[l].y;
-//            subEntities[l].zo = aVector3d[l].z;
-//            subEntities[l].xOld = aVector3d[l].x;
-//            subEntities[l].yOld = aVector3d[l].y;
-//            subEntities[l].zOld = aVector3d[l].z;
-//        }
-//    }
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        Vec3[] aVector3d = new Vec3[subEntities.length];
+
+        for (int j = 0; j < subEntities.length; ++j) {
+            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
+        }
+
+        float rotation = getYRot() * ((float) Math.PI / 180F);
+        float xPos = cos(rotation);
+        float zPos = sin(rotation);
+        float armPos = 0.6f;
+        float legPos = 0.2f;
+
+        tickPart(headHitBox, 0, 2.1, 0);
+        tickPart(bodyHitBox, 0, 1.2, 0);
+        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
+        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
+        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
+
+        for (int l = 0; l < subEntities.length; ++l) {
+            subEntities[l].xo = aVector3d[l].x;
+            subEntities[l].yo = aVector3d[l].y;
+            subEntities[l].zo = aVector3d[l].z;
+            subEntities[l].xOld = aVector3d[l].x;
+            subEntities[l].yOld = aVector3d[l].y;
+            subEntities[l].zOld = aVector3d[l].z;
+        }
+    }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
-        part.setPos(this.getX() + x, this.getY() + y, this.getZ() + z);
+        part.setPos(getX() + x, getY() + y, getZ() + z);
     }
 
     //Settings
@@ -337,12 +335,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
 
     public InteractionResult onInteract(Player player, InteractionHand hand) {
-        for (ArmorSlot subEntity : this.armorParts) {
+        for (ArmorSlot subEntity : this.armorParts)
             subEntity.setDurability(1);
-        }
 
         this.doPlayerRide(player);
-
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
@@ -377,87 +373,102 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     @Override
-    public void travel(Vec3 sVector3d) {
-        if (this.isAlive()) {
-            if (this.isVehicle() && this.canBeControlledByRider()) {
-                LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
-                this.setYRot(livingentity.getYRot());
-                this.yRotO = this.getYRot();
-                this.setXRot(livingentity.getXRot() * 0.5F);
-                this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = this.getYRot();
-                this.yHeadRot = this.yBodyRot;
-                float f = livingentity.xxa /* * 0.5F*/;
-                float f1 = livingentity.zza;
+    public void travel(@NotNull Vec3 travelVector) {
+        if (!this.isAlive()) return;
 
-                if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
-                    double jump = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
+        if (this.isVehicle() && this.canBeControlledByRider()) {
+            var livingEntity = (LivingEntity)this.getControllingPassenger();
+            assert livingEntity != null;
+            this.setYRot(livingEntity.getYRot());
+            this.yRotO = this.getYRot();
+            this.setXRot(livingEntity.getXRot() * 0.5F);
+            this.setRot(this.getYRot(), this.getXRot());
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.yBodyRot;
+            float f = livingEntity.xxa /* * 0.5F*/;
+            float f1 = livingEntity.zza;
 
-                    Vec3 vector3d = this.getDeltaMovement();
-                    this.setDeltaMovement(vector3d.x, jump, vector3d.z);
-                    this.setIsJumping(true);
-                    this.hasImpulse = true;
+            if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
+                double jump = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
 
-                    //ForgeHooks.onLivingJump(this);ю.
+                Vec3 deltaMovement = this.getDeltaMovement();
+                this.setDeltaMovement(deltaMovement.x, jump, deltaMovement.z);
+                this.setIsJumping(true);
+                this.hasImpulse = true;
 
-                    if (f1 > 0.0F) {
-                        float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
-                        float f3 = cos(this.getYRot() * ((float)Math.PI / 180F));
-                        this.setDeltaMovement(this.getDeltaMovement().add(
-                                -0.4F * f2 * this.playerJumpPendingScale
-                                ,0.0D
-                                ,0.4F * f3 * this.playerJumpPendingScale));
-                    }
-
-                    this.playerJumpPendingScale = 0.0F;
+                if (f1 > 0.0F) {
+                    float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
+                    float f3 = cos(this.getYRot() * ((float)Math.PI / 180F));
+                    this.setDeltaMovement(this.getDeltaMovement().add(
+                            -0.4F * f2 * this.playerJumpPendingScale
+                            ,0.0D
+                            ,0.4F * f3 * this.playerJumpPendingScale));
                 }
 
-                this.flyingSpeed = this.getSpeed() * 0.1F;
-                if (this.isControlledByLocalInstance()) {
-                    this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                    super.travel(new Vec3(f, sVector3d.y, f1));
-                } else if (livingentity instanceof Player) {
-                    this.setDeltaMovement(Vec3.ZERO);
-                }
-
-                if (this.onGround) {
-                    this.playerJumpPendingScale = 0.0F;
-                    this.setIsJumping(false);
-                }
-
-                //this.calculateEntityAnimation(this, false);
-            } else {
-                this.flyingSpeed = 0.02F;
-                super.travel(sVector3d);
+                this.playerJumpPendingScale = 0.0F;
             }
+
+            this.flyingSpeed = this.getSpeed() * 0.1F;
+            if (this.isControlledByLocalInstance()) {
+                this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                super.travel(new Vec3(f, travelVector.y, f1));
+            } else if (livingEntity instanceof Player) {
+                this.setDeltaMovement(Vec3.ZERO);
+            }
+
+            if (this.onGround) {
+                this.playerJumpPendingScale = 0.0F;
+                this.setIsJumping(false);
+            }
+
+            //this.calculateEntityAnimation(this, false);
+        } else {
+            this.flyingSpeed = 0.02F;
+            super.travel(travelVector);
         }
     }
 
     @Override
-    public boolean causeFallDamage(float height, float p_225503_2_, DamageSource p_147189_) {
-//        if (height > 1.0F) {
-//            this.playSound(SoundEvents.ANVIL_LAND, 0.4F, 1.0F);
-//        }
+    public boolean causeFallDamage(float height, float p_149500_, @NotNull DamageSource p_149501_) {
+        if (height > 1.0F) {
+            this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
+        }
 
-        Global.LOGGER.log(DEBUG, "FALL");
-
-        pushEntitiesAround();
-
-        int immune = 5;
-        int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
-        if (damage <= immune) {
+        int damage = this.calculateFallDamage(height, p_149500_);
+        if (damage <= 0) {
             return false;
         } else {
+            this.hurt(p_149501_, damage);
             if (this.isVehicle()) {
-                for(Entity entity : getIndirectPassengers()) {
-                    entity.hurt(DamageSource.FALL, damage - immune);
+                for(Entity entity : this.getIndirectPassengers()) {
+                    entity.hurt(p_149501_, (float) damage);
                 }
             }
-            animateHurt();
-            playBlockFallSound();
+
+            this.playBlockFallSound();
             return true;
         }
     }
+
+//    @Override
+//    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {
+//        pushEntitiesAround();
+//
+//        int immune = 5;
+//        int damage = this.calculateFallDamage(height, p_225503_2_) / 2;
+//        if (damage <= immune) {
+//            return false;
+//        } else {
+//            if (this.isVehicle()) {
+//                for(Entity entity : getIndirectPassengers()) {
+//                    entity.hurt(DamageSource.FALL, damage - immune);
+//                }
+//            }
+//            animateHurt();
+//            playBlockFallSound();
+//            return true;
+//        }
+//    }
 
     public void pushEntitiesAround(){
         for(Entity entity : getEntitiesOfClass(3,1,3)) {
@@ -554,5 +565,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         player.setYRot(getYRot());
         player.setXRot(getXRot());
         player.startRiding(this);
+    }
+
+    @Override
+    public void containerChanged(Container p_18983_) {
+
     }
 }

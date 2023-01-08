@@ -144,6 +144,10 @@ public class ModGameRenderer extends GameRenderer {
             }
         }
 
+//        if(cameraEntity.getVehicle() instanceof PowerArmorEntity){
+//
+//        }
+
         return entity == null ? null : new EntityHitResult(entity, vec3);
     }
 

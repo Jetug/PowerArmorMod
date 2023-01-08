@@ -27,57 +27,22 @@ public class InputEvents {
     @SubscribeEvent()
     public static void onKeyInput(InputEvent.KeyInputEvent event)
     {
-        if (event.getAction() == GLFW.GLFW_PRESS) {
-            Minecraft minecraft = Minecraft.getInstance();
-            var player = minecraft.player;
-            var options = minecraft.options;
+        var minecraft = Minecraft.getInstance();
+        var player = minecraft.player;
+        var options = minecraft.options;
 
-            if (player != null && isWearingPowerArmor(player)) {
-                var entity = player.getVehicle();
-                int key = event.getKey();
+        if (player != null && isWearingPowerArmor(player)) {
+            var entity = (PowerArmorEntity)player.getVehicle();
+            assert entity != null;
 
-                if (doubleClickHelper.isDoubleClick(key)) {
-                    assert entity != null;
-                    onDoubleClick(entity);
-                }
+            if (options.keyJump.isDown()) entity.jump();
+            if (options.keyShift.isDown()) options.keyShift.setDown(false);
 
-                if (options.keyJump.isDown()) {
-                    onJump(entity);
-                }
-                else if (options.keyShift.isDown()) {
-                    options.keyShift.setDown(false);
-                }
-                else if (LEAVE.isDown()) {
-                    player.stopRiding();
-                }
+            if (event.getAction() == GLFW.GLFW_PRESS) {
+                if (doubleClickHelper.isDoubleClick(event.getKey())) onDoubleClick(entity);
+                if (LEAVE.isDown()) player.stopRiding();
             }
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent()
-    public static void onMouseInput(InputEvent.MouseInputEvent event)
-    {
-//        if (event.getAction() == GLFW.GLFW_PRESS) {
-//            var minecraft = Minecraft.getInstance();
-//            var player = minecraft.player;
-//            var options = minecraft.options;
-//
-//            if (player != null && isWearingPowerArmor(player)) {
-//                if(options.keyAttack.isDown() || options.keyUse.isDown() || options.keyPickItem.isDown()){
-//                    var targetEntity = minecraft.crosshairPickEntity;
-//                    if(targetEntity instanceof PowerArmorEntity){
-//                        ((PowerArmorEntity) targetEntity).setIsPickable(false);
-//                    }
-//                }
-//            }
-//        }
-    }
-
-    private static void onJump(Entity entity){
-        ((PowerArmorEntity)entity).jump();
-        LOGGER.log(Level.DEBUG, "jump");
-        out.println("Jump!");
     }
 
     private static void onDoubleClick(Entity entity){

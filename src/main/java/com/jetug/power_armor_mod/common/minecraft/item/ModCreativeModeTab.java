@@ -8,7 +8,7 @@ public class ModCreativeModeTab {
     public static final CreativeModeTab MY_TAB = new CreativeModeTab("xxx") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.TEST.get());
+            return new ItemStack(ModItems.ARMOR_SPAWN_EGG.get());
         }
     };
 }

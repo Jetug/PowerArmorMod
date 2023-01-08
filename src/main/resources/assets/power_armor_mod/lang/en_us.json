@@ -1,5 +1,9 @@
 {
   "item.power_armor_mod.test": "XXX",
+  "item.power_armor_mod.armor_spawn_egg": "Armor spawn egg",
+  "item.power_armor_mod.pa_helmet": "Helmet",
+
+
   "block.power_armor_mod.test_block": "XXX",
   "entity.power_armor_mod.power_armor": "Power Armor",
   "itemGroup.xxx": "XXX",
