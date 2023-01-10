@@ -63,7 +63,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightArm     = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
     public final ArmorSlot leftLeg      = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
-    public final ArmorSlot[] armorParts = new ArmorSlot[]{head, body, leftArm, rightArm, leftLeg, rightLeg};
+    public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
@@ -78,7 +78,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private boolean isDashing = false;
     private boolean isPickable = true;
 
-
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
 
@@ -88,7 +87,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         rightArmHitBox  = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
         leftLegHitBox   = new PowerArmorPartEntity(this, LEFT_LEG , 0.6f, 1.0f);
         rightLegHitBox  = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
-        subEntities = new PowerArmorPartEntity[]{headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox};
+        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
 
         this.noCulling = true;
         this.createInventory();
