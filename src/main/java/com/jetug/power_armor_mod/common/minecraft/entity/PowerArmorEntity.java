@@ -8,6 +8,7 @@ import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
+import com.jetug.power_armor_mod.test.screen.GemCuttingStationMenu;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -135,7 +136,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void openGUI(Player playerEntity) {
         Global.referenceMob = this;
 
-        //if (!this.level.isClientSide) {
+        if (!this.level.isClientSide) {
             playerEntity.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int p_createMenu_1_, @NotNull Inventory p_createMenu_2_, @NotNull Player p_createMenu_3_) {
@@ -147,7 +148,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                     return PowerArmorEntity.this.getDisplayName();
                 }
             });
-        //}
+        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -598,4 +599,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void containerChanged(Container p_18983_) {
 
     }
+
+//    @Nullable
+//    @Override
+//    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+//        return new GemCuttingStationMenu(pContainerId, pInventory, this);
+//    }
 }
