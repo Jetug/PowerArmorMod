@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.client.gui;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
@@ -44,7 +45,7 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
 
         ////////////
-        Entity entity = null;
+        Entity entity = Global.referenceMob;
 
         if (entity instanceof PowerArmorEntity) {
             PowerArmorEntity dragon = (PowerArmorEntity) entity;

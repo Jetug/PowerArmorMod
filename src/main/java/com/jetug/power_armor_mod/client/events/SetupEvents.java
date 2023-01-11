@@ -1,10 +1,14 @@
 package com.jetug.power_armor_mod.client.events;
 
+import com.jetug.power_armor_mod.client.gui.GuiRegistry;
 import com.jetug.power_armor_mod.client.render.ModGameRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.test.screen.GemCuttingStationScreen;
+import com.jetug.power_armor_mod.test.screen.ModMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,16 +25,25 @@ import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityType
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public static void onClientSetup(FMLClientSetupEvent event){
-//        RenderingRegistry.registerEntityRenderingHandler(POWER_ARMOR.get(), PowerArmorRenderer::new);
-//    }
 
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);
+        setupCustomGameRenderer();
+    }
 
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        for (KeyMapping key: getKeys())
+            ClientRegistry.registerKeyBinding(key);
+
+        MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), GemCuttingStationScreen::new);
+
+        event.enqueueWork(GuiRegistry::register);
+    }
+
+    private static void setupCustomGameRenderer(){
         var minecraft = Minecraft.getInstance();
         var gameRenderer = new ModGameRenderer(minecraft, minecraft.getResourceManager() ,minecraft.renderBuffers());
 
@@ -41,13 +54,5 @@ public final class SetupEvents {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event) {
-        for (KeyMapping key: getKeys())
-            ClientRegistry.registerKeyBinding(key);
     }
 }

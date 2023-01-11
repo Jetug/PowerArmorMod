@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.jetug.power_armor_mod.client.gui.ContainerDragon;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
@@ -9,6 +10,7 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,7 +21,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -46,6 +50,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calcula
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
 import static org.apache.logging.log4j.Level.DEBUG;
+import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
@@ -65,10 +70,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
+    public SimpleContainer dragonInventory;
+
     protected boolean isJumping;
-    protected float playerJumpPendingScale;
-    protected SimpleContainer inventory;
-    private LazyOptional<?> itemHandler = null;
+    protected float playerJumpPendingScale;;
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer clientTimer = new TickTimer();
@@ -88,34 +93,29 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         leftLegHitBox   = new PowerArmorPartEntity(this, LEFT_LEG , 0.6f, 1.0f);
         rightLegHitBox  = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
         subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
+        noCulling = true;
 
-        this.noCulling = true;
-        this.createInventory();
+        initInventory();
     }
 
-    private void createInventory() {
-        SimpleContainer simplecontainer = this.inventory;
-        this.inventory = new SimpleContainer(this.getInventorySize());
-        if (simplecontainer != null) {
-            simplecontainer.removeListener(this);
-            int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
-
-            for(int j = 0; j < i; ++j) {
-                ItemStack itemstack = simplecontainer.getItem(j);
+    private void initInventory(){
+        //Code based on initHorseChest from AbstractHorseEntity
+        SimpleContainer inventory = this.dragonInventory;
+        this.dragonInventory = new SimpleContainer(5);
+        if (inventory != null) {
+            inventory.removeListener(this);
+            int i = Math.min(inventory.getContainerSize(), this.dragonInventory.getContainerSize());
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = inventory.getItem(j);
                 if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
+                    this.dragonInventory.setItem(j, itemstack.copy());
                 }
             }
         }
 
-        this.inventory.addListener(this);
-        //this.updateContainerEquipment();
-        this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
+        this.dragonInventory.addListener(this);
     }
 
-    protected int getInventorySize() {
-        return 2;
-    }
 
 //    protected void updateContainerEquipment() {
 //        if (!this.level.isClientSide) {
@@ -131,6 +131,24 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_30598_));
 //        }
 //    }
+
+    public void openGUI(Player playerEntity) {
+        Global.referenceMob = this;
+
+        //if (!this.level.isClientSide) {
+            playerEntity.openMenu(new MenuProvider() {
+                @Override
+                public AbstractContainerMenu createMenu(int p_createMenu_1_, @NotNull Inventory p_createMenu_2_, @NotNull Player p_createMenu_3_) {
+                    return new ContainerDragon(p_createMenu_1_, dragonInventory, p_createMenu_2_, PowerArmorEntity.this);
+                }
+
+                @Override
+                public @NotNull Component getDisplayName() {
+                    return PowerArmorEntity.this.getDisplayName();
+                }
+            });
+        //}
+    }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
@@ -333,12 +351,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         else return damageSource.getEntity() == getControllingPassenger();
     }
 
+    @Override
+    public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vector, @NotNull InteractionHand hand) {
 
-    public InteractionResult onInteract(Player player, InteractionHand hand) {
+        Global.LOGGER.log(INFO, level.isClientSide);
+
         for (ArmorSlot subEntity : this.armorParts)
             subEntity.setDurability(1);
+        ItemStack stack = player.getItemInHand(hand);
 
-        this.doPlayerRide(player);
+        if (stack.isEmpty() && player.isShiftKeyDown()) {
+            this.openGUI(player);
+            return InteractionResult.SUCCESS;
+        }
+
+        //this.doPlayerRide(player);
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 

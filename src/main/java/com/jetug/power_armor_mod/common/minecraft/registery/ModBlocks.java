@@ -1,10 +1,13 @@
 package com.jetug.power_armor_mod.common.minecraft.registery;
 
 import com.jetug.power_armor_mod.common.minecraft.item.ModCreativeModeTab;
+import com.jetug.power_armor_mod.test.block.custom.GemCuttingStationBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,6 +24,11 @@ public class ModBlocks {
 //BLOCKS{
     public static final RegistryObject<Block> TEST_BLOCK = (RegistryObject<Block>) registerBlock("test_block",
             ()-> new Block(Block.Properties.of(Material.CACTUS).strength(1f)), ModCreativeModeTab.MY_TAB);
+
+    public static final RegistryObject<Block> GEM_CUTTING_STATION = registerBlock("gem_cutting_station",
+            () -> new GemCuttingStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
+            ModCreativeModeTab.MY_TAB);
+
 //}
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){

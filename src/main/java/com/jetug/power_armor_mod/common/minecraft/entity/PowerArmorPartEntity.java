@@ -14,7 +14,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
@@ -56,8 +58,18 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        return parentMob.onInteract(player, hand);
+    public InteractionResult interactAt(Player player, Vec3 p_19981_, InteractionHand hand) {
+        for (ArmorSlot subEntity : parentMob.armorParts)
+            subEntity.setDurability(1);
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.isEmpty() && player.isShiftKeyDown()) {
+            parentMob.openGUI(player);
+            return InteractionResult.SUCCESS;
+        }
+
+        //this.doPlayerRide(player);
+        return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
     @Override

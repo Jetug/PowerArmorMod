@@ -29,6 +29,17 @@ public class ModItems {
                             .tab(ModCreativeModeTab.MY_TAB)
                             .durability(5)
             ));
+    //tutor
+    public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> RAW_CITRINE = ITEMS.register("raw_citrine",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> GEM_CUTTER_TOOL = ITEMS.register("gem_cutter_tool",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).durability(32)));
+
+
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
