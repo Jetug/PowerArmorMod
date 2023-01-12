@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod;
 
+import com.jetug.power_armor_mod.client.gui.ContainerRegistry;
 import com.jetug.power_armor_mod.client.gui.GuiRegistry;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModBlockEntities;
@@ -29,6 +30,8 @@ public class PowerArmorMod
         ModEntityTypes.register(eventBus);
         ModBlockEntities.register(eventBus);
         ModMenuTypes.register(eventBus);
+        ContainerRegistry.CONTAINERS.register(eventBus);
+
         EVENT_BUS.register(this);
     }
 
