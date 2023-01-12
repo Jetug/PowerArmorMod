@@ -1,6 +1,8 @@
 package com.jetug.power_armor_mod.client.gui;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,84 +13,47 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 
-public class ContainerDragon extends AbstractContainerMenu {
+public class PowerArmorContainer extends AbstractContainerMenu {
     private final Container dragonInventory;
-    private final PowerArmorEntity dragon;
+    private final PowerArmorEntity powerArmor;
 
-    public ContainerDragon(int i, Inventory playerInventory) {
+    public PowerArmorContainer(int i, Inventory playerInventory) {
         this(i, new SimpleContainer(5), playerInventory, null);
     }
 
-    public ContainerDragon(int id, Container ratInventory, Inventory playerInventory, PowerArmorEntity rat) {
+    private Slot createSlot(Container container, int id, int x, int y, BodyPart bodyPart){
+        return new Slot(container, id, x, y) {
+            @Override
+            public void setChanged() {
+                this.container.setChanged();
+            }
+
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return super.mayPlace(stack) && stack.getItem()
+                        instanceof PowerArmorItem item && item.part == bodyPart;
+            }
+        };
+    }
+
+    public PowerArmorContainer(int id, Container container, Inventory playerInventory, PowerArmorEntity entity) {
         super(ContainerRegistry.DRAGON_CONTAINER.get(), id);
 
-        this.dragonInventory = ratInventory;
-        this.dragon = rat;
+        this.dragonInventory = container;
+        this.powerArmor = entity;
         byte b0 = 3;
         dragonInventory.startOpen(playerInventory.player);
         int i = (b0 - 4) * 18;
-        
-        this.addSlot(new Slot(ratInventory, 0, 8, 54) {
-            @Override
-            public void setChanged() {
-                this.container.setChanged();
-            }
 
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return super.mayPlace(stack) && stack.getItem() instanceof BannerItem;
-            }
-        });
-        this.addSlot(new Slot(ratInventory, 1, 8, 18) {
-            @Override
-            public void setChanged() {
-                this.container.setChanged();
-            }
+        this.addSlot(createSlot(container, 0, 117, 9, BodyPart.HEAD));
+        this.addSlot(createSlot(container, 1, 8, 18, BodyPart.BODY));
+        this.addSlot(createSlot(container, 2, 8, 36, BodyPart.RIGHT_ARM));
+        this.addSlot(createSlot(container, 3, 153, 18, BodyPart.LEFT_ARM));
+        this.addSlot(createSlot(container, 4, 153, 36, BodyPart.RIGHT_LEG));
 
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                if (!super.mayPlace(stack) || stack.isEmpty()) return false;
-                stack.getItem();
-                return stack.getItem() instanceof ArmorItem;
-            }
-        });
-        this.addSlot(new Slot(ratInventory, 2, 8, 36) {
-            @Override
-            public void setChanged() {
-                this.container.setChanged();
-            }
-
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                if (!super.mayPlace(stack) || stack.isEmpty()) return false;
-                stack.getItem();
-                return stack.getItem() instanceof ArmorItem;
-            }
-        });
-        this.addSlot(new Slot(ratInventory, 3, 153, 18) {
-            @Override
-            public void setChanged() {
-                this.container.setChanged();
-            }
-
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return super.mayPlace(stack) && !stack.isEmpty() && stack.getItem() != null && stack.getItem() instanceof ArmorItem;
-            }
-        });
-        this.addSlot(new Slot(ratInventory, 4, 153, 36) {
-            @Override
-            public void setChanged() {
-                this.container.setChanged();
-            }
-
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return super.mayPlace(stack) && !stack.isEmpty() && stack.getItem() != null && stack.getItem() instanceof ArmorItem;
-            }
-        });
         int j;
         int k;
+
         for (j = 0; j < 3; ++j) {
             for (k = 0; k < 9; ++k) {
                 this.addSlot(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 150 + j * 18 + i));
@@ -102,7 +67,7 @@ public class ContainerDragon extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return this.dragonInventory.stillValid(playerIn) && this.dragon.isAlive() && this.dragon.distanceTo(playerIn) < 8.0F;
+        return this.dragonInventory.stillValid(playerIn) && this.powerArmor.isAlive() && this.powerArmor.distanceTo(playerIn) < 8.0F;
     }
 
     @Override

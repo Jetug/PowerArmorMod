@@ -10,22 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingStationMenu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Global.MOD_ID, "textures/gui/gem_cutting_station_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Global.MOD_ID, "textures/gui/gem_cutting_station_gui.png");
 
     public GemCuttingStationScreen(GemCuttingStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-    }
-
-    @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -33,5 +21,16 @@ public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingS
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 }

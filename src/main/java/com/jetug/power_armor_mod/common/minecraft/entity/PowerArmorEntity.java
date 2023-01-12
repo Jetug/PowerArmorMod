@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
-import com.jetug.power_armor_mod.client.gui.ContainerDragon;
+import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
@@ -8,7 +9,6 @@ import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
-import com.jetug.power_armor_mod.test.screen.GemCuttingStationMenu;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -21,16 +21,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -50,7 +47,6 @@ import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
-import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -71,7 +67,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
-    public SimpleContainer dragonInventory;
+    public SimpleContainer inventory;
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;;
@@ -100,21 +96,22 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     private void initInventory(){
-        //Code based on initHorseChest from AbstractHorseEntity
-        SimpleContainer inventory = this.dragonInventory;
-        this.dragonInventory = new SimpleContainer(5);
+        SimpleContainer inventory = this.inventory;
+        this.inventory = new SimpleContainer(5);
+
         if (inventory != null) {
             inventory.removeListener(this);
-            int i = Math.min(inventory.getContainerSize(), this.dragonInventory.getContainerSize());
+            int i = Math.min(inventory.getContainerSize(), this.inventory.getContainerSize());
+
             for (int j = 0; j < i; ++j) {
                 ItemStack itemstack = inventory.getItem(j);
                 if (!itemstack.isEmpty()) {
-                    this.dragonInventory.setItem(j, itemstack.copy());
+                    this.inventory.setItem(j, itemstack.copy());
                 }
             }
         }
 
-        this.dragonInventory.addListener(this);
+        this.inventory.addListener(this);
     }
 
 
@@ -140,7 +137,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             playerEntity.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int p_createMenu_1_, @NotNull Inventory p_createMenu_2_, @NotNull Player p_createMenu_3_) {
-                    return new ContainerDragon(p_createMenu_1_, dragonInventory, p_createMenu_2_, PowerArmorEntity.this);
+                    return new PowerArmorContainer(p_createMenu_1_, inventory, p_createMenu_2_, PowerArmorEntity.this);
                 }
 
                 @Override
@@ -359,14 +356,18 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         for (ArmorSlot subEntity : this.armorParts)
             subEntity.setDurability(1);
+
         ItemStack stack = player.getItemInHand(hand);
 
+        if(stack.getItem() instanceof PowerArmorItem){
+
+        }
         if (stack.isEmpty() && player.isShiftKeyDown()) {
             this.openGUI(player);
             return InteractionResult.SUCCESS;
         }
 
-        //this.doPlayerRide(player);
+        this.doPlayerRide(player);
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 

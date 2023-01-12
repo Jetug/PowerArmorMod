@@ -11,13 +11,16 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 public class PowerArmorItem extends Item {
+    public final BodyPart part;
+
     public PowerArmorItem(BodyPart part, Properties properties) {
         super(properties);
+        this.part = part;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level p_41432_, Player p_41433_, InteractionHand p_41434_) {
-        return super.use(p_41432_, p_41433_, p_41434_);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return super.use(level, player, hand);
     }
 
     @Override

@@ -9,6 +9,8 @@ import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.enums.EquipmentType.STANDARD;
 
 public class Resources {
+    public static final ResourceLocation ARMOR_INVENTORY_TEXTURE = new ResourceLocation("power_armor_mod:textures/gui/armor_inventory.png");
+
     @Model(ArmorPart = HEAD, Type = STANDARD)
     public static final ResourceLocation HELMET_MODEL_LOCATION = resourceLocation("geo/armor_head.geo.json");
     @Texture(ArmorPart = HEAD, Type = STANDARD)
