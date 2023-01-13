@@ -1,7 +1,9 @@
-package com.jetug.power_armor_mod.client.gui;
+package com.jetug.power_armor_mod.common.minecraft.registery;
 
+import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,4 +14,8 @@ public class ContainerRegistry {
 
     public static final RegistryObject<MenuType<PowerArmorContainer>> DRAGON_CONTAINER
             = CONTAINERS.register("power_armor", () -> new MenuType<>(PowerArmorContainer::new));
+
+    public static void register(IEventBus eventBus) {
+        CONTAINERS.register(eventBus);
+    }
 }

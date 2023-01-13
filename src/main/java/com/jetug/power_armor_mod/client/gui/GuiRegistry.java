@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.client.gui;
 
+import com.jetug.power_armor_mod.common.minecraft.registery.ContainerRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 
 public class GuiRegistry {

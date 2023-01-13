@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod;
 
-import com.jetug.power_armor_mod.client.gui.ContainerRegistry;
-import com.jetug.power_armor_mod.client.gui.GuiRegistry;
+import com.jetug.power_armor_mod.common.minecraft.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModBlockEntities;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModBlocks;
@@ -24,19 +23,17 @@ public class PowerArmorMod
     public PowerArmorMod() {
         GeckoLib.initialize();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        eventBus.addListener(this::setup);
-        ModItems.register(eventBus);
-        ModBlocks.register(eventBus);
-        ModEntityTypes.register(eventBus);
-        ModBlockEntities.register(eventBus);
-        ModMenuTypes.register(eventBus);
-        ContainerRegistry.CONTAINERS.register(eventBus);
-
+        register(eventBus);
         EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
-        PacketHandler.register();
-        ResourceHelper.register();
+    private void register(IEventBus eventBus) {
+        ContainerRegistry.register(eventBus);
+        ModBlockEntities.register(eventBus);
+        ModBlocks.register(eventBus);
+        ModEntityTypes.register(eventBus);
+        ModMenuTypes.register(eventBus);
+        ModItems.register(eventBus);
     }
+
 }

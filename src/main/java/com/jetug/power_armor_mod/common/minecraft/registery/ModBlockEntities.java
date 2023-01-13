@@ -17,7 +17,6 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(GemCuttingStationBlockEntity::new,
                             ModBlocks.GEM_CUTTING_STATION.get()).build(null));
 
-
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

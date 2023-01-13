@@ -26,8 +26,9 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onTrack(final PlayerEvent.StartTracking event){
-        final Entity entity = event.getTarget();
-        final Player playerEntity = event.getPlayer();
+        Entity entity = event.getTarget();
+        Player playerEntity = event.getPlayer();
+
         if (playerEntity instanceof ServerPlayer) {
             if(entity instanceof PowerArmorEntity){
                 entity.getCapability(ARMOR_DATA).ifPresent(capability ->

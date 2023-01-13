@@ -54,24 +54,6 @@ public class ResourceHelper {
     @Nullable
     public static ResourceLocation getModel(BodyPart part, EquipmentType type) {
         return models.get(part.getId()).get(type.getId());
-
-//        Field[] fields = Resources.class.getFields();
-//        for (Field field: fields) {
-//            if(field.isAnnotationPresent(Model.class)){
-//                Model model = field.getAnnotation(Model.class);
-//                if(model.ArmorPart() == part && model.Type() == type){
-//                    ResourceLocation resource;
-//                    try {
-//                        resource = (ResourceLocation)field.get(null);
-//                    }
-//                    catch (IllegalAccessException e) {
-//                        return null;
-//                    }
-//                    return resource;
-//                }
-//            }
-//        }
-//        return null;
     }
 
     @Nullable

@@ -32,19 +32,4 @@ public class EventHandler {
                 break;
         }
     }
-
-    @SubscribeEvent()
-    public static void on(PlayerEvent event) {
-        event.getEntity().getViewVector(1);
-    }
-
-    @SubscribeEvent()
-    public static void onHurt(LivingHurtEvent event) {
-        event.getEntity().getViewVector(1);
-    }
-
-    @SubscribeEvent()
-    public static void onPick(PlayerEvent event) {
-        event.getEntity().getViewVector(1);
-    }
 }
