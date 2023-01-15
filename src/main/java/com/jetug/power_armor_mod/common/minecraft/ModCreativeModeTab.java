@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.minecraft.item;
+package com.jetug.power_armor_mod.common.minecraft;
 
 import com.jetug.power_armor_mod.common.minecraft.registery.ModItems;
 import net.minecraft.world.item.CreativeModeTab;

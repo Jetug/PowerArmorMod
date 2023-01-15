@@ -58,18 +58,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 p_19981_, InteractionHand hand) {
-        for (ArmorSlot subEntity : parentMob.armorParts)
-            subEntity.setDurability(1);
-        ItemStack stack = player.getItemInHand(hand);
-
-        if (stack.isEmpty() && player.isShiftKeyDown()) {
-            parentMob.openGUI(player);
-            return InteractionResult.SUCCESS;
-        }
-
-        //this.doPlayerRide(player);
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+    public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
+        return parentMob.interactAt(player, vector, hand);
     }
 
     @Override
@@ -87,7 +77,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     public boolean hurt(DamageSource damageSource, float damage) {
         Player player = Minecraft.getInstance().player;
         damage(damage);
-            Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
+        Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
+
         return !this.isInvulnerableTo(damageSource) && this.parentMob.hurt(this, damageSource, damage);
     }
 

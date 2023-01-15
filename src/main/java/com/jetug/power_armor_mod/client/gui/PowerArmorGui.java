@@ -14,6 +14,8 @@ import net.minecraft.world.entity.player.Inventory;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.ARMOR_INVENTORY_TEXTURE;
 
 public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> {
+    public static final int ENTITY_POS_X = 41;
+    public static final int ENTITY_POS_Y = 73;
     private float mousePosX;
     private float mousePosY;
 
@@ -46,7 +48,13 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
 
         if (Global.referenceMob instanceof PowerArmorEntity powerArmor) {
             float scale = 1F / Math.max(0.0001F, powerArmor.getScale());
-            InventoryScreen.renderEntityInInventory(x + 88, y + 55, (int) (scale * 23F), x + 51 - this.mousePosX, y + 75 - 50 - this.mousePosY, powerArmor);
+            InventoryScreen.renderEntityInInventory(
+                    x + ENTITY_POS_X,
+                    y + ENTITY_POS_Y,
+                    (int)(scale * 23F),
+                    x + 51 - this.mousePosX,
+                    y + 75 - 50 - this.mousePosY,
+                    powerArmor);
         }
     }
 }

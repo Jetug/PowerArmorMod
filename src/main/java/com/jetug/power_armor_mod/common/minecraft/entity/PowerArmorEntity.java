@@ -11,6 +11,8 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -70,7 +72,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public SimpleContainer inventory;
 
     protected boolean isJumping;
-    protected float playerJumpPendingScale;;
+    protected float playerJumpPendingScale;
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer clientTimer = new TickTimer();
@@ -97,7 +99,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     private void initInventory(){
         SimpleContainer inventory = this.inventory;
-        this.inventory = new SimpleContainer(5);
+        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
 
         if (inventory != null) {
             inventory.removeListener(this);
@@ -114,34 +116,18 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         this.inventory.addListener(this);
     }
 
-
-//    protected void updateContainerEquipment() {
-//        if (!this.level.isClientSide) {
-//            this.setFlag(4, !this.inventory.getItem(0).isEmpty());
-//        }
-//    }
-//
-//    protected void setFlag(int p_30598_, boolean p_30599_) {
-//        byte b0 = this.entityData.get(DATA_ID_FLAGS);
-//        if (p_30599_) {
-//            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_30598_));
-//        } else {
-//            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_30598_));
-//        }
-//    }
-
     public void openGUI(Player playerEntity) {
         Global.referenceMob = this;
 
         if (!this.level.isClientSide) {
             playerEntity.openMenu(new MenuProvider() {
                 @Override
-                public AbstractContainerMenu createMenu(int p_createMenu_1_, @NotNull Inventory p_createMenu_2_, @NotNull Player p_createMenu_3_) {
+                public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
                     return new PowerArmorContainer(p_createMenu_1_, inventory, p_createMenu_2_, PowerArmorEntity.this);
                 }
 
                 @Override
-                public @NotNull Component getDisplayName() {
+                public Component getDisplayName() {
                     return PowerArmorEntity.this.getDisplayName();
                 }
             });
@@ -176,13 +162,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return null;
     }
 
-
-    public float getArmorDurability(BodyPart bodyPart) {
-        var cap = getCapability(ARMOR_DATA).orElse(null);
-        cap.syncFromServer();
-        return cap.getDurability(bodyPart);
+    public boolean hasArmor(BodyPart bodyPart) {
+        return getArmorDurability(bodyPart) != 0;
     }
 
+    public float getArmorDurability(BodyPart bodyPart) {
+//        var cap = getCapability(ARMOR_DATA).orElse(null);
+//        cap.syncFromServer();
+//        return cap.getDurability(bodyPart);
+
+        var itemStack = inventory.getItem(bodyPart.getId());
+
+        var item = itemStack.getItem();
+        var vat = itemStack.getDamageValue();
+        return itemStack.isEmpty() ? 0 : itemStack.getDamageValue();
+    }
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
         if (level.isClientSide) {
@@ -193,12 +187,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
-        float durability = getArmorDurability(bodyPart) - damage;
 
-        if (durability < 0)
-            durability = 0;
-
-        setArmorDurability(bodyPart, durability);
+        var item = inventory.getItem(bodyPart.getId());
+        item.setDamageValue((int)(item.getDamageValue() - damage));
+//
+//
+//        float durability = getArmorDurability(bodyPart) - damage;
+//
+//        if (durability < 0)
+//            durability = 0;
+//
+//        setArmorDurability(bodyPart, durability);
     }
 
     public void dash(DashDirection direction) {
@@ -227,8 +226,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             }
             case UP -> vector = new Vec3(0, 1, 0);
         }
-
-        push(vector);
     }
 
     public void push(Vec3 vector){
@@ -418,7 +415,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             float f1 = livingEntity.zza;
 
             if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
-                double jump = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
+                double jump = this.getCustomJump() * this.playerJumpPendingScale * this.getBlockJumpFactor();
 
                 Vec3 deltaMovement = this.getDeltaMovement();
                 this.setDeltaMovement(deltaMovement.x, jump, deltaMovement.z);
@@ -429,9 +426,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                     float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
                     float f3 = cos(this.getYRot() * ((float)Math.PI / 180F));
                     this.setDeltaMovement(this.getDeltaMovement().add(
-                            -0.4F * f2 * this.playerJumpPendingScale
-                            ,0.0D
-                            ,0.4F * f3 * this.playerJumpPendingScale));
+                            -0.4F * f2 * this.playerJumpPendingScale,
+                            0.0D,
+                            0.4F * f3 * this.playerJumpPendingScale));
                 }
 
                 this.playerJumpPendingScale = 0.0F;

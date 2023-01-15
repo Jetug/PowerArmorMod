@@ -4,6 +4,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 
 public class DoubleClickHelper{
+//
+//    public class DoubleClickResult{
+//        boolean isClicked;
+//        int key
+//    }
+
     private static final int maxTicks = 10;
 
     private Integer lastKey;

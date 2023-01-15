@@ -1,8 +1,6 @@
 package com.jetug.power_armor_mod.common.network;
 
-import com.jetug.power_armor_mod.common.network.packet.ArmorClientUpdatePacket;
-import com.jetug.power_armor_mod.common.network.packet.ArmorPartClientPacket;
-import com.jetug.power_armor_mod.common.network.packet.ArmorPartPacket;
+import com.jetug.power_armor_mod.common.network.packet.*;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -23,8 +21,10 @@ public class PacketHandler {
 									.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 									.networkProtocolVersion(() -> PROTOCOL_VERSION)
 									.simpleChannel();
+	private static int disc = 0;
+
 	public static void register() {
-		int disc = 0;
+
 		HANDLER.registerMessage(disc++,
 				ArmorPartPacket.class,
 				ArmorPartPacket::write,
@@ -38,9 +38,9 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++,
 				ArmorPartClientPacket.class,
 				ArmorPartClientPacket::write,
-				p -> {
+				buffer -> {
 					final ArmorPartClientPacket msg = new ArmorPartClientPacket();
-					msg.read(p);
+					msg.read(buffer);
 					return msg;
 				},
 				ArmorPartClientPacket::handle);
@@ -54,8 +54,42 @@ public class PacketHandler {
 					return msg;
 				},
 				ArmorClientUpdatePacket::handle);
+
+		HANDLER.registerMessage(disc++,
+				ActionPacket.class,
+				ActionPacket::write,
+				p -> {
+					final var msg = new ActionPacket();
+					msg.read(p);
+					return msg;
+				},
+				ActionPacket::handle);
+
 	}
-	
+
+	private void registerMessage(Packet packet){
+
+		HANDLER.registerMessage(disc++,
+				ActionPacket.class,
+				ActionPacket::write,
+				p -> {
+					final var msg = new ActionPacket();
+					msg.read(p);
+					return msg;
+				},
+				ActionPacket::handle);
+
+		HANDLER.registerMessage(disc++,
+				Packet.class,
+				packet::write,
+				p -> {
+					final var msg = new Packet();
+					msg.read(p);
+					return msg;
+				},
+				packet::handle);
+	}
+
 	/**
 	 * Sends a packet to a specific player.<br>
 	 * Must be called server side.

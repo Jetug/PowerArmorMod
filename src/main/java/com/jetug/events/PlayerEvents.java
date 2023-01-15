@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.client.events;
+package com.jetug.events;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
@@ -21,9 +21,7 @@ public class PlayerEvents
     public static void onRenderPlayer(RenderPlayerEvent.Pre event)
     {
         Player player = event.getPlayer();
-        if(isWearingPowerArmor(player)){
-            player.setInvisible(true);
-        }
+        player.setInvisible(isWearingPowerArmor(player));
     }
 
     @OnlyIn(Dist.CLIENT)

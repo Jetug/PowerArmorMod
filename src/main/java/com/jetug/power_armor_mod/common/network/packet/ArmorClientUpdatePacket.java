@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 
-public class ArmorClientUpdatePacket{
+public class ArmorClientUpdatePacket {
     IArmorData capability = null;
     private int entityID = -1;
 
