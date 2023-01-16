@@ -11,8 +11,6 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -108,24 +106,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return new PowerArmorPartEntity(this, bodyPart, xz, y);
     }
 
-    private void initInventory(){
-        SimpleContainer inventory = this.inventory;
-        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
-
-        if (inventory != null) {
-            inventory.removeListener(this);
-            int i = Math.min(inventory.getContainerSize(), this.inventory.getContainerSize());
-
-            for (int j = 0; j < i; ++j) {
-                ItemStack itemstack = inventory.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
-                }
-            }
-        }
-
-        this.inventory.addListener(this);
-    }
 
     public void openGUI(Player playerEntity) {
         Global.referenceMob = this;
@@ -213,6 +193,22 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
             inventory.setItem(slotId, ItemStack.of(compoundNBT));
         }
+    }
+
+    private void initInventory(){
+        SimpleContainer inventoryBuff = this.inventory;
+        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
+        if (inventoryBuff != null) {
+            inventoryBuff.removeListener(this);
+            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = inventoryBuff.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    this.inventory.setItem(j, itemstack.copy());
+                }
+            }
+        }
+        this.inventory.addListener(this);
     }
 
     public boolean hasArmor(BodyPart bodyPart) {
