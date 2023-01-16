@@ -2,15 +2,19 @@ package com.jetug.power_armor_mod.common.network;
 
 import com.jetug.power_armor_mod.common.network.packet.*;
 import com.jetug.power_armor_mod.common.util.constants.Global;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class PacketHandler {
 
@@ -55,19 +59,32 @@ public class PacketHandler {
 				},
 				ArmorClientUpdatePacket::handle);
 
-		HANDLER.registerMessage(disc++,
-				ActionPacket.class,
-				ActionPacket::write,
-				p -> {
-					final var msg = new ActionPacket();
-					msg.read(p);
-					return msg;
-				},
-				ActionPacket::handle);
-
+		HANDLER.registerMessage(disc++, ActionPacket.class, ActionPacket::write, ActionPacket::read, ActionPacket::handle);
 	}
 
-	private void registerMessage(Packet packet){
+	private <T> void registerMessage(T packet){
+
+
+//		try {
+//			var write = packet.getClass().getDeclaredMethod("write", packet.getClass(), FriendlyByteBuf.class);
+//			write.setAccessible(true);
+//
+//			var read = packet.getClass().getDeclaredMethod("read", FriendlyByteBuf.class);
+//			write.setAccessible(true);
+//
+//			var handle = packet.getClass().getDeclaredMethod("handle", packet.getClass(), Supplier.class);
+//			write.setAccessible(true);
+//
+//			HANDLER.registerMessage(disc++,
+//					packet.getClass(),
+//					write::invoke,
+//					read::invoke,
+//					handle::invoke
+//		);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 		HANDLER.registerMessage(disc++,
 				ActionPacket.class,
@@ -78,16 +95,6 @@ public class PacketHandler {
 					return msg;
 				},
 				ActionPacket::handle);
-
-		HANDLER.registerMessage(disc++,
-				Packet.class,
-				packet::write,
-				p -> {
-					final var msg = new Packet();
-					msg.read(p);
-					return msg;
-				},
-				packet::handle);
 	}
 
 	/**

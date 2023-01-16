@@ -227,7 +227,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         var player = Minecraft.getInstance().player;
 
         var isClientSide = getLevel().isClientSide;
-        var itemStack = inventory.getItem(bodyPart.getId());
+        //var itemStack = inventory.getItem(bodyPart.getId());
+
+        var itemStack = inventory.getItem(0);
+
+
         var item = itemStack.getItem();
         var vat = itemStack.getDamageValue();
 

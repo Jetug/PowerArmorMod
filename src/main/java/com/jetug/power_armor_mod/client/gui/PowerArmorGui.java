@@ -16,6 +16,7 @@ import static com.jetug.power_armor_mod.common.util.constants.Resources.ARMOR_IN
 public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
+
     private float mousePosX;
     private float mousePosY;
 

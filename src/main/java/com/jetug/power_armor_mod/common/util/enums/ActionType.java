@@ -1,15 +1,15 @@
 package com.jetug.power_armor_mod.common.util.enums;
 
 public enum ActionType {
-    DISMOUNT(0);
+    DISMOUNT;
 
-    private int id;
+    private static final ActionType[] values = ActionType.values();
 
-    ActionType(int id) {
-        this.id = id;
+    public static ActionType getById(int id) {
+        return values[id];
     }
 
-    public int getId(){
-        return id;
+    public int getId() {
+        return ordinal();
     }
 }

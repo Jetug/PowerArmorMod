@@ -7,28 +7,27 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ActionPacket extends Packet{
+public class ActionPacket{
     ActionType action = null;
-    private int actionId = -1;
 
-    public ActionPacket(final ActionType action) {
+    public ActionPacket(ActionType action) {
         this.action = action;
     }
 
     public ActionPacket() {}
 
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(action.getId());
+    public static void write(ActionPacket message, FriendlyByteBuf buffer) {
+        buffer.writeByte(message.action.getId());
     }
 
-    public ActionPacket read(FriendlyByteBuf buffer) {
-        actionId = buffer.readInt();
-        return this;
+    public static ActionPacket read(FriendlyByteBuf buffer) {
+        var action = ActionType.getById(buffer.readByte());
+        return new ActionPacket(action);
     }
 
-    public void handle(final Supplier<NetworkEvent.Context> contextSupplier) {
-        ServerPlayer player = contextSupplier.get().getSender();
-        if (player != null && actionId == ActionType.DISMOUNT.getId()) {
+    public static void handle(ActionPacket message, Supplier<NetworkEvent.Context> context) {
+        ServerPlayer player = context.get().getSender();
+        if (player != null && message.action == ActionType.DISMOUNT) {
             player.stopRiding();
         }
     }
