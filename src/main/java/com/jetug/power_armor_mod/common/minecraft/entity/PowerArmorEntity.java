@@ -224,10 +224,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //        cap.syncFromServer();
 //        return cap.getDurability(bodyPart);
 
-        var itemStack = inventory.getItem(bodyPart.getId());
+        var player = Minecraft.getInstance().player;
 
+        var isClientSide = getLevel().isClientSide;
+        var itemStack = inventory.getItem(bodyPart.getId());
         var item = itemStack.getItem();
         var vat = itemStack.getDamageValue();
+
         return itemStack.isEmpty() ? 0 : itemStack.getDamageValue();
     }
 
@@ -285,7 +288,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public void push(Vec3 vector){
         setDeltaMovement(this.getDeltaMovement().add(vector));
-        //push(vector.x , vector.y , vector.z);
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
