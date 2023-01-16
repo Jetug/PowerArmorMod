@@ -13,6 +13,9 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -53,6 +56,9 @@ import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
+    public static final String SLOT_TAG = "Slot";
+    public static final String ITEMS_TAG = "Items";
+
     public final PowerArmorPartEntity headHitBox;
     public final PowerArmorPartEntity bodyHitBox;
     public final PowerArmorPartEntity leftArmHitBox;
@@ -85,16 +91,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
 
-        headHitBox      = new PowerArmorPartEntity(this, HEAD     , 0.6f, 0.6f);
-        bodyHitBox      = new PowerArmorPartEntity(this, BODY     , 0.7f, 1.0f);
-        leftArmHitBox   = new PowerArmorPartEntity(this, LEFT_ARM , 0.5f, 1.0f);
-        rightArmHitBox  = new PowerArmorPartEntity(this, RIGHT_ARM, 0.5f, 1.0f);
-        leftLegHitBox   = new PowerArmorPartEntity(this, LEFT_LEG , 0.6f, 1.0f);
-        rightLegHitBox  = new PowerArmorPartEntity(this, RIGHT_LEG, 0.6f, 1.0f);
+        headHitBox      = createArmorPart(HEAD     , 0.6f, 0.6f);
+        bodyHitBox      = createArmorPart(BODY     , 0.7f, 1.0f);
+        leftArmHitBox   = createArmorPart(LEFT_ARM , 0.5f, 1.0f);
+        rightArmHitBox  = createArmorPart(RIGHT_ARM, 0.5f, 1.0f);
+        leftLegHitBox   = createArmorPart(LEFT_LEG , 0.6f, 1.0f);
+        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
+
         subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         noCulling = true;
 
         initInventory();
+    }
+
+    private PowerArmorPartEntity createArmorPart(BodyPart bodyPart, float xz, float y){
+        return new PowerArmorPartEntity(this, bodyPart, xz, y);
     }
 
     private void initInventory(){
@@ -144,22 +155,64 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
-    public ArmorSlot getArmorPart(BodyPart part) {
-        switch (part) {
-            case HEAD:
-                return head;
-            case BODY:
-                return body;
-            case LEFT_ARM:
-                return leftArm;
-            case RIGHT_ARM:
-                return rightArm;
-            case LEFT_LEG:
-                return leftLeg;
-            case RIGHT_LEG:
-                return rightLeg;
+//    public ArmorSlot getArmorPart(BodyPart part) {
+//        switch (part) {
+//            case HEAD:
+//                return head;
+//            case BODY:
+//                return body;
+//            case LEFT_ARM:
+//                return leftArm;
+//            case RIGHT_ARM:
+//                return rightArm;
+//            case LEFT_LEG:
+//                return leftLeg;
+//            case RIGHT_LEG:
+//                return rightLeg;
+//        }
+//        return null;
+//    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        saveInventory(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        loadInventory(compound);
+    }
+
+    private void saveInventory(CompoundTag compound){
+        if (inventory == null) return;
+
+        ListTag nbtTags = new ListTag();
+
+        for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
+            var itemstack = inventory.getItem(slotId);
+
+            if (!itemstack.isEmpty()) {
+                CompoundTag compoundNBT = new CompoundTag();
+                compoundNBT.putByte(SLOT_TAG, (byte) slotId);
+                itemstack.save(compoundNBT);
+                nbtTags.add(compoundNBT);
+            }
+
         }
-        return null;
+        compound.put(ITEMS_TAG, nbtTags);
+    }
+
+    private void loadInventory(@NotNull CompoundTag compound) {
+        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
+        initInventory();
+
+        for (Tag nbt : nbtTags) {
+            var compoundNBT = (CompoundTag) nbt;
+            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
+            inventory.setItem(slotId, ItemStack.of(compoundNBT));
+        }
     }
 
     public boolean hasArmor(BodyPart bodyPart) {
@@ -226,6 +279,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             }
             case UP -> vector = new Vec3(0, 1, 0);
         }
+
+        push(vector);
     }
 
     public void push(Vec3 vector){
@@ -351,8 +406,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         Global.LOGGER.log(INFO, level.isClientSide);
 
-        for (ArmorSlot subEntity : this.armorParts)
-            subEntity.setDurability(1);
+//        for (ArmorSlot subEntity : this.armorParts)
+//            subEntity.setDurability(1);
 
         ItemStack stack = player.getItemInHand(hand);
 

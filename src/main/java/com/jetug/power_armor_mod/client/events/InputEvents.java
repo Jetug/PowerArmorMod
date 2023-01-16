@@ -1,4 +1,4 @@
-package com.jetug.events;
+package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.network.PacketHandler;

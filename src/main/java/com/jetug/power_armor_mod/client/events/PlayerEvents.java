@@ -1,4 +1,4 @@
-package com.jetug.events;
+package com.jetug.power_armor_mod.client.events;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
