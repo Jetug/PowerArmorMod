@@ -13,10 +13,17 @@ public enum BodyPart{
     private int id;
     private String name;
 
+    private static final BodyPart[] values = BodyPart.values();
+
     BodyPart(int id, String name) {
         this.id = id;
         this.name = name;
     }
+
+    public static BodyPart getById(int id) {
+        return values[id];
+    }
+
 
     public int getId(){
         return id;

@@ -12,17 +12,17 @@ import java.util.function.Supplier;
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 
 public class ArmorClientUpdatePacket {
-    IArmorData capability = null;
+    IArmorData data = null;
     private int entityID = -1;
 
-    public ArmorClientUpdatePacket(final IArmorData capability) {
-        this.capability = capability;
+    public ArmorClientUpdatePacket(final IArmorData data) {
+        this.data = data;
     }
 
     public ArmorClientUpdatePacket() {}
 
     public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(capability.getEntity().getId());
+        buffer.writeInt(data.getEntity().getId());
     }
 
     public ArmorClientUpdatePacket read(FriendlyByteBuf buffer) {

@@ -1,48 +1,62 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.function.Supplier;
 
 public class PowerArmorPacket{
-    ActionType action = null;
-    private int entityId = -1;
-
-    public PowerArmorPacket(int entityId, final ActionType action) {
-        this.entityId = entityId;
-        this.action = action;
-    }
+    public CompoundTag nbt = null;
 
     public PowerArmorPacket() {}
 
+    public PowerArmorPacket(ArmorData armorData) {
+        nbt = armorData.serializeNBT();
+    }
+
+    public PowerArmorPacket(CompoundTag armorData) {
+        nbt = armorData;
+    }
+
+    public ArmorData getArmorData(){
+        var data = new ArmorData();
+        data.deserializeNBT(nbt);
+        return data;
+    }
+
     public static void write(PowerArmorPacket message, FriendlyByteBuf buffer) {
-        buffer.writeByte(message.action.getId());
-        buffer.writeInt(message.entityId);
+        buffer.writeNbt(message.nbt);
     }
 
     public static PowerArmorPacket read(FriendlyByteBuf buffer) {
-        var action = ActionType.getById(buffer.readByte());
-        var entityId = buffer.readInt();
-        return new PowerArmorPacket(entityId, action);
+        return new PowerArmorPacket(buffer.readNbt());
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
-        if(context.get().getDirection() == NetworkDirection.LOGIN_TO_CLIENT){
-            var player = Minecraft.getInstance().player;
-            var entity = player.level.getEntity(message.entityId);
 
+        Player player = null;
 
+        var dir = context.get().getDirection();
+
+        if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT){
+            player = Minecraft.getInstance().player;
         }
-        else if(context.get().getDirection() == NetworkDirection.LOGIN_TO_SERVER) {
-            var player = context.get().getSender();
-            var entity = player.level.getEntity(message.entityId);
+        else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
 
+            var server = ServerLifecycleHooks.getCurrentServer();
+            player = context.get().getSender();
         }
+
+        var data = message.getArmorData();
+        var entity = player.level.getEntity(data.entityId);
+
+        if(entity instanceof PowerArmorEntity powerArmor) powerArmor.setArmorData(data);
 
     }
 }

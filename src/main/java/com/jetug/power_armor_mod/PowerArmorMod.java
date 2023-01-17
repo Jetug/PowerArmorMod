@@ -35,5 +35,4 @@ public class PowerArmorMod
         ModMenuTypes.register(eventBus);
         ModItems.register(eventBus);
     }
-
 }

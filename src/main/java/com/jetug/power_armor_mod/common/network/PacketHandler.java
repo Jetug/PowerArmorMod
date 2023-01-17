@@ -6,11 +6,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -60,6 +63,7 @@ public class PacketHandler {
 				ArmorClientUpdatePacket::handle);
 
 		HANDLER.registerMessage(disc++, ActionPacket.class, ActionPacket::write, ActionPacket::read, ActionPacket::handle);
+		HANDLER.registerMessage(disc++, PowerArmorPacket.class, PowerArmorPacket::write, PowerArmorPacket::read, PowerArmorPacket::handle);
 	}
 
 	private <T> void registerMessage(T packet){
@@ -101,6 +105,7 @@ public class PacketHandler {
 	 * Sends a packet to a specific player.<br>
 	 * Must be called server side.
 	 * */
+	//@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void sendTo(Object msg, ServerPlayer player) {
 		if(!(player instanceof FakePlayer)) {
 			HANDLER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
@@ -111,12 +116,15 @@ public class PacketHandler {
 	 * Sends a packet to the server.<br>
 	 * Must be called client side.
 	 * */
+	//@OnlyIn(Dist.CLIENT)
 	public static void sendToServer(Object msg) {
 		HANDLER.sendToServer(msg);
 	}
 	
 	/**Server side.*/
-	public static void sendToAllPlayers(Object msg, MinecraftServer server) {
+	//@OnlyIn(Dist.DEDICATED_SERVER)
+	public static void sendToAllPlayers(Object msg) {
+		var server = ServerLifecycleHooks.getCurrentServer();
 		List<ServerPlayer> list = server.getPlayerList().getPlayers();
 		for(ServerPlayer e : list) {
 			sendTo(msg, e);

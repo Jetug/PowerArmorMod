@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.common.minecraft.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.network.packet.ArmorData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -43,6 +45,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
@@ -50,6 +53,7 @@ import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
+import static net.minecraftforge.api.distmarker.Dist.CLIENT;
 import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -80,6 +84,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer clientTimer = new TickTimer();
+
+    private final boolean isClientSide = level.isClientSide;
+
+    private HashMap<BodyPart, Integer> durability = new HashMap<>() {{
+        put(HEAD, 0);
+        put(BODY, 0);
+        put(LEFT_ARM, 0);
+        put(RIGHT_ARM, 0);
+        put(LEFT_LEG, 0);
+        put(RIGHT_LEG, 0);
+    }};
 
     private Vec3 previousPosition = position();
     private double speed = 0D;
@@ -215,7 +230,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return getArmorDurability(bodyPart) != 0;
     }
 
-    public float getArmorDurability(BodyPart bodyPart) {
+    public int getArmorDurability(BodyPart bodyPart) {
 //        var cap = getCapability(ARMOR_DATA).orElse(null);
 //        cap.syncFromServer();
 //        return cap.getDurability(bodyPart);
@@ -231,7 +246,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         var item = itemStack.getItem();
         var vat = itemStack.getDamageValue();
 
-        return itemStack.isEmpty() ? 0 : itemStack.getDamageValue();
+        //return itemStack.isEmpty() ? 0 : itemStack.getDamageValue();
+
+        return durability.get(bodyPart);
     }
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
@@ -305,6 +322,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     @Override
     public void tick() {
         super.tick();
+
+        if(!level.isClientSide) {
+            getArmorData().sentToClient();
+        }
+
+
         speed = calculateDistance(previousPosition, position());
         previousPosition = position();
 
@@ -322,6 +345,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         clientTimer.tick();
         //}
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
+
+
     }
 
     @Override
@@ -653,6 +678,37 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     @Override
     public void containerChanged(Container p_18983_) {
 
+    }
+
+    public ArmorData getArmorData(){
+        var data = new ArmorData(getId());
+
+        if (isClientSide)
+            data.durability = durability;
+        else{
+            for (var i = 0; i < inventory.getContainerSize(); i++){
+                var item = inventory.getItem(i);
+                if(!item.isEmpty()){
+                    var damage = item.getDamageValue();
+                    data.durability.put(BodyPart.getById(i), 1);
+                }
+            }
+        }
+        return data;
+    }
+
+    public void setArmorData(ArmorData data){
+        durability = data.durability;
+    }
+
+    @OnlyIn(CLIENT)
+    public void setDurability(BodyPart part, int value) {
+        durability.put(part, value);
+    }
+
+    @OnlyIn(CLIENT)
+    public Integer getDurability(BodyPart part) {
+        return durability.get(part);
     }
 
 //    @Nullable
