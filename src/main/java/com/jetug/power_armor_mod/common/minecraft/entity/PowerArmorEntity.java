@@ -216,12 +216,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
             var itemstack = inventory.getItem(slotId);
 
-            if (!itemstack.isEmpty()) {
+            //if (!itemstack.isEmpty()) {
                 CompoundTag compoundNBT = new CompoundTag();
                 compoundNBT.putByte(SLOT_TAG, (byte) slotId);
                 itemstack.save(compoundNBT);
                 nbtTags.add(compoundNBT);
-            }
+            //}
 
         }
 
@@ -693,32 +693,31 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
 
-        if (isClientSide)
-            data.durability = durability;
+        if (isClientSide) {
+            //data.durability = durability;
+        }
         else{
-            for (var i = 0; i < inventory.getContainerSize(); i++){
-                var item = inventory.getItem(i);
-                if(!item.isEmpty()){
-                    var damage = item.getDamageValue();
-                    data.durability.put(BodyPart.getById(i), 1);
-                }
-            }
+//            for (var i = 0; i < inventory.getContainerSize(); i++){
+//                var item = inventory.getItem(i);
+//                if(!item.isEmpty()){
+//                    var damage = item.getDamageValue();
+//                    //data.durability.put(BodyPart.getById(i), 1);
+//                }
+//            }
             data.inventory = serializeInventory(inventory);
         }
         return data;
     }
 
     public void setArmorData(ArmorData data){
-        durability = data.durability;
+        //durability = data.durability;
         deserializeInventory(inventory, data.inventory);
     }
 
-    @OnlyIn(CLIENT)
     public void setDurability(BodyPart part, int value) {
         durability.put(part, value);
     }
 
-    @OnlyIn(CLIENT)
     public Integer getDurability(BodyPart part) {
         return durability.get(part);
     }

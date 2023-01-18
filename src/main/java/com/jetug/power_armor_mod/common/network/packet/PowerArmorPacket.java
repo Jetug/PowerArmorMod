@@ -56,7 +56,8 @@ public class PowerArmorPacket{
         var data = message.getArmorData();
         var entity = player.level.getEntity(data.entityId);
 
-        if(entity instanceof PowerArmorEntity powerArmor) powerArmor.setArmorData(data);
+        if(entity instanceof PowerArmorEntity powerArmor)
+            powerArmor.setArmorData(data);
 
     }
 }
