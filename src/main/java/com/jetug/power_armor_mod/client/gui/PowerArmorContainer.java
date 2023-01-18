@@ -38,9 +38,9 @@ public class PowerArmorContainer extends AbstractContainerMenu {
     public PowerArmorContainer(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
         super(ContainerRegistry.DRAGON_CONTAINER.get(), containerId);
 
-        powerArmor = entity;
-        armorInventory = container;
-        armorInventory.startOpen(playerInventory.player);
+        this.powerArmor = entity;
+        this.armorInventory = container;
+        this.armorInventory.startOpen(playerInventory.player);
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);

@@ -180,9 +180,37 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         loadInventory(compound);
     }
 
+    private void syncInventoryWithClient() {
+        var nbt = serializeInventory(inventory);
+        var data = new ArmorData(getId());
+        data.inventory = nbt;
+        data.sentToClient();
+    }
+
+    public void setInventory(ListTag tags){
+        deserializeInventory(inventory, tags);
+    }
+
     private void saveInventory(CompoundTag compound){
         if (inventory == null) return;
+        compound.put(ITEMS_TAG, serializeInventory(inventory));
+    }
 
+    private void loadInventory(@NotNull CompoundTag compound) {
+        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
+        initInventory();
+        deserializeInventory(inventory, nbtTags);
+    }
+
+    private void deserializeInventory(SimpleContainer inventory, ListTag nbtTags){
+        for (Tag nbt : nbtTags) {
+            var compoundNBT = (CompoundTag) nbt;
+            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
+            inventory.setItem(slotId, ItemStack.of(compoundNBT));
+        }
+    }
+
+    private ListTag serializeInventory(@NotNull SimpleContainer inventory){
         ListTag nbtTags = new ListTag();
 
         for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
@@ -196,18 +224,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             }
 
         }
-        compound.put(ITEMS_TAG, nbtTags);
-    }
 
-    private void loadInventory(@NotNull CompoundTag compound) {
-        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
-        initInventory();
-
-        for (Tag nbt : nbtTags) {
-            var compoundNBT = (CompoundTag) nbt;
-            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
-            inventory.setItem(slotId, ItemStack.of(compoundNBT));
-        }
+        return nbtTags;
     }
 
     private void initInventory(){
@@ -231,26 +249,15 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public int getArmorDurability(BodyPart bodyPart) {
-//        var cap = getCapability(ARMOR_DATA).orElse(null);
-//        cap.syncFromServer();
-//        return cap.getDurability(bodyPart);
-
-
-
-        var player = Minecraft.getInstance().player;
-
         var isClientSide = getLevel().isClientSide;
-        //var itemStack = inventory.getItem(bodyPart.getId());
+        var itemStack = inventory.getItem(bodyPart.getId());
 
-        var itemStack = inventory.getItem(0);
+        if(itemStack.isEmpty()) return 0;
 
-
-        var item = itemStack.getItem();
-        var vat = itemStack.getDamageValue();
-
-        //return itemStack.isEmpty() ? 0 : itemStack.getDamageValue(
-        var dur = durability.get(bodyPart);
-        return dur;
+        var dur = itemStack.getDamageValue(); //= durability.get(bodyPart);
+        var max = itemStack.getMaxDamage();
+        var res = max - dur;
+        return res;
     }
 
     public void setArmorDurability(BodyPart bodyPart, float value) {
@@ -328,7 +335,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         if(!level.isClientSide) {
             getArmorData().sentToClient();
         }
-
 
         speed = calculateDistance(previousPosition, position());
         previousPosition = position();
@@ -680,7 +686,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     @Override
     public void containerChanged(Container p_18983_) {
         if (!this.level.isClientSide) {
-            updateAttributes();
+            syncInventoryWithClient();
         }
     }
 
@@ -697,12 +703,14 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                     data.durability.put(BodyPart.getById(i), 1);
                 }
             }
+            data.inventory = serializeInventory(inventory);
         }
         return data;
     }
 
     public void setArmorData(ArmorData data){
         durability = data.durability;
+        deserializeInventory(inventory, data.inventory);
     }
 
     @OnlyIn(CLIENT)
