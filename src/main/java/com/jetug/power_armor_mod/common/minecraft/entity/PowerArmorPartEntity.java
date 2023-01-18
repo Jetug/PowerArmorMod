@@ -75,7 +75,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        Player player = Minecraft.getInstance().player;
         damage(damage);
         Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
 
