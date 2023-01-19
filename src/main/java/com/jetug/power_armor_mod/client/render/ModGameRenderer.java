@@ -113,7 +113,7 @@ public class ModGameRenderer extends GameRenderer {
         for(Entity levelEntity : level.getEntities(cameraEntity, box, filter)) {
             if(levelEntity instanceof PowerArmorEntity && player != null && player.getVehicle() == levelEntity)
                 continue;
-            if(levelEntity instanceof PowerArmorPartEntity && player != null && player.getVehicle() == ((PowerArmorPartEntity)levelEntity).parentMob)
+            if(levelEntity instanceof PowerArmorPartEntity powerArmorPart && player != null && player.getVehicle() == powerArmorPart.parentMob)
                 continue;
 
             AABB aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
