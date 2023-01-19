@@ -20,8 +20,9 @@ public class PlayerEvents
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent.Pre event)
     {
-        Player player = event.getPlayer();
-        player.setInvisible(isWearingPowerArmor(player));
+        if(isWearingPowerArmor(event.getPlayer())){
+            event.setCanceled(true);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

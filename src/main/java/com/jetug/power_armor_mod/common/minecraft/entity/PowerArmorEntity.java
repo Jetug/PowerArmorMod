@@ -7,6 +7,7 @@ import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
+import com.jetug.power_armor_mod.common.util.helpers.Speedometer;
 import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
@@ -77,27 +78,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
+    public final Speedometer speedometer = new Speedometer(this);
+
     public SimpleContainer inventory;
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
 
+    private final boolean isClientSide = level.isClientSide;
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer clientTimer = new TickTimer();
 
-    private final boolean isClientSide = level.isClientSide;
-
-    private HashMap<BodyPart, Integer> durability = new HashMap<>() {{
-        put(HEAD, 0);
-        put(BODY, 0);
-        put(LEFT_ARM, 0);
-        put(RIGHT_ARM, 0);
-        put(LEFT_LEG, 0);
-        put(RIGHT_LEG, 0);
-    }};
-
-    private Vec3 previousPosition = position();
-    private double speed = 0D;
     private boolean isDashing = false;
     private boolean isPickable = true;
 
@@ -269,17 +260,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
-
         var item = inventory.getItem(bodyPart.getId());
         item.setDamageValue((int)(item.getDamageValue() - damage));
-//
-//
-//        float durability = getArmorDurability(bodyPart) - damage;
-//
-//        if (durability < 0)
-//            durability = 0;
-//
-//        setArmorDurability(bodyPart, durability);
     }
 
     public void dash(DashDirection direction) {
@@ -313,10 +295,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void push(Vec3 vector){
-        setDeltaMovement(this.getDeltaMovement().add(vector));
+        setDeltaMovement(getDeltaMovement().add(vector));
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+        damageArmor(part.bodyPart, damage);
         return hurt(damageSource, damage);
     }
 
@@ -336,12 +319,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             getArmorData().sentToClient();
         }
 
-        speed = calculateDistance(previousPosition, position());
-        previousPosition = position();
+        speedometer.tick();
 
-        boolean bb = level.isClientSide;
-
-        if(isDashing && !bb) {
+        if(isDashing && !isClientSide) {
             pushEntitiesAround();
         }
 
@@ -509,8 +489,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
                 Vec3 deltaMovement = this.getDeltaMovement();
                 this.setDeltaMovement(deltaMovement.x, jump, deltaMovement.z);
-                this.setIsJumping(true);
-                this.hasImpulse = true;
+                isJumping = true;
+                hasImpulse = true;
 
                 if (f1 > 0.0F) {
                     float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
@@ -534,10 +514,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
             if (this.onGround) {
                 this.playerJumpPendingScale = 0.0F;
-                this.setIsJumping(false);
+                isJumping = false;
             }
-
-            //this.calculateEntityAnimation(this, false);
         } else {
             this.flyingSpeed = 0.02F;
             super.travel(travelVector);
@@ -658,11 +636,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         if (hurtTime > 0){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", PLAY_ONCE));
             event.getController().animationSpeed =  1.0D;
-            return PlayState.STOP;
+            return PlayState.CONTINUE;
         }
-        else if(event.isMoving()){
+        if(event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", LOOP));
-            event.getController().animationSpeed = speed + 1 * 4.0D;
+            event.getController().animationSpeed = speedometer.getSpeed() + 1 * 4.0D;
             return PlayState.CONTINUE;
         }
         else{
@@ -712,14 +690,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void setArmorData(ArmorData data){
         //durability = data.durability;
         deserializeInventory(inventory, data.inventory);
-    }
-
-    public void setDurability(BodyPart part, int value) {
-        durability.put(part, value);
-    }
-
-    public Integer getDurability(BodyPart part) {
-        return durability.get(part);
     }
 
 //    @Nullable

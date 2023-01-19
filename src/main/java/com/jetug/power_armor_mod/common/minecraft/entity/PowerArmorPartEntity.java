@@ -53,9 +53,9 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
         return parentMob.getArmorDurability(bodyPart);
     }
 
-    public void damage(float damage){
-        parentMob.damageArmor(bodyPart, damage);
-    }
+//    public void damage(float damage){
+//        parentMob.damageArmor(bodyPart, damage);
+//    }
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
@@ -75,7 +75,7 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        damage(damage);
+        //damage(damage);
         Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
 
         return !this.isInvulnerableTo(damageSource) && this.parentMob.hurt(this, damageSource, damage);
