@@ -48,7 +48,6 @@ public class PowerArmorPacket{
             player = Minecraft.getInstance().player;
         }
         else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-
             var server = ServerLifecycleHooks.getCurrentServer();
             player = context.get().getSender();
         }

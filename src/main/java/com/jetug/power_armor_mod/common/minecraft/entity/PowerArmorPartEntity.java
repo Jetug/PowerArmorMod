@@ -58,7 +58,8 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //    }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
+    public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vector, @NotNull InteractionHand hand) {
+        var ic = level.isClientSide;
         return parentMob.interactAt(player, vector, hand);
     }
 
@@ -70,15 +71,14 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 
     @Override
     public boolean isPickable() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        //damage(damage);
         Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
-
-        return !this.isInvulnerableTo(damageSource) && this.parentMob.hurt(this, damageSource, damage);
+        //!this.isInvulnerableTo(damageSource) &&
+        return this.parentMob.hurt(this, damageSource, damage);
     }
 
     @Override

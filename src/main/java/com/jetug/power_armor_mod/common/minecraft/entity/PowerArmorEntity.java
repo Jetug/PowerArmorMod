@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
-import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.packet.ArmorData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
@@ -33,7 +32,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -46,15 +44,12 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.helpers.VectorHelper.calculateDistance;
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
-import static net.minecraftforge.api.distmarker.Dist.CLIENT;
 import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -90,7 +85,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private final TickTimer clientTimer = new TickTimer();
 
     private boolean isDashing = false;
-    private boolean isPickable = true;
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
@@ -171,11 +165,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         loadInventory(compound);
     }
 
-    private void syncInventoryWithClient() {
-        var nbt = serializeInventory(inventory);
-        var data = new ArmorData(getId());
-        data.inventory = nbt;
-        data.sentToClient();
+    private void syncDataWithClient() {
+        getArmorData().sentToClient();
+    }
+
+    private void syncDataWithServer() {
+        getArmorData().sentToServer();
     }
 
     public void setInventory(ListTag tags){
@@ -213,7 +208,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 itemstack.save(compoundNBT);
                 nbtTags.add(compoundNBT);
             //}
-
         }
 
         return nbtTags;
@@ -260,8 +254,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
+
         var item = inventory.getItem(bodyPart.getId());
+        var d1 = item.getDamageValue();
         item.setDamageValue((int)(item.getDamageValue() - damage));
+        var d2 = item.getDamageValue();
+
+        syncDataWithServer();
     }
 
     public void dash(DashDirection direction) {
@@ -299,8 +298,15 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+        var ic = isClientSide;
         damageArmor(part.bodyPart, damage);
-        return hurt(damageSource, damage);
+        return super.hurt(damageSource, damage);
+    }
+
+    @Override
+    public boolean hurt(DamageSource damageSource, float damage) {
+        damageArmor(BODY, damage);
+        return super.hurt(damageSource, damage);
     }
 
     public boolean isJumping() {
@@ -317,21 +323,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         if(!level.isClientSide) {
             getArmorData().sentToClient();
+
+            if(isDashing) {
+                pushEntitiesAround();
+            }
         }
 
         speedometer.tick();
 
-        if(isDashing && !isClientSide) {
-            pushEntitiesAround();
-        }
 
-        if(!Minecraft.getInstance().options.keyAttack.isDown()){
-            isPickable = true;
-        }
 
-        //if(level.isClientSide){
+//        if(!Minecraft.getInstance().options.keyAttack.isDown()){
+//            isPickable = true;
+//        }
+
         clientTimer.tick();
-        //}
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
 
 
@@ -389,9 +395,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return true;
     }
 
-    public void setIsPickable(Boolean value){
-        isPickable = value;
-    }
+//    public void setIsPickable(Boolean value){
+//        isPickable = value;
+//    }
 
     @Override
     public boolean isPickable() {
@@ -418,19 +424,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     @Override
     public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vector, @NotNull InteractionHand hand) {
-
         Global.LOGGER.log(INFO, level.isClientSide);
-
-//        for (ArmorSlot subEntity : this.armorParts)
-//            subEntity.setDurability(1);
-
         ItemStack stack = player.getItemInHand(hand);
 
-        if(stack.getItem() instanceof PowerArmorItem){
-
-        }
         if (stack.isEmpty() && player.isShiftKeyDown()) {
-            this.openGUI(player);
+            openGUI(player);
             return InteractionResult.SUCCESS;
         }
 
@@ -630,7 +628,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         if(isDashing){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward", HOLD_ON_LAST_FRAME));
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", LOOP));
+            //event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", LOOP));
             return PlayState.CONTINUE;
         }
         if (hurtTime > 0){
@@ -662,39 +660,19 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     @Override
-    public void containerChanged(Container p_18983_) {
+    public void containerChanged(@NotNull Container container) {
         if (!this.level.isClientSide) {
-            syncInventoryWithClient();
+            syncDataWithClient();
         }
     }
 
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
-
-        if (isClientSide) {
-            //data.durability = durability;
-        }
-        else{
-//            for (var i = 0; i < inventory.getContainerSize(); i++){
-//                var item = inventory.getItem(i);
-//                if(!item.isEmpty()){
-//                    var damage = item.getDamageValue();
-//                    //data.durability.put(BodyPart.getById(i), 1);
-//                }
-//            }
-            data.inventory = serializeInventory(inventory);
-        }
+        data.inventory = serializeInventory(inventory);
         return data;
     }
 
     public void setArmorData(ArmorData data){
-        //durability = data.durability;
         deserializeInventory(inventory, data.inventory);
     }
-
-//    @Nullable
-//    @Override
-//    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-//        return new GemCuttingStationMenu(pContainerId, pInventory, this);
-//    }
 }
