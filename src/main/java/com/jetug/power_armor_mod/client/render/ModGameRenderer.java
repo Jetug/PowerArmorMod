@@ -64,20 +64,20 @@ public class ModGameRenderer extends GameRenderer {
 
 
             ////Jetug
-            EntityHitResult entityHitResult = isWearingPowerArmor(Minecraft.getInstance().player) ?
+            EntityHitResult entityHitResult = //isWearingPowerArmor(Minecraft.getInstance().player) ?
                     getEntityHitResult(cameraEntity,
                             eyePosition,
                             pickVector,
                             aabb,
                             (entity) -> !entity.isSpectator() && entity.isPickable(),
-                            finalPickRange)
-                    :
-                    ProjectileUtil.getEntityHitResult(cameraEntity,
-                            eyePosition,
-                            pickVector,
-                            aabb,
-                            (entity) -> !entity.isSpectator() && entity.isPickable(),
                             finalPickRange);
+//                    :
+//                    ProjectileUtil.getEntityHitResult(cameraEntity,
+//                            eyePosition,
+//                            pickVector,
+//                            aabb,
+//                            (entity) -> !entity.isSpectator() && entity.isPickable(),
+//                            finalPickRange);
 
             if (entityHitResult != null) {
                 Entity hitEntity = entityHitResult.getEntity();
