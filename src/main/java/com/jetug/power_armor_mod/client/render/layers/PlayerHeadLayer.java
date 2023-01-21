@@ -29,11 +29,11 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
 
     public PlayerHeadLayer(IGeoRenderer<PowerArmorEntity> entityRenderer) {
         super(entityRenderer);
-        //  Minecraft.getInstance().player.
     }
 
     private void addImage(BufferedImage buff1, BufferedImage buff2, int x, int y) {
         Graphics2D g2d = buff1.createGraphics();
+        //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
         g2d.drawImage(buff2, x, y, null);
         g2d.dispose();
     }
@@ -59,6 +59,15 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
         return nativeImage;
     }
 
+    public static void cropImage(BufferedImage img, int xPos, int yPos) {
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                if(x >= xPos || y >= yPos)
+                    img.setRGB(x, y, (new Color(0.0f, 0.0f, 0.0f, 0.0f)).getRGB());
+            }
+        }
+    }
+
     //private void
 
     private final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
@@ -76,9 +85,10 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
                     Resource resource = minecraft.getResourceManager().getResource(originalPlayerTexture);
                     NativeImage nativeimage = NativeImage.read(resource.getInputStream());
                     var imageArr = nativeimage.asByteArray();
-                    var scaledImage = new BufferedImage(300, 300, BufferedImage.TYPE_INT_RGB);
+                    var scaledImage = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
                     var playerSkin = createImageFromBytes(imageArr);
 
+                    cropImage(playerSkin, 32, 16);
                     addImage(scaledImage, playerSkin, 0, 0);
 
                     File file = new File("C:/Users/Jetug/Desktop/result/original.png");
@@ -93,6 +103,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
                     finalTextureLocation = new ResourceLocation(Global.MOD_ID, tag);
                     minecraft.getTextureManager().register(finalTextureLocation, dynamicTexture);
 
+                    playerTextures.put(tag, finalTextureLocation);
                 }
                 catch (IOException e) {
                     throw new RuntimeException(e);
