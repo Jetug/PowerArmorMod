@@ -306,6 +306,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         damageArmor(BODY, damage);
+        Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
         return super.hurt(damageSource, damage);
     }
 

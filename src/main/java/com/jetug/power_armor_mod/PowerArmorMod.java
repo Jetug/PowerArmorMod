@@ -22,8 +22,7 @@ public class PowerArmorMod
 {
     public PowerArmorMod() {
         GeckoLib.initialize();
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        register(eventBus);
+        register(FMLJavaModLoadingContext.get().getModEventBus());
         EVENT_BUS.register(this);
     }
 
