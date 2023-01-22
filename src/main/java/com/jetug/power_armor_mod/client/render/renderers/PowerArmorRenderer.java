@@ -41,7 +41,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
             updateArmor(entity);
             super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, e);
+            throw e;
+            //LOGGER.log(Level.ERROR, e);
         }
     }
 
