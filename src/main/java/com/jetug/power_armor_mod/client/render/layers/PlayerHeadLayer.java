@@ -11,34 +11,125 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import org.apache.logging.log4j.Level;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
 
 public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
+    private final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
+    private IGeoRenderer<PowerArmorEntity> entityRenderer;
 
     public PlayerHeadLayer(IGeoRenderer<PowerArmorEntity> entityRenderer) {
         super(entityRenderer);
+        this.entityRenderer = entityRenderer;
     }
 
-    private void addImage(BufferedImage buff1, BufferedImage buff2, int x, int y) {
+
+    @Override
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof AbstractClientPlayer clientPlayer ) {
+
+            var texture = getHeadResourceLocation(clientPlayer, entity);
+            if (texture == null) return;
+
+            var cameo = RenderType.armorCutoutNoCull(texture);
+            int overlay = OverlayTexture.NO_OVERLAY;
+
+            matrixStackIn.pushPose();
+            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
+            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
+            this.getRenderer().render(
+                    this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION),
+                    entity,
+                    partialTicks,
+                    cameo,
+                    matrixStackIn,
+                    bufferIn,
+                    bufferIn.getBuffer(cameo),
+                    packedLightIn,
+                    overlay,
+                    1f, 1f, 1f, 1f);
+            matrixStackIn.popPose();
+        }
+    }
+
+    @Nullable
+    private ResourceLocation getHeadResourceLocation(AbstractClientPlayer clientPlayer, PowerArmorEntity entity) {
+        var minecraft = Minecraft.getInstance();
+        var tag = clientPlayer.getUUID().toString();
+
+        if (playerTextures.containsKey(tag)) {
+            return playerTextures.get(tag);
+        } else {
+            var playerHead = getPlayerHead(clientPlayer);
+            var entityTextureRL = entityRenderer.getTextureLocation(entity);
+            var entityTexture = resourceToBufferedImage(entityTextureRL);
+
+            if (playerHead == null || entityTexture == null) return null;
+
+            playerHead = extendImage(playerHead, entityTexture.getWidth(), entityTexture.getHeight());
+
+            var nativeImage = getNativeImage(playerHead);
+            var dynamicTexture = new DynamicTexture(nativeImage);
+            var finalTextureLocation = new ResourceLocation(Global.MOD_ID, tag);
+
+            minecraft.getTextureManager().register(finalTextureLocation, dynamicTexture);
+            playerTextures.put(tag, finalTextureLocation);
+            return finalTextureLocation;
+        }
+    }
+
+    @Nullable
+    private static BufferedImage getPlayerHead(AbstractClientPlayer clientPlayer) {
+        var playerSkin = getPlayerSkin(clientPlayer);
+        if(playerSkin == null) return null;
+        cropImage(playerSkin, 32, 16);
+        return playerSkin;
+    }
+
+    @Nullable
+    private static BufferedImage getPlayerSkin(AbstractClientPlayer clientPlayer) {
+        var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
+        return resourceToBufferedImage(originalPlayerTexture);
+    }
+
+    @Nullable
+    private static BufferedImage resourceToBufferedImage(ResourceLocation resourceLocation) {
+        try {
+            var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
+            var nativeImage = NativeImage.read(resource.getInputStream());
+            var imageArr = nativeImage.asByteArray();
+            return createImageFromBytes(imageArr);
+        }
+        catch (IOException e) {
+            Global.LOGGER.log(Level.ERROR, e);
+            return null;
+        }
+    }
+    private static BufferedImage extendImage(BufferedImage image, int width, int height){
+        var scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        addImage(scaledImage, image, 0, 0);
+        return scaledImage;
+    }
+
+    private static void addImage(BufferedImage buff1, BufferedImage buff2, int x, int y) {
         Graphics2D g2d = buff1.createGraphics();
         //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
         g2d.drawImage(buff2, x, y, null);
         g2d.dispose();
     }
 
-    private BufferedImage createImageFromBytes(byte[] imageData) {
+    private static BufferedImage createImageFromBytes(byte[] imageData) {
         var bais = new ByteArrayInputStream(imageData);
         try {
             return ImageIO.read(bais);
@@ -65,74 +156,6 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
                 if(x >= xPos || y >= yPos)
                     img.setRGB(x, y, (new Color(0.0f, 0.0f, 0.0f, 0.0f)).getRGB());
             }
-        }
-    }
-
-    //private void
-
-    private final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
-
-    @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof AbstractClientPlayer clientPlayer ) {
-            var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
-            var minecraft = Minecraft.getInstance();
-            var tag = clientPlayer.getUUID().toString();
-            ResourceLocation finalTextureLocation = null;
-
-            if(!playerTextures.containsKey(tag)) {
-                try {
-                    Resource resource = minecraft.getResourceManager().getResource(originalPlayerTexture);
-                    NativeImage nativeimage = NativeImage.read(resource.getInputStream());
-                    var imageArr = nativeimage.asByteArray();
-                    var scaledImage = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
-                    var playerSkin = createImageFromBytes(imageArr);
-
-                    cropImage(playerSkin, 32, 16);
-                    addImage(scaledImage, playerSkin, 0, 0);
-
-                    File file = new File("C:/Users/Jetug/Desktop/result/original.png");
-                    ImageIO.write(playerSkin, "png", file);
-
-                    File outputFile = new File("C:/Users/Jetug/Desktop/result/image"+clientPlayer.getUUID()+".png");
-                    ImageIO.write(scaledImage, "png", outputFile);
-
-                    var nativeImage = getNativeImage(scaledImage);
-                    var dynamicTexture = new DynamicTexture(nativeImage);
-
-                    finalTextureLocation = new ResourceLocation(Global.MOD_ID, tag);
-                    minecraft.getTextureManager().register(finalTextureLocation, dynamicTexture);
-
-                    playerTextures.put(tag, finalTextureLocation);
-                }
-                catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            else{
-                finalTextureLocation = playerTextures.get(tag);
-            }
-
-            var cameo = RenderType.armorCutoutNoCull(finalTextureLocation);
-            //var cameo = RenderType.armorCutoutNoCull(originalPlayerTexture);
-
-            int overlay = OverlayTexture.NO_OVERLAY;
-
-            matrixStackIn.pushPose();
-            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
-            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-            this.getRenderer().render(
-                    this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION),
-                    entity,
-                    partialTicks,
-                    cameo,
-                    matrixStackIn,
-                    bufferIn,
-                    bufferIn.getBuffer(cameo),
-                    packedLightIn,
-                    overlay,
-                    1f, 1f, 1f, 1f);
-            matrixStackIn.popPose();
         }
     }
 }
