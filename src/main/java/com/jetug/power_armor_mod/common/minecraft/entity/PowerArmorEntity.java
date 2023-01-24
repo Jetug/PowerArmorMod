@@ -433,7 +433,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             return InteractionResult.SUCCESS;
         }
 
-        this.doPlayerRide(player);
+        if(!isVehicle())
+            this.doPlayerRide(player);
+
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 

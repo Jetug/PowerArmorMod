@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.util.helpers;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
@@ -12,14 +13,120 @@ import net.minecraft.server.packs.resources.Resource;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.HashMap;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Base64;
+import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
+import static com.mojang.authlib.minecraft.MinecraftProfileTexture.*;
 
 
 public class TextureHelper {
+
+//    public static ResourceLocation getResourceLocation(AbstractClientPlayer clientPlayer) {
+//        var minecraft = Minecraft.getInstance();
+//        var playerInfo = minecraft.getConnection().getPlayerInfo(clientPlayer.getUUID());
+//
+//        GameProfile gameprofile = playerInfo.getProfile();
+//
+//        var map = minecraft.getSkinManager().getInsecureSkinInformation(gameprofile);
+//
+//        if (map.containsKey(Type.SKIN)) {
+//            final var skin = map.get(Type.SKIN);
+//            skin.getUrl();
+//
+////            String s = Hashing.sha1().hashUnencodedChars(skin.getHash()).toString();
+////            ResourceLocation resourcelocation = new ResourceLocation("skins/" + s);
+////
+////            return resourcelocation;
+//            return minecraft.getSkinManager().registerTexture(skin, Type.SKIN);
+//        }
+//        return null;
+//
+//    }
+
+    public static ResourceLocation getResourceLocation(AbstractClientPlayer clientPlayer) {
+        var minecraft = Minecraft.getInstance();
+        var playerInfo = minecraft.getConnection().getPlayerInfo(clientPlayer.getUUID());
+        var gameProfile = playerInfo.getProfile();
+        var map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
+
+        skinRequest(clientPlayer.getUUID());
+
+
+        if (map.containsKey(Type.SKIN)) {
+            final var skin = map.get(Type.SKIN);
+            try {
+
+                var url = new URL(skin.getUrl());
+                var image = ImageIO.read(url);
+                return createResource(image, clientPlayer.getUUID().toString());
+
+            } catch (Exception e) {
+                //return clientPlayer.getSkinTextureLocation();
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+
+    private static void skinRequest(UUID uuid) {
+        var strUuid = uuid.toString();
+        strUuid = strUuid.replace("-", "");
+
+        var url = "https://sessionserver.mojang.com/session/minecraft/profile/" + strUuid;
+        url =     "https://sessionserver.mojang.com/session/minecraft/profile/494036be71f64b58bb8da483a18a322f";
+        var response = getHTML(url);
+        var gson = new Gson();
+
+        User user = gson.fromJson(response, User.class);
+        var img = user.properties[0].value;
+
+        var image = base64ToBufferedImage(img);
+        File file = new File("C:\\Users\\Jetug\\Desktop\\result\\test_image.png");
+        file.createNewFile();
+    }
+
+    private static BufferedImage base64ToBufferedImage(String base64) {
+        var base = Base64.getDecoder();
+        var bytes = base.decode(base64);
+        return BufferedImageHelper.getImage(bytes);
+    }
+
+    public static String getHTML(String urlToRead) {
+        var result = new StringBuilder();
+
+        try {
+            var url = new URL(urlToRead);
+            var conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            var res = conn.getResponseMessage();
+            //return res;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                for (String line; (line = reader.readLine()) != null; ) {
+                    result.append(line);
+                }
+                return result.toString();
+            }
+        }
+        catch (Exception e){
+            return "";
+        }
+    }
+
+    public static ResourceLocation createResource(BufferedImage image, String name) {
+        var minecraft = Minecraft.getInstance();
+        var nativeImage = getNativeImage(image);
+        var texture = new DynamicTexture(nativeImage);
+        var resourceLocation = new ResourceLocation(Global.MOD_ID, name);
+        minecraft.getTextureManager().register(resourceLocation, texture);
+        return resourceLocation;
+    }
 
     public static Pair<Integer, Integer> getTextureSize(ResourceLocation resourceLocation) {
         Resource resource = null;
@@ -29,7 +136,7 @@ public class TextureHelper {
             return new Pair<>(nativeImage.getWidth(), nativeImage.getHeight());
 
         } catch (IOException e) {
-            return new Pair<Integer, Integer>(0,0);
+            return new Pair<>(0, 0);
         }
     }
 

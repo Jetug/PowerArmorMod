@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getResourceLocation;
+
 public class BufferedImageHelper {
     @Nullable
     public static BufferedImage getPlayerHeadImage(AbstractClientPlayer clientPlayer) {
@@ -25,7 +27,8 @@ public class BufferedImageHelper {
 
     @Nullable
     private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {
-        var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
+        //var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
+        var originalPlayerTexture = getResourceLocation(clientPlayer);
         return resourceToBufferedImage(originalPlayerTexture);
     }
 
@@ -35,7 +38,7 @@ public class BufferedImageHelper {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
             var nativeImage = NativeImage.read(resource.getInputStream());
             var imageArr = nativeImage.asByteArray();
-            return createImageFromBytes(imageArr);
+            return getImage(imageArr);
         }
         catch (IOException e) {
             Global.LOGGER.log(Level.ERROR, e);
@@ -47,20 +50,7 @@ public class BufferedImageHelper {
         NativeImage nativeImage = new NativeImage(img.getWidth(), img.getHeight(), true);
         for (int x = 0; x < img.getWidth(); x++) {
             for (int y = 0; y < img.getHeight(); y++) {
-                //var c = img.getRaster().getPixel(x, y, new int[0]);
-                //var c2 = img.getAlphaRaster().getPixel(x, y, new int[0]);
-
-//                var color = (((((c[3] >> 8) + c[2]) >> 8) + c[1]) >> 8) + c[0];
-//                nativeImage.setPixelRGBA(x, y, color);
-
-                //var color = img.getRGB(x, y);
-
                 int clr = img.getRGB(x, y);
-//                int red = (clr & 0xff000000) >> 24;
-//                int green =   (clr & 0x00ff0000) >> 16;
-//                int blue = (clr & 0x0000ff00) >> 8;
-                //int alpha =   clr & 0x000000ff;
-                //int alpha = 255;
                 int alpha = (clr & 0xff000000) >> 24;
                 int red =   (clr & 0x00ff0000) >> 16;
                 int green = (clr & 0x0000ff00) >> 8;
@@ -71,7 +61,6 @@ public class BufferedImageHelper {
                 rgb = (rgb << 8) + green;
                 rgb = (rgb << 8) + red;
 
-                //var rgba = color << 16;
                 nativeImage.setPixelRGBA(x, y, rgb);
             }
         }
@@ -100,7 +89,7 @@ public class BufferedImageHelper {
         g2d.dispose();
     }
 
-    private static BufferedImage createImageFromBytes(byte[] imageData) {
+    public static BufferedImage getImage(byte[] imageData) {
         var bais = new ByteArrayInputStream(imageData);
         try {
             return ImageIO.read(bais);
