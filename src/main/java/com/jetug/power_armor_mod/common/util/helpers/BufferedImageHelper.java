@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getResourceLocation;
+import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.*;
 
 public class BufferedImageHelper {
     @Nullable
@@ -27,10 +27,63 @@ public class BufferedImageHelper {
 
     @Nullable
     private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {
-        //var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
-        var originalPlayerTexture = getResourceLocation(clientPlayer);
-        return resourceToBufferedImage(originalPlayerTexture);
+        var skin = skinRequest(clientPlayer.getUUID());
+
+        if(skin == null){
+            var originalPlayerTexture = clientPlayer.getSkinTextureLocation();
+            skin = resourceToBufferedImage(originalPlayerTexture);
+        }
+
+        return skin;
     }
+
+//    public static ResourceLocation getMojangSkin(AbstractClientPlayer clientPlayer) {
+//        var minecraft = Minecraft.getInstance();
+//
+//        var uuid = clientPlayer.getUUID();
+//        var skin = skinRequest(clientPlayer.getUUID());
+//    }
+
+    public static ResourceLocation getMojangSkin2(AbstractClientPlayer clientPlayer) {
+        var minecraft = Minecraft.getInstance();
+
+        var uuid = clientPlayer.getUUID();
+        //uuid = UUID.fromString("494036be-71f6-4b58-bb8d-a483a18a322f");
+//        var playerInfo = minecraft.getConnection().getPlayerInfo(uuid);
+//        var gameProfile = playerInfo.getProfile();
+//        var map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
+
+        var skin = skinRequest(clientPlayer.getUUID());
+
+
+
+//        Map<Type, MinecraftProfileTexture> taxtures = null;
+//        try {
+//            var field = Minecraft.class.getDeclaredField("minecraftSessionService");
+//            field.setAccessible(true);
+//            var sess = (MinecraftSessionService)field.get(minecraft);
+//            taxtures = sess.getTextures(gameProfile, false);
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+
+//        if (map.containsKey(Type.SKIN)) {
+//            final var skin = map.get(Type.SKIN);
+//            try {
+//
+//                var url = new URL(skin.getUrl());
+//                var image = ImageIO.read(url);
+//                return createResource(image, clientPlayer.getUUID().toString());
+//
+//            } catch (Exception e) {
+//                //return clientPlayer.getSkinTextureLocation();
+//                throw new RuntimeException(e);
+//            }
+//        }
+        return null;
+    }
+
 
     @Nullable
     public static BufferedImage resourceToBufferedImage(ResourceLocation resourceLocation) {
