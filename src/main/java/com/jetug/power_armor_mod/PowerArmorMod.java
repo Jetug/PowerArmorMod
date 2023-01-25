@@ -20,18 +20,20 @@ import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 @Mod(Global.MOD_ID)
 public class PowerArmorMod
 {
+    public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+
     public PowerArmorMod() {
         GeckoLib.initialize();
-        register(FMLJavaModLoadingContext.get().getModEventBus());
+        register();
         EVENT_BUS.register(this);
     }
 
-    private void register(IEventBus eventBus) {
-        ContainerRegistry.register(eventBus);
-        ModBlockEntities.register(eventBus);
-        ModBlocks.register(eventBus);
-        ModEntityTypes.register(eventBus);
-        ModMenuTypes.register(eventBus);
-        ModItems.register(eventBus);
+    private void register() {
+        ContainerRegistry.register(MOD_EVENT_BUS);
+        ModBlockEntities.register(MOD_EVENT_BUS);
+        ModBlocks.register(MOD_EVENT_BUS);
+        ModEntityTypes.register(MOD_EVENT_BUS);
+        ModMenuTypes.register(MOD_EVENT_BUS);
+        ModItems.register(MOD_EVENT_BUS);
     }
 }

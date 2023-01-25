@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import org.apache.logging.log4j.Level;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
@@ -22,9 +23,11 @@ import java.util.Base64;
 import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
+import static org.apache.logging.log4j.Level.*;
 
 
 public class TextureHelper {
+    public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
 //    public static ResourceLocation getMojangSkin(AbstractClientPlayer clientPlayer) {
 //        var minecraft = Minecraft.getInstance();
@@ -48,30 +51,26 @@ public class TextureHelper {
 //
 //    }
 
-
+    @Nullable
     public static BufferedImage skinRequest(UUID uuid) {
-        var strUuid = uuid.toString();
-        strUuid = strUuid.replace("-", "");
-
-        var url = "https://sessionserver.mojang.com/session/minecraft/profile/" + strUuid;
-        url =     "https://sessionserver.mojang.com/session/minecraft/profile/494036be71f64b58bb8da483a18a322f";
+        var url = MINECRAFT_PROFILE_URL + uuid.toString().replace("-", "");
+        //url =     "https://sessionserver.mojang.com/session/minecraft/profile/494036be71f64b58bb8da483a18a322f";
 
         try {
             var response = getHTML(url);
-//            var gson = new Gson();
-//            var user = gson.fromJson(response, User.class);
-
             var json = JsonParser.parseString(response).getAsJsonObject();
             var base64 = json.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();//user.properties[0].value;
             var skinData = decodeBase64(base64);
             json = JsonParser.parseString(skinData).getAsJsonObject();
             var jsonUrl = json.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
-            var image = ImageIO.read(new URL(jsonUrl));
 
-            return image;
+            return ImageIO.read(new URL(jsonUrl));
 //            File file = new File("C:\\Users\\Jetug\\Desktop\\result\\test_image.png");
 //            ImageIO.write(image, "png", file);
-        } catch (IOException e) {
+        }
+        catch (Exception e){
+            if(!(e instanceof IOException || e instanceof IllegalStateException))
+                Global.LOGGER.log(ERROR, e.getMessage(), e);
             return null;
         }
     }
