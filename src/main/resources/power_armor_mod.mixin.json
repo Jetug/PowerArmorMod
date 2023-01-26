@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.jetug.power_armor_mod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinProjectileUtil"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "power_armor_mod.mixin-refmap.json",
+  "minVersion": "0.8"
+}

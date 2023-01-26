@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -428,13 +429,14 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         Global.LOGGER.log(INFO, level.isClientSide);
         ItemStack stack = player.getItemInHand(hand);
 
-        if (stack.isEmpty() && player.isShiftKeyDown()) {
+        if (player.isShiftKeyDown()) {
             openGUI(player);
             return InteractionResult.SUCCESS;
         }
-
-        if(!isVehicle())
+        else if(!isVehicle()) {
             this.doPlayerRide(player);
+            return InteractionResult.SUCCESS;
+        }
 
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
@@ -458,14 +460,14 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         float posX = sin(this.yBodyRot * ((float) Math.PI / 180F));
         float posZ = cos(this.yBodyRot * ((float) Math.PI / 180F));
-
         double posXZ = -0.3;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
                 this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
                 this.getZ() - (posXZ * posZ));
-        if (entity instanceof LivingEntity) {
-            ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+
+        if (entity instanceof LivingEntity livingEntity) {
+            livingEntity.yBodyRot = this.yBodyRot;
         }
     }
 
@@ -473,15 +475,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void travel(@NotNull Vec3 travelVector) {
         if (!this.isAlive()) return;
 
-        if (this.isVehicle() && this.canBeControlledByRider()) {
+        if (this.isVehicle() && this.canBeControlledByRider() && getControllingPassenger() instanceof Player player) {
             var livingEntity = (LivingEntity)this.getControllingPassenger();
             assert livingEntity != null;
             this.setYRot(livingEntity.getYRot());
             this.yRotO = this.getYRot();
             this.setXRot(livingEntity.getXRot() * 0.5F);
             this.setRot(this.getYRot(), this.getXRot());
-            this.yBodyRot = this.getYRot();
-            this.yHeadRot = this.yBodyRot;
+
+            this.yBodyRot = player.yBodyRot;//this.getYRot();
+            this.yHeadRot = player.yHeadRot;//this.yBodyRot;
+
             float f = livingEntity.xxa /* * 0.5F*/;
             float f1 = livingEntity.zza;
 
@@ -517,7 +521,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 this.playerJumpPendingScale = 0.0F;
                 isJumping = false;
             }
-        } else {
+        }
+        else {
             this.flyingSpeed = 0.02F;
             super.travel(travelVector);
         }
@@ -543,6 +548,30 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             this.playBlockFallSound();
             return true;
         }
+    }
+
+
+    public void doPlayerRide(Player player) {
+        player.setYRot(getYRot());
+        player.setXRot(getXRot());
+        player.startRiding(this);
+    }
+
+    @Override
+    public void containerChanged(@NotNull Container container) {
+        if (!this.level.isClientSide) {
+            syncDataWithClient();
+        }
+    }
+
+    public ArmorData getArmorData(){
+        var data = new ArmorData(getId());
+        data.inventory = serializeInventory(inventory);
+        return data;
+    }
+
+    public void setArmorData(ArmorData data){
+        deserializeInventory(inventory, data.inventory);
     }
 
 //    @Override
@@ -590,31 +619,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         this.playerJumpPendingScale = 1.0F;
     }
 
-//    @Override
-//    public void onPlayerJump(int jump) {
-//        if (jump < 0) {
-//            jump = 0;
-//        }
-//
-//        if (jump >= 90) {
-//            this.playerJumpPendingScale = 1.0F;
-//        } else {
-//            this.playerJumpPendingScale = 0.4F + 0.4F * (float)jump / 90.0F;
-//        }
-//    }
-//
-
-//    @Override
-//    public boolean canJump() {
-//        return true;
-//    }
-//
-//    @Override
-//    public void handleStartJump(int p_184775_1_) {}
-//
-//    @Override
-//    public void handleStopJump() {}
-//
     @Override
     public void registerControllers(AnimationData data) {
         AnimationController<PowerArmorEntity> controller = new AnimationController(this, "controller", 0, this::predicate);
@@ -626,26 +630,41 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return this.factory;
     }
 
+    boolean walkFlag = true;
+
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        event.getController().animationSpeed =  1.0D;
+        AnimationController<E> controller = event.getController();
+        controller.animationSpeed =  1.0D;
 
         if(isDashing){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward", HOLD_ON_LAST_FRAME));
+            setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
+            //controller.setAnimation(new AnimationBuilder().addAnimation("dash_forward", HOLD_ON_LAST_FRAME));
             //event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", LOOP));
             return PlayState.CONTINUE;
         }
         if (hurtTime > 0){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("hurt", PLAY_ONCE));
-            event.getController().animationSpeed =  1.0D;
+            setAnimation(controller, "hurt", PLAY_ONCE);
+            //controller.setAnimation(new AnimationBuilder().addAnimation("hurt", PLAY_ONCE));
+            controller.animationSpeed =  1.0D;
             return PlayState.CONTINUE;
         }
         if(event.isMoving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", LOOP));
-            event.getController().animationSpeed = speedometer.getSpeed() + 1 * 4.0D;
+            setAnimation(controller, "walk_start", LOOP);
+            setAnimation(controller, "walk_start", LOOP);
+//            if(walkFlag)
+//                setAnimation(controller, "walk_start", LOOP);
+//            else
+//                setAnimation(controller, "walk_end", LOOP);
+//            walkFlag = !walkFlag;
+//            controller.setAnimation(new AnimationBuilder()
+//                    .addAnimation("walk_start", PLAY_ONCE)
+//                    .addAnimation("walk_end", PLAY_ONCE));
+            controller.animationSpeed = speedometer.getSpeed() * 4.0D;
             return PlayState.CONTINUE;
         }
         else{
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", LOOP));
+            setAnimation(controller, "idle", LOOP);
+            //controller.setAnimation(new AnimationBuilder().addAnimation("idle", LOOP));
         }
 
 //        else if (isFallFlying()){
@@ -656,26 +675,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return PlayState.CONTINUE;
     }
 
-    public void doPlayerRide(Player player) {
-        player.setYRot(getYRot());
-        player.setXRot(getXRot());
-        player.startRiding(this);
-    }
-
-    @Override
-    public void containerChanged(@NotNull Container container) {
-        if (!this.level.isClientSide) {
-            syncDataWithClient();
-        }
-    }
-
-    public ArmorData getArmorData(){
-        var data = new ArmorData(getId());
-        data.inventory = serializeInventory(inventory);
-        return data;
-    }
-
-    public void setArmorData(ArmorData data){
-        deserializeInventory(inventory, data.inventory);
+    private void setAnimation(AnimationController<?> controller, String name, ILoopType loopType){
+        controller.setAnimation(new AnimationBuilder().addAnimation(name, loopType));
     }
 }

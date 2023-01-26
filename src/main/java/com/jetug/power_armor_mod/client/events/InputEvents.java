@@ -48,60 +48,31 @@ public class InputEvents {
                     onDoubleClick(entity, event.getKey());
 
                 if (LEAVE.isDown()) {
-                    //player.getVehicle().ejectPassengers();
-//                    ServerboundPlayerCommandPacket.Action serverPacket = ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY;
-//                    player.connection.send(new ServerboundPlayerCommandPacket(player, serverPacket));
                     player.stopRiding();
                     doServerAction(ActionType.DISMOUNT);
                     player.setInvisible(false);
                 }
             }
-//            else if(event.getAction() == GLFW.GLFW_PRESS) {
-//                if (!LEAVE.isDown()) {
-//                    ServerboundPlayerCommandPacket.Action serverPacket = ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY;
-//                    player.connection.send(new ServerboundPlayerCommandPacket(player, serverPacket));
-//                }
-//            }
         }
     }
 
-    private static void onDoubleClick(Entity entity, int key){
+    private static void onDoubleClick(PowerArmorEntity entity, int key){
         var options = Minecraft.getInstance().options;
 
         if (key == options.keyUp.getKey().getValue()) {
-            ((PowerArmorEntity) entity).dash(DashDirection.FORWARD);
+            entity.dash(DashDirection.FORWARD);
         }
         if (key == options.keyDown.getKey().getValue()) {
-            ((PowerArmorEntity) entity).dash(DashDirection.BACK);
+            entity.dash(DashDirection.BACK);
         }
         if (key == options.keyLeft.getKey().getValue()) {
-            ((PowerArmorEntity) entity).dash(DashDirection.LEFT);
+            entity.dash(DashDirection.LEFT);
         }
         if (key == options.keyRight.getKey().getValue()) {
-            ((PowerArmorEntity) entity).dash(DashDirection.RIGHT);
+            entity.dash(DashDirection.RIGHT);
         }
         if (key == options.keyJump.getKey().getValue()) {
-            ((PowerArmorEntity) entity).dash(DashDirection.UP);
+            entity.dash(DashDirection.UP);
         }
     }
-
-    private static void onDash(Entity entity){
-        Options options = Minecraft.getInstance().options;
-
-        if (options.keyDown.isDown()){
-            ((PowerArmorEntity)entity).dash(DashDirection.BACK);
-        }
-        else if (options.keyRight.isDown()){
-            ((PowerArmorEntity)entity).dash(DashDirection.RIGHT);
-        }
-        else if (options.keyLeft.isDown()){
-            ((PowerArmorEntity)entity).dash(DashDirection.LEFT);
-        }
-        else {
-            ((PowerArmorEntity) entity).dash(DashDirection.FORWARD);
-        }
-        out.println("Dash!");
-    }
-
-    
 }

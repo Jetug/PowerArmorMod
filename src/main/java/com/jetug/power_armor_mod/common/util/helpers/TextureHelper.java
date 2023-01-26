@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
@@ -29,74 +30,38 @@ import static org.apache.logging.log4j.Level.*;
 public class TextureHelper {
     public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-//    public static ResourceLocation getMojangSkin(AbstractClientPlayer clientPlayer) {
-//        var minecraft = Minecraft.getInstance();
-//        var playerInfo = minecraft.getConnection().getPlayerInfo(clientPlayer.getUUID());
-//
-//        GameProfile gameprofile = playerInfo.getProfile();
-//
-//        var map = minecraft.getSkinManager().getInsecureSkinInformation(gameprofile);
-//
-//        if (map.containsKey(Type.SKIN)) {
-//            final var skin = map.get(Type.SKIN);
-//            skin.getUrl();
-//
-////            String s = Hashing.sha1().hashUnencodedChars(skin.getHash()).toString();
-////            ResourceLocation resourcelocation = new ResourceLocation("skins/" + s);
-////
-////            return resourcelocation;
-//            return minecraft.getSkinManager().registerTexture(skin, Type.SKIN);
-//        }
-//        return null;
-//
-//    }
+    @Nullable
+    public static BufferedImage getPlayerHeadImage(AbstractClientPlayer clientPlayer) {
+        var playerSkin = getPlayerSkinImage(clientPlayer);
+        if(playerSkin == null) return null;
+        cropImage(playerSkin, 32, 16);
+        return playerSkin;
+    }
+
+    @Nullable
+    private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {
+        var skin = skinRequest(clientPlayer.getUUID());
+        return Objects.requireNonNullElse(skin,
+                resourceToBufferedImage(clientPlayer.getSkinTextureLocation()));
+    }
 
     @Nullable
     public static BufferedImage skinRequest(UUID uuid) {
         var url = MINECRAFT_PROFILE_URL + uuid.toString().replace("-", "");
-        //url =     "https://sessionserver.mojang.com/session/minecraft/profile/494036be71f64b58bb8da483a18a322f";
-
         try {
             var response = getHTML(url);
             var json = JsonParser.parseString(response).getAsJsonObject();
-            var base64 = json.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();//user.properties[0].value;
+            var base64 = json.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
             var skinData = decodeBase64(base64);
             json = JsonParser.parseString(skinData).getAsJsonObject();
             var jsonUrl = json.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
 
             return ImageIO.read(new URL(jsonUrl));
-//            File file = new File("C:\\Users\\Jetug\\Desktop\\result\\test_image.png");
-//            ImageIO.write(image, "png", file);
         }
         catch (Exception e){
             if(!(e instanceof IOException || e instanceof IllegalStateException))
                 Global.LOGGER.log(ERROR, e.getMessage(), e);
             return null;
-        }
-    }
-
-    private static String decodeBase64(String base64) {
-        byte[] decoded = Base64.getDecoder().decode(base64);
-        return new  String(decoded, StandardCharsets.UTF_8);
-    }
-
-    public static String getHTML(String urlToRead) {
-        var result = new StringBuilder();
-
-        try {
-            var url = new URL(urlToRead);
-            var conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            var res = conn.getResponseMessage();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                for (String line; (line = reader.readLine()) != null; ) {
-                    result.append(line);
-                }
-                return result.toString();
-            }
-        }
-        catch (Exception e){
-            return "";
         }
     }
 
@@ -127,5 +92,30 @@ public class TextureHelper {
         if (playerHead == null) return null;
         playerHead = extendImage(playerHead, width, height);
         return new DynamicTexture(getNativeImage(playerHead));
+    }
+
+    private static String decodeBase64(String base64) {
+        byte[] decoded = Base64.getDecoder().decode(base64);
+        return new  String(decoded, StandardCharsets.UTF_8);
+    }
+
+    private static String getHTML(String urlToRead) {
+        var result = new StringBuilder();
+
+        try {
+            var url = new URL(urlToRead);
+            var conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            var res = conn.getResponseMessage();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                for (String line; (line = reader.readLine()) != null; ) {
+                    result.append(line);
+                }
+                return result.toString();
+            }
+        }
+        catch (Exception e){
+            return "";
+        }
     }
 }

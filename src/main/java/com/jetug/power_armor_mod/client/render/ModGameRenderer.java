@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,20 +65,20 @@ public class ModGameRenderer extends GameRenderer {
 
 
             ////Jetug
-            EntityHitResult entityHitResult = //isWearingPowerArmor(Minecraft.getInstance().player) ?
+            EntityHitResult entityHitResult = isWearingPowerArmor(Minecraft.getInstance().player) ?
                     getEntityHitResult(cameraEntity,
                             eyePosition,
                             pickVector,
                             aabb,
                             (entity) -> !entity.isSpectator() && entity.isPickable(),
+                            finalPickRange)
+                    :
+                    ProjectileUtil.getEntityHitResult(cameraEntity,
+                            eyePosition,
+                            pickVector,
+                            aabb,
+                            (entity) -> !entity.isSpectator() && entity.isPickable(),
                             finalPickRange);
-//                    :
-//                    ProjectileUtil.getEntityHitResult(cameraEntity,
-//                            eyePosition,
-//                            pickVector,
-//                            aabb,
-//                            (entity) -> !entity.isSpectator() && entity.isPickable(),
-//                            finalPickRange);
 
             if (entityHitResult != null) {
                 Entity hitEntity = entityHitResult.getEntity();
@@ -117,18 +118,30 @@ public class ModGameRenderer extends GameRenderer {
     @Nullable
     private static EntityHitResult getEntityHitResult(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
                                                       AABB box, Predicate<Entity> filter, double pickRange) {
-        var player = Minecraft.getInstance().player;
-        assert player != null;
+
         var level = cameraEntity.level;
         var _pickRange = pickRange;
         Entity entity = null;
         Vec3   vec3 = null;
 
+        var player = Minecraft.getInstance().player;
+        assert player != null;
+        try{
+            player.sendMessage(new TextComponent("ModeRenderer"), player.getUUID());
+        }
+        catch (Exception e){}
+
         for(Entity levelEntity : level.getEntities(cameraEntity, box, filter)) {
-            if(levelEntity instanceof PowerArmorEntity && player.getVehicle() == levelEntity)
+
+//            if(levelEntity instanceof PowerArmorEntity powerArmor || levelEntity instanceof PowerArmorPartEntity)
+//                continue;
+
+            if(levelEntity instanceof PowerArmorEntity powerArmor && player.getVehicle() == powerArmor)
                 continue;
-            if (levelEntity instanceof PowerArmorPartEntity powerArmorPart && player.getVehicle() == powerArmorPart.parentMob)
+            if(levelEntity instanceof PowerArmorPartEntity powerArmorPart && player.getVehicle() == powerArmorPart.parentMob)
                 continue;
+
+            //if (Minecraft.getInstance() objectMouseOver.getType() == RayTraceResult.Type.ENTITY) {
 
             AABB aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
             Optional<Vec3> optional = aabb.clip(eyePosition, pickVector);

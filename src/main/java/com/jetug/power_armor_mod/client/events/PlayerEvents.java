@@ -1,15 +1,20 @@
 package com.jetug.power_armor_mod.client.events;
 
+import com.jetug.power_armor_mod.client.render.ModGameRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.lang.reflect.Field;
 
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 
@@ -37,6 +42,7 @@ public class PlayerEvents
             target.push(vector.x * 20, 0, vector.z * 20);
         }
     }
+
 
 
     @OnlyIn(Dist.CLIENT)
