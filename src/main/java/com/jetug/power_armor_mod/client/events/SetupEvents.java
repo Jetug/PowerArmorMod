@@ -33,7 +33,6 @@ public final class SetupEvents {
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);
-        //setupCustomGameRenderer();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -45,28 +44,4 @@ public final class SetupEvents {
         MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), GemCuttingStationScreen::new);
         event.enqueueWork(GuiRegistry::register);
     }
-
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public static void clientSetup2(FMLClientSetupEvent event) {
-//        setupCustomGameRenderer();
-//    }
-
-    public static void setupCustomGameRenderer(){
-        try {
-            var minecraft = Minecraft.getInstance();
-            //if(minecraft.gameRenderer == null || minecraft.gameRenderer instanceof ModGameRenderer) return;
-
-            var gameRenderer = new ModGameRenderer(minecraft, minecraft.getResourceManager() ,minecraft.renderBuffers());
-
-            //minecraft.getClass().met
-
-            Field field = minecraft.getClass().getDeclaredField("gameRenderer");
-            field.setAccessible(true);
-            field.set(minecraft, gameRenderer);
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-    }
-
 }

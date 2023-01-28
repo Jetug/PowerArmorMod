@@ -34,9 +34,17 @@ public class TextureHelper {
     public static BufferedImage getPlayerHeadImage(AbstractClientPlayer clientPlayer) {
         var playerSkin = getPlayerSkinImage(clientPlayer);
         if(playerSkin == null) return null;
-        cropImage(playerSkin, 32, 16);
+        cropImage(playerSkin, 64, 16);
         return playerSkin;
     }
+
+//    @Nullable
+//    public static BufferedImage getPlayerHeadwearImage(AbstractClientPlayer clientPlayer) {
+//        var playerSkin = getPlayerSkinImage(clientPlayer);
+//        if(playerSkin == null) return null;
+//        cropImage(playerSkin, 32, 16);
+//        return playerSkin;
+//    }
 
     @Nullable
     private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {

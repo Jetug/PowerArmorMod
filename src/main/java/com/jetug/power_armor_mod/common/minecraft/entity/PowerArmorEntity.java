@@ -86,6 +86,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private final TickTimer clientTimer = new TickTimer();
 
     private boolean isDashing = false;
+    private DashDirection dashDirection;
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
@@ -269,6 +270,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             return;
 
         isDashing = true;
+        dashDirection = direction;
+
         clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
 
         float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
@@ -637,9 +640,23 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         controller.animationSpeed =  1.0D;
 
         if(isDashing){
-            setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
-            //controller.setAnimation(new AnimationBuilder().addAnimation("dash_forward", HOLD_ON_LAST_FRAME));
-            //event.getController().setAnimation(new AnimationBuilder().addAnimation("dash_forward_final", LOOP));
+            switch (dashDirection) {
+                case FORWARD -> {
+                    setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
+                }
+                case BACK -> {
+                    setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
+                }
+                case RIGHT -> {
+                    setAnimation(controller, "dash_right", HOLD_ON_LAST_FRAME);
+                }
+                case LEFT -> {
+                    setAnimation(controller, "dash_left", HOLD_ON_LAST_FRAME);
+                }
+                case UP -> {
+                    setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
+                }
+            }
             return PlayState.CONTINUE;
         }
         if (hurtTime > 0){
@@ -649,13 +666,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             return PlayState.CONTINUE;
         }
         if(event.isMoving()){
-            setAnimation(controller, "walk_start", LOOP);
-            setAnimation(controller, "walk_start", LOOP);
-//            if(walkFlag)
-//                setAnimation(controller, "walk_start", LOOP);
-//            else
-//                setAnimation(controller, "walk_end", LOOP);
-//            walkFlag = !walkFlag;
+            setAnimation(controller, "walk", LOOP);
+
 //            controller.setAnimation(new AnimationBuilder()
 //                    .addAnimation("walk_start", PLAY_ONCE)
 //                    .addAnimation("walk_end", PLAY_ONCE));
@@ -664,13 +676,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         }
         else{
             setAnimation(controller, "idle", LOOP);
-            //controller.setAnimation(new AnimationBuilder().addAnimation("idle", LOOP));
         }
-
-//        else if (isFallFlying()){
-//            event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
-//            return PlayState.CONTINUE;
-//        }
 
         return PlayState.CONTINUE;
     }
