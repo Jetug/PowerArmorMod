@@ -43,8 +43,6 @@ public class PlayerEvents
         }
     }
 
-
-
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onHandRender2(RenderPlayerEvent.Pre event)

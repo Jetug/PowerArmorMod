@@ -57,6 +57,7 @@ import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes
 public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
+    public static final float ROTATION = (float) Math.PI / 180F;
 
     public final PowerArmorPartEntity headHitBox;
     public final PowerArmorPartEntity bodyHitBox;
@@ -85,6 +86,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer clientTimer = new TickTimer();
 
+    private boolean isHitting = false;
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
@@ -100,7 +102,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         noCulling = true;
-
         initInventory();
     }
 
@@ -265,18 +266,23 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         syncDataWithServer();
     }
 
+    public void onDoHit(){
+        isHitting = true;
+        clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isHitting = false));
+    }
+
     public void dash(DashDirection direction) {
         if (!(getControllingPassenger() instanceof Player player))
             return;
 
         isDashing = true;
+        clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
         dashDirection = direction;
 
-        clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
-
-        float rotation = player.getViewYRot(1) * ((float)Math.PI / 180F);
-        float x = sin(rotation);
-        float z = cos(rotation);
+        float viewYRot = player.getViewYRot(1);
+        float rotation = viewYRot * ROTATION;
+        float x = sin(rotation) * 2;
+        float z = cos(rotation) * 2;
 
         Vec3 vector = new Vec3(-x, 0, z);
 
@@ -284,12 +290,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             case FORWARD -> vector = new Vec3(-x, 0, z);
             case BACK -> vector = new Vec3(x, 0, -z);
             case RIGHT -> {
-                float rot1 = (player.getViewYRot(1) + 90) * ((float) Math.PI / 180F);
-                vector = new Vec3(-sin(rot1), 0, cos(rot1));
+                float rot = (viewYRot + 90) * ROTATION;
+                vector = new Vec3(-sin(rot), 0, cos(rot));
             }
             case LEFT -> {
-                float rot2 = (player.getViewYRot(1) - 90) * ((float) Math.PI / 180F);
-                vector = new Vec3(-sin(rot2), 0, cos(rot2));
+                float rot = (viewYRot - 90) * ROTATION;
+                vector = new Vec3(-sin(rot), 0, cos(rot));
             }
             case UP -> vector = new Vec3(0, 1, 0);
         }
@@ -336,8 +342,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         speedometer.tick();
 
-
-
 //        if(!Minecraft.getInstance().options.keyAttack.isDown()){
 //            isPickable = true;
 //        }
@@ -345,12 +349,19 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         clientTimer.tick();
         //PowerArmorMod.LOGGER.log(DEBUG, "speed: " + speed);
 
-
     }
 
     @Override
     public void aiStep() {
         super.aiStep();
+
+//        this.yBodyRot = this.getYRot();//player.yBodyRot;//this.getYRot();
+//        this.yHeadRot = this.getYRot();//.yHeadRot;//this.yBodyRot;
+
+        if(getControllingPassenger() instanceof Player player) {
+            this.yHeadRot = this.getYRot();
+            this.yBodyRot = player.yBodyRot;//this.getYRot();
+        }
 
         Vec3[] aVector3d = new Vec3[subEntities.length];
 
@@ -358,7 +369,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
         }
 
-        float rotation = getYRot() * ((float) Math.PI / 180F);
+        float rotation = getYRot() * ROTATION;
         float xPos = cos(rotation);
         float zPos = sin(rotation);
         float armPos = 0.6f;
@@ -461,8 +472,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        float posX = sin(this.yBodyRot * ((float) Math.PI / 180F));
-        float posZ = cos(this.yBodyRot * ((float) Math.PI / 180F));
+        float posX = sin(this.yBodyRot * ROTATION);
+        float posZ = cos(this.yBodyRot * ROTATION);
         double posXZ = -0.3;
         double posY = 0.9;
         entity.setPos(this.getX() + (posXZ * posX),
@@ -486,9 +497,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             this.setXRot(livingEntity.getXRot() * 0.5F);
             this.setRot(this.getYRot(), this.getXRot());
 
-            this.yBodyRot = player.yBodyRot;//this.getYRot();
-            this.yHeadRot = player.yHeadRot;//this.yBodyRot;
-
             float f = livingEntity.xxa /* * 0.5F*/;
             float f1 = livingEntity.zza;
 
@@ -501,8 +509,8 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 hasImpulse = true;
 
                 if (f1 > 0.0F) {
-                    float f2 = sin(this.getYRot() * ((float)Math.PI / 180F));
-                    float f3 = cos(this.getYRot() * ((float)Math.PI / 180F));
+                    float f2 = sin(this.getYRot() * ROTATION);
+                    float f3 = cos(this.getYRot() * ROTATION);
                     this.setDeltaMovement(this.getDeltaMovement().add(
                             -0.4F * f2 * this.playerJumpPendingScale,
                             0.0D,
@@ -529,6 +537,31 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             this.flyingSpeed = 0.02F;
             super.travel(travelVector);
         }
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeRiddenInWater(Entity rider) {
+        return true;
+    }
+
+//    @Override
+//    public void stopRiding() {
+//        super.stopRiding();
+//    }
+//
+//    @Override
+//    protected void removePassenger(Entity p_20352_) {
+//        super.removePassenger(p_20352_);
+//    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
+        return super.getDismountLocationForPassenger(p_20123_);
     }
 
     @Override
@@ -623,61 +656,89 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        AnimationController<PowerArmorEntity> controller = new AnimationController(this, "controller", 0, this::predicate);
-        data.addAnimationController(controller);
-    }
-
-    @Override
     public AnimationFactory getFactory() {
         return this.factory;
     }
 
-    boolean walkFlag = true;
+    @Override
+    public void registerControllers(AnimationData data) {
+        AnimationController<PowerArmorEntity> controller = new AnimationController(this, "controller", 0, this::animateArms);
+        AnimationController<PowerArmorEntity> legsController = new AnimationController(this, "legs_controller", 0, this::animateLegs);
+        data.addAnimationController(controller);
+        data.addAnimationController(legsController);
+    }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+    @Nullable
+    private Player getPlayer(){
+        if(getControllingPassenger() instanceof Player player)
+            return player;
+        return null;
+    }
+
+    private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
-        controller.animationSpeed =  1.0D;
+        controller.animationSpeed = 1.0D;
 
-        if(isDashing){
-            switch (dashDirection) {
-                case FORWARD -> {
-                    setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
-                }
-                case BACK -> {
-                    setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
-                }
-                case RIGHT -> {
-                    setAnimation(controller, "dash_right", HOLD_ON_LAST_FRAME);
-                }
-                case LEFT -> {
-                    setAnimation(controller, "dash_left", HOLD_ON_LAST_FRAME);
-                }
-                case UP -> {
-                    setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
-                }
+        var player = getPlayer();
+        if (player != null) {
+            if (event.isMoving()) {
+                setAnimation(controller, "walk_legs", LOOP);
+                controller.animationSpeed = speedometer.getSpeed() * 4.0D;
+                return PlayState.CONTINUE;
             }
-            return PlayState.CONTINUE;
+            return PlayState.STOP;
         }
-        if (hurtTime > 0){
-            setAnimation(controller, "hurt", PLAY_ONCE);
-            //controller.setAnimation(new AnimationBuilder().addAnimation("hurt", PLAY_ONCE));
-            controller.animationSpeed =  1.0D;
-            return PlayState.CONTINUE;
-        }
-        if(event.isMoving()){
-            setAnimation(controller, "walk", LOOP);
+        return PlayState.STOP;
+    }
 
-//            controller.setAnimation(new AnimationBuilder()
-//                    .addAnimation("walk_start", PLAY_ONCE)
-//                    .addAnimation("walk_end", PLAY_ONCE));
-            controller.animationSpeed = speedometer.getSpeed() * 4.0D;
-            return PlayState.CONTINUE;
-        }
-        else{
-            setAnimation(controller, "idle", LOOP);
-        }
+    private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
+        AnimationController<E> controller = event.getController();
+        controller.animationSpeed = 1.0D;
 
+        var player = getPlayer();
+        if (player != null) {
+            if (player.attackAnim > 0) {
+                controller.animationSpeed = 2.0D;
+                setAnimation(controller, "hit", PLAY_ONCE);
+                return PlayState.CONTINUE;
+            } else if (isDashing) {
+                return animateDash(controller);
+            } else if (hurtTime > 0) {
+                setAnimation(controller, "hurt", PLAY_ONCE);
+                return PlayState.CONTINUE;
+            }
+//            else if (event.isMoving()) {
+//                setAnimation(controller, "walk", LOOP);
+//                controller.animationSpeed = speedometer.getSpeed() * 4.0D;
+//                return PlayState.CONTINUE;
+//            }
+            else {
+                setAnimation(controller, "idle", LOOP);
+                return PlayState.CONTINUE;
+            }
+        }
+        return PlayState.STOP;
+    }
+
+    @NotNull
+    private <E extends IAnimatable> PlayState animateDash(AnimationController<E> controller) {
+        switch (dashDirection) {
+            case FORWARD -> {
+                setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
+            }
+            case BACK -> {
+                setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
+            }
+            case RIGHT -> {
+                setAnimation(controller, "dash_right", HOLD_ON_LAST_FRAME);
+            }
+            case LEFT -> {
+                setAnimation(controller, "dash_left", HOLD_ON_LAST_FRAME);
+            }
+            case UP -> {
+                setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
+            }
+        }
         return PlayState.CONTINUE;
     }
 

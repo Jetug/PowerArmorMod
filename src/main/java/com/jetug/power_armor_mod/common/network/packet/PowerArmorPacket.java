@@ -39,16 +39,12 @@ public class PowerArmorPacket{
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
-
         Player player = null;
-
-        var dir = context.get().getDirection();
 
         if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT){
             player = Minecraft.getInstance().player;
         }
         else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-            var server = ServerLifecycleHooks.getCurrentServer();
             player = context.get().getSender();
         }
 

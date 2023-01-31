@@ -21,7 +21,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getTex
 
 public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
     private final IGeoRenderer<PowerArmorEntity> entityRenderer;
-    private final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
+    private static final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
 
     public PlayerHeadLayer(IGeoRenderer<PowerArmorEntity> entityRenderer) {
         super(entityRenderer);
