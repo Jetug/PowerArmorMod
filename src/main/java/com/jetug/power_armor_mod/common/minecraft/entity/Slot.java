@@ -13,15 +13,17 @@ public abstract class Slot {
     protected BodyPart part;
     protected EquipmentType type;
     public final IPowerArmor parent;
+    private final ArrayList<Tuple<String, String>> attachments;
 
     public Slot(IPowerArmor parent, BodyPart part, EquipmentType type){
         this.parent = parent;
         this.part = part;
         this.type = type;
+        this.attachments =  ResourceHelper.getAttachments(part);
     }
 
     public ArrayList<Tuple<String, String>> getAttachments(){
-        return ResourceHelper.getAttachments(part);
+        return attachments;
     }
 
     public BodyPart getArmorPart() {

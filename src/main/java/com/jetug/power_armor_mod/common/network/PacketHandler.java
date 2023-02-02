@@ -62,8 +62,10 @@ public class PacketHandler {
 				},
 				ArmorClientUpdatePacket::handle);
 
-		HANDLER.registerMessage(disc++, ActionPacket.class, ActionPacket::write, ActionPacket::read, ActionPacket::handle);
-		HANDLER.registerMessage(disc++, PowerArmorPacket.class, PowerArmorPacket::write, PowerArmorPacket::read, PowerArmorPacket::handle);
+		HANDLER.registerMessage(disc++, ActionPacket.class	   , ActionPacket::write	 , ActionPacket::read	 , ActionPacket::handle		);
+		HANDLER.registerMessage(disc++, PowerArmorPacket.class , PowerArmorPacket::write , PowerArmorPacket::read, PowerArmorPacket::handle );
+		HANDLER.registerMessage(disc++, InteractPacket.class   , InteractPacket::write	 , InteractPacket::read	 , InteractPacket::handle	);
+		HANDLER.registerMessage(disc++, HurtPacket.class	   , HurtPacket::write		 , HurtPacket::read	 	 , HurtPacket::handle		);
 	}
 
 	private <T> void registerMessage(T packet){
@@ -105,7 +107,6 @@ public class PacketHandler {
 	 * Sends a packet to a specific player.<br>
 	 * Must be called server side.
 	 * */
-	//@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void sendTo(Object msg, ServerPlayer player) {
 		if(!(player instanceof FakePlayer)) {
 			HANDLER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
@@ -116,13 +117,11 @@ public class PacketHandler {
 	 * Sends a packet to the server.<br>
 	 * Must be called client side.
 	 * */
-	//@OnlyIn(Dist.CLIENT)
 	public static void sendToServer(Object msg) {
 		HANDLER.sendToServer(msg);
 	}
 	
 	/**Server side.*/
-	//@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void sendToAllPlayers(Object msg) {
 		var server = ServerLifecycleHooks.getCurrentServer();
 		List<ServerPlayer> list = server.getPlayerList().getPlayers();

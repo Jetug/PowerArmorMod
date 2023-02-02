@@ -15,14 +15,14 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 import java.util.ArrayList;
 
-import static com.jetug.power_armor_mod.client.render.ResourceHelper.getAttachments;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
+import static com.jetug.power_armor_mod.client.render.ResourceHelper.*;
+import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;
     public ResourceLocation model = POWER_ARMOR_MODEL_LOCATION;
     public ResourceLocation texture;
-    public ArrayList<Tuple<String, String>> boneAttachments = null;
+    public ArrayList<Tuple<String, String>> boneAttachments;
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);

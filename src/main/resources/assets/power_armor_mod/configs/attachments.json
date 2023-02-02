@@ -1,0 +1,98 @@
+{
+  "head": [
+      {
+        "frame": "head",
+        "armor": "helmet"
+      }
+  ],
+  "body": [
+    {
+      "frame": "body_top",
+      "armor": "body_top_armor"
+    },
+    {
+      "frame": "body_bottom",
+      "armor": "body_bottom_armor"
+    },
+    {
+      "frame": "front_plate",
+      "armor": "front_plate_armor"
+    },
+    {
+      "frame": "back_plate",
+      "armor": "back_plate_armor"
+    }
+  ],
+  "left_arm": [
+    {
+      "frame": "left_upper_arm",
+      "armor": "left_shoulder_armor"
+    },
+    {
+      "frame": "left_upper_arm",
+      "armor": "left_upper_arm_armor"
+    },
+    {
+      "frame": "left_lower_arm",
+      "armor": "left_forearm_armor"
+    }
+  ],
+  "right_arm": [
+    {
+      "frame": "right_upper_arm",
+      "armor": "right_shoulder_armor"
+    },
+    {
+      "frame": "right_upper_arm",
+      "armor": "right_upper_arm_armor"
+    },
+    {
+      "frame": "right_lower_arm",
+      "armor": "right_forearm_armor"
+    }
+  ],
+  "left_leg": [
+    {
+      "frame": "left_upper_leg",
+      "armor": "left_upper_leg_armor"
+    },
+    {
+      "frame": "left_lower_leg",
+      "armor": "left_knee"
+    },
+    {
+      "frame": "left_lower_leg",
+      "armor": "left_lower_leg_armor"
+    },
+    {
+      "frame": "left_shoe",
+      "armor": "left_shoe_armor"
+    },
+    {
+      "frame": "left_toes",
+      "armor": "left_toes_armor"
+    }
+  ],
+  "right_leg": [
+    {
+      "frame": "right_upper_leg",
+      "armor": "right_upper_leg_armor"
+    },
+    {
+      "frame": "right_lower_leg",
+      "armor": "right_knee"
+    },
+    {
+      "frame": "right_lower_leg",
+      "armor": "right_lower_leg_armor"
+    },
+    {
+      "frame": "right_shoe",
+      "armor": "right_shoe_armor"
+    },
+    {
+      "frame": "right_toes",
+      "armor": "right_toes_armor"
+    }
+  ]
+}

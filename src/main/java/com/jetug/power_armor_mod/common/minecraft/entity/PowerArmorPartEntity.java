@@ -1,5 +1,7 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.jetug.power_armor_mod.common.network.PacketHandler;
+import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
@@ -7,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
+
+import static org.apache.logging.log4j.Level.INFO;
 
 
 public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
@@ -57,9 +62,18 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
 //        parentMob.damageArmor(bodyPart, damage);
 //    }
 
+//    @Override
+//    public InteractionResult interact(Player p_19978_, InteractionHand p_19979_) {
+//        return super.interact(p_19978_, p_19979_);
+//    }
+
     @Override
     public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vector, @NotNull InteractionHand hand) {
-        var ic = level.isClientSide;
+        if(level.isClientSide){
+            PacketHandler.sendToServer(new InteractPacket(this.getId(), hand ,vector));
+        }
+
+        Global.LOGGER.log(INFO, "interactAt " + bodyPart.getName() + level.isClientSide);
         return parentMob.interactAt(player, vector, hand);
     }
 
@@ -77,7 +91,6 @@ public class PowerArmorPartEntity extends PartEntity<PowerArmorEntity> {
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         Global.LOGGER.log(Level.DEBUG, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
-        //!this.isInvulnerableTo(damageSource) &&
         return this.parentMob.hurt(this, damageSource, damage);
     }
 

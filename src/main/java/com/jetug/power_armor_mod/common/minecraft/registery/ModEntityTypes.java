@@ -16,7 +16,7 @@ public class ModEntityTypes {
     public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
             ENTITY_TYPES.register("power_armor", () -> EntityType.Builder
                     .of(PowerArmorEntity::new, MobCategory.CREATURE)
-                    .sized(1.3f, 2.5f)
+                    .sized(1.1f, 2.2f)
                     .build(new ResourceLocation(Global.MOD_ID, "power_armor").toString()));
 
 
