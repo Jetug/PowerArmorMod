@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.entity;
 
+import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
@@ -19,7 +20,9 @@ public abstract class Slot {
         this.parent = parent;
         this.part = part;
         this.type = type;
-        this.attachments =  ResourceHelper.getAttachments(part);
+        this.attachments = ResourceHelper.getAttachments(part);
+
+        //armorPartSettings = ;
     }
 
     public ArrayList<Tuple<String, String>> getAttachments(){

@@ -1,21 +1,35 @@
 package com.jetug.power_armor_mod.client.render;
 
+import com.google.gson.Gson;
+import com.jetug.power_armor_mod.PowerArmorMod;
 import com.jetug.power_armor_mod.common.util.annotations.Model;
 import com.jetug.power_armor_mod.common.util.annotations.Texture;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.constants.Resources;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import software.bernie.geckolib3.file.AnimationFile;
 
 import javax.annotation.Nullable;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
-import static com.jetug.power_armor_mod.common.util.constants.Bones.HEAD_BONE_NAME;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.HELMET_MODEL_LOCATION;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.HELMET_TEXTURE_LOCATION;
+import static com.jetug.power_armor_mod.common.util.constants.Bones.*;
+import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static java.nio.file.Files.newBufferedReader;
 
 public class ResourceHelper {
 
@@ -112,7 +126,88 @@ public class ResourceHelper {
         return null;
     }
 
+    public static ArmorPartSettings[] getAttachments2(BodyPart bodyPart){
+        if(bodyPart == BODY){
+            try {
+                var files = GetFiles();
+                var rl = new ResourceLocation(Global.MOD_ID, "configs/body.json");
+                var path = rl.getPath();
+                var np = rl.getNamespace();
+
+                var resourceManager = Minecraft.getInstance().getResourceManager();
+                //var test = resourceManager.listResources().getResources(new ResourceLocation(Global.MOD_ID,"configs"));
+
+                //Map<ResourceLocation, AnimationFile> animations = new Object2ObjectOpenHashMap<>();
+                var rss = resourceManager.listResources("configs", fileName -> fileName.endsWith(".json"));
+
+                var readIn = getBufferedReader(resourceManager.getResource(rl).getInputStream());
+
+//                var readIn = new BufferedReader(new InputStreamReader(
+//                                Minecraft.class.getClassLoader().getResourceAsStream("/assets/power_armor_mod/configs/body.json"), "UTF-8"));
+                Gson gson = new Gson();
+                ArmorPartSettings abilities = gson.fromJson(readIn, ArmorPartSettings.class);
+                int i = 0;
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    private static ArrayList<Path> GetFiles(){
+        FileSystem filesystem = null;
+
+        var resPath = "/assets/" + Global.MOD_ID + "/configs/";
+
+        URL url = PowerArmorMod.class.getResource(resPath);
+
+        var paths = new ArrayList<Path>();
+
+        try
+        {
+            if (url != null)
+            {
+                URI uri = url.toURI();
+                Path path = null;
+
+                if ("file".equals(uri.getScheme()))
+                {
+                    path = Paths.get(PowerArmorMod.class.getResource(resPath).toURI());
+                }
+                else
+                {
+
+                    filesystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                    path = filesystem.getPath(resPath);
+
+                }
+
+                var it = Files.walk(path).iterator();
+
+                while(it.hasNext()) {
+                    //System.out.println(it.next());
+                    paths.add(it.next());
+                }
+            }
+            return paths;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return paths;
+    }
+
+    public static BufferedReader getBufferedReader(InputStream stream){
+        return new BufferedReader(new InputStreamReader(stream));
+    }
+
+
     public static ArrayList<Tuple<String, String>> getAttachments(BodyPart bodyPart){
+
+        getAttachments2(BODY);
+
         ArrayList<Tuple<String, String>> boneList = new ArrayList<>();
         
         switch (bodyPart){

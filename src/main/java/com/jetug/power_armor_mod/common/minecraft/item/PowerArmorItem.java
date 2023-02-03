@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.item;
 
+import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 public class PowerArmorItem extends Item {
     public static final String DAMAGE_KEY = "Damage";
+    //private final ArmorPartSettings armorPartSettings = null;
 
     public final BodyPart part;
 

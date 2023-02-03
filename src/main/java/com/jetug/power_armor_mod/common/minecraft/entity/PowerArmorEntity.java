@@ -24,10 +24,7 @@ import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
@@ -97,7 +94,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
-
 //        headHitBox      = createArmorPart(HEAD     , 0.6f, 0.6f);
 //        bodyHitBox      = createArmorPart(BODY     , 0.7f, 1.0f);
 //        leftArmHitBox   = createArmorPart(LEFT_ARM , 0.5f, 1.0f);
@@ -108,6 +104,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         noCulling = true;
         initInventory();
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose p_21047_) {
+        return super.getDimensions(p_21047_);
     }
 
     private PowerArmorPartEntity createArmorPart(BodyPart bodyPart, float xz, float y){
@@ -687,7 +688,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 return PlayState.CONTINUE;
             }
-            return PlayState.STOP;
         }
         return PlayState.STOP;
     }
@@ -713,13 +713,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 return PlayState.CONTINUE;
             }
-//            else {
-//                setAnimation(controller, "idle", LOOP);
-//                return PlayState.CONTINUE;
-//            }
-            return PlayState.STOP;
         }
-        return PlayState.STOP;
+
+        setAnimation(controller, "idle", LOOP);
+        return PlayState.CONTINUE;
     }
 
     @NotNull

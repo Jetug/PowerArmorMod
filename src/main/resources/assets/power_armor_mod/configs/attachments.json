@@ -7,18 +7,22 @@
   ],
   "body": [
     {
-      "frame": "body_top",
+      "mode": "replace",
+      "frame": "body_top_frame",
       "armor": "body_top_armor"
     },
     {
-      "frame": "body_bottom",
+      "mode": "replace",
+      "frame": "body_bottom_frame",
       "armor": "body_bottom_armor"
     },
     {
+      "mode": "add",
       "frame": "front_plate",
       "armor": "front_plate_armor"
     },
     {
+      "mode": "add",
       "frame": "back_plate",
       "armor": "back_plate_armor"
     }
@@ -29,11 +33,11 @@
       "armor": "left_shoulder_armor"
     },
     {
-      "frame": "left_upper_arm",
+      "frame": "left_upper_arm_frame",
       "armor": "left_upper_arm_armor"
     },
     {
-      "frame": "left_lower_arm",
+      "frame": "left_lower_arm_frame",
       "armor": "left_forearm_armor"
     }
   ],

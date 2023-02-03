@@ -64,6 +64,9 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void handleModel(ArmorSlot slot, Boolean isAttaching){
+
+
+
         slot.getAttachments().forEach(tuple ->{
             ResourceLocation model = ResourceHelper.getModel(slot.getArmorPart(), slot.getType());
             GeoBone frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
