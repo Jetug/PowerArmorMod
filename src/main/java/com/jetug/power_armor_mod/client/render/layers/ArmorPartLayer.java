@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.client.render.layers;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,19 +22,17 @@ import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;
-    public ResourceLocation model = POWER_ARMOR_MODEL_LOCATION;
     public ResourceLocation texture;
-    public ArrayList<Tuple<String, String>> boneAttachments;
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
 
         var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
 
+        //var test = ResourceHelper.getTexture(bodyPart, EquipmentType.STANDARD);
+        this.texture = settings.getTexture(); new ResourceLocation(Global.MOD_ID, settings.texture);//ResourceHelper.getTexture(bodyPart, EquipmentType.STANDARD);//settings.getTexture();
         this.bodyPart = bodyPart;
-        this.model = ResourceHelper.getModel(bodyPart, EquipmentType.STANDARD);
-        this.texture = settings.getTexture();
-        this.boneAttachments = getAttachments(bodyPart);
+
     }
 
     @Override

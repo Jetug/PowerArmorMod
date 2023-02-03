@@ -3,41 +3,27 @@ package com.jetug.power_armor_mod.common.minecraft.entity;
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.network.packet.ArmorData;
-import com.jetug.power_armor_mod.common.network.packet.HurtPacket;
-import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
+import com.jetug.power_armor_mod.common.network.packet.*;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
-import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
-import com.jetug.power_armor_mod.common.util.helpers.Speedometer;
-import com.jetug.power_armor_mod.common.util.helpers.VectorHelper;
-import com.jetug.power_armor_mod.common.util.helpers.timer.PlayOnceTimerTask;
-import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
+import com.jetug.power_armor_mod.common.util.enums.*;
+import com.jetug.power_armor_mod.common.util.helpers.*;
+import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.entity.PartEntity;
+import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -45,12 +31,9 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.util.Mth.cos;
@@ -70,14 +53,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //    public final PowerArmorPartEntity leftLegHitBox;
 //    public final PowerArmorPartEntity rightLegHitBox;
 //    public final PowerArmorPartEntity[] subEntities;
-
-    public final ArmorSlot head         = new ArmorSlot(this, HEAD      , EquipmentType.STANDARD);
-    public final ArmorSlot body         = new ArmorSlot(this, BODY      , EquipmentType.STANDARD);
-    public final ArmorSlot leftArm      = new ArmorSlot(this, LEFT_ARM  , EquipmentType.STANDARD);
-    public final ArmorSlot rightArm     = new ArmorSlot(this, RIGHT_ARM , EquipmentType.STANDARD);
-    public final ArmorSlot leftLeg      = new ArmorSlot(this, LEFT_LEG  , EquipmentType.STANDARD);
-    public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
-    public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
     public final BodyPart[] parts = new BodyPart[]{
             HEAD      ,
