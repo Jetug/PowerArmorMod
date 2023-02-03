@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
+import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
@@ -26,9 +27,12 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
+
+        var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
+
         this.bodyPart = bodyPart;
         this.model = ResourceHelper.getModel(bodyPart, EquipmentType.STANDARD);
-        this.texture = ResourceHelper.getTexture(bodyPart, EquipmentType.STANDARD);
+        this.texture = settings.getTexture();
         this.boneAttachments = getAttachments(bodyPart);
     }
 

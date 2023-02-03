@@ -206,7 +206,7 @@ public class ResourceHelper {
 
     public static ArrayList<Tuple<String, String>> getAttachments(BodyPart bodyPart){
 
-        getAttachments2(BODY);
+        //getAttachments2(BODY);
 
         ArrayList<Tuple<String, String>> boneList = new ArrayList<>();
         

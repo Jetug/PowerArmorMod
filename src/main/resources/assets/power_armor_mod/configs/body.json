@@ -1,5 +1,8 @@
 {
   "part": "body",
+  "model": "geo/armor_body.geo.json",
+  "texture": "textures/entities/armor_body.png",
+
   "attachments": [
     {
       "mode": "replace",

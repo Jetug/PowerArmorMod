@@ -1,0 +1,23 @@
+{
+  "part": "left_arm",
+  "model": "geo/armor_left_arm.geo.json",
+  "texture": "textures/entities/armor_left_arm.png",
+
+  "attachments": [
+    {
+      "mode": "add",
+      "frame": "left_upper_arm",
+      "armor": "left_shoulder_armor"
+    },
+    {
+      "mode": "replace",
+      "frame": "left_upper_arm_frame",
+      "armor": "left_upper_arm_armor"
+    },
+    {
+      "mode": "replace",
+      "frame": "left_lower_arm_frame",
+      "armor": "left_forearm_armor"
+    }
+  ]
+}

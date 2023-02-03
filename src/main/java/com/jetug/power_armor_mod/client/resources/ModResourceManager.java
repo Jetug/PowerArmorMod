@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.jetug.power_armor_mod.client.render.ResourceHelper.getBufferedReader;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.BODY;
@@ -24,7 +26,7 @@ public class ModResourceManager {
     private final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
     private Collection<ResourceLocation> partConfigs;
-    private Collection<ArmorPartSettings> partSettings = new ArrayList<>();
+    private final Map<BodyPart, ArmorPartSettings> partSettings = new HashMap<>();
 
     public void loadConfigs(){
         partConfigs = resourceManager.listResources(CONFIG_FOLDER, fileName -> fileName.endsWith(".json"));
@@ -32,18 +34,14 @@ public class ModResourceManager {
         for (ResourceLocation config : partConfigs) {
             var settings = getPartSettings(config);
             if(settings != null){
-                partSettings.add(settings);
+                partSettings.put(settings.part, settings);
             }
         }
     }
 
     public ArmorPartSettings getPartSettings(BodyPart bodyPart){
-        for (ArmorPartSettings settings : partSettings) {
-            if(settings.part == bodyPart){
-                return settings;
-            }
-        }
-
+        if(partSettings.containsKey(bodyPart))
+            return partSettings.get(bodyPart);
         return null;
     }
 
@@ -57,7 +55,4 @@ public class ModResourceManager {
             return null;
         }
     }
-
-
-
 }

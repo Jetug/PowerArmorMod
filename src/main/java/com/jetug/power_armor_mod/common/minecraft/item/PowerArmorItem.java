@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.minecraft.item;
 
+import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
@@ -16,16 +17,21 @@ import java.util.Objects;
 
 public class PowerArmorItem extends Item {
     public static final String DAMAGE_KEY = "Damage";
-    //private final ArmorPartSettings armorPartSettings = null;
+    public final ArmorPartSettings armorPartSettings;
 
     public final BodyPart part;
 
     public PowerArmorItem(BodyPart part, Properties properties) {
         super(properties);
         this.part = part;
+        armorPartSettings = ClientConfig.resourceManager.getPartSettings(part);
     }
+//
+//    public boolean hasArmor(){
+//        itemS
+//    }
 
-    public int getArmorDamage(ItemStack itemStack)
+    public static int getArmorDamage(ItemStack itemStack)
     {
         if(itemStack.hasTag())
         {
@@ -34,6 +40,11 @@ public class PowerArmorItem extends Item {
         }
         else
             return 0;
+    }
+
+    public static boolean hasArmor(ItemStack itemStack)
+    {
+        return itemStack.getMaxDamage() != getArmorDamage(itemStack);
     }
 
     public void damageArmor(ItemStack itemStack, int dmg)

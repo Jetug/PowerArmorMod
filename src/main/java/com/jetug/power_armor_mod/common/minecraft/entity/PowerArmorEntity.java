@@ -47,6 +47,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
@@ -77,8 +79,17 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public final ArmorSlot rightLeg     = new ArmorSlot(this, RIGHT_LEG , EquipmentType.STANDARD);
     public final ArmorSlot[] armorParts = new ArmorSlot[]{ head, body, leftArm, rightArm, leftLeg, rightLeg };
 
-    public final Speedometer speedometer = new Speedometer(this);
+    public final BodyPart[] parts = new BodyPart[]{
+            HEAD      ,
+            BODY      ,
+            LEFT_ARM  ,
+            RIGHT_ARM ,
+            LEFT_LEG  ,
+            RIGHT_LEG ,
+    };
 
+    //private final Iterable<ItemStack> armorSlots;
+    public final Speedometer speedometer = new Speedometer(this);
     public SimpleContainer inventory;
 
     protected boolean isJumping;
@@ -102,8 +113,22 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
 //
 //        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
+
+
         noCulling = true;
         initInventory();
+        //armorSlots = getPartSlots();
+    }
+
+    public Iterable<ItemStack> getPartSlots(){
+        var items = new ArrayList<ItemStack>();
+
+
+        for(int i = 0; i < PowerArmorContainer.SIZE; i++){
+            items.add(inventory.getItem(i));
+        }
+
+        return items;
     }
 
     @Override
@@ -144,23 +169,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
-//    public ArmorSlot getArmorPart(BodyPart part) {
-//        switch (part) {
-//            case HEAD:
-//                return head;
-//            case BODY:
-//                return body;
-//            case LEFT_ARM:
-//                return leftArm;
-//            case RIGHT_ARM:
-//                return rightArm;
-//            case LEFT_LEG:
-//                return leftLeg;
-//            case RIGHT_LEG:
-//                return rightLeg;
-//        }
-//        return null;
-//    }
+    public ItemStack getItem(BodyPart part) {
+        return inventory.getItem(part.ordinal());
+    }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
