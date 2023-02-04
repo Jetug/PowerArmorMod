@@ -249,7 +249,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public void damageArmor(BodyPart bodyPart, float damage) {
-
         var itemStack = inventory.getItem(bodyPart.getId());
         Global.LOGGER.info("damageArmor" + isClientSide);
         if(!itemStack.isEmpty()){
@@ -309,7 +308,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
 
         if(!isClientSide){
-            damageArmor(BODY, damage);
+            damageArmor(HEAD     , damage);
+            damageArmor(BODY     , damage);
+            damageArmor(LEFT_ARM , damage);
+            damageArmor(RIGHT_ARM, damage);
+            damageArmor(LEFT_LEG , damage);
+            damageArmor(RIGHT_LEG, damage);
         }
 
         return super.hurt(damageSource, damage);

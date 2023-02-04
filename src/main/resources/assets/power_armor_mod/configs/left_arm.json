@@ -16,7 +16,7 @@
     },
     {
       "mode": "replace",
-      "frame": "left_lower_arm_frame",
+      "frame": "left_forearm_frame",
       "armor": "left_forearm_armor"
     }
   ]

@@ -2,7 +2,6 @@ package com.jetug.power_armor_mod.client.resources;
 
 import com.google.gson.Gson;
 import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
-import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,14 +9,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.jetug.power_armor_mod.client.render.ResourceHelper.getBufferedReader;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.BODY;
 
 public class ModResourceManager {
 
@@ -55,4 +51,8 @@ public class ModResourceManager {
             return null;
         }
     }
+    private static BufferedReader getBufferedReader(InputStream stream){
+        return new BufferedReader(new InputStreamReader(stream));
+    }
+
 }

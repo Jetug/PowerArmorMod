@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render;
 
-import com.google.gson.annotations.SerializedName;
+import com.jetug.power_armor_mod.common.util.enums.AttachmentMode;
 
 public class Attachment {
     public AttachmentMode mode;

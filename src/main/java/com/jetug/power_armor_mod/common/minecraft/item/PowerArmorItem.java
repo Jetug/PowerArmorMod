@@ -31,25 +31,22 @@ public class PowerArmorItem extends Item {
 //        itemS
 //    }
 
-    public static int getArmorDamage(ItemStack itemStack)
-    {
-        if(itemStack.hasTag())
-        {
+    public static int getArmorDamage(ItemStack itemStack) {
+        if(itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getOrCreateTag();
             return nbt.getInt(DAMAGE_KEY);
         }
-        else
-            return 0;
+        else return 0;
     }
 
-    public static boolean hasArmor(ItemStack itemStack)
-    {
-        return itemStack.getMaxDamage() != getArmorDamage(itemStack);
+    public static boolean hasArmor(ItemStack itemStack) {
+        return getArmorDamage(itemStack) < itemStack.getMaxDamage();
     }
 
     public void damageArmor(ItemStack itemStack, int dmg)
     {
-        setArmorDamage(itemStack, getArmorDamage(itemStack)+dmg);
+        var resultDamage = getArmorDamage(itemStack)+dmg;
+        setArmorDamage(itemStack, Math.min(resultDamage, itemStack.getMaxDamage()));
     }
 
     public static void setArmorDamage(ItemStack head, int totalDamage)

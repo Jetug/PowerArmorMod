@@ -1,24 +1,18 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.jetug.power_armor_mod.common.util.enums.EquipmentType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-import java.util.ArrayList;
-
-import static com.jetug.power_armor_mod.client.render.ResourceHelper.*;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
 
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;

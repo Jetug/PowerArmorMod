@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.client.render.ResourceHelper;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
@@ -20,6 +19,5 @@ public class CommonModEvents {
     @SubscribeEvent
     public static void setup(final FMLCommonSetupEvent event) {
         PacketHandler.register();
-        ResourceHelper.register();
     }
 }
