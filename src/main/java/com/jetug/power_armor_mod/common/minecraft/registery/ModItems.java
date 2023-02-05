@@ -10,8 +10,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.POWER_ARMOR;
-import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
+import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.*;
+import static com.jetug.power_armor_mod.common.util.constants.Global.*;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =

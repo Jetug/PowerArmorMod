@@ -3,9 +3,9 @@ package com.jetug.power_armor_mod.client.events;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.GuiRegistry;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
+import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.test.screen.GemCuttingStationScreen;
-import com.jetug.power_armor_mod.test.screen.ModMenuTypes;
+import com.jetug.power_armor_mod.test.screen.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,11 +14,10 @@ import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 
-import static com.jetug.power_armor_mod.client.KeyBindings.getKeys;
-import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.POWER_ARMOR;
+import static com.jetug.power_armor_mod.client.KeyBindings.*;
+import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.*;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
@@ -26,6 +25,8 @@ public final class SetupEvents {
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);
+        event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
+
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -1,8 +1,10 @@
 package com.jetug.power_armor_mod.common.minecraft.registery;
 
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,11 +16,17 @@ public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Global.MOD_ID);
 
     public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
-            ENTITY_TYPES.register("power_armor", () -> EntityType.Builder
-                    .of(PowerArmorEntity::new, MobCategory.CREATURE)
-                    .sized(1.1f, 2.2f)
-                    .build(new ResourceLocation(Global.MOD_ID, "power_armor").toString()));
+            registerEntity("power_armor", EntityType.Builder
+                    .of(PowerArmorEntity::new, MobCategory.MISC)
+                    .sized(1.1f, 2.2f));
 
+    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_PART =
+            registerEntity("power_armor_part", EntityType.Builder.of(PowerArmorPartEntity::new, MobCategory.MISC));
+
+
+    private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String entityName, EntityType.Builder<T> builder) {
+        return ENTITY_TYPES.register(entityName, () -> builder.build(new ResourceLocation(Global.MOD_ID, entityName).toString()));
+    }
 
     public static void register(IEventBus eventBus){
         ENTITY_TYPES.register(eventBus);

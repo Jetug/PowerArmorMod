@@ -20,11 +20,8 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
-
         var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
-
-        //var test = ResourceHelper.getTexture(bodyPart, EquipmentType.STANDARD);
-        this.texture = settings.getTexture(); new ResourceLocation(Global.MOD_ID, settings.texture);//ResourceHelper.getTexture(bodyPart, EquipmentType.STANDARD);//settings.getTexture();
+        this.texture = settings.getTexture();
         this.bodyPart = bodyPart;
 
     }
