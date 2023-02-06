@@ -10,6 +10,7 @@ import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
@@ -84,6 +85,9 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
+    private int maxHeat = 0;
+    private int heat = 0;
+
     public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
         noCulling = true;
@@ -94,13 +98,12 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 //        rightArmHitBox  = createArmorPart(RIGHT_ARM, 0.5f, 1.0f);
 //        leftLegHitBox   = createArmorPart(LEFT_LEG , 0.6f, 1.0f);
 //        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
-//
-//
-//        //new AABB(blockPosition(), );
-//
 //        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
-
         initInventory();
+
+        clientTimer.addTimer(new LoopTimerTask(() -> {
+            heat -= 1;
+        }));
     }
 
 //    private void updateHitboxes() {
