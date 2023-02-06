@@ -10,6 +10,9 @@ import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ArrowRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -19,9 +22,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.*;
@@ -47,13 +53,13 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     public static final String ITEMS_TAG = "Items";
     public static final float ROTATION = (float) Math.PI / 180F;
 
-    public final PowerArmorPartEntity headHitBox;
-    public final PowerArmorPartEntity bodyHitBox;
-    public final PowerArmorPartEntity leftArmHitBox;
-    public final PowerArmorPartEntity rightArmHitBox;
-    public final PowerArmorPartEntity leftLegHitBox;
-    public final PowerArmorPartEntity rightLegHitBox;
-    public final PowerArmorPartEntity[] subEntities;
+//    public final PowerArmorPartEntity headHitBox;
+//    public final PowerArmorPartEntity bodyHitBox;
+//    public final PowerArmorPartEntity leftArmHitBox;
+//    public final PowerArmorPartEntity rightArmHitBox;
+//    public final PowerArmorPartEntity leftLegHitBox;
+//    public final PowerArmorPartEntity rightLegHitBox;
+//    public final PowerArmorPartEntity[] subEntities;
 
     public final BodyPart[] parts = new BodyPart[]{
             HEAD      ,
@@ -82,27 +88,29 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         super(type, worldIn);
         noCulling = true;
 
-        headHitBox      = createArmorPart(HEAD     , 0.6f, 0.6f);
-        bodyHitBox      = createArmorPart(BODY     , 0.7f, 1.0f);
-        leftArmHitBox   = createArmorPart(LEFT_ARM , 0.5f, 1.0f);
-        rightArmHitBox  = createArmorPart(RIGHT_ARM, 0.5f, 1.0f);
-        leftLegHitBox   = createArmorPart(LEFT_LEG , 0.6f, 1.0f);
-        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
-
-        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
-        //updateHitboxes();
+//        headHitBox      = createArmorPart(HEAD     , 0.6f, 0.6f);
+//        bodyHitBox      = createArmorPart(BODY     , 0.7f, 1.0f);
+//        leftArmHitBox   = createArmorPart(LEFT_ARM , 0.5f, 1.0f);
+//        rightArmHitBox  = createArmorPart(RIGHT_ARM, 0.5f, 1.0f);
+//        leftLegHitBox   = createArmorPart(LEFT_LEG , 0.6f, 1.0f);
+//        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
+//
+//
+//        //new AABB(blockPosition(), );
+//
+//        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
 
         initInventory();
     }
 
-    private void updateHitboxes() {
-        if(!level.isClientSide) {
-            for (PowerArmorPartEntity subEntity : subEntities) {
-                if(!subEntity.shouldContinuePersisting())
-                    level.addFreshEntity(subEntity);
-            }
-        }
-    }
+//    private void updateHitboxes() {
+//        if(!level.isClientSide) {
+//            for (PowerArmorPartEntity subEntity : subEntities) {
+//                if(!subEntity.shouldContinuePersisting())
+//                    level.addFreshEntity(subEntity);
+//            }
+//        }
+//    }
 
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
@@ -114,10 +122,10 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return items;
     }
 
-    @Override
-    public EntityDimensions getDimensions(Pose p_21047_) {
-        return super.getDimensions(p_21047_);
-    }
+//    @Override
+//    public EntityDimensions getDimensions(Pose p_21047_) {
+//        return super.getDimensions(p_21047_);
+//    }
 
     private PowerArmorPartEntity createArmorPart(BodyPart bodyPart, float xz, float y){
         return new PowerArmorPartEntity(this, bodyPart, xz, y);
@@ -320,6 +328,44 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             damageArmor(RIGHT_LEG, damage);
         }
 
+
+
+        var attacker = damageSource.getEntity();
+        if(attacker != null) {
+
+            var minecraft = Minecraft.getInstance();
+            minecraft.getProfiler().push("pick");
+            minecraft.crosshairPickEntity = null;
+            double d0 = attacker.getPickRadius();
+
+            Vec3 vec3 = this.getEyePosition();
+            double d1 = d0;
+
+            d1 *= d1;
+            if (minecraft.hitResult != null) {
+                d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
+            }
+
+            Vec3 vec31 = attacker.getViewVector(1.0F);
+            Vec3 vec32 = vec3.add(vec31.x * d0, vec31.y * d0, vec31.z * d0);
+            AABB aabb = attacker.getBoundingBox().expandTowards(vec31.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+
+            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(attacker, vec3, vec32, aabb, (p_172770_) ->
+                    !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
+
+            //if(entityhitresult != null)
+            if (entityhitresult != null) {
+                var loc = entityhitresult.getLocation();
+                var attackerAye = attacker.getEyePosition();
+                var attackerForward = attacker.getForward();
+                var attackVector = attackerAye.subtract(this.getEyePosition()).add(attackerForward);
+                var headAABB = new AABB(position().add(0, 2.1, 0), position().add(0.6, 2.1 + 0.6, 0.6));
+                //var headAABB = new AABB(new Vec3(0, 2.1, 0), new Vec3(0.6, 2.1 + 0.6, 0.6));
+                if (headAABB.contains(loc)) {
+                    Global.LOGGER.log(INFO, "HURT HEAD");
+                }
+            }
+        }
         return super.hurt(damageSource, damage);
     }
 
@@ -385,35 +431,35 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         //moveHitboxes();
     }
 
-    private void moveHitboxes() {
-        Vec3[] aVector3d = new Vec3[subEntities.length];
-
-        for (int j = 0; j < subEntities.length; ++j) {
-            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
-        }
-
-        float rotation = getYRot() * ROTATION;
-        float xPos = cos(rotation);
-        float zPos = sin(rotation);
-        float armPos = 0.6f;
-        float legPos = 0.2f;
-
-        tickPart(headHitBox, 0, 2.1, 0);
-        tickPart(bodyHitBox, 0, 1.2, 0);
-        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
-        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
-        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
-
-        for (int l = 0; l < subEntities.length; ++l) {
-            subEntities[l].xo = aVector3d[l].x;
-            subEntities[l].yo = aVector3d[l].y;
-            subEntities[l].zo = aVector3d[l].z;
-            subEntities[l].xOld = aVector3d[l].x;
-            subEntities[l].yOld = aVector3d[l].y;
-            subEntities[l].zOld = aVector3d[l].z;
-        }
-    }
+//    private void moveHitboxes() {
+//        Vec3[] aVector3d = new Vec3[subEntities.length];
+//
+//        for (int j = 0; j < subEntities.length; ++j) {
+//            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
+//        }
+//
+//        float rotation = getYRot() * ROTATION;
+//        float xPos = cos(rotation);
+//        float zPos = sin(rotation);
+//        float armPos = 0.6f;
+//        float legPos = 0.2f;
+//
+//        tickPart(headHitBox, 0, 2.1, 0);
+//        tickPart(bodyHitBox, 0, 1.2, 0);
+//        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
+//        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
+//        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
+//        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
+//
+//        for (int l = 0; l < subEntities.length; ++l) {
+//            subEntities[l].xo = aVector3d[l].x;
+//            subEntities[l].yo = aVector3d[l].y;
+//            subEntities[l].zo = aVector3d[l].z;
+//            subEntities[l].xOld = aVector3d[l].x;
+//            subEntities[l].yOld = aVector3d[l].y;
+//            subEntities[l].zOld = aVector3d[l].z;
+//        }
+//    }
 
     private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
         part.setPos(getX() + x, getY() + y, getZ() + z);

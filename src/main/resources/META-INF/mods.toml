@@ -5,9 +5,8 @@ license="All rights reserved"
 modId="power_armor_mod"
 version="${file.jarVersion}"
 displayName="Armorpunk"
-logoFile="power_armor_mod.png" #optional
-credits="Thanks for this example mod goes to Java" #optional
-authors="Jetug" #optional
+logoFile="logo.png"
+authors="Jetug"
 description='''
 This mod adds mechanical armor
 '''

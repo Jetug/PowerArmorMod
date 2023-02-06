@@ -78,6 +78,5 @@ public class MixinProjectileUtil {
         }
 
         return entity == null ? null : new EntityHitResult(entity, vec3);
-
     }
 }
