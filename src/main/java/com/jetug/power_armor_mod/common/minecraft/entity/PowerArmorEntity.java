@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -330,7 +331,6 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
 
         var attacker = damageSource.getEntity();
         if(attacker != null) {
-
             var minecraft = Minecraft.getInstance();
             minecraft.getProfiler().push("pick");
             minecraft.crosshairPickEntity = null;
@@ -348,7 +348,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
             Vec3 vec32 = vec3.add(vec31.x * d0, vec31.y * d0, vec31.z * d0);
             AABB aabb = attacker.getBoundingBox().expandTowards(vec31.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
 
-            EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(attacker, vec3, vec32, aabb, (p_172770_) ->
+            var entityHitResult = ProjectileUtil.getEntityHitResult(attacker, vec3, vec32, aabb, (p_172770_) ->
                     !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
 
             //if(entityHitResult != null)
