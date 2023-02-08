@@ -5,6 +5,7 @@ import com.jetug.power_armor_mod.client.gui.GuiRegistry;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.util.helpers.DoubleClickController;
 import com.jetug.power_armor_mod.test.screen.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -21,6 +22,8 @@ import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityType
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
+    @OnlyIn(Dist.CLIENT)
+    public static final DoubleClickController DOUBLE_CLICK_CONTROLLER = new DoubleClickController();
 
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
@@ -39,5 +42,8 @@ public final class SetupEvents {
         event.enqueueWork(GuiRegistry::register);
 
         ClientConfig.resourceManager.loadConfigs();
+        DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
     }
+
+
 }
