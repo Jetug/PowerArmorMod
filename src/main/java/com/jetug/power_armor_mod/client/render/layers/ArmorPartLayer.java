@@ -23,7 +23,6 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
         var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
         this.texture = settings.getTexture();
         this.bodyPart = bodyPart;
-
     }
 
     @Override

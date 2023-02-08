@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.minecraft.registery;
 
 import com.jetug.power_armor_mod.common.minecraft.ModCreativeModeTab;
+import com.jetug.power_armor_mod.common.minecraft.item.ModArmorMaterials;
 import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.item.Item;
@@ -24,37 +25,37 @@ public class ModItems {
                             .stacksTo(64) ));
 
     public static final RegistryObject<Item> PA_HELMET = ITEMS.register("pa_helmet", () ->
-            new PowerArmorItem(BodyPart.HEAD, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.HEAD, new Item.Properties()
                             .tab(ModCreativeModeTab.MY_TAB)
                             .durability(5)
             ));
 
     public static final RegistryObject<Item> PA_BODY = ITEMS.register("pa_body", () ->
-            new PowerArmorItem(BodyPart.BODY, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.BODY, new Item.Properties()
                     .tab(ModCreativeModeTab.MY_TAB)
                     .durability(5)
             ));
 
     public static final RegistryObject<Item> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
-            new PowerArmorItem(BodyPart.RIGHT_ARM, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.RIGHT_ARM, new Item.Properties()
                     .tab(ModCreativeModeTab.MY_TAB)
                     .durability(5)
             ));
 
     public static final RegistryObject<Item> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
-            new PowerArmorItem(BodyPart.LEFT_ARM, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.LEFT_ARM, new Item.Properties()
                     .tab(ModCreativeModeTab.MY_TAB)
                     .durability(5)
             ));
 
     public static final RegistryObject<Item> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
-            new PowerArmorItem(BodyPart.RIGHT_LEG, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.RIGHT_LEG, new Item.Properties()
                     .tab(ModCreativeModeTab.MY_TAB)
                     .durability(5)
             ));
 
     public static final RegistryObject<Item> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
-            new PowerArmorItem(BodyPart.LEFT_LEG, new Item.Properties()
+            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.LEFT_LEG, new Item.Properties()
                     .tab(ModCreativeModeTab.MY_TAB)
                     .durability(5)
             ));

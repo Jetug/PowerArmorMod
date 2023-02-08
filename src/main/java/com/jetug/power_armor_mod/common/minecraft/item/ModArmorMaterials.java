@@ -11,11 +11,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum ModArmorMaterials{
-    IRON("iron", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
+    IRON("iron", 15, new int[]{3, 6, 4, 4, 4, 4}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.1F, () -> {
         return Ingredient.of(Items.IRON_INGOT);
     });
 
-    private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
+    private static final int[] HEALTH_PER_SLOT = new int[]{11, 16, 13, 13, 13, 13};
     private final String name;
     private final int durabilityMultiplier;
     private final int[] slotProtections;
@@ -36,12 +36,12 @@ public enum ModArmorMaterials{
         this.repairIngredient = new LazyLoadedValue<>(p_40481_);
     }
 
-    public int getDurabilityForSlot(BodyPart p_40484_) {
-        //return HEALTH_PER_SLOT[p_40484_.getIndex()] * this.durabilityMultiplier;
+    public int getDurabilityForSlot(BodyPart bodyPart) {
+        return HEALTH_PER_SLOT[bodyPart.ordinal()] * this.durabilityMultiplier;
     }
 
-    public int getDefenseForSlot(BodyPart p_40487_) {
-        return this.slotProtections[p_40487_.getIndex()];
+    public int getDefenseForSlot(BodyPart bodyPart) {
+        return this.slotProtections[bodyPart.ordinal()];
     }
 
     public int getEnchantmentValue() {
