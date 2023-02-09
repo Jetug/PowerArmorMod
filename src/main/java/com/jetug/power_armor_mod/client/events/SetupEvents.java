@@ -2,10 +2,11 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.GuiRegistry;
+import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.helpers.DoubleClickController;
+import com.jetug.power_armor_mod.client.input.DoubleClickController;
 import com.jetug.power_armor_mod.test.screen.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -24,6 +25,8 @@ import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityType
 public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     public static final DoubleClickController DOUBLE_CLICK_CONTROLLER = new DoubleClickController();
+    @OnlyIn(Dist.CLIENT)
+    private static final LongClickController LONG_CLICK_CONTROLLER = new LongClickController();
 
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
@@ -43,6 +46,7 @@ public final class SetupEvents {
 
         ClientConfig.resourceManager.loadConfigs();
         DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
+        LONG_CLICK_CONTROLLER.addListener(InputController::onRepeat);
     }
 
 

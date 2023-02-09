@@ -1,9 +1,9 @@
 package com.jetug.power_armor_mod.client.events;
 
+import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.ActionType;
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
-import com.jetug.power_armor_mod.common.util.helpers.DoubleClickController;
+import com.jetug.power_armor_mod.client.input.DoubleClickController;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,8 +18,6 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.i
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
-    static DoubleClickController doubleClickController = new DoubleClickController();
-
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onKeyInput(InputEvent.KeyInputEvent event)
