@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -47,7 +48,7 @@ import static net.minecraft.util.Mth.sin;
 import static org.apache.logging.log4j.Level.INFO;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
+public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
     public static final float ROTATION = (float) Math.PI / 180F;
@@ -86,7 +87,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     private int maxHeat = 0;
     private int heat = 0;
 
-    public PowerArmorEntity(EntityType<? extends Mob> type, Level worldIn) {
+    public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
         noCulling = true;
 
@@ -151,7 +152,7 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
+        return LivingEntity.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
@@ -484,6 +485,11 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
     }
 
     @Override
+    public HumanoidArm getMainArm() {
+        return null;
+    }
+
+    @Override
     public boolean isInvisible() {
         var clientPlayer = Minecraft.getInstance().player;
         var pov = Minecraft.getInstance().options.getCameraType();
@@ -649,6 +655,21 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         }
     }
 
+    private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
+
+    @Override
+    public Iterable<ItemStack> getArmorSlots() {
+        return this.armorItems;
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot p_21127_) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {}
+
 
     public void doPlayerRide(Player player) {
         player.setYRot(getYRot());
@@ -708,10 +729,16 @@ public class PowerArmorEntity extends Mob implements IAnimatable, /*IJumpingMoun
         return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
     }
 
+//    @Override
+//    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+//        this.doPlayerRide(player);
+//        return InteractionResult.sidedSuccess(this.level.isClientSide);
+//    }
+
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         this.doPlayerRide(player);
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+        return super.interact(player, hand);
     }
 
     public void jump(){

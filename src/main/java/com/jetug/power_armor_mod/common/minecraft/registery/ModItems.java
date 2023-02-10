@@ -18,11 +18,11 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    public static final RegistryObject<Item> ARMOR_SPAWN_EGG = ITEMS.register("armor_spawn_egg", () ->
-            new ForgeSpawnEggItem(POWER_ARMOR, 0xDC8100, 0x4B4D4A,
-                    new Item.Properties()
-                            .tab(ModCreativeModeTab.MY_TAB)
-                            .stacksTo(64) ));
+//    public static final RegistryObject<Item> ARMOR_SPAWN_EGG = ITEMS.register("armor_spawn_egg", () ->
+//            new ForgeSpawnEggItem(POWER_ARMOR, 0xDC8100, 0x4B4D4A,
+//                    new Item.Properties()
+//                            .tab(ModCreativeModeTab.MY_TAB)
+//                            .stacksTo(64) ));
 
     public static final RegistryObject<Item> PA_HELMET = ITEMS.register("pa_helmet", () ->
             new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.HEAD, new Item.Properties()
