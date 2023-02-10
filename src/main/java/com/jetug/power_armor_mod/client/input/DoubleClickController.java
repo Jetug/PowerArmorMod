@@ -24,11 +24,9 @@ public class DoubleClickController {
     }
 
     private void onTick(final TickEvent.ClientTickEvent event) {
-        if (lastKey == null) 
-            return;
+        if (lastKey == null) return;
         ticks -= 1;
-        if (ticks <= 0)
-            lastKey = null;
+        if (ticks <= 0) lastKey = null;
     }
 
     private void onClick(final InputEvent.KeyInputEvent event){

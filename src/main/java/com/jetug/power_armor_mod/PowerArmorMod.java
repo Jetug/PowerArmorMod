@@ -12,8 +12,7 @@ import software.bernie.geckolib3.GeckoLib;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(Global.MOD_ID)
-public class PowerArmorMod
-{
+public class PowerArmorMod {
     public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
     public PowerArmorMod() {
