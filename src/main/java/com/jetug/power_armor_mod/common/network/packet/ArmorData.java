@@ -18,14 +18,6 @@ public class ArmorData {
 
     public int entityId = -1;
     public ListTag inventory;
-//    public HashMap<BodyPart, Integer> durability = new HashMap<>() {{
-//        put(HEAD, 0);
-//        put(BODY, 0);
-//        put(LEFT_ARM, 0);
-//        put(RIGHT_ARM, 0);
-//        put(LEFT_LEG, 0);
-//        put(RIGHT_LEG, 0);
-//    }};
 
     public ArmorData() {}
 
@@ -35,9 +27,7 @@ public class ArmorData {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-
         nbt.putInt("ID", entityId);
-        //durability.forEach((part, value) -> nbt.putInt(DURABILITY + part.getId(), value));
         nbt.put(INVENTORY, inventory);
 
         return nbt;
@@ -45,8 +35,6 @@ public class ArmorData {
 
     public void deserializeNBT(CompoundTag nbt) {
         entityId = nbt.getInt("ID");
-//        for(int i = 0; i < durability.size(); i++)
-//            durability.put(BodyPart.getById(i) , nbt.getInt(DURABILITY + i));
         inventory = (ListTag)nbt.get(INVENTORY);
     }
 

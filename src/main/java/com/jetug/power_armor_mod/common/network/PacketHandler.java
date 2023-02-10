@@ -68,41 +68,6 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++, HurtPacket.class	   , HurtPacket::write		 , HurtPacket::read	 	 , HurtPacket::handle		);
 	}
 
-	private <T> void registerMessage(T packet){
-
-
-//		try {
-//			var write = packet.getClass().getDeclaredMethod("write", packet.getClass(), FriendlyByteBuf.class);
-//			write.setAccessible(true);
-//
-//			var read = packet.getClass().getDeclaredMethod("read", FriendlyByteBuf.class);
-//			write.setAccessible(true);
-//
-//			var handle = packet.getClass().getDeclaredMethod("handle", packet.getClass(), Supplier.class);
-//			write.setAccessible(true);
-//
-//			HANDLER.registerMessage(disc++,
-//					packet.getClass(),
-//					write::invoke,
-//					read::invoke,
-//					handle::invoke
-//		);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
-		HANDLER.registerMessage(disc++,
-				ActionPacket.class,
-				ActionPacket::write,
-				p -> {
-					final var msg = new ActionPacket();
-					msg.read(p);
-					return msg;
-				},
-				ActionPacket::handle);
-	}
-
 	/**
 	 * Sends a packet to a specific player.<br>
 	 * Must be called server side.

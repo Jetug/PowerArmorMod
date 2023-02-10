@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.GuiRegistry;
+import com.jetug.power_armor_mod.client.input.InputController;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
@@ -32,18 +33,15 @@ public final class SetupEvents {
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);
         event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
-
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        for (KeyMapping key: getKeys())
-            ClientRegistry.registerKeyBinding(key);
+        for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
 
         MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), GemCuttingStationScreen::new);
         event.enqueueWork(GuiRegistry::register);
-
         ClientConfig.resourceManager.loadConfigs();
         registerClickListeners();
     }
@@ -51,7 +49,6 @@ public final class SetupEvents {
     private static void registerClickListeners() {
         DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
         LONG_CLICK_CONTROLLER.addRepeatListener(InputController::onRepeat);
+        LONG_CLICK_CONTROLLER.addReleaseListener(InputController::onLongRelease);
     }
-
-
 }
