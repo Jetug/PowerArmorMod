@@ -5,10 +5,10 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 public class ModCreativeModeTab {
-    public static final CreativeModeTab MY_TAB = new CreativeModeTab("xxx") {
+    public static final CreativeModeTab MY_TAB = new CreativeModeTab("ArmorPunk") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.ARMOR_SPAWN_EGG.get());
+            return new ItemStack(ModItems.PA_HELMET.get());
         }
     };
 }
