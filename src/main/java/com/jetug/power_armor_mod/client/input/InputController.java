@@ -49,7 +49,7 @@ public class InputController {
         var minecraft = Minecraft.getInstance();
         var player = minecraft.player;
 
-        if (player != null && isWearingPowerArmor(player)) {
+        if (isWearingPowerArmor()) {
             var entity = (PowerArmorEntity) player.getVehicle();
             assert entity != null;
             var options = Minecraft.getInstance().options;
@@ -61,7 +61,7 @@ public class InputController {
         var minecraft = Minecraft.getInstance();
         var player = minecraft.player;
 
-        if (player != null && isWearingPowerArmor(player)) {
+        if (isWearingPowerArmor()) {
             var entity = (PowerArmorEntity) player.getVehicle();
             assert entity != null;
             var options = Minecraft.getInstance().options;

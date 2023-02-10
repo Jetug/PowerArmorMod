@@ -9,7 +9,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class PlayerEvents
@@ -31,7 +31,7 @@ public class PlayerEvents
         var target = event.getTarget();
 
         if(isWearingPowerArmor(player)){
-            Vec3 vector = player.getViewVector(1.0F);
+            var vector = player.getViewVector(1.0F);
             target.push(vector.x * 20, 0, vector.z * 20);
         }
     }
