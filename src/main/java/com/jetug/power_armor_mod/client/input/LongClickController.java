@@ -1,26 +1,25 @@
 package com.jetug.power_armor_mod.client.input;
 
-import cpw.mods.util.LambdaExceptionUtils;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class LongClickController {
     private Integer lastKey;
     private int ticks = 0;
-    private BiConsumer<InputEvent.KeyInputEvent, Integer> listener = (k, t) -> {};
+    private BiConsumer<InputEvent.KeyInputEvent, Integer> repeatListener = (k, t) -> {};
+    private BiConsumer<InputEvent.KeyInputEvent, Integer> releaseListener = (k, t) -> {};
 
     public LongClickController(){
         MinecraftForge.EVENT_BUS.addListener(this::onTick);
         MinecraftForge.EVENT_BUS.addListener(this::onClick);
     }
 
-    public void addListener(BiConsumer<InputEvent.KeyInputEvent, Integer> listener){
-        this.listener = listener;
+    public void addRepeatListener(BiConsumer<InputEvent.KeyInputEvent, Integer> listener){
+        this.repeatListener = listener;
     }
 
     private void onTick(final TickEvent.ClientTickEvent event) {
@@ -34,7 +33,8 @@ public class LongClickController {
                 ticks = 0;
                 lastKey = event.getKey();
             }
-            else listener.accept(event, ticks);
+            else if(repeatListener != null)
+                repeatListener.accept(event, ticks);
         }
         else if(event.getAction() == GLFW.GLFW_RELEASE){
             if(event.getKey() == lastKey){

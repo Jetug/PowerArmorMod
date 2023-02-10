@@ -45,8 +45,12 @@ public final class SetupEvents {
         event.enqueueWork(GuiRegistry::register);
 
         ClientConfig.resourceManager.loadConfigs();
+        registerClickListeners();
+    }
+
+    private static void registerClickListeners() {
         DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
-        LONG_CLICK_CONTROLLER.addListener(InputController::onRepeat);
+        LONG_CLICK_CONTROLLER.addRepeatListener(InputController::onRepeat);
     }
 
 
