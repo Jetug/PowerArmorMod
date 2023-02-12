@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.test.block.entity.custom;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.ModBlockEntities;
-import com.jetug.power_armor_mod.common.minecraft.registery.ModItems;
+import com.jetug.power_armor_mod.common.minecraft.registery.BlockEntitiesRegistry;
+import com.jetug.power_armor_mod.common.minecraft.registery.ItemsRegistry;
 import com.jetug.power_armor_mod.test.screen.GemCuttingStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,7 +42,7 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public GemCuttingStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.GEM_CUTTING_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
+        super(BlockEntitiesRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
     }
 
     @Override
@@ -111,14 +111,14 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
         entity.itemHandler.extractItem(1, 1, false);
         entity.itemHandler.getStackInSlot(2).hurt(1, new Random(), null);
 
-        entity.itemHandler.setStackInSlot(3, new ItemStack(ModItems.CITRINE.get(),
+        entity.itemHandler.setStackInSlot(3, new ItemStack(ItemsRegistry.CITRINE.get(),
                 entity.itemHandler.getStackInSlot(3).getCount() + 1));
     }
 
     private static boolean hasRecipe(GemCuttingStationBlockEntity entity) {
         boolean hasItemInWaterSlot = PotionUtils.getPotion(entity.itemHandler.getStackInSlot(0)) == Potions.WATER;
-        boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ModItems.RAW_CITRINE.get();
-        boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ModItems.GEM_CUTTER_TOOL.get();
+        boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ItemsRegistry.RAW_CITRINE.get();
+        boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ItemsRegistry.GEM_CUTTER_TOOL.get();
 
         return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
     }

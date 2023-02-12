@@ -7,7 +7,6 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.power_armor_mod.common.minecraft.registery.ModEntityTypes.POWER_ARMOR_PART;
+import static com.jetug.power_armor_mod.common.minecraft.registery.EntityTypesRegistry.POWER_ARMOR_PART;
 import static org.apache.logging.log4j.Level.INFO;
 
 public class PowerArmorPartEntity extends Entity{

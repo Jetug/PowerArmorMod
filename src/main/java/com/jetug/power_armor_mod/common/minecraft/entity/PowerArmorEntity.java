@@ -41,11 +41,12 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.ARMOR_DATA;
+
+import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.*;
+import static com.jetug.power_armor_mod.common.minecraft.registery.ItemsRegistry.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static net.minecraft.util.Mth.cos;
-import static net.minecraft.util.Mth.sin;
-import static org.apache.logging.log4j.Level.INFO;
+import static net.minecraft.util.Mth.*;
+import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
 public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
@@ -393,32 +394,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     @Override
-    protected float tickHeadTurn(float p_21260_, float p_21261_) {
-        float f = Mth.wrapDegrees(p_21260_ - this.yBodyRot);
-        this.yBodyRot += f * 0.3F;
-        float f1 = Mth.wrapDegrees(this.getYRot() - this.yBodyRot);
-        boolean flag = f1 < -90.0F || f1 >= 90.0F;
-        if (f1 < -75.0F) {
-            f1 = -75.0F;
-        }
-
-        if (f1 >= 75.0F) {
-            f1 = 75.0F;
-        }
-
-        this.yBodyRot = this.getYRot() - f1;
-        if (f1 * f1 > 2500.0F) {
-            this.yBodyRot += f1 * 0.2F;
-        }
-
-        if (flag) {
-            p_21261_ *= -1.0F;
-        }
-
-        return p_21261_;
-    }
-
-    @Override
     public void aiStep() {
         super.aiStep();
 
@@ -508,9 +483,12 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     @Override
-    public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vector, @NotNull InteractionHand hand) {
+    public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
         Global.LOGGER.log(INFO, level.isClientSide);
         ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.getItem() == PA_FRAME.get())
+            return InteractionResult.PASS;
 
         if (player.isShiftKeyDown()) {
             openGUI(player);
@@ -523,6 +501,14 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
+
+
+//    @Override
+//    public InteractionResult interact(Player player, InteractionHand hand) {
+//        this.doPlayerRide(player);
+//        return super.interact(player, hand);
+//    }
+
 
     @Nullable
     public Entity getControllingPassenger() {
@@ -734,12 +720,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 //        this.doPlayerRide(player);
 //        return InteractionResult.sidedSuccess(this.level.isClientSide);
 //    }
-
-    @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        this.doPlayerRide(player);
-        return super.interact(player, hand);
-    }
 
     public void jump(){
         this.playerJumpPendingScale = 1.0F;

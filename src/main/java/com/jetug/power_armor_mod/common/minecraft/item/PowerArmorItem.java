@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.common.minecraft.item;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
+import com.jetug.power_armor_mod.common.minecraft.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -13,8 +14,8 @@ public class PowerArmorItem extends Item {
     private final ModArmorMaterials material;
     public final BodyPart part;
 
-    public PowerArmorItem(ModArmorMaterials material, BodyPart part, Properties properties) {
-        super(properties.durability(material.getDurabilityForSlot(part)));
+    public PowerArmorItem(ModArmorMaterials material, BodyPart part) {
+        super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB));
         this.material = material;
         this.part = part;
     }
