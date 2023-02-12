@@ -22,6 +22,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -439,8 +440,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         part.setPos(getX() + x, getY() + y, getZ() + z);
     }
 
-    //Settings
-    //{
     @Override
     public void checkDespawn() {}
 
@@ -515,10 +514,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
-    public boolean canBeControlledByRider() {
-        return this.getControllingPassenger() instanceof LivingEntity;
-    }
-
     public double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
     }
@@ -544,7 +539,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public void travel(@NotNull Vec3 travelVector) {
         if (!this.isAlive()) return;
 
-        if (this.isVehicle() && this.canBeControlledByRider() && getControllingPassenger() instanceof Player player) {
+        if (this.isVehicle() &&  getControllingPassenger() instanceof Player) {
             var livingEntity = (LivingEntity)this.getControllingPassenger();
             assert livingEntity != null;
             this.setYRot(livingEntity.getYRot());
@@ -603,16 +598,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public boolean canBeRiddenInWater(Entity rider) {
         return true;
     }
-
-//    @Override
-//    public void stopRiding() {
-//        super.stopRiding();
-//    }
-//
-//    @Override
-//    protected void removePassenger(Entity p_20352_) {
-//        super.removePassenger(p_20352_);
-//    }
 
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
@@ -714,12 +699,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     private List<Entity> getEntitiesOfClass(double x, double y, double z) {
         return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
     }
-
-//    @Override
-//    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-//        this.doPlayerRide(player);
-//        return InteractionResult.sidedSuccess(this.level.isClientSide);
-//    }
 
     public void jump(){
         this.playerJumpPendingScale = 1.0F;
