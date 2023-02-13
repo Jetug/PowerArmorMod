@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.minecraft.entity;
+package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
@@ -18,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
-import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import static org.apache.logging.log4j.Level.INFO;

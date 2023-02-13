@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.registery.EntityTypesRegistry;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.registery.EntityTypesRegistry;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;

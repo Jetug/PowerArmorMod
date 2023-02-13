@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.minecraft.registery;
+package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.util.constants.Global;

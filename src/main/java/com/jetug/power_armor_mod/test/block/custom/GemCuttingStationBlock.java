@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.test.block.custom;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.BlockEntitiesRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitiesRegistry;
 import com.jetug.power_armor_mod.test.block.entity.custom.GemCuttingStationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

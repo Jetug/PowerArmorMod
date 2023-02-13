@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;

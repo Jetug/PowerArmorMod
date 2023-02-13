@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.*;
+import com.jetug.power_armor_mod.common.foundation.registery.*;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.test.screen.ModMenuTypes;
 import net.minecraftforge.eventbus.api.IEventBus;

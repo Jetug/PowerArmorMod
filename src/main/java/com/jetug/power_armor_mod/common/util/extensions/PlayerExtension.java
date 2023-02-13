@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.util.extensions;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.ActionType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,17 +20,17 @@ public class PlayerExtension {
         return player.getVehicle() instanceof PowerArmorEntity;
     }
 
+    public static void StopWearingArmor(LocalPlayer player) {
+        player.stopRiding();
+        doServerAction(ActionType.DISMOUNT);
+        player.setInvisible(false);
+    }
+
     public static void sendMessage(String text){
         var player = Minecraft.getInstance().player;
         try {
             player.sendMessage(new TextComponent(text), player.getUUID());
         }
         catch (Exception ignored) {}
-    }
-
-    public static void StopWearingArmor(LocalPlayer player) {
-        player.stopRiding();
-        doServerAction(ActionType.DISMOUNT);
-        player.setInvisible(false);
     }
 }

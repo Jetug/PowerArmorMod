@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.input;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import net.minecraft.client.KeyMapping;
@@ -41,10 +41,6 @@ public class InputController {
         armorEntity.dash(direction);
     }
 
-    public static boolean keysEqual(int key1, KeyMapping key2){
-        return key1 == key2.getKey().getValue();
-    }
-
     public static void onRepeat(int key, int ticks){
         var minecraft = Minecraft.getInstance();
         var player = minecraft.player;
@@ -67,5 +63,9 @@ public class InputController {
             var options = Minecraft.getInstance().options;
             Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
         }
+    }
+
+    private static boolean keysEqual(int key1, KeyMapping key2){
+        return key1 == key2.getKey().getValue();
     }
 }

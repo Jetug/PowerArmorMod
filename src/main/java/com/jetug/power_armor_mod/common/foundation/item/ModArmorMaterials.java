@@ -1,11 +1,9 @@
-package com.jetug.power_armor_mod.common.minecraft.item;
+package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;

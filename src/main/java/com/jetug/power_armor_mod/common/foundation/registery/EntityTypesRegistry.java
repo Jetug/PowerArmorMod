@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.common.minecraft.registery;
+package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

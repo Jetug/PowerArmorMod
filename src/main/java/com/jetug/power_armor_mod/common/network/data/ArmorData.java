@@ -1,6 +1,7 @@
-package com.jetug.power_armor_mod.common.network.packet;
-import com.jetug.power_armor_mod.common.capability.armordata.IArmorData;
+package com.jetug.power_armor_mod.common.network.data;
+
 import com.jetug.power_armor_mod.common.network.PacketHandler;
+import com.jetug.power_armor_mod.common.network.packet.PowerArmorPacket;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,7 +14,6 @@ import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.RIGHT_LEG;
 
 public class ArmorData {
-    public static final String DURABILITY = "durability";
     public static final String INVENTORY = "inventory";
 
     public int entityId = -1;

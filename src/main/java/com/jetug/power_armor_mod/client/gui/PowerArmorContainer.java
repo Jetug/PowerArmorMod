@@ -1,8 +1,8 @@
 package com.jetug.power_armor_mod.client.gui;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.minecraft.registery.ContainerRegistry;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

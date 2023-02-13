@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.common.minecraft.item;
+package com.jetug.power_armor_mod.common.foundation.item;
 
-import com.jetug.power_armor_mod.common.minecraft.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;

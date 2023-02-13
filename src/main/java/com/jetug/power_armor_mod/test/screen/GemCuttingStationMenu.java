@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.test.screen;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.BlocksRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlocksRegistry;
 import com.jetug.power_armor_mod.test.block.entity.custom.GemCuttingStationBlockEntity;
 import com.jetug.power_armor_mod.test.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;

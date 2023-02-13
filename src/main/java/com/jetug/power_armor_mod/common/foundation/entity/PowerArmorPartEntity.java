@@ -1,9 +1,9 @@
-package com.jetug.power_armor_mod.common.minecraft.entity;
+package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.network.*;
+import com.jetug.power_armor_mod.common.network.packet.*;
+import com.jetug.power_armor_mod.common.util.constants.*;
+import com.jetug.power_armor_mod.common.util.enums.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.power_armor_mod.common.minecraft.registery.EntityTypesRegistry.POWER_ARMOR_PART;
+import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypesRegistry.POWER_ARMOR_PART;
 import static org.apache.logging.log4j.Level.INFO;
 
 public class PowerArmorPartEntity extends Entity{

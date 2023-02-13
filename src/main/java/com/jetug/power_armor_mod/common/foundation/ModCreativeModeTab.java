@@ -1,6 +1,6 @@
-package com.jetug.power_armor_mod.common.minecraft;
+package com.jetug.power_armor_mod.common.foundation;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.ItemsRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.ItemsRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 

@@ -1,6 +1,6 @@
-package com.jetug.power_armor_mod.common.minecraft.registery;
+package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.minecraft.ModCreativeModeTab;
+import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.test.block.custom.GemCuttingStationBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;

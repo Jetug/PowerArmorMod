@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.minecraft.block;
+package com.jetug.power_armor_mod.common.foundation.block;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;

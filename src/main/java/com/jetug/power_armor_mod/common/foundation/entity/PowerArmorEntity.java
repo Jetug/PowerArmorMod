@@ -1,32 +1,25 @@
-package com.jetug.power_armor_mod.common.minecraft.entity;
+package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
-import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.network.PacketHandler;
-import com.jetug.power_armor_mod.common.network.packet.*;
+import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ArrowRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -43,8 +36,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.capability.constants.Capabilities.*;
-import static com.jetug.power_armor_mod.common.minecraft.registery.ItemsRegistry.*;
+import static com.jetug.power_armor_mod.common.foundation.registery.ItemsRegistry.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
@@ -54,6 +46,8 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
     public static final float ROTATION = (float) Math.PI / 180F;
+
+    private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 
 //    public final PowerArmorPartEntity headHitBox;
 //    public final PowerArmorPartEntity bodyHitBox;
@@ -256,14 +250,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         return res;
     }
 
-    public void setArmorDurability(BodyPart bodyPart, float value) {
-        if (level.isClientSide) {
-            var cap = getCapability(ARMOR_DATA).orElse(null);
-            cap.setDurability(bodyPart, value);
-            cap.syncWithServer();
-        }
-    }
-
     public void damageArmor(BodyPart bodyPart, float damage) {
         var itemStack = inventory.getItem(bodyPart.getId());
         Global.LOGGER.info("damageArmor" + isClientSide);
@@ -310,9 +296,9 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-        if(isClientSide) {
-            PacketHandler.sendToServer(new HurtPacket(this.getId(), damageSource, damage));
-        }
+//        if(isClientSide) {
+//            PacketHandler.sendToServer(new HurtPacket(this.getId(), damageSource, damage));
+//        }
 
         damageArmor(part.bodyPart, damage);
         return super.hurt(damageSource, damage);
@@ -626,8 +612,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         }
     }
 
-    private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
-
     @Override
     public Iterable<ItemStack> getArmorSlots() {
         return this.armorItems;
@@ -641,19 +625,19 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     @Override
     public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {}
 
-
-    public void doPlayerRide(Player player) {
-        player.setYRot(getYRot());
-        player.setXRot(getXRot());
-        player.startRiding(this);
-    }
-
     @Override
     public void containerChanged(@NotNull Container container) {
         if (!this.level.isClientSide) {
             syncDataWithClient();
         }
     }
+    public void doPlayerRide(Player player) {
+        player.setYRot(getYRot());
+        player.setXRot(getXRot());
+        player.startRiding(this);
+    }
+
+
 
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());

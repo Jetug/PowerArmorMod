@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.test.block.entity.custom;
 
-import com.jetug.power_armor_mod.common.minecraft.registery.BlockEntitiesRegistry;
-import com.jetug.power_armor_mod.common.minecraft.registery.ItemsRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitiesRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.ItemsRegistry;
 import com.jetug.power_armor_mod.test.screen.GemCuttingStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

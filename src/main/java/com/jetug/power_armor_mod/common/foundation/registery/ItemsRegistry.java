@@ -1,9 +1,9 @@
-package com.jetug.power_armor_mod.common.minecraft.registery;
+package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.minecraft.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.minecraft.item.ArmorFrame;
-import com.jetug.power_armor_mod.common.minecraft.item.ModArmorMaterials;
-import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
+import com.jetug.power_armor_mod.common.foundation.item.ArmorFrame;
+import com.jetug.power_armor_mod.common.foundation.item.ModArmorMaterials;
+import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;

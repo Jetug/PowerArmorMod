@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.IPowerArmor;
+import com.jetug.power_armor_mod.common.foundation.entity.IPowerArmor;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
