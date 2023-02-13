@@ -72,11 +72,9 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         //var settings = item.armorPartSettings;
         var settings = ClientConfig.resourceManager.getPartSettings(part);
         if(settings == null) return;
-
         var attachments = settings.attachments;
 
         if(attachments == null && attachments.length == 0) return;
-
 
         for (Attachment attachment : attachments) {
             var frameBone = getFrameBone(attachment.frame);
@@ -87,12 +85,12 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
             if(isAttaching)
                 addModelPart(attachment, frameBone, armorBone);
             else {
-                removeModelPart(attachment, frameBone, armorBone);
+                removeModelPart(attachment, frameBone, armorBone, part);
             }
         }
     }
 
-    private static void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
+    private void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
         if(attachment.mode == null) return;
 
         switch (attachment.mode) {
@@ -113,7 +111,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private static void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
+    private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone, BodyPart part) {
         if(attachment.mode == null) return;
 
         switch (attachment.mode) {

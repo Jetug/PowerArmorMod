@@ -260,7 +260,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof Player player) || isOnGround())
+        if (!(getControllingPassenger() instanceof Player player) || !isOnGround())
             return;
 
         isDashing = true;
@@ -269,8 +269,8 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
         float viewYRot = player.getViewYRot(1);
         float rotation = viewYRot * ROTATION;
-        float x = sin(rotation) * 2;
-        float z = cos(rotation) * 2;
+        float x = sin(rotation) * 3;
+        float z = cos(rotation) * 3;
 
         Vec3 vector = new Vec3(-x, 0, z);
 
