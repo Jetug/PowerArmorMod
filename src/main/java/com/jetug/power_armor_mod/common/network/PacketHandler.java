@@ -36,24 +36,16 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++, HurtPacket.class	   , HurtPacket::write		 , HurtPacket::read	 	 , HurtPacket::handle		);
 	}
 
-	/**
-	 * Sends a packet to a specific player.<br>
-	 * Must be called server side.
-	 * */
 	public static void sendTo(Object msg, ServerPlayer player) {
 		if(!(player instanceof FakePlayer)) {
 			HANDLER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
-	
-	/**
-	 * Sends a packet to the server.<br>
-	 * Must be called client side.
-	 * */
+
 	public static void sendToServer(Object msg) {
 		HANDLER.sendToServer(msg);
 	}
-	
+
 	/**Server side.*/
 	public static void sendToAllPlayers(Object msg) {
 		var server = ServerLifecycleHooks.getCurrentServer();

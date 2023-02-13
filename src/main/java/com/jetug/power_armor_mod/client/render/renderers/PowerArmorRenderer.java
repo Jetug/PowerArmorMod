@@ -79,7 +79,6 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
 
         for (Attachment attachment : attachments) {
-
             var frameBone = getFrameBone(attachment.frame);
             var armorBone = getArmorBone(settings.getModel(), attachment.armor);
 
@@ -95,6 +94,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private static void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
         if(attachment.mode == null) return;
+
         switch (attachment.mode) {
             case ADD -> {
                 if (!frameBone.childBones.contains(armorBone)) {
@@ -139,43 +139,4 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
     }
-
-//    private void handleModel(ItemStack slot, Boolean isAttaching){
-//        var item = (PowerArmorItem)slot.getItem();
-//        var attachments = item.armorPartSettings.attachments;
-//
-//        for (Attachment attachment : attachments) {
-//
-//            var model = item.armorPartSettings.getModel();
-//
-//            var frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(attachment.frame);
-//            var armorBone = armorModel.getModel(model).getBone(attachment.armor).orElse(null);
-//
-//            if(frameBone != null && armorBone != null) {
-//                if (isAttaching) {
-//                    if(!frameBone.childBones.contains(armorBone)) {
-//                        armorBone.parent = frameBone;
-//                        frameBone.childBones.add(armorBone);
-//                    }
-//                }
-//                else frameBone.childBones.remove(armorBone);
-//            }
-//        }
-//
-//        slot.getAttachments().forEach(tuple ->{
-//            ResourceLocation model = ResourceHelper.getModel(slot.getArmorPart(), slot.getType());
-//            GeoBone frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
-//            GeoBone armorBone = armorModel.getModel(model).getBone(tuple.getB()).orElse(null);
-//
-//            if(frameBone != null && armorBone != null) {
-//                if (isAttaching) {
-//                    if(!frameBone.childBones.contains(armorBone)) {
-//                        armorBone.parent = frameBone;
-//                        frameBone.childBones.add(armorBone);
-//                    }
-//                }
-//                else frameBone.childBones.remove(armorBone);
-//            }
-//        });
-//    }
 }

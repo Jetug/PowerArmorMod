@@ -260,7 +260,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof Player player))
+        if (!(getControllingPassenger() instanceof Player player) || isOnGround())
             return;
 
         isDashing = true;
