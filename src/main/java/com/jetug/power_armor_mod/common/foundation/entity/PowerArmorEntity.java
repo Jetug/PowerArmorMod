@@ -98,6 +98,9 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 //        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         initInventory();
 
+        if(isServerSide)
+            syncDataWithClient();
+
         timer.addTimer(new LoopTimerTask(() -> {
             heat -= 1;
         }));

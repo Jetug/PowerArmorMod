@@ -39,7 +39,7 @@ public class PowerArmorPacket{
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
-        Player player;
+        Player player = null;
 
         if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT
                 || context.get().getDirection() == NetworkDirection.LOGIN_TO_CLIENT){
@@ -49,7 +49,7 @@ public class PowerArmorPacket{
                 || context.get().getDirection() == NetworkDirection.LOGIN_TO_SERVER) {
             player = context.get().getSender();
         }
-        else return;
+        //else return;
 
         var data = message.getArmorData();
         var entity = player.level.getEntity(data.entityId);
