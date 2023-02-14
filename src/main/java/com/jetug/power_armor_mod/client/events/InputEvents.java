@@ -31,7 +31,7 @@ public class InputEvents {
 
         if (event.getAction() == GLFW.GLFW_PRESS) {
             if (LEAVE.isDown()) {
-                StopWearingArmor(getLocalPlayer());
+                stopWearingArmor(getLocalPlayer());
             }
         }
     }

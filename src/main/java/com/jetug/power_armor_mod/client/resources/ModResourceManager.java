@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.resources;
 
 import com.google.gson.Gson;
-import com.jetug.power_armor_mod.client.render.ArmorPartSettings;
+import com.jetug.power_armor_mod.common.json.ArmorPartSettings;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;

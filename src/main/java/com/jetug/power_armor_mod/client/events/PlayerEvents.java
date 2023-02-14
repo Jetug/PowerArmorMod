@@ -15,8 +15,7 @@ public class PlayerEvents
 {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public static void onRenderPlayer(RenderPlayerEvent.Pre event)
-    {
+    public static void onRenderPlayer(RenderPlayerEvent.Pre event) {
         if(isWearingPowerArmor(event.getPlayer())){
             event.setCanceled(true);
         }
@@ -24,8 +23,7 @@ public class PlayerEvents
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onAttack(AttackEntityEvent event)
-    {
+    public static void onAttack(AttackEntityEvent event) {
         var player = event.getPlayer();
         var target = event.getTarget();
 

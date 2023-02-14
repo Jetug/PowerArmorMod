@@ -7,7 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 
-import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
+import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 
 public class PlayerExtension {
 
@@ -20,7 +20,7 @@ public class PlayerExtension {
         return player.getVehicle() instanceof PowerArmorEntity;
     }
 
-    public static void StopWearingArmor(LocalPlayer player) {
+    public static void stopWearingArmor(LocalPlayer player) {
         player.stopRiding();
         doServerAction(ActionType.DISMOUNT);
         player.setInvisible(false);

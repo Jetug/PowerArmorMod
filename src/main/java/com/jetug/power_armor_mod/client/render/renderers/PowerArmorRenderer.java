@@ -1,9 +1,10 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
+import com.ibm.icu.impl.Pair;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.model.ArmorModel;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.client.render.Attachment;
+import com.jetug.power_armor_mod.common.json.Attachment;
 import com.jetug.power_armor_mod.client.render.layers.ArmorPartLayer;
 import com.jetug.power_armor_mod.client.render.layers.PlayerHeadLayer;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
@@ -17,9 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
+import java.util.Map;
+
+import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
+
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
     private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
+    //private Map<BodyPart, Attachment>
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -50,11 +56,9 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
             var itemStack = entity.getItem(part);
             if (!itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack)) {
                 updateModel(part, itemStack, true);
-                //attachBones(itemStack);
             }
             else{
                 updateModel(part, itemStack, false);
-                //detachBones(part);
             }
         }
     }
@@ -113,6 +117,14 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone, BodyPart part) {
         if(attachment.mode == null) return;
+
+//        var newBone = armorModel.getModel(POWER_ARMOR_MODEL_LOCATION).getBone(part.getName()).orElse(null);
+//        var oldBone = (GeoBone)powerArmorModel.getBone(part.getName());
+//        var parent = oldBone.parent;
+//
+//        parent.childBones.remove(oldBone);
+//        parent.childBones.add(newBone);
+//        newBone.parent = parent;
 
         switch (attachment.mode) {
             case ADD -> {

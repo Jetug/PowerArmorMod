@@ -74,13 +74,15 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     protected float playerJumpPendingScale;
 
     private final boolean isClientSide = level.isClientSide;
+    private final boolean isServerSide = !level.isClientSide;
+
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    private final TickTimer clientTimer = new TickTimer();
+    private final TickTimer timer = new TickTimer();
 
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
-    private int maxHeat = 0;
+    private int maxHeat = 100;
     private int heat = 0;
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
@@ -96,7 +98,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 //        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         initInventory();
 
-        clientTimer.addTimer(new LoopTimerTask(() -> {
+        timer.addTimer(new LoopTimerTask(() -> {
             heat -= 1;
         }));
     }
@@ -259,12 +261,22 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         }
     }
 
+    public enum ArmorAction{
+        DASH
+    }
+
+    private boolean canDoAction(ArmorAction action){
+        return false;
+    }
+
+
+
     public void dash(DashDirection direction) {
         if (!(getControllingPassenger() instanceof Player player) || !isOnGround())
             return;
 
         isDashing = true;
-        clientTimer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
+        timer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
         dashDirection = direction;
 
         float viewYRot = player.getViewYRot(1);
@@ -369,7 +381,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         super.tick();
 
         if(!level.isClientSide) {
-            getArmorData().sentToClient();
+            //syncDataWithClient();
 
             if(isDashing) {
                 pushEntitiesAround();
@@ -377,7 +389,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         }
 
         speedometer.tick();
-        clientTimer.tick();
+        timer.tick();
     }
 
     @Override

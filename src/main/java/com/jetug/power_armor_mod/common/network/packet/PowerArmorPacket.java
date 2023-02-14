@@ -39,20 +39,22 @@ public class PowerArmorPacket{
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
-        Player player = null;
+        Player player;
 
-        if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT){
+        if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT
+                || context.get().getDirection() == NetworkDirection.LOGIN_TO_CLIENT){
             player = Minecraft.getInstance().player;
         }
-        else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
+        else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER
+                || context.get().getDirection() == NetworkDirection.LOGIN_TO_SERVER) {
             player = context.get().getSender();
         }
+        else return;
 
         var data = message.getArmorData();
         var entity = player.level.getEntity(data.entityId);
 
         if(entity instanceof PowerArmorEntity powerArmor)
             powerArmor.setArmorData(data);
-
     }
 }
