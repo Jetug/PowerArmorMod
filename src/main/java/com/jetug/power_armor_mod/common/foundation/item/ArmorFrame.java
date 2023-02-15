@@ -14,10 +14,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class ArmorFrame extends Item {
-    public static final String ENTITY_TAG = "EntityTag";
-    public static final String DRAGON_HORN_ENTITY_ID = "DragonHornEntityID";
-    public static final String ENTITY_UUID = "EntityUUID";
-
     public ArmorFrame() {
         super((new Item.Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
     }

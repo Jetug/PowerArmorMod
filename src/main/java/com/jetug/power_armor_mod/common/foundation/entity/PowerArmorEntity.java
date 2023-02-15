@@ -15,6 +15,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
@@ -46,6 +49,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
     public static final float ROTATION = (float) Math.PI / 180F;
+    public static final int EFFECT_DURATION = 9;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 
@@ -88,32 +92,22 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
         noCulling = true;
-
-//        headHitBox      = createArmorPart(HEAD     , 0.6f, 0.6f);
-//        bodyHitBox      = createArmorPart(BODY     , 0.7f, 1.0f);
-//        leftArmHitBox   = createArmorPart(LEFT_ARM , 0.5f, 1.0f);
-//        rightArmHitBox  = createArmorPart(RIGHT_ARM, 0.5f, 1.0f);
-//        leftLegHitBox   = createArmorPart(LEFT_LEG , 0.6f, 1.0f);
-//        rightLegHitBox  = createArmorPart(RIGHT_LEG, 0.6f, 1.0f);
-//        subEntities = new PowerArmorPartEntity[]{ headHitBox, bodyHitBox, leftArmHitBox, rightArmHitBox, leftLegHitBox, rightLegHitBox };
         initInventory();
-
-        if(isServerSide)
-            syncDataWithClient();
 
         timer.addTimer(new LoopTimerTask(() -> {
             heat -= 1;
         }));
     }
 
-//    private void updateHitboxes() {
-//        if(!level.isClientSide) {
-//            for (PowerArmorPartEntity subEntity : subEntities) {
-//                if(!subEntity.shouldContinuePersisting())
-//                    level.addFreshEntity(subEntity);
-//            }
-//        }
-//    }
+    public static AttributeSupplier.Builder createAttributes() {
+        return LivingEntity.createLivingAttributes()
+                .add(Attributes.MAX_HEALTH, 1000.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.20D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+                .add(Attributes.JUMP_STRENGTH, 0.5D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
+    }
 
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
@@ -125,13 +119,24 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         return items;
     }
 
-//    @Override
-//    public EntityDimensions getDimensions(Pose p_21047_) {
-//        return super.getDimensions(p_21047_);
-//    }
 
-    private PowerArmorPartEntity createArmorPart(BodyPart bodyPart, float xz, float y){
-        return new PowerArmorPartEntity(this, bodyPart, xz, y);
+
+
+
+    public ItemStack getItem(BodyPart part) {
+        return inventory.getItem(part.ordinal());
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        saveInventory(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        loadInventory(compound);
     }
 
     public void openGUI(Player playerEntity) {
@@ -150,93 +155,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
                 }
             });
         }
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return LivingEntity.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 1000.0D)
-                .add(Attributes.ATTACK_DAMAGE, 0.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.20D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.JUMP_STRENGTH, 0.5D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
-    }
-
-    public ItemStack getItem(BodyPart part) {
-        return inventory.getItem(part.ordinal());
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        saveInventory(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        loadInventory(compound);
-    }
-
-    private void syncDataWithClient() {
-        getArmorData().sentToClient();
-    }
-
-    private void syncDataWithServer() {
-        getArmorData().sentToServer();
-    }
-
-    public void setInventory(ListTag tags){
-        deserializeInventory(inventory, tags);
-    }
-
-    private void saveInventory(CompoundTag compound){
-        if (inventory == null) return;
-        compound.put(ITEMS_TAG, serializeInventory(inventory));
-    }
-
-    private void loadInventory(@NotNull CompoundTag compound) {
-        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
-        initInventory();
-        deserializeInventory(inventory, nbtTags);
-    }
-
-    private ListTag serializeInventory(@NotNull SimpleContainer inventory){
-        ListTag nbtTags = new ListTag();
-
-        for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
-            var itemStack = inventory.getItem(slotId);
-            CompoundTag compoundNBT = new CompoundTag();
-            compoundNBT.putByte(SLOT_TAG, (byte) slotId);
-            itemStack.save(compoundNBT);
-            nbtTags.add(compoundNBT);
-        }
-
-        return nbtTags;
-    }
-
-    private void deserializeInventory(SimpleContainer inventory, ListTag nbtTags){
-        for (Tag nbt : nbtTags) {
-            var compoundNBT = (CompoundTag) nbt;
-            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
-            inventory.setItem(slotId, ItemStack.of(compoundNBT));
-        }
-    }
-
-    private void initInventory(){
-        SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
-        if (inventoryBuff != null) {
-            inventoryBuff.removeListener(this);
-            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
-            for (int j = 0; j < i; ++j) {
-                ItemStack itemstack = inventoryBuff.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
-                }
-            }
-        }
-        this.inventory.addListener(this);
     }
 
     public boolean hasArmor(BodyPart bodyPart) {
@@ -332,7 +250,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
             damageArmor(LEFT_LEG , damage);
             damageArmor(RIGHT_LEG, damage);
         }
-
+       
         var attacker = damageSource.getEntity();
         if(attacker != null) {
             var minecraft = Minecraft.getInstance();
@@ -375,21 +293,19 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         return this.isJumping;
     }
 
-    public void setIsJumping(boolean p_110255_1_) {
-        this.isJumping = p_110255_1_;
-    }
-
     @Override
     public void tick() {
         super.tick();
 
         if(!level.isClientSide) {
-            //syncDataWithClient();
 
             if(isDashing) {
                 pushEntitiesAround();
             }
         }
+
+        //syncDataWithClient();
+        applyEffects();
 
         speedometer.tick();
         timer.tick();
@@ -401,58 +317,12 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
         if(getControllingPassenger() instanceof Player player) {
             this.yHeadRot = this.getYRot();
-            this.yBodyRot = player.yBodyRot;//this.getYRot();
+            //this.yBodyRot = player.yBodyRot;
         }
-
-        //moveHitboxes();
-    }
-
-//    private void moveHitboxes() {
-//        Vec3[] aVector3d = new Vec3[subEntities.length];
-//
-//        for (int j = 0; j < subEntities.length; ++j) {
-//            aVector3d[j] = new Vec3(subEntities[j].getX(), subEntities[j].getY(), subEntities[j].getZ());
-//        }
-//
-//        float rotation = getYRot() * ROTATION;
-//        float xPos = cos(rotation);
-//        float zPos = sin(rotation);
-//        float armPos = 0.6f;
-//        float legPos = 0.2f;
-//
-//        tickPart(headHitBox, 0, 2.1, 0);
-//        tickPart(bodyHitBox, 0, 1.2, 0);
-//        tickPart(rightArmHitBox, xPos * -armPos , 1.1, zPos * -armPos);
-//        tickPart(leftArmHitBox , xPos * armPos , 1.1, zPos * armPos);
-//        tickPart(rightLegHitBox, xPos * -legPos, 0, zPos * -legPos);
-//        tickPart(leftLegHitBox , xPos * legPos , 0, zPos * legPos);
-//
-//        for (int l = 0; l < subEntities.length; ++l) {
-//            subEntities[l].xo = aVector3d[l].x;
-//            subEntities[l].yo = aVector3d[l].y;
-//            subEntities[l].zo = aVector3d[l].z;
-//            subEntities[l].xOld = aVector3d[l].x;
-//            subEntities[l].yOld = aVector3d[l].y;
-//            subEntities[l].zOld = aVector3d[l].z;
-//        }
-//    }
-
-    private void tickPart(PowerArmorPartEntity part, double x, double y, double z) {
-        part.setPos(getX() + x, getY() + y, getZ() + z);
     }
 
     @Override
     public void checkDespawn() {}
-
-//    @Override
-//    public PartEntity<?>[] getParts() {
-//        return this.subEntities;
-//    }
-//
-//    @Override
-//    public boolean isMultipartEntity() {
-//        return true;
-//    }
 
     @Override
     public boolean isPickable() {
@@ -502,21 +372,9 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
-
-//    @Override
-//    public InteractionResult interact(Player player, InteractionHand hand) {
-//        this.doPlayerRide(player);
-//        return super.interact(player, hand);
-//    }
-
-
     @Nullable
     public Entity getControllingPassenger() {
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-    }
-
-    public double getCustomJump() {
-        return this.getAttributeValue(Attributes.JUMP_STRENGTH);
     }
 
     @Override
@@ -548,39 +406,37 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
             this.setXRot(livingEntity.getXRot() * 0.5F);
             this.setRot(this.getYRot(), this.getXRot());
 
-            float f = livingEntity.xxa /* * 0.5F*/;
-            float f1 = livingEntity.zza;
-
-            if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
-                double jump = this.getCustomJump() * this.playerJumpPendingScale * this.getBlockJumpFactor();
+            if (playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
+                double jump = this.getCustomJump() * playerJumpPendingScale * this.getBlockJumpFactor();
 
                 Vec3 deltaMovement = this.getDeltaMovement();
                 this.setDeltaMovement(deltaMovement.x, jump, deltaMovement.z);
                 isJumping = true;
                 hasImpulse = true;
 
-                if (f1 > 0.0F) {
+                if (livingEntity.zza > 0.0F) {
                     float f2 = sin(this.getYRot() * ROTATION);
                     float f3 = cos(this.getYRot() * ROTATION);
                     this.setDeltaMovement(this.getDeltaMovement().add(
-                            -0.4F * f2 * this.playerJumpPendingScale,
+                            -0.4F * f2 * playerJumpPendingScale,
                             0.0D,
-                            0.4F * f3 * this.playerJumpPendingScale));
+                            0.4F * f3 * playerJumpPendingScale));
                 }
 
-                this.playerJumpPendingScale = 0.0F;
+                playerJumpPendingScale = 0.0F;
             }
 
             this.flyingSpeed = this.getSpeed() * 0.1F;
+
             if (this.isControlledByLocalInstance()) {
                 this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                super.travel(new Vec3(f, travelVector.y, f1));
+                super.travel(new Vec3(livingEntity.xxa, travelVector.y, livingEntity.zza));
             } else if (livingEntity instanceof Player) {
                 this.setDeltaMovement(Vec3.ZERO);
             }
 
             if (this.onGround) {
-                this.playerJumpPendingScale = 0.0F;
+                playerJumpPendingScale = 0.0F;
                 isJumping = false;
             }
         }
@@ -629,7 +485,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     @Override
     public Iterable<ItemStack> getArmorSlots() {
-        return this.armorItems;
+        return armorItems;
     }
 
     @Override
@@ -642,17 +498,15 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     @Override
     public void containerChanged(@NotNull Container container) {
-        if (!this.level.isClientSide) {
-            syncDataWithClient();
-        }
+        syncDataWithClient();
     }
+
     public void doPlayerRide(Player player) {
+
         player.setYRot(getYRot());
         player.setXRot(getXRot());
         player.startRiding(this);
     }
-
-
 
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
@@ -663,6 +517,91 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public void setArmorData(ArmorData data){
         deserializeInventory(inventory, data.inventory);
     }
+
+    public boolean hasPlayer(){
+        return getControllingPassenger() instanceof Player;
+    }
+
+    private double getCustomJump() {
+        return this.getAttributeValue(Attributes.JUMP_STRENGTH);
+    }
+
+    private void applyEffects(){
+        var player = getPlayer();
+
+        if(player != null) {
+            addEffect(player, MobEffects.DIG_SPEED         , 1);
+            addEffect(player, MobEffects.DAMAGE_BOOST      , 1);
+            addEffect(player, MobEffects.DAMAGE_RESISTANCE , 1);
+        }
+    }
+
+    private void addEffect(Player player, MobEffect effect, int amplifier){
+        player.addEffect(new MobEffectInstance(effect, PowerArmorEntity.EFFECT_DURATION, amplifier, false, false));
+    }
+
+    private void syncDataWithClient() {
+        if(isServerSide) getArmorData().sentToClient();
+    }
+
+    private void syncDataWithServer() {
+        getArmorData().sentToServer();
+    }
+
+    public void setInventory(ListTag tags){
+        deserializeInventory(inventory, tags);
+    }
+
+    private void saveInventory(CompoundTag compound){
+        if (inventory == null) return;
+        compound.put(ITEMS_TAG, serializeInventory(inventory));
+    }
+
+    private void loadInventory(@NotNull CompoundTag compound) {
+        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
+        initInventory();
+        deserializeInventory(inventory, nbtTags);
+    }
+
+    private ListTag serializeInventory(@NotNull SimpleContainer inventory){
+        ListTag nbtTags = new ListTag();
+
+        for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
+            var itemStack = inventory.getItem(slotId);
+            CompoundTag compoundNBT = new CompoundTag();
+            compoundNBT.putByte(SLOT_TAG, (byte) slotId);
+            itemStack.save(compoundNBT);
+            nbtTags.add(compoundNBT);
+        }
+
+        return nbtTags;
+    }
+
+    private void deserializeInventory(SimpleContainer inventory, ListTag nbtTags){
+        for (Tag nbt : nbtTags) {
+            var compoundNBT = (CompoundTag) nbt;
+            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
+            inventory.setItem(slotId, ItemStack.of(compoundNBT));
+        }
+    }
+
+    private void initInventory(){
+        SimpleContainer inventoryBuff = this.inventory;
+        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
+        if (inventoryBuff != null) {
+            inventoryBuff.removeListener(this);
+            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = inventoryBuff.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    this.inventory.setItem(j, itemstack.copy());
+                }
+            }
+        }
+        this.inventory.addListener(this);
+    }
+
+
 
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {
@@ -685,7 +624,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 //    }
 
     public void pushEntitiesAround(){
-        for(Entity entity : getEntitiesOfClass(3,1,3)) {
+        for(Entity entity : getEntitiesOfClass(3, 1,3)) {
             if (entity == this || entity == getControllingPassenger())
                 continue;
             double push = 0.5;
@@ -700,7 +639,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
     public void jump(){
-        this.playerJumpPendingScale = 1.0F;
+        playerJumpPendingScale = 1.0F;
     }
 
     @Override
@@ -710,10 +649,10 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController<PowerArmorEntity> controller = new AnimationController(this, "controller", 0, this::animateArms);
-        AnimationController<PowerArmorEntity> legsController = new AnimationController(this, "legs_controller", 0, this::animateLegs);
-        data.addAnimationController(controller);
-        data.addAnimationController(legsController);
+        AnimationController<PowerArmorEntity> armController = new AnimationController<>(this, "arm_controller", 0, this::animateArms);
+        AnimationController<PowerArmorEntity> legController = new AnimationController<>(this, "leg_controller", 0, this::animateLegs);
+        data.addAnimationController(armController);
+        data.addAnimationController(legController);
     }
 
     @Nullable
@@ -721,21 +660,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         if(getControllingPassenger() instanceof Player player)
             return player;
         return null;
-    }
-
-    private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
-        AnimationController<E> controller = event.getController();
-        controller.animationSpeed = 1.0D;
-
-        var player = getPlayer();
-        if (player != null) {
-            if (event.isMoving()) {
-                setAnimation(controller, "walk_legs", LOOP);
-                controller.animationSpeed = speedometer.getSpeed() * 4.0D;
-                return PlayState.CONTINUE;
-            }
-        }
-        return PlayState.STOP;
     }
 
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
@@ -763,6 +687,21 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
         setAnimation(controller, "idle", LOOP);
         return PlayState.CONTINUE;
+    }
+
+    private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
+        AnimationController<E> controller = event.getController();
+        controller.animationSpeed = 1.0D;
+
+        var player = getPlayer();
+        if (player != null) {
+            if (event.isMoving()) {
+                setAnimation(controller, "walk_legs", LOOP);
+                controller.animationSpeed = speedometer.getSpeed() * 4.0D;
+                return PlayState.CONTINUE;
+            }
+        }
+        return PlayState.STOP;
     }
 
     @NotNull

@@ -12,6 +12,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+
 public class PowerArmorContainer extends AbstractContainerMenu {
     public static final int SIZE = 6;
 
@@ -36,7 +38,7 @@ public class PowerArmorContainer extends AbstractContainerMenu {
     }
 
     public PowerArmorContainer(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
-        super(ContainerRegistry.DRAGON_CONTAINER.get(), containerId);
+        super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId);
 
         this.powerArmor = entity;
         this.armorInventory = container;
@@ -45,12 +47,12 @@ public class PowerArmorContainer extends AbstractContainerMenu {
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
 
-        createSlot( BodyPart.HEAD     , 117, 9  );
-        createSlot( BodyPart.BODY     , 117, 27 );
-        createSlot( BodyPart.RIGHT_ARM, 99 , 27 );
-        createSlot( BodyPart.LEFT_ARM , 135, 27 );
-        createSlot( BodyPart.RIGHT_LEG, 108, 45 );
-        createSlot( BodyPart.LEFT_LEG , 126, 45 );
+        createSlot(HEAD     , 117, 9 );
+        createSlot(BODY     , 117, 27);
+        createSlot(RIGHT_ARM, 99 , 27);
+        createSlot(LEFT_ARM , 135, 27);
+        createSlot(RIGHT_LEG, 108, 45);
+        createSlot(LEFT_LEG , 126, 45);
     }
 
     @Override

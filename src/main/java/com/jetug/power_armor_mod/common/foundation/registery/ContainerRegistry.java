@@ -12,7 +12,7 @@ public class ContainerRegistry {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister
             .create(ForgeRegistries.CONTAINERS, Global.MOD_ID);
 
-    public static final RegistryObject<MenuType<PowerArmorContainer>> DRAGON_CONTAINER
+    public static final RegistryObject<MenuType<PowerArmorContainer>> ARMOR_CONTAINER
             = CONTAINERS.register("power_armor", () -> new MenuType<>(PowerArmorContainer::new));
 
     public static void register(IEventBus eventBus) {
