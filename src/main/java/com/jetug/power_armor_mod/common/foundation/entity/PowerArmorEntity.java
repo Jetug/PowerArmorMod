@@ -53,14 +53,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 
-//    public final PowerArmorPartEntity headHitBox;
-//    public final PowerArmorPartEntity bodyHitBox;
-//    public final PowerArmorPartEntity leftArmHitBox;
-//    public final PowerArmorPartEntity rightArmHitBox;
-//    public final PowerArmorPartEntity leftLegHitBox;
-//    public final PowerArmorPartEntity rightLegHitBox;
-//    public final PowerArmorPartEntity[] subEntities;
-
     public final BodyPart[] parts = new BodyPart[]{
             HEAD      ,
             BODY      ,
@@ -70,7 +62,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
             RIGHT_LEG ,
     };
 
-    //private final Iterable<ItemStack> armorSlots;
     public final Speedometer speedometer = new Speedometer(this);
     public SimpleContainer inventory;
 
@@ -120,9 +111,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     }
 
 
-
-
-
     public ItemStack getItem(BodyPart part) {
         return inventory.getItem(part.ordinal());
     }
@@ -137,105 +125,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         loadInventory(compound);
-    }
-
-    public void openGUI(Player playerEntity) {
-        Global.referenceMob = this;
-
-        if (!this.level.isClientSide) {
-            playerEntity.openMenu(new MenuProvider() {
-                @Override
-                public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-                    return new PowerArmorContainer(p_createMenu_1_, inventory, p_createMenu_2_, PowerArmorEntity.this);
-                }
-
-                @Override
-                public Component getDisplayName() {
-                    return PowerArmorEntity.this.getDisplayName();
-                }
-            });
-        }
-    }
-
-    public boolean hasArmor(BodyPart bodyPart) {
-        return getArmorDurability(bodyPart) != 0;
-    }
-
-    public int getArmorDurability(BodyPart bodyPart) {
-        var isClientSide = getLevel().isClientSide;
-        var itemStack = inventory.getItem(bodyPart.getId());
-
-        if(itemStack.isEmpty()) return 0;
-
-        var dur = itemStack.getDamageValue();
-        var max = itemStack.getMaxDamage();
-        var res = max - dur;
-        return res;
-    }
-
-    public void damageArmor(BodyPart bodyPart, float damage) {
-        var itemStack = inventory.getItem(bodyPart.getId());
-        Global.LOGGER.info("damageArmor" + isClientSide);
-        if(!itemStack.isEmpty()){
-            var item = (PowerArmorItem)itemStack.getItem();
-            item.damageArmor(itemStack, 1);
-        }
-    }
-
-    public enum ArmorAction{
-        DASH
-    }
-
-    private boolean canDoAction(ArmorAction action){
-        return false;
-    }
-
-
-
-    public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof Player player) || !isOnGround())
-            return;
-
-        isDashing = true;
-        timer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
-        dashDirection = direction;
-
-        float viewYRot = player.getViewYRot(1);
-        float rotation = viewYRot * ROTATION;
-        float x = sin(rotation) * 3;
-        float z = cos(rotation) * 3;
-
-        Vec3 vector = new Vec3(-x, 0, z);
-
-        switch (direction) {
-            case FORWARD -> vector = new Vec3(-x, 0, z);
-            case BACK -> vector = new Vec3(x, 0, -z);
-            case RIGHT -> {
-                float rot = (viewYRot + 90) * ROTATION;
-                vector = new Vec3(-sin(rot), 0, cos(rot));
-            }
-            case LEFT -> {
-                float rot = (viewYRot - 90) * ROTATION;
-                vector = new Vec3(-sin(rot), 0, cos(rot));
-            }
-            case UP -> vector = new Vec3(0, 1, 0);
-        }
-
-        push(vector);
-    }
-
-    public void push(Vec3 vector){
-        setDeltaMovement(getDeltaMovement().add(vector));
-    }
-
-    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-//        if(isClientSide) {
-//            PacketHandler.sendToServer(new HurtPacket(this.getId(), damageSource, damage));
-//        }
-
-        damageArmor(part.bodyPart, damage);
-        return super.hurt(damageSource, damage);
-
     }
 
     @Override
@@ -287,10 +176,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
             }
         }
         return super.hurt(damageSource, damage);
-    }
-
-    public boolean isJumping() {
-        return this.isJumping;
     }
 
     @Override
@@ -501,8 +386,104 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         syncDataWithClient();
     }
 
-    public void doPlayerRide(Player player) {
 
+    public void openGUI(Player playerEntity) {
+        Global.referenceMob = this;
+
+        if (!this.level.isClientSide) {
+            playerEntity.openMenu(new MenuProvider() {
+                @Override
+                public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
+                    return new PowerArmorContainer(p_createMenu_1_, inventory, p_createMenu_2_, PowerArmorEntity.this);
+                }
+
+                @Override
+                public Component getDisplayName() {
+                    return PowerArmorEntity.this.getDisplayName();
+                }
+            });
+        }
+    }
+
+    public boolean hasArmor(BodyPart bodyPart) {
+        return getArmorDurability(bodyPart) != 0;
+    }
+
+    public int getArmorDurability(BodyPart bodyPart) {
+        var isClientSide = getLevel().isClientSide;
+        var itemStack = inventory.getItem(bodyPart.getId());
+
+        if(itemStack.isEmpty()) return 0;
+
+        var dur = itemStack.getDamageValue();
+        var max = itemStack.getMaxDamage();
+        var res = max - dur;
+        return res;
+    }
+
+    public void damageArmor(BodyPart bodyPart, float damage) {
+        var itemStack = inventory.getItem(bodyPart.getId());
+        Global.LOGGER.info("damageArmor" + isClientSide);
+        if(!itemStack.isEmpty()){
+            var item = (PowerArmorItem)itemStack.getItem();
+            item.damageArmor(itemStack, 1);
+        }
+    }
+
+    public enum ArmorAction{
+        DASH
+    }
+
+    private boolean canDoAction(ArmorAction action){
+        return false;
+    }
+
+    public void dash(DashDirection direction) {
+        if (!(getControllingPassenger() instanceof Player player) || !isOnGround())
+            return;
+
+        isDashing = true;
+        timer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
+        dashDirection = direction;
+
+        float viewYRot = player.getViewYRot(1);
+        float rotation = viewYRot * ROTATION;
+        float x = sin(rotation) * 3;
+        float z = cos(rotation) * 3;
+
+        Vec3 vector = new Vec3(-x, 0, z);
+
+        switch (direction) {
+            case FORWARD -> vector = new Vec3(-x, 0, z);
+            case BACK -> vector = new Vec3(x, 0, -z);
+            case RIGHT -> {
+                float rot = (viewYRot + 90) * ROTATION;
+                vector = new Vec3(-sin(rot), 0, cos(rot));
+            }
+            case LEFT -> {
+                float rot = (viewYRot - 90) * ROTATION;
+                vector = new Vec3(-sin(rot), 0, cos(rot));
+            }
+            case UP -> vector = new Vec3(0, 1, 0);
+        }
+
+        push(vector);
+    }
+
+    public void push(Vec3 vector){
+        setDeltaMovement(getDeltaMovement().add(vector));
+    }
+
+    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+        damageArmor(part.bodyPart, damage);
+        return super.hurt(damageSource, damage);
+    }
+
+    public boolean isJumping() {
+        return this.isJumping;
+    }
+
+    public void doPlayerRide(Player player) {
         player.setYRot(getYRot());
         player.setXRot(getXRot());
         player.startRiding(this);
