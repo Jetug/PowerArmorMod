@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.foundation.entity.IPowerArmor;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -11,7 +11,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import static com.jetug.power_armor_mod.common.util.constants.Bones.HEAD_BONE_NAME;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 
-public class PowerArmorModel<Type extends IPowerArmor & IAnimatable> extends AnimatedGeoModel<Type>
+public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {
     public PowerArmorModel(){
         super();

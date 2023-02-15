@@ -45,9 +45,7 @@ import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJumpingMount,*/ IPowerArmor, ContainerListener {
-    public static final String SLOT_TAG = "Slot";
-    public static final String ITEMS_TAG = "Items";
+public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
 
@@ -63,13 +61,9 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     };
 
     public final Speedometer speedometer = new Speedometer(this);
-    public SimpleContainer inventory;
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
-
-    private final boolean isClientSide = level.isClientSide;
-    private final boolean isServerSide = !level.isClientSide;
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final TickTimer timer = new TickTimer();
@@ -82,12 +76,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
-        noCulling = true;
-        initInventory();
-
-        timer.addTimer(new LoopTimerTask(() -> {
-            heat -= 1;
-        }));
+        timer.addTimer(new LoopTimerTask(() -> heat -= 1));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -113,18 +102,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
 
     public ItemStack getItem(BodyPart part) {
         return inventory.getItem(part.ordinal());
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        saveInventory(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        loadInventory(compound);
     }
 
     @Override
@@ -183,13 +160,12 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         super.tick();
 
         if(!level.isClientSide) {
-
             if(isDashing) {
                 pushEntitiesAround();
             }
         }
 
-        //syncDataWithClient();
+        syncDataWithClient();
         applyEffects();
 
         speedometer.tick();
@@ -209,15 +185,10 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
     @Override
     public void checkDespawn() {}
 
-    @Override
-    public boolean isPickable() {
-        return true;
-    }
-
-    @Override
-    public HumanoidArm getMainArm() {
-        return null;
-    }
+//    @Override
+//    public boolean isPickable() {
+//        return true;
+//    }
 
     @Override
     public boolean isInvisible() {
@@ -368,25 +339,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         }
     }
 
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return armorItems;
-    }
-
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot p_21127_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {}
-
-    @Override
-    public void containerChanged(@NotNull Container container) {
-        syncDataWithClient();
-    }
-
-
     public void openGUI(Player playerEntity) {
         Global.referenceMob = this;
 
@@ -405,30 +357,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         }
     }
 
-    public boolean hasArmor(BodyPart bodyPart) {
-        return getArmorDurability(bodyPart) != 0;
-    }
-
-    public int getArmorDurability(BodyPart bodyPart) {
-        var isClientSide = getLevel().isClientSide;
-        var itemStack = inventory.getItem(bodyPart.getId());
-
-        if(itemStack.isEmpty()) return 0;
-
-        var dur = itemStack.getDamageValue();
-        var max = itemStack.getMaxDamage();
-        var res = max - dur;
-        return res;
-    }
-
-    public void damageArmor(BodyPart bodyPart, float damage) {
-        var itemStack = inventory.getItem(bodyPart.getId());
-        Global.LOGGER.info("damageArmor" + isClientSide);
-        if(!itemStack.isEmpty()){
-            var item = (PowerArmorItem)itemStack.getItem();
-            item.damageArmor(itemStack, 1);
-        }
-    }
 
     public enum ArmorAction{
         DASH
@@ -489,16 +417,6 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         player.startRiding(this);
     }
 
-    public ArmorData getArmorData(){
-        var data = new ArmorData(getId());
-        data.inventory = serializeInventory(inventory);
-        return data;
-    }
-
-    public void setArmorData(ArmorData data){
-        deserializeInventory(inventory, data.inventory);
-    }
-
     public boolean hasPlayer(){
         return getControllingPassenger() instanceof Player;
     }
@@ -521,66 +439,7 @@ public class PowerArmorEntity extends LivingEntity implements IAnimatable, /*IJu
         player.addEffect(new MobEffectInstance(effect, PowerArmorEntity.EFFECT_DURATION, amplifier, false, false));
     }
 
-    private void syncDataWithClient() {
-        if(isServerSide) getArmorData().sentToClient();
-    }
 
-    private void syncDataWithServer() {
-        getArmorData().sentToServer();
-    }
-
-    public void setInventory(ListTag tags){
-        deserializeInventory(inventory, tags);
-    }
-
-    private void saveInventory(CompoundTag compound){
-        if (inventory == null) return;
-        compound.put(ITEMS_TAG, serializeInventory(inventory));
-    }
-
-    private void loadInventory(@NotNull CompoundTag compound) {
-        ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
-        initInventory();
-        deserializeInventory(inventory, nbtTags);
-    }
-
-    private ListTag serializeInventory(@NotNull SimpleContainer inventory){
-        ListTag nbtTags = new ListTag();
-
-        for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
-            var itemStack = inventory.getItem(slotId);
-            CompoundTag compoundNBT = new CompoundTag();
-            compoundNBT.putByte(SLOT_TAG, (byte) slotId);
-            itemStack.save(compoundNBT);
-            nbtTags.add(compoundNBT);
-        }
-
-        return nbtTags;
-    }
-
-    private void deserializeInventory(SimpleContainer inventory, ListTag nbtTags){
-        for (Tag nbt : nbtTags) {
-            var compoundNBT = (CompoundTag) nbt;
-            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
-            inventory.setItem(slotId, ItemStack.of(compoundNBT));
-        }
-    }
-
-    private void initInventory(){
-        SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
-        if (inventoryBuff != null) {
-            inventoryBuff.removeListener(this);
-            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
-            for (int j = 0; j < i; ++j) {
-                ItemStack itemstack = inventoryBuff.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
-                }
-            }
-        }
-        this.inventory.addListener(this);
-    }
 
 
 
