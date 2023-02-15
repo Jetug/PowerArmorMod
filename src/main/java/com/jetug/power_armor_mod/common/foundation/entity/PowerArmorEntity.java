@@ -50,16 +50,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final int EFFECT_DURATION = 9;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
-
-    public final BodyPart[] parts = new BodyPart[]{
-            HEAD      ,
-            BODY      ,
-            LEFT_ARM  ,
-            RIGHT_ARM ,
-            LEFT_LEG  ,
-            RIGHT_LEG ,
-    };
-
     public final Speedometer speedometer = new Speedometer(this);
 
     protected boolean isJumping;
@@ -88,17 +78,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 .add(Attributes.JUMP_STRENGTH, 0.5D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
-
-    public Iterable<ItemStack> getPartSlots(){
-        var items = new ArrayList<ItemStack>();
-
-        for(int i = 0; i < PowerArmorContainer.SIZE; i++){
-            items.add(inventory.getItem(i));
-        }
-
-        return items;
-    }
-
 
     public ItemStack getItem(BodyPart part) {
         return inventory.getItem(part.ordinal());

@@ -23,14 +23,38 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.ArrayList;
+
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.RIGHT_LEG;
+
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
+
+    public final BodyPart[] parts = new BodyPart[]{
+            HEAD      ,
+            BODY      ,
+            LEFT_ARM  ,
+            RIGHT_ARM ,
+            LEFT_LEG  ,
+            RIGHT_LEG ,
+    };
 
     public SimpleContainer inventory;
 
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
+
+    public Iterable<ItemStack> getPartSlots(){
+        var items = new ArrayList<ItemStack>();
+
+        for(int i = 0; i < PowerArmorContainer.SIZE; i++){
+            items.add(inventory.getItem(i));
+        }
+
+        return items;
+    }
 
     public boolean hasArmor(BodyPart bodyPart) {
         return getArmorDurability(bodyPart) != 0;
