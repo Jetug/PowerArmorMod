@@ -4,6 +4,7 @@ import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +28,8 @@ public class PowerArmorContainer extends AbstractContainerMenu {
     private static final int SLOT_SIZE = 18;
     private static final int INVENTORY_POS_X = 8;
     private static final int INVENTORY_POS_Y = 84;
-    private static final int HOTBAR_POS_Y = 141;
+    private static final int HOTBAR_POS_Y = 142;
+    private static final int HOTBAR_POS_X = INVENTORY_POS_X;
     private static final int INVENTORY_ROW_SIZE = 9;
 
     private final PowerArmorEntity powerArmor;
@@ -39,7 +41,6 @@ public class PowerArmorContainer extends AbstractContainerMenu {
 
     public PowerArmorContainer(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
         super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId);
-
         this.powerArmor = entity;
         this.armorInventory = container;
         this.armorInventory.startOpen(playerInventory.player);
@@ -108,7 +109,7 @@ public class PowerArmorContainer extends AbstractContainerMenu {
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int slot = 0; slot < 9; ++slot) {
-            this.addSlot(new Slot(playerInventory, slot, INVENTORY_POS_X + slot * SLOT_SIZE, HOTBAR_POS_Y));
+            this.addSlot(new Slot(playerInventory, slot, HOTBAR_POS_X + slot * SLOT_SIZE, HOTBAR_POS_Y));
         }
     }
 

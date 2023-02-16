@@ -22,6 +22,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     public PowerArmorGui(PowerArmorContainer container, Inventory inventory, Component name) {
         super(container, inventory, name);
         //this.imageHeight = 214;
+
     }
 
     @Override

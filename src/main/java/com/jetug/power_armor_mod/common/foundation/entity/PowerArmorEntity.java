@@ -155,7 +155,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void aiStep() {
         super.aiStep();
 
-        if(getControllingPassenger() instanceof Player player) {
+        if(hasPlayer()) {
             this.yHeadRot = this.getYRot();
             //this.yBodyRot = player.yBodyRot;
         }
@@ -192,18 +192,19 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.log(INFO, level.isClientSide);
         ItemStack stack = player.getItemInHand(hand);
 
-        if (stack.getItem() == Items.STICK)
-            return giveEntityItemToPlayer(player, this, hand);
-        if (player.isShiftKeyDown()) {
-            openGUI(player);
-            return InteractionResult.SUCCESS;
-        }
-        else if(!isVehicle()) {
-            this.doPlayerRide(player);
-            return InteractionResult.SUCCESS;
+        if(isServerSide) {
+            if (stack.getItem() == Items.STICK)
+                return giveEntityItemToPlayer(player, this, hand);
+            if (player.isShiftKeyDown()) {
+                openGUI(player);
+                return InteractionResult.SUCCESS;
+            } else if (!isVehicle()) {
+                this.doPlayerRide(player);
+                return InteractionResult.SUCCESS;
+            }
         }
 
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+        return InteractionResult.PASS;
     }
 
     @Nullable
@@ -281,6 +282,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Override
+    protected float tickHeadTurn(float pYRot, float pAnimStep) {
+        if(hasPlayer())
+            return super.tickHeadTurn(pYRot, pAnimStep);
+        return pAnimStep;
+    }
+
+    @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
@@ -320,7 +328,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void openGUI(Player playerEntity) {
         Global.referenceMob = this;
 
-        if (!this.level.isClientSide) {
+        if (isServerSide) {
             playerEntity.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {

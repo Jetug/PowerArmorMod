@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
@@ -15,9 +16,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 
 public class ArmorFrameItem extends Item {
+
     public ArmorFrameItem() {
         super((new Item.Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
     }
@@ -45,27 +49,37 @@ public class ArmorFrameItem extends Item {
     private static void summonSavedEntity(Entity savedEntity, UseOnContext context) {
         var stack = context.getItemInHand();
 
-        savedEntity.absMoveTo(context.getClickedPos().getX() + 0.5D,
-                (context.getClickedPos().getY() + 1),
-                context.getClickedPos().getZ() + 0.5D,
-                180 + (context.getHorizontalDirection()).toYRot(), 0.0F);
+        moveEntityToClickedBlock(savedEntity, context);
 
         if (context.getLevel().addFreshEntity(savedEntity)) {
             clearItemTags(stack);
-            stack.shrink(1);
+
+            context.getPlayer().getInventory().removeItem(stack);
+
+            //stack.shrink(1);
         }
     }
 
     private static void summonNewEntity(UseOnContext context) {
         var stack = context.getItemInHand();
         var world = context.getLevel();
-
-        context.getClickedPos();
         var entity = new PowerArmorEntity(EntityTypeRegistry.POWER_ARMOR.get(), world);
-        entity.setPos(context.getClickLocation());
+        //entity.setPos(context.getClickLocation());
+        moveEntityToClickedBlock(entity, context);
 
         if (world.addFreshEntity(entity)) {
             stack.shrink(1);
         }
     }
+
+
+    private static void moveEntityToClickedBlock(Entity savedEntity, UseOnContext context) {
+        var clickedPos = context.getClickedPos();
+        savedEntity.absMoveTo(
+                clickedPos.getX() + 0.5D,
+                clickedPos.getY() + 1,
+                clickedPos.getZ() + 0.5D,
+                180 + (context.getHorizontalDirection()).toYRot(), 0.0F);
+    }
+
 }
