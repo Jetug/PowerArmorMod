@@ -154,20 +154,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     @Override
     public void aiStep() {
         super.aiStep();
-
-        if(hasPlayer()) {
-            this.yHeadRot = this.getYRot();
-            //this.yBodyRot = player.yBodyRot;
-        }
+        if(hasPlayer()) this.yHeadRot = this.getYRot();
     }
 
     @Override
     public void checkDespawn() {}
-
-//    @Override
-//    public boolean isPickable() {
-//        return true;
-//    }
 
     @Override
     public boolean isInvisible() {
@@ -208,6 +199,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Nullable
+    @Override
     public Entity getControllingPassenger() {
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
