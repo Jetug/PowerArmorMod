@@ -1,8 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
@@ -10,7 +8,6 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -24,6 +21,7 @@ import net.minecraft.world.entity.player.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
@@ -36,10 +34,10 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.foundation.registery.ItemsRegistry.*;
+import static com.jetug.power_armor_mod.common.foundation.EntityHelper.giveEntityItemToPlayer;
+import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
@@ -131,7 +129,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 }
             }
         }
-        return super.hurt(damageSource, damage);
+
+        //return super.hurt(damageSource, damage);
+        return true;
     }
 
     @Override
@@ -181,10 +181,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        if (super.isInvulnerableTo(damageSource)) {
+        if (super.isInvulnerableTo(damageSource))
             return true;
-        }
-        else return damageSource.getEntity() == getControllingPassenger();
+        else
+            return damageSource.getEntity() == getControllingPassenger();
     }
 
     @Override
@@ -192,9 +192,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.log(INFO, level.isClientSide);
         ItemStack stack = player.getItemInHand(hand);
 
-        if (stack.getItem() == PA_FRAME.get())
-            return InteractionResult.PASS;
-
+        if (stack.getItem() == Items.STICK)
+            return giveEntityItemToPlayer(player, this, hand);
         if (player.isShiftKeyDown()) {
             openGUI(player);
             return InteractionResult.SUCCESS;

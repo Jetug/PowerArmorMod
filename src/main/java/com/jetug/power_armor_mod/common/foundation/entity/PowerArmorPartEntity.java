@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypesRegistry.POWER_ARMOR_PART;
+import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry.POWER_ARMOR_PART;
 import static org.apache.logging.log4j.Level.INFO;
 
 public class PowerArmorPartEntity extends Entity{

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.test.block.custom;
 
-import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitiesRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
 import com.jetug.power_armor_mod.test.block.entity.custom.GemCuttingStationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -102,7 +102,7 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, BlockEntitiesRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY.get(),
+        return createTickerHelper(pBlockEntityType, BlockEntitieRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY.get(),
                 GemCuttingStationBlockEntity::tick);
     }
 }

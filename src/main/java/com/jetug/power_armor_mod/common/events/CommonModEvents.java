@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.registery.EntityTypesRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public class CommonModEvents {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(EntityTypesRegistry.POWER_ARMOR.get(), PowerArmorEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.POWER_ARMOR.get(), PowerArmorEntity.createAttributes().build());
     }
 
     @SubscribeEvent

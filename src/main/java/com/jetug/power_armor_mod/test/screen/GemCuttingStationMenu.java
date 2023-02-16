@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.test.screen;
 
-import com.jetug.power_armor_mod.common.foundation.registery.BlocksRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
 import com.jetug.power_armor_mod.test.block.entity.custom.GemCuttingStationBlockEntity;
 import com.jetug.power_armor_mod.test.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -95,7 +95,7 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, BlocksRegistry.GEM_CUTTING_STATION.get());
+                pPlayer, BlockRegistry.GEM_CUTTING_STATION.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

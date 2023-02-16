@@ -71,9 +71,6 @@ public class ArmorFrameOrig extends Item {
             var world = context.getLevel();
             var id = stack.getTag().getString(DRAGON_HORN_ENTITY_ID);
             var type = EntityType.byString(id).orElse(null);
-
-            //world.addFreshEntity(new PowerArmorEntity(EntityTypesRegistry.POWER_ARMOR.get(), world));
-
             if (type != null) {
                 Entity entity = type.create(world);
 

@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
+import com.jetug.power_armor_mod.common.foundation.PowerArmorMaterial;
 import com.jetug.power_armor_mod.common.json.ArmorPartSettings;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
@@ -11,10 +12,10 @@ import net.minecraft.world.item.ItemStack;
 public class PowerArmorItem extends Item {
     public static final String DAMAGE_KEY = "Damage";
     private ArmorPartSettings armorPartSettings = null;
-    private final ModArmorMaterials material;
+    private final PowerArmorMaterial material;
     public final BodyPart part;
 
-    public PowerArmorItem(ModArmorMaterials material, BodyPart part) {
+    public PowerArmorItem(PowerArmorMaterial material, BodyPart part) {
         super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB));
         this.material = material;
         this.part = part;

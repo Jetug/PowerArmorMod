@@ -1,8 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.item.ArmorFrame;
-import com.jetug.power_armor_mod.common.foundation.item.ModArmorMaterials;
+import com.jetug.power_armor_mod.common.foundation.item.ArmorFrameItem;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.item.Item;
@@ -11,31 +10,32 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static com.jetug.power_armor_mod.common.util.constants.Global.*;
+import static com.jetug.power_armor_mod.common.foundation.registery.ArmorMaterialRegistry.IRON;
+import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
 
-public class ItemsRegistry {
+public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorFrame::new);
+    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorFrameItem::new);
 
     public static final RegistryObject<Item> PA_HELMET = ITEMS.register("pa_helmet", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.HEAD));
+            new PowerArmorItem(IRON, BodyPart.HEAD));
 
     public static final RegistryObject<Item> PA_BODY = ITEMS.register("pa_body", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.BODY));
+            new PowerArmorItem(IRON, BodyPart.BODY));
 
     public static final RegistryObject<Item> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.RIGHT_ARM));
+            new PowerArmorItem(IRON, BodyPart.RIGHT_ARM));
 
     public static final RegistryObject<Item> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.LEFT_ARM));
+            new PowerArmorItem(IRON, BodyPart.LEFT_ARM));
 
     public static final RegistryObject<Item> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.RIGHT_LEG));
+            new PowerArmorItem(IRON, BodyPart.RIGHT_LEG));
 
     public static final RegistryObject<Item> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
-            new PowerArmorItem(ModArmorMaterials.IRON, BodyPart.LEFT_LEG));
+            new PowerArmorItem(IRON, BodyPart.LEFT_LEG));
 
     //tutor
     public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",

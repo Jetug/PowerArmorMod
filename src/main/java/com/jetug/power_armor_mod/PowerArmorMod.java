@@ -22,10 +22,10 @@ public class PowerArmorMod {
 
     private void register() {
         ContainerRegistry.register(MOD_EVENT_BUS);
-        BlockEntitiesRegistry.register(MOD_EVENT_BUS);
-        BlocksRegistry.register(MOD_EVENT_BUS);
-        EntityTypesRegistry.register(MOD_EVENT_BUS);
+        BlockEntitieRegistry.register(MOD_EVENT_BUS);
+        BlockRegistry.register(MOD_EVENT_BUS);
+        EntityTypeRegistry.register(MOD_EVENT_BUS);
         ModMenuTypes.register(MOD_EVENT_BUS);
-        ItemsRegistry.register(MOD_EVENT_BUS);
+        ItemRegistry.register(MOD_EVENT_BUS);
     }
 }
