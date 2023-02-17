@@ -37,8 +37,7 @@ public class MixinProjectileUtil {
                 return filter.test(levelEntity) && isNotPowerArmorEntity && isNotPowerArmorPartEntity;
             };
 
-            var result = originalMethod(cameraEntity, eyePosition, pickVector, box, newFilter, pickRange, info);
-            info.setReturnValue(result);
+            info.setReturnValue(originalMethod(cameraEntity, eyePosition, pickVector, box, newFilter, pickRange, info));
         }
     }
 

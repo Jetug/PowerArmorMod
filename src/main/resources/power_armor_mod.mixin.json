@@ -3,6 +3,8 @@
   "package": "com.jetug.power_armor_mod.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "CreativeInventoryScreenMixin",
+    "InventoryScreenMixin",
     "MixinProjectileUtil"
   ],
   "injectors": {

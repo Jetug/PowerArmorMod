@@ -10,6 +10,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 import static com.jetug.power_armor_mod.common.foundation.registery.ArmorMaterialRegistry.IRON;
 import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
 
@@ -47,9 +49,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GEM_CUTTER_TOOL = ITEMS.register("gem_cutter_tool",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).durability(32)));
 
-
-
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
+    }
+
+    private static <I extends Item> I registerItem(final String name, final Supplier<? extends I> sup){
+        return ITEMS.register(name, sup).get();
     }
 }
