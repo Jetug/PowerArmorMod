@@ -17,16 +17,16 @@ import net.minecraft.world.entity.player.Inventory;
 import java.awt.*;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
-import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 import static net.minecraft.world.item.Items.*;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
 public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
     public static final float MIN_SCALE = 0.0001F;
+    public static final int TABS_WIDTH = 57;
 
     private float mousePosX;
     private float mousePosY;
@@ -59,16 +59,20 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
         Pos2D playerIconPos = TOP_TAB_ICON_POS_1;
         Pos2D paIconPos     = TOP_TAB_ICON_POS_2;
 
-        if(minecraft.player.isCreative()){
-            playerIconPos = BOTTOM_TAB_ICON_POS_1;
-            paIconPos     = BOTTOM_TAB_ICON_POS_2;
+        if (minecraft.player.isCreative()) {
+            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , getRight() - 6 - 16, getBottom() + 4);
+            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), getRight() - 35 - 16, getBottom() + 4);
         }
-        else{
-
+        else {
+            this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos + -20);
+            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + 35, topPos + -20);
         }
+    }
 
-        this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + playerIconPos.x, topPos + playerIconPos.y);
-        this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + paIconPos.x, topPos + paIconPos.y);
+    @Override
+    protected void init() {
+        super.init();
+
     }
 
     @Override
@@ -82,15 +86,21 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
             renderEntity(powerArmor);
         }
 
-        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-        this.blit(poseStack, leftPos, topPos - 28, 0, 32, 57, 62);
+        if(minecraft.player.isCreative()){
+            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
+            this.blit(poseStack, getRight() - TABS_WIDTH, getBottom() - 4, 0, 32, TABS_WIDTH, 62);
+        }
+        else{
+            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
+            this.blit(poseStack, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
+        }
     }
 
-    private double getRight(){
+    private int getRight(){
         return leftPos + imageWidth;
     }
 
-    private double getBottom(){
+    private int getBottom(){
         return topPos + imageHeight;
     }
 

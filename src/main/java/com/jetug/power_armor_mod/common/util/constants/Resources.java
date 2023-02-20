@@ -12,6 +12,7 @@ public class Resources {
     public static final ResourceLocation ARMOR_ANIMATION_LOCATION = resourceLocation("animations/armor.animation.json");
     public static final ResourceLocation INVISIBLE_TEXTURE = resourceLocation("textures/entities/power_armor_invisible.png");
     public static final ResourceLocation PLAYER_INVENTORY_TABS = resourceLocation("textures/gui/player_inventory_switch_tabs.png");
+    public static final ResourceLocation PLAYER_INVENTORY_BOTTOM_TABS = resourceLocation("textures/gui/player_inventory_tabs_bottom.png");
 
     public static ResourceLocation resourceLocation(String location){
         return new ResourceLocation(Global.MOD_ID, location);
