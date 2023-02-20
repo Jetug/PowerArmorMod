@@ -48,7 +48,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.awt.*;
+
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
+import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_HEIGHT;
+import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_WIDTH;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.PLAYER_INVENTORY_TABS;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 
@@ -70,8 +74,11 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 //
 //
 //        }
-
-        doServerAction(ActionType.OPEN_GUI);
+        //doServerAction(ActionType.OPEN_GUI);
+        var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
+        if(rect.contains(mouseX, mouseY)){
+            doServerAction(ActionType.OPEN_GUI);
+        }
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))

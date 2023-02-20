@@ -22,27 +22,35 @@
 
 package com.jetug.power_armor_mod.mixin;
 
-import com.mojang.blaze3d.platform.*;
-import com.mojang.blaze3d.systems.*;
-import com.mojang.blaze3d.vertex.*;
-import io.netty.buffer.Unpooled;
-import net.minecraft.client.gui.screens.inventory.*;
-import net.minecraft.client.gui.screens.recipebook.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.*;
-import net.minecraft.world.entity.player.*;
-import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.*;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.*;
-import com.jetug.power_armor_mod.common.foundation.registery.*;
+import java.awt.*;
+
+import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
+import static com.jetug.power_armor_mod.common.network.PacketSender.*;
+import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
+import static net.minecraft.world.item.Items.*;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -52,6 +60,8 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.i
 public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
     @Shadow @Final private RecipeBookComponent recipeBookComponent;
 
+    @Shadow public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
+
     public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
@@ -59,16 +69,17 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if(!isWearingPowerArmor()) return;
-/*        if (GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
-                && GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
-            ClientPlayNetworking.send(Constant.Packet.OPEN_GC_INVENTORY, new FriendlyByteBuf(Unpooled.buffer(0)));
-        }*/
-        //CreativeModeInventoryScreen
+
+        var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
+        if(rect.contains(mouseX, mouseY)){
+            doServerAction(ActionType.OPEN_GUI);
+        }
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         if(!isWearingPowerArmor()) return;
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
@@ -78,9 +89,12 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if(!isWearingPowerArmor()) return;
+
         Lighting.setupFor3DItems();
-        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(ItemRegistry.PA_FRAME.get().getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,
+                topPos + TOP_TAB_ICON_POS_1.y);
+        itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_2.x,
+                topPos + TOP_TAB_ICON_POS_2.y);
         Lighting.setupForFlatItems();
     }
 }
