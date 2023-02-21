@@ -34,6 +34,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     public PowerArmorGui(PowerArmorContainer container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
         var rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
