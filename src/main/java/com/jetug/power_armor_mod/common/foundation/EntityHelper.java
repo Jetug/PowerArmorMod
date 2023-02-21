@@ -71,6 +71,7 @@ public class EntityHelper {
         return null;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void clearItemTags(ItemStack stack){
         CompoundTag tag = stack.getTag();
         tag.remove(ITEM_ENTITY_ID);
@@ -78,5 +79,4 @@ public class EntityHelper {
         tag.remove(ENTITY_UUID);
         stack.setTag(tag);
     }
-
 }

@@ -27,22 +27,16 @@ import com.jetug.power_armor_mod.common.util.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -50,15 +44,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
 
+import static com.jetug.power_armor_mod.client.gui.PowerArmorGui.TABS_WIDTH;
+import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_HEIGHT;
 import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_WIDTH;
+import static com.jetug.power_armor_mod.common.util.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.PLAYER_INVENTORY_TABS;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static net.minecraft.world.item.Items.CHEST;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+@SuppressWarnings("DataFlowIssue")
 @Mixin(CreativeModeInventoryScreen.class)
 @OnlyIn(Dist.CLIENT)
 public abstract class CreativeInventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
@@ -69,33 +68,38 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if(!isWearingPowerArmor()) return;
-//        if (GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), leftPos + 30, leftPos + 59)
-//                && GCPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), topPos - 26, topPos)) {
-//
-//
-//        }
-        //doServerAction(ActionType.OPEN_GUI);
-        var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
+        var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
             doServerAction(ActionType.OPEN_GUI);
         }
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
+    public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
         if(!isWearingPowerArmor()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-        this.blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
+
+        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
+        this.blit(poseStack, getRight() - TABS_WIDTH, getBottom() - 4, 0, 0, TABS_WIDTH, 32);
+//
+//        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
+//        this.blit(poseStack, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if(!isWearingPowerArmor()) return;
         Lighting.setupFor3DItems();
-        this.itemRenderer.renderAndDecorateItem(Items.CRAFTING_TABLE.getDefaultInstance(), this.leftPos + 6, this.topPos - 20);
-        this.itemRenderer.renderAndDecorateItem(ItemRegistry.PA_FRAME.get().getDefaultInstance(), this.leftPos + 35, this.topPos - 20);
+        this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), getRight() - 30 - 16, getBottom() + 4);
         Lighting.setupForFlatItems();
+    }
+
+    private int getRight(){
+        return leftPos + imageWidth;
+    }
+
+    private int getBottom(){
+        return topPos + imageHeight;
     }
 }

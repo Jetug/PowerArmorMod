@@ -37,7 +37,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.giveEntityItemToPlayer;
-import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
@@ -317,14 +316,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-    public void openGUI(Player playerEntity) {
+    public void openGUI(Player player) {
         Global.referenceMob = this;
 
         if (isServerSide) {
-            playerEntity.openMenu(new MenuProvider() {
+            player.openMenu(new MenuProvider() {
                 @Override
-                public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-                    return new PowerArmorContainer(p_createMenu_1_, inventory, p_createMenu_2_, PowerArmorEntity.this);
+                public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
+                    return new PowerArmorContainer(id, inventory, menu, PowerArmorEntity.this);
                 }
 
                 @Override

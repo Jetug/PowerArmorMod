@@ -30,6 +30,8 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
 
     private float mousePosX;
     private float mousePosY;
+    private int right;
+    private int bottom;
 
     public PowerArmorGui(PowerArmorContainer container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -39,6 +41,11 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
         var rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
 
+        if (minecraft.player.isCreative()) {
+            rect = new Rectangle(right - 25, bottom, 25, TAB_HEIGHT);
+        } else {
+            rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
+        }
         if(rect.contains(mouseX, mouseY)){
             minecraft.setScreen(new InventoryScreen(minecraft.player));
         }
@@ -57,14 +64,10 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
         this.renderTooltip(matrixStack, mouseX, mouseY);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        Pos2D playerIconPos = TOP_TAB_ICON_POS_1;
-        Pos2D paIconPos     = TOP_TAB_ICON_POS_2;
-
         if (minecraft.player.isCreative()) {
-            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , getRight() - 6 - 16, getBottom() + 4);
-            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), getRight() - 35 - 16, getBottom() + 4);
-        }
-        else {
+            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , right - 6  - 16, bottom + 4);
+            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), right - 30 - 16, bottom + 4);
+        } else {
             this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos + -20);
             this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + 35, topPos + -20);
         }
@@ -73,7 +76,12 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     @Override
     protected void init() {
         super.init();
+        right = getRight();
+        bottom = getBottom();
 
+//        addWidget(new Button(leftPos, topPos, 50, 50, new TextComponent("TEST"), (c) -> {
+//            minecraft.setScreen(new InventoryScreen(minecraft.player));
+//        }));
     }
 
     @Override
@@ -89,7 +97,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
 
         if(minecraft.player.isCreative()){
             RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
-            this.blit(poseStack, getRight() - TABS_WIDTH, getBottom() - 4, 0, 32, TABS_WIDTH, 62);
+            this.blit(poseStack, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
         }
         else{
             RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
