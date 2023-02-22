@@ -84,49 +84,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public boolean hurt(DamageSource damageSource, float damage) {
         Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
 
-        if(!isClientSide){
+        if(isServerSide){
             damageArmor(HEAD     , damage);
             damageArmor(BODY     , damage);
             damageArmor(LEFT_ARM , damage);
             damageArmor(RIGHT_ARM, damage);
             damageArmor(LEFT_LEG , damage);
             damageArmor(RIGHT_LEG, damage);
-        }
-       
-        var attacker = damageSource.getEntity();
-        if(attacker != null) {
-            var minecraft = Minecraft.getInstance();
-            minecraft.getProfiler().push("pick");
-            minecraft.crosshairPickEntity = null;
-            double d0 = attacker.getPickRadius();
-
-            Vec3 vec3 = this.getEyePosition();
-            double d1 = d0;
-
-            d1 *= d1;
-            if (minecraft.hitResult != null) {
-                d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
-            }
-
-            Vec3 vec31 = attacker.getViewVector(1.0F);
-            Vec3 vec32 = vec3.add(vec31.x * d0, vec31.y * d0, vec31.z * d0);
-            AABB aabb = attacker.getBoundingBox().expandTowards(vec31.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
-
-            var entityHitResult = ProjectileUtil.getEntityHitResult(attacker, vec3, vec32, aabb, (p_172770_) ->
-                    !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
-
-            //if(entityHitResult != null)
-            if (entityHitResult != null) {
-                var loc = entityHitResult.getLocation();
-                var attackerAye = attacker.getEyePosition();
-                var attackerForward = attacker.getForward();
-                var attackVector = attackerAye.subtract(this.getEyePosition()).add(attackerForward);
-                var headAABB = new AABB(position().add(0, 2.1, 0), position().add(0.6, 2.1 + 0.6, 0.6));
-                //var headAABB = new AABB(new Vec3(0, 2.1, 0), new Vec3(0.6, 2.1 + 0.6, 0.6));
-                if (headAABB.contains(loc)) {
-                    Global.LOGGER.log(INFO, "HURT HEAD");
-                }
-            }
         }
 
         //return super.hurt(damageSource, damage);
@@ -379,10 +343,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         setDeltaMovement(getDeltaMovement().add(vector));
     }
 
-    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-        damageArmor(part.bodyPart, damage);
-        return super.hurt(damageSource, damage);
-    }
+//    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
+//        damageArmor(part.bodyPart, damage);
+//        return super.hurt(damageSource, damage);
+//    }
 
     public boolean isJumping() {
         return this.isJumping;
