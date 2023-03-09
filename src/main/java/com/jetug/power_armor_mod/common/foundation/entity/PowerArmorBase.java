@@ -67,15 +67,6 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return res;
     }
 
-    public void damageArmor(BodyPart bodyPart, float damage) {
-        var itemStack = inventory.getItem(bodyPart.getId());
-        Global.LOGGER.info("damageArmor" + isClientSide);
-        if(!itemStack.isEmpty()){
-            var item = (PowerArmorItem)itemStack.getItem();
-            item.damageArmor(itemStack, 1);
-        }
-    }
-
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);

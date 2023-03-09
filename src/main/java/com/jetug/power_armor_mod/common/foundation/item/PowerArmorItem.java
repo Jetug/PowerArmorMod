@@ -6,6 +6,7 @@ import com.jetug.power_armor_mod.common.json.ArmorPartSettings;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,6 +27,14 @@ public class PowerArmorItem extends Item {
             armorPartSettings = ClientConfig.resourceManager.getPartSettings(part);
 
         return armorPartSettings;
+    }
+
+    public PowerArmorMaterial getMaterial(){
+        return material;
+    }
+
+    public float getDamageAfterAbsorb(float damage){
+        return CombatRules.getDamageAfterAbsorb(damage, material.getDefenseForSlot(part), material.getToughness());
     }
 
     public static int getArmorDamage(ItemStack itemStack) {

@@ -20,6 +20,15 @@ public class PlayerExtension {
         return player.getVehicle() instanceof PowerArmorEntity;
     }
 
+    public static PowerArmorEntity getLocalPlayerArmor(){
+        try{
+            return (PowerArmorEntity) Minecraft.getInstance().player.getVehicle();
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
     public static void stopWearingArmor(LocalPlayer player) {
         player.stopRiding();
         doServerAction(ActionType.DISMOUNT);

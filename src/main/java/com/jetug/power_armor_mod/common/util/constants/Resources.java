@@ -11,8 +11,17 @@ public class Resources {
     public static final ResourceLocation ARMOR_TEXTURE_LOCATION = resourceLocation("textures/entities/armor.png");
     public static final ResourceLocation ARMOR_ANIMATION_LOCATION = resourceLocation("animations/armor.animation.json");
     public static final ResourceLocation INVISIBLE_TEXTURE = resourceLocation("textures/entities/power_armor_invisible.png");
+
     public static final ResourceLocation PLAYER_INVENTORY_TABS = resourceLocation("textures/gui/player_inventory_switch_tabs.png");
     public static final ResourceLocation PLAYER_INVENTORY_BOTTOM_TABS = resourceLocation("textures/gui/player_inventory_tabs_bottom.png");
+    public static final ResourceLocation ICONS_LOCATION = new ResourceLocation(Global.MOD_ID ,"textures/gui/icons.png");
+
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_HEAD      = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_head.png");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_BODY      = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_body.png");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_LEFT_ARM  = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_left_arm.png");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_RIGHT_ARM = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_right_arm.png");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_LEFT_LEG  = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_left_leg.png");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_RIGHT_LEG = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_right_leg.png");
 
     public static ResourceLocation resourceLocation(String location){
         return new ResourceLocation(Global.MOD_ID, location);

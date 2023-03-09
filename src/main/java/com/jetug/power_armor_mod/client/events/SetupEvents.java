@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
+import com.jetug.power_armor_mod.client.gui.HeatRenderer;
 import com.jetug.power_armor_mod.client.gui.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.InputController;
 import com.jetug.power_armor_mod.client.input.LongClickController;
@@ -15,6 +16,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
@@ -44,11 +47,17 @@ public final class SetupEvents {
         event.enqueueWork(GuiRegistry::register);
         ClientConfig.resourceManager.loadConfigs();
         registerClickListeners();
+        setupGui(event);
     }
 
     private static void registerClickListeners() {
         DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
         LONG_CLICK_CONTROLLER.addRepeatListener(InputController::onRepeat);
         LONG_CLICK_CONTROLLER.addReleaseListener(InputController::onLongRelease);
+    }
+
+    public static void setupGui(FMLClientSetupEvent event)
+    {
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Armor heat", new HeatRenderer());
     }
 }

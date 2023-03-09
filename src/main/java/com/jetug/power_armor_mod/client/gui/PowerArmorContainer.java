@@ -3,17 +3,25 @@ package com.jetug.power_armor_mod.client.gui;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
+import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import net.minecraft.client.gui.components.Button;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
+import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
+import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
 
 public class PowerArmorContainer extends AbstractContainerMenu {
     public static final int SIZE = 6;
@@ -32,12 +40,25 @@ public class PowerArmorContainer extends AbstractContainerMenu {
     private static final int HOTBAR_POS_X = INVENTORY_POS_X;
     private static final int INVENTORY_ROW_SIZE = 9;
 
+
+    static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]
+            {
+                    EMPTY_ARMOR_SLOT_HEAD,
+                    EMPTY_ARMOR_SLOT_BODY,
+                    EMPTY_ARMOR_SLOT_LEFT_ARM,
+                    EMPTY_ARMOR_SLOT_RIGHT_ARM,
+                    EMPTY_ARMOR_SLOT_LEFT_LEG,
+                    EMPTY_ARMOR_SLOT_RIGHT_LEG
+            };
+
+
     private final PowerArmorEntity powerArmor;
     private final Container armorInventory;
 
     public PowerArmorContainer(int i, Inventory playerInventory) {
         this(i, new SimpleContainer(SIZE), playerInventory, null);
     }
+
 
     public PowerArmorContainer(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
         super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId);
@@ -48,12 +69,12 @@ public class PowerArmorContainer extends AbstractContainerMenu {
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
 
-        createSlot(HEAD     , 117, 9 );
-        createSlot(BODY     , 117, 27);
-        createSlot(RIGHT_ARM, 99 , 27);
-        createSlot(LEFT_ARM , 135, 27);
-        createSlot(RIGHT_LEG, 108, 45);
-        createSlot(LEFT_LEG , 126, 45);
+        createSlot(HEAD     , HEAD_SLOT_POS     );
+        createSlot(BODY     , BODY_SLOT_POS     );
+        createSlot(LEFT_ARM , RIGHT_ARM_SLOT_POS);
+        createSlot(RIGHT_ARM, LEFT_ARM_SLOT_POS );
+        createSlot(LEFT_LEG , RIGHT_LEG_SLOT_POS);
+        createSlot(RIGHT_LEG, LEFT_LEG_SLOT_POS );
     }
 
     @Override
@@ -113,19 +134,23 @@ public class PowerArmorContainer extends AbstractContainerMenu {
         }
     }
 
-    private void createSlot(BodyPart bodyPart, int x, int y){
-        this.addSlot(new Slot(armorInventory, bodyPart.getId(), x, y) {
+    private void createSlot(BodyPart bodyPart, Pos2D pos){
+        this.addSlot(new Slot(armorInventory, bodyPart.getId(), pos.x, pos.y) {
             @Override
             public void setChanged() {
                 container.setChanged();
             }
-
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return super.mayPlace(stack)
                         && stack.getItem() instanceof PowerArmorItem item
                         && item.part == bodyPart;
             }
+
+//            @Override
+//            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+//                return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_HEAD);
+//            }
         });
     }
 }

@@ -3,22 +3,24 @@ package com.jetug.power_armor_mod.client.gui;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import oshi.util.tuples.Pair;
 
 import java.awt.*;
 
+import static com.jetug.power_armor_mod.client.gui.PowerArmorContainer.*;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.world.item.Items.*;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
@@ -38,6 +40,20 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     }
 
     @Override
+    protected void init() {
+        super.init();
+        right = getRight();
+        bottom = getBottom();
+
+//        addWidget(new Button(leftPos, topPos, 50, 50, new TextComponent("TEST"), (c) -> {
+//            minecraft.setScreen(new InventoryScreen(minecraft.player));
+//        }));
+    }
+
+    @Override
+    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {}
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
         var rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
 
@@ -54,15 +70,10 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {}
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.mousePosX = mouseX;
         this.mousePosY = mouseY;
-        this.renderTooltip(matrixStack, mouseX, mouseY);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
 
         if (minecraft.player.isCreative()) {
             this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , right - 6  - 16, bottom + 4);
@@ -71,18 +82,34 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
             this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos + -20);
             this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + 35, topPos + -20);
         }
+
+        this.renderBackground(poseStack);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
+        //RenderSystem.setShaderTexture(0, ICONS_LOCATION);
+
+        renderIcon(HEAD     , EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
+        renderIcon(BODY     , EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
+        renderIcon(LEFT_ARM , EMPTY_ARMOR_SLOT_LEFT_ARM , poseStack, RIGHT_ARM_SLOT_POS);
+        renderIcon(RIGHT_ARM, EMPTY_ARMOR_SLOT_RIGHT_ARM, poseStack, LEFT_ARM_SLOT_POS );
+        renderIcon(LEFT_LEG , EMPTY_ARMOR_SLOT_LEFT_LEG , poseStack, RIGHT_LEG_SLOT_POS);
+        renderIcon(RIGHT_LEG, EMPTY_ARMOR_SLOT_RIGHT_LEG, poseStack, LEFT_LEG_SLOT_POS );
+
+        this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        right = getRight();
-        bottom = getBottom();
-
-//        addWidget(new Button(leftPos, topPos, 50, 50, new TextComponent("TEST"), (c) -> {
-//            minecraft.setScreen(new InventoryScreen(minecraft.player));
-//        }));
+    private void renderIcon(BodyPart bodyPart, PoseStack poseStack, Pos2D pos, Rectangle icon){
+        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getItem().isEmpty())
+            blit(poseStack, leftPos + pos.x, topPos + pos.y, icon.x, icon.y, icon.width, icon.height);
     }
+
+    private void renderIcon(BodyPart bodyPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2D pos){
+        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getItem().isEmpty()) {
+            RenderSystem.setShaderTexture(0, pTextureId);
+            blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
+        //}
+    }
+
 
     @Override
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {

@@ -79,11 +79,11 @@ public class PowerArmorPartEntity extends Entity{
         return false;
     }
 
-    @Override
-    public boolean hurt(DamageSource damageSource, float damage) {
-        Global.LOGGER.log(INFO, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
-        return this.parentMob.hurt(this, damageSource, damage);
-    }
+//    @Override
+//    public boolean hurt(DamageSource damageSource, float damage) {
+//        Global.LOGGER.log(INFO, bodyPart.getName() + " : " + getDurability() + " isClientSide: " + level.isClientSide);
+//        return this.parentMob.hurt(this, damageSource, damage);
+//    }
 
     @Override
     public boolean is(@NotNull Entity entity) {

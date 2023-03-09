@@ -77,7 +77,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-        this.blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
+        blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))

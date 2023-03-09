@@ -1,16 +1,20 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
+import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +22,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -45,6 +48,8 @@ import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes
 public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
+    public static final String HEAT = "Heat";
+    public static final int DASH_HEAT = 100;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     public final Speedometer speedometer = new Speedometer(this);
@@ -58,8 +63,24 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
-    private int maxHeat = 100;
-    private int heat = 0;
+    private int maxHeat = 1000;
+    private int heat = 50;
+
+    public void addHeat(int value){
+        if(value + heat <= maxHeat)
+            heat += value;
+        else heat = maxHeat;
+    }
+
+    public int getHeat(){
+        return heat;
+    }
+
+    public int getHeatInPercent(){
+        float dd = (float)heat / maxHeat * 100;
+        int i = (int)dd ;
+        return i;
+    }
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -81,23 +102,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float damage) {
-        Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
-
-        if(isServerSide){
-            damageArmor(HEAD     , damage);
-            damageArmor(BODY     , damage);
-            damageArmor(LEFT_ARM , damage);
-            damageArmor(RIGHT_ARM, damage);
-            damageArmor(LEFT_LEG , damage);
-            damageArmor(RIGHT_LEG, damage);
-        }
-
-        //return super.hurt(damageSource, damage);
-        return true;
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -115,13 +119,84 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt(HEAT, heat);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        heat = compound.getInt(HEAT);
+
+    }
+
+    @Override
+    public boolean hurt(DamageSource damageSource, float damage) {
+        Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
+
+        if(isServerSide){
+            damageArmorItem(HEAD     , damage, damageSource);
+            damageArmorItem(BODY     , damage, damageSource);
+            damageArmorItem(LEFT_ARM , damage, damageSource);
+            damageArmorItem(RIGHT_ARM, damage, damageSource);
+            damageArmorItem(LEFT_LEG , damage, damageSource);
+            damageArmorItem(RIGHT_LEG, damage, damageSource);
+        }
+
+        return true;
+    }
+
+    public void damageArmorItem(BodyPart bodyPart, float damage, DamageSource damageSource) {
+        Global.LOGGER.info("damageArmorItem" + isClientSide);
+
+        var itemStack = inventory.getItem(bodyPart.getId());
+
+        if(!itemStack.isEmpty()){
+            var item = (PowerArmorItem)itemStack.getItem();
+            var trueDamage = ((PowerArmorItem)itemStack.getItem()).getDamageAfterAbsorb(damage);
+            item.damageArmor(itemStack, (int)trueDamage);
+        }
+    }
+
+    public float getPlayerDamageValue(DamageSource damageSource, float damage){
+        var itemStack = inventory.getItem(BODY.ordinal());
+        if(!itemStack.isEmpty()) {
+            return ((PowerArmorItem) itemStack.getItem()).getDamageAfterAbsorb(damage);
+        }
+        return damage;
+    }
+
+    public void hurtPart(BodyPart bodyPart, DamageSource damageSource, float damage) {
+
+    }
+
+    @Override
+    public boolean causeFallDamage(float height, float multiplier, DamageSource damageSource) {
+        if (height > 1) this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
+        if(height > 4) pushEntitiesAround();
+
+        int damage = this.calculateFallDamage(height, multiplier);
+        if (damage <= 0) {
+            return false;
+        } else {
+            this.hurt(damageSource, damage);
+            if (this.isVehicle()) {
+                for(Entity entity : this.getIndirectPassengers()) {
+                    entity.hurt(damageSource, (float) damage);
+                }
+            }
+
+            this.playBlockFallSound();
+            return true;
+        }
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         if(hasPlayer()) this.yHeadRot = this.getYRot();
     }
-
-    @Override
-    public void checkDespawn() {}
 
     @Override
     public boolean isInvisible() {
@@ -244,6 +319,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
+        return super.getDismountLocationForPassenger(p_20123_);
+    }
+
+    @Override
+    public void checkDespawn() {}
+
+    @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
@@ -251,33 +334,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     @Override
     public boolean canBeRiddenInWater(Entity rider) {
         return true;
-    }
-
-    @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
-        return super.getDismountLocationForPassenger(p_20123_);
-    }
-
-    @Override
-    public boolean causeFallDamage(float height, float p_149500_, @NotNull DamageSource p_149501_) {
-        if (height > 1.0F) {
-            this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
-        }
-
-        int damage = this.calculateFallDamage(height, p_149500_);
-        if (damage <= 0) {
-            return false;
-        } else {
-            this.hurt(p_149501_, damage);
-            if (this.isVehicle()) {
-                for(Entity entity : this.getIndirectPassengers()) {
-                    entity.hurt(p_149501_, (float) damage);
-                }
-            }
-
-            this.playBlockFallSound();
-            return true;
-        }
     }
 
     public void openGUI(Player player) {
@@ -298,29 +354,42 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-
-    public enum ArmorAction{
-        DASH
+    public void doPlayerRide(Player player) {
+        player.setYRot(getYRot());
+        player.setXRot(getXRot());
+        player.startRiding(this);
     }
 
-    private boolean canDoAction(ArmorAction action){
-        return false;
+    public boolean hasPlayer(){
+        return getControllingPassenger() instanceof Player;
+    }
+
+    public void jump(){
+        playerJumpPendingScale = 1.0F;
     }
 
     public void dash(DashDirection direction) {
-        if (!(getControllingPassenger() instanceof Player player) || !isOnGround())
+        doHeatAction(DASH_HEAT, () -> _dash(direction));
+    }
+
+    public void push(Vec3 vector){
+        setDeltaMovement(getDeltaMovement().add(vector));
+    }
+
+    private void _dash(DashDirection direction){
+        if (!(getControllingPassenger() instanceof Player player))
             return;
 
         isDashing = true;
-        timer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
         dashDirection = direction;
+        timer.addTimer(new PlayOnceTimerTask(10, () -> isDashing = false));
 
         float viewYRot = player.getViewYRot(1);
         float rotation = viewYRot * ROTATION;
         float x = sin(rotation) * 3;
         float z = cos(rotation) * 3;
 
-        Vec3 vector = new Vec3(-x, 0, z);
+        var vector = new Vec3(-x, 0, z);
 
         switch (direction) {
             case FORWARD -> vector = new Vec3(-x, 0, z);
@@ -339,28 +408,27 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         push(vector);
     }
 
-    public void push(Vec3 vector){
-        setDeltaMovement(getDeltaMovement().add(vector));
+    private void doHeatAction(int heat, SimpleAction action){
+        if(!canDoAction(heat)) return;
+        action.execute();
+        addHeat(heat);
+    }
+
+    private boolean canDoAction(int heat){
+        return heat + this.heat <= maxHeat;
     }
 
 //    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-//        damageArmor(part.bodyPart, damage);
+//        damageArmorItem(part.bodyPart, damage);
 //        return super.hurt(damageSource, damage);
 //    }
 
-    public boolean isJumping() {
+
+
+    private boolean isJumping() {
         return this.isJumping;
     }
 
-    public void doPlayerRide(Player player) {
-        player.setYRot(getYRot());
-        player.setXRot(getXRot());
-        player.startRiding(this);
-    }
-
-    public boolean hasPlayer(){
-        return getControllingPassenger() instanceof Player;
-    }
 
     private double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
@@ -379,10 +447,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private void addEffect(Player player, MobEffect effect, int amplifier){
         player.addEffect(new MobEffectInstance(effect, PowerArmorEntity.EFFECT_DURATION, amplifier, false, false));
     }
-
-
-
-
 
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {
@@ -404,7 +468,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //        }
 //    }
 
-    public void pushEntitiesAround(){
+    private void pushEntitiesAround(){
         for(Entity entity : getEntitiesOfClass(3, 1,3)) {
             if (entity == this || entity == getControllingPassenger())
                 continue;
@@ -417,10 +481,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     private List<Entity> getEntitiesOfClass(double x, double y, double z) {
         return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
-    }
-
-    public void jump(){
-        playerJumpPendingScale = 1.0F;
     }
 
     @Override

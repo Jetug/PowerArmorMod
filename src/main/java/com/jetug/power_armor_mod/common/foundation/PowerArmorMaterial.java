@@ -12,16 +12,18 @@ public class PowerArmorMaterial {
     private final String name;
     private final int durabilityMultiplier;
     private final int[] slotProtections;
+    private final float toughness;
     private final int enchantmentValue;
     private final SoundEvent sound;
     private final float knockbackResistance;
     private final LazyLoadedValue<Ingredient> repairIngredient;
 
-    public PowerArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, int enchantmentValue,
+    public PowerArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, float toughness,  int enchantmentValue,
                               SoundEvent sound, float knockbackResistance, Supplier<Ingredient> p_40481_) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
         this.slotProtections = slotProtections;
+        this.toughness = toughness;
         this.enchantmentValue = enchantmentValue;
         this.sound = sound;
         this.knockbackResistance = knockbackResistance;
@@ -50,6 +52,10 @@ public class PowerArmorMaterial {
 
     public String getName() {
         return this.name;
+    }
+
+    public float getToughness() {
+        return this.toughness;
     }
 
     public float getKnockbackResistance() {

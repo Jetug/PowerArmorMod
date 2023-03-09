@@ -54,7 +54,7 @@ public class PowerArmorPartEntityOrig extends PartEntity<PowerArmorEntity> {
     }
 
 //    public void damage(float damage){
-//        parentMob.damageArmor(bodyPart, damage);
+//        parentMob.damageArmorItem(bodyPart, damage);
 //    }
 
 //    @Override
