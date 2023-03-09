@@ -3,7 +3,6 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
-import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
@@ -20,7 +19,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
 
-    public final BodyPart[] parts = new BodyPart[]{
+    public final BodyPart[] armorParts = new BodyPart[]{
             HEAD      ,
             BODY      ,
             LEFT_ARM  ,
@@ -33,6 +32,8 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
+    protected float totalDefense;
+    protected float totalToughness;
 
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
@@ -54,6 +55,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         initInventory();
         syncDataWithClient();
         syncDataWithClient();
+        getTotalArmor();
     }
 
     public int getArmorDurability(BodyPart bodyPart) {
@@ -63,8 +65,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
         var dur = itemStack.getDamageValue();
         var max = itemStack.getMaxDamage();
-        var res = max - dur;
-        return res;
+        return max - dur;
     }
 
     @Override
@@ -82,6 +83,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     @Override
     public void containerChanged(@NotNull Container container) {
         syncDataWithClient();
+        getTotalArmor();
     }
 
     public ArmorData getArmorData(){
@@ -131,6 +133,19 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             }
         }
         this.inventory.addListener(this);
+    }
+
+    private void getTotalArmor(){
+        totalDefense   = 0;
+        totalToughness = 0;
+
+        for (var part : armorParts){
+            var itemStack = inventory.getItem(part.ordinal());
+            if (!itemStack.isEmpty()){
+                totalDefense += ((PowerArmorItem)itemStack.getItem()).getMaterial().getDefenseForSlot(part);
+                totalToughness += ((PowerArmorItem)itemStack.getItem()).getMaterial().getToughness();
+            }
+        }
     }
 
     private ListTag serializeInventory(@NotNull SimpleContainer inventory){

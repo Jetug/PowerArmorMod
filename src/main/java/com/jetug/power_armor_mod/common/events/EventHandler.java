@@ -35,10 +35,10 @@ public class EventHandler {
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
-        if(event.getEntity() instanceof Player player && isWearingPowerArmor(player)){
-            var damage = ((PowerArmorEntity)player.getVehicle()).getPlayerDamageValue(event.getSource(), event.getAmount());
-            player.hurt(event.getSource(), damage);
-            event.setCanceled(true);
-        }
+//        if(event.getEntity() instanceof Player player && isWearingPowerArmor(player)){
+//            var damage = ((PowerArmorEntity)player.getVehicle()).getPlayerDamageValue(event.getSource(), event.getAmount());
+//            player.hurt(event.getSource(), damage);
+//            event.setCanceled(true);
+//        }
     }
 }

@@ -67,7 +67,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private int heat = 50;
 
     public void addHeat(int value){
-        if(value + heat <= maxHeat)
+        if(value <= 0) return;
+
+        if(heat + value <= maxHeat)
             heat += value;
         else heat = maxHeat;
     }
@@ -131,44 +133,38 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     }
 
+    private float getDamageAfterAbsorb(float damage){
+        return CombatRules.getDamageAfterAbsorb(damage, totalDefense,totalToughness);
+    }
+
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
 
+        float finalDamage = getDamageAfterAbsorb(damage);
+
+        if (hasPlayer())
+            getPlayer().hurt(damageSource, finalDamage);
+
         if(isServerSide){
-            damageArmorItem(HEAD     , damage, damageSource);
-            damageArmorItem(BODY     , damage, damageSource);
-            damageArmorItem(LEFT_ARM , damage, damageSource);
-            damageArmorItem(RIGHT_ARM, damage, damageSource);
-            damageArmorItem(LEFT_LEG , damage, damageSource);
-            damageArmorItem(RIGHT_LEG, damage, damageSource);
+            damageArmorItem(HEAD     ,damageSource , damage);
+            damageArmorItem(BODY     ,damageSource , damage);
+            damageArmorItem(LEFT_ARM ,damageSource , damage);
+            damageArmorItem(RIGHT_ARM,damageSource , damage);
         }
 
         return true;
     }
 
-    public void damageArmorItem(BodyPart bodyPart, float damage, DamageSource damageSource) {
+    public void damageArmorItem(BodyPart bodyPart, DamageSource damageSource, float damage) {
         Global.LOGGER.info("damageArmorItem" + isClientSide);
 
         var itemStack = inventory.getItem(bodyPart.getId());
 
         if(!itemStack.isEmpty()){
             var item = (PowerArmorItem)itemStack.getItem();
-            var trueDamage = ((PowerArmorItem)itemStack.getItem()).getDamageAfterAbsorb(damage);
-            item.damageArmor(itemStack, (int)trueDamage);
+            item.damageArmor(itemStack, (int) damage);
         }
-    }
-
-    public float getPlayerDamageValue(DamageSource damageSource, float damage){
-        var itemStack = inventory.getItem(BODY.ordinal());
-        if(!itemStack.isEmpty()) {
-            return ((PowerArmorItem) itemStack.getItem()).getDamageAfterAbsorb(damage);
-        }
-        return damage;
-    }
-
-    public void hurtPart(BodyPart bodyPart, DamageSource damageSource, float damage) {
-
     }
 
     @Override
@@ -177,19 +173,22 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         if(height > 4) pushEntitiesAround();
 
         int damage = this.calculateFallDamage(height, multiplier);
-        if (damage <= 0) {
+        if (damage <= 0)
             return false;
-        } else {
-            this.hurt(damageSource, damage);
-            if (this.isVehicle()) {
-                for(Entity entity : this.getIndirectPassengers()) {
-                    entity.hurt(damageSource, (float) damage);
-                }
-            }
 
-            this.playBlockFallSound();
-            return true;
-        }
+        damageArmorItem(LEFT_LEG , damageSource , damage);
+        damageArmorItem(RIGHT_LEG, damageSource , damage);
+
+        this.hurt(damageSource, damage);
+
+//        if (this.isVehicle()) {
+//            for(Entity entity : this.getIndirectPassengers()) {
+//                entity.hurt(damageSource, (float) damage);
+//            }
+//        }
+
+        this.playBlockFallSound();
+        return true;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.ibm.icu.impl.Pair;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.model.ArmorModel;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
@@ -17,10 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-
-import java.util.Map;
-
-import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
@@ -52,7 +47,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void updateArmor(PowerArmorEntity entity){
-        for (var part : entity.parts) {
+        for (var part : entity.armorParts) {
             var itemStack = entity.getItem(part);
             if (!itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack)) {
                 updateModel(part, itemStack, true);
