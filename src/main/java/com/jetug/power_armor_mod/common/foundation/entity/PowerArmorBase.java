@@ -23,6 +23,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.getInPerc
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
     public static final String SLOT_TAG = "Slot";
     public static final String ITEMS_TAG = "Items";
+    public static final int MAX_ATTACK_CHARGE = 60;
 
     public final BodyPart[] armorParts = new BodyPart[]{
             HEAD      ,
@@ -95,6 +96,10 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     public int getHeatInPercent(){
         return getInPercents(heat, maxHeat);
+    }
+
+    public int getAttackChargeInPercent(){
+        return getInPercents(attackCharge, MAX_ATTACK_CHARGE);
     }
 
     public Iterable<ItemStack> getPartSlots(){

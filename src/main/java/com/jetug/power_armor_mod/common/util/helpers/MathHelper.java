@@ -5,7 +5,7 @@ public class MathHelper {
        return (int)((float)value / maxValue * 100);
     }
 
-    public float getPercentOf(int value, int percents){
+    public static float getPercentOf(int value, int percents){
         return value * ((float)percents / 100.0f);
     }
 }
