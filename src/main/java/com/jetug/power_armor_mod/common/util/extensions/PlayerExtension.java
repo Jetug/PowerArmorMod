@@ -29,6 +29,15 @@ public class PlayerExtension {
         }
     }
 
+    public static PowerArmorEntity getPlayerArmor(Player player){
+        try{
+            return (PowerArmorEntity) player.getVehicle();
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
     public static void stopWearingArmor(LocalPlayer player) {
         player.stopRiding();
         doServerAction(ActionType.DISMOUNT);

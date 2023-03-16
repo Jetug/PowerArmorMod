@@ -4,6 +4,7 @@ import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 
+import static com.jetug.power_armor_mod.common.network.data.ArmorData.HEAT;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
@@ -34,6 +36,36 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     protected final boolean isServerSide = !level.isClientSide;
     protected float totalDefense;
     protected float totalToughness;
+    protected int maxHeat = 1000;
+    protected int heat = 50;
+
+    public void addHeat(int value){
+        if(value <= 0) return;
+
+        if(heat + value <= maxHeat)
+            heat += value;
+        else heat = maxHeat;
+    }
+
+    public int getHeat(){
+        return heat;
+    }
+
+    protected void doHeatAction(int heat, SimpleAction action){
+        if(!canDoAction(heat)) return;
+        action.execute();
+        addHeat(heat);
+    }
+
+    protected boolean canDoAction(int heat){
+        return heat + this.heat <= maxHeat;
+    }
+
+    public int getHeatInPercent(){
+        float dd = (float)heat / maxHeat * 100;
+        int i = (int)dd ;
+        return i;
+    }
 
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
@@ -72,12 +104,14 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         saveInventory(compound);
+        compound.putInt(HEAT, heat);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         loadInventory(compound);
+        heat = compound.getInt(HEAT);
     }
 
     @Override
@@ -89,11 +123,13 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
         data.inventory = serializeInventory(inventory);
+        //data.heat = heat;
         return data;
     }
 
     public void setArmorData(ArmorData data){
         deserializeInventory(inventory, data.inventory);
+        //heat = data.heat;
     }
 
     public void setInventory(ListTag tags){

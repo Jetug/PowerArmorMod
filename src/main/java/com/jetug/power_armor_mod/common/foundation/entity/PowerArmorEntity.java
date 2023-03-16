@@ -6,11 +6,9 @@ import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
-import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
@@ -48,8 +46,8 @@ import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes
 public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
-    public static final String HEAT = "Heat";
     public static final int DASH_HEAT = 100;
+    public static final int MAX_ATTACK_CHARGE = 100;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     public final Speedometer speedometer = new Speedometer(this);
@@ -63,26 +61,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
-    private int maxHeat = 1000;
-    private int heat = 50;
-
-    public void addHeat(int value){
-        if(value <= 0) return;
-
-        if(heat + value <= maxHeat)
-            heat += value;
-        else heat = maxHeat;
-    }
-
-    public int getHeat(){
-        return heat;
-    }
-
-    public int getHeatInPercent(){
-        float dd = (float)heat / maxHeat * 100;
-        int i = (int)dd ;
-        return i;
-    }
+    private int attackCharge = 0;
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -120,19 +99,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         timer.tick();
     }
 
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt(HEAT, heat);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        heat = compound.getInt(HEAT);
-
-    }
-
     private float getDamageAfterAbsorb(float damage){
         return CombatRules.getDamageAfterAbsorb(damage, totalDefense,totalToughness);
     }
@@ -143,14 +109,19 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
         float finalDamage = getDamageAfterAbsorb(damage);
 
-        if (hasPlayer())
-            getPlayer().hurt(damageSource, finalDamage);
+        if (hasPlayerPassenger())
+            getPlayerPassenger().hurt(damageSource, finalDamage);
 
         if(isServerSide){
             damageArmorItem(HEAD     ,damageSource , damage);
             damageArmorItem(BODY     ,damageSource , damage);
             damageArmorItem(LEFT_ARM ,damageSource , damage);
             damageArmorItem(RIGHT_ARM,damageSource , damage);
+
+            if(damageSource == DamageSource.FALL) {
+                damageArmorItem(LEFT_LEG, damageSource, damage);
+                damageArmorItem(RIGHT_LEG, damageSource, damage);
+            }
         }
 
         return true;
@@ -176,8 +147,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         if (damage <= 0)
             return false;
 
-        damageArmorItem(LEFT_LEG , damageSource , damage);
-        damageArmorItem(RIGHT_LEG, damageSource , damage);
+
 
         this.hurt(damageSource, damage);
 
@@ -194,7 +164,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(hasPlayer()) this.yHeadRot = this.getYRot();
+        if(hasPlayerPassenger()) this.yHeadRot = this.getYRot();
     }
 
     @Override
@@ -312,7 +282,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     protected float tickHeadTurn(float pYRot, float pAnimStep) {
-        if(hasPlayer())
+        if(hasPlayerPassenger())
             return super.tickHeadTurn(pYRot, pAnimStep);
         return pAnimStep;
     }
@@ -353,13 +323,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-    public void doPlayerRide(Player player) {
-        player.setYRot(getYRot());
-        player.setXRot(getXRot());
-        player.startRiding(this);
-    }
-
-    public boolean hasPlayer(){
+    public boolean hasPlayerPassenger(){
         return getControllingPassenger() instanceof Player;
     }
 
@@ -373,6 +337,22 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     public void push(Vec3 vector){
         setDeltaMovement(getDeltaMovement().add(vector));
+    }
+
+    public void punchTarget(Entity target){
+        if(!hasPlayerPassenger()) return;
+        var vector = getPlayerPassenger().getViewVector(1.0F);
+        target.push(vector.x * 20, 0, vector.z * 20);
+    }
+
+
+    public void addAttackCharge(int attackCharge) {
+        if(this.attackCharge + attackCharge <= MAX_ATTACK_CHARGE)
+            this.attackCharge += attackCharge;
+    }
+
+    public void resetAttackCharge() {
+        this.attackCharge = 0;
     }
 
     private void _dash(DashDirection direction){
@@ -407,22 +387,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         push(vector);
     }
 
-    private void doHeatAction(int heat, SimpleAction action){
-        if(!canDoAction(heat)) return;
-        action.execute();
-        addHeat(heat);
+    private void doPlayerRide(Player player) {
+        player.setYRot(getYRot());
+        player.setXRot(getXRot());
+        player.startRiding(this);
     }
-
-    private boolean canDoAction(int heat){
-        return heat + this.heat <= maxHeat;
-    }
-
-//    public boolean hurt(PowerArmorPartEntity part, DamageSource damageSource, float damage) {
-//        damageArmorItem(part.bodyPart, damage);
-//        return super.hurt(damageSource, damage);
-//    }
-
-
 
     private boolean isJumping() {
         return this.isJumping;
@@ -434,7 +403,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     private void applyEffects(){
-        var player = getPlayer();
+        var player = getPlayerPassenger();
 
         if(player != null) {
             addEffect(player, MobEffects.DIG_SPEED         , 1);
@@ -496,7 +465,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     @Nullable
-    private Player getPlayer(){
+    public Player getPlayerPassenger(){
         if(getControllingPassenger() instanceof Player player)
             return player;
         return null;
@@ -506,7 +475,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
 
-        var player = getPlayer();
+        var player = getPlayerPassenger();
         if (player != null) {
             if (player.attackAnim > 0) {
                 controller.animationSpeed = 2.0D;
@@ -533,7 +502,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
 
-        var player = getPlayer();
+        var player = getPlayerPassenger();
         if (player != null) {
             if (event.isMoving()) {
                 setAnimation(controller, "walk_legs", LOOP);
@@ -544,7 +513,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.STOP;
     }
 
-    @NotNull
     private <E extends IAnimatable> PlayState animateDash(AnimationController<E> controller) {
         switch (dashDirection) {
             case FORWARD -> {

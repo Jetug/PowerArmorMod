@@ -2,22 +2,18 @@ package com.jetug.power_armor_mod.common.network.data;
 
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.PowerArmorPacket;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.RIGHT_LEG;
-
 public class ArmorData {
     public static final String INVENTORY = "inventory";
+    public static final String HEAT = "Heat";
+    public static final String ID = "ID";
 
     public int entityId = -1;
     public ListTag inventory;
+    public int heat;
 
     public ArmorData() {}
 
@@ -26,16 +22,18 @@ public class ArmorData {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt("ID", entityId);
+        var nbt = new CompoundTag();
+        nbt.putInt(ID, entityId);
         nbt.put(INVENTORY, inventory);
+        nbt.putInt(HEAT, heat);
 
         return nbt;
     }
 
     public void deserializeNBT(CompoundTag nbt) {
-        entityId = nbt.getInt("ID");
+        entityId = nbt.getInt(ID);
         inventory = (ListTag)nbt.get(INVENTORY);
+        heat = nbt.getInt(HEAT);
     }
 
     public void sentToClientPlayer(ServerPlayer player) {

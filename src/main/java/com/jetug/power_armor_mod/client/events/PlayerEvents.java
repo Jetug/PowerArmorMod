@@ -28,8 +28,7 @@ public class PlayerEvents
         var target = event.getTarget();
 
         if(isWearingPowerArmor(player)){
-            var vector = player.getViewVector(1.0F);
-            target.push(vector.x * 20, 0, vector.z * 20);
+            getPlayerArmor(player).punchTarget(target);
         }
     }
 
@@ -43,12 +42,12 @@ public class PlayerEvents
 //        var ent = new PowerArmorEntity(EntityType.VEX, mc.level);
 //
 //        Minecraft.getInstance().getRenderManager().getRenderer(entity.getClass())
-//                .doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
+//                .doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayerPassenger().rotationYaw, event.getPartialRenderTick());
 //
 //
 //        Entity entity = EntityType.byKey(GodsCrownItem.getSelectedMorphMobOf(stack).toString()).get().create(event.getEntity().world);
 //        Minecraft.getInstance().levelRenderer.getRenderManager()
-//                .getRenderer(entity.getClass()).doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayer().rotationYaw, event.getPartialRenderTick());
+//                .getRenderer(entity.getClass()).doRender(entity, event.getX(), event.getY(), event.getZ(), event.getPlayerPassenger().rotationYaw, event.getPartialRenderTick());
 //
 //
 //        float x = 5.0F;
@@ -101,7 +100,7 @@ public class PlayerEvents
 //    @SubscribeEvent()
 //    public static void onCollide( event)
 //    {
-//        Player player = event.getPlayer();
+//        Player player = event.getPlayerPassenger();
 //        Entity target = event.getTarget();
 //
 //        if(isWearingPowerArmor(player)){

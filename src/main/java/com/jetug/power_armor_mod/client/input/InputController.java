@@ -13,7 +13,6 @@ import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 public class InputController {
-
     public static void onDoubleClick(InputEvent.KeyInputEvent event){
         if (getLocalPlayer() == null || !isWearingPowerArmor()) return;
 
@@ -42,26 +41,26 @@ public class InputController {
     }
 
     public static void onRepeat(int key, int ticks){
-        var minecraft = Minecraft.getInstance();
-        var player = minecraft.player;
-
         if (isWearingPowerArmor()) {
-            var entity = (PowerArmorEntity) player.getVehicle();
-            assert entity != null;
             var options = Minecraft.getInstance().options;
             Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
+
+            if(keysEqual(key, options.keyUse)){
+                var pa = getLocalPlayerArmor();
+                pa.addAttackCharge(1);
+            }
         }
     }
 
     public static void onLongRelease(int key, int ticks){
-        var minecraft = Minecraft.getInstance();
-        var player = minecraft.player;
-
         if (isWearingPowerArmor()) {
-            var entity = (PowerArmorEntity) player.getVehicle();
-            assert entity != null;
             var options = Minecraft.getInstance().options;
             Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
+
+            if(keysEqual(key, options.keyUse)){
+                var pa = getLocalPlayerArmor();
+                pa.resetAttackCharge();
+            }
         }
     }
 

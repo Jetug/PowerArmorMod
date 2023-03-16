@@ -69,7 +69,7 @@ public class PowerArmorItem extends Item {
 
 //    @Override
 //    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-//        context.getItemInHand().hurtAndBreak(1, Objects.requireNonNull(context.getPlayer()),
+//        context.getItemInHand().hurtAndBreak(1, Objects.requireNonNull(context.getPlayerPassenger()),
 //                (player) -> player.broadcastBreakEvent(player.getUsedItemHand()));
 //
 //        return super.onItemUseFirst(stack, context);
