@@ -53,11 +53,22 @@ public class InputController {
     }
 
     public static void onLongRelease(int key, int ticks){
+//        if (isWearingPowerArmor()) {
+//            var options = Minecraft.getInstance().options;
+//            Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
+//
+//            if(keysEqual(key, options.keyUse)){
+//                var pa = getLocalPlayerArmor();
+//                pa.resetAttackCharge();
+//            }
+//        }
+    }
+
+    public static void onRelease(int key){
         if (isWearingPowerArmor()) {
             var options = Minecraft.getInstance().options;
-            Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
 
-            if(keysEqual(key, options.keyUse)){
+            if(keysEqual(key, options.keyUse, options.keyAttack) ){
                 var pa = getLocalPlayerArmor();
                 pa.resetAttackCharge();
             }
@@ -66,5 +77,12 @@ public class InputController {
 
     private static boolean keysEqual(int key1, KeyMapping key2){
         return key1 == key2.getKey().getValue();
+    }
+
+    private static boolean keysEqual(int key1, KeyMapping... arguments){
+        for (KeyMapping argument : arguments)
+            if(key1 == argument.getKey().getValue()) return true;
+
+        return false;
     }
 }

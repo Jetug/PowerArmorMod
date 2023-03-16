@@ -47,7 +47,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
     public static final int DASH_HEAT = 100;
-    public static final int MAX_ATTACK_CHARGE = 100;
+    public static final int MAX_ATTACK_CHARGE = 60;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     public final Speedometer speedometer = new Speedometer(this);
@@ -56,16 +56,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     protected float playerJumpPendingScale;
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    private final TickTimer timer = new TickTimer();
 
     private boolean isDashing = false;
     private DashDirection dashDirection;
 
-    private int attackCharge = 0;
+
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
         super(type, worldIn);
-        timer.addTimer(new LoopTimerTask(() -> heat -= 1));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -342,7 +340,16 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void punchTarget(Entity target){
         if(!hasPlayerPassenger()) return;
         var vector = getPlayerPassenger().getViewVector(1.0F);
-        target.push(vector.x * 20, 0, vector.z * 20);
+
+        var force = 0;
+        if(attackCharge < 10) force = 1;
+        else if(attackCharge < 30) force = 10;
+        else if(attackCharge < 40) force = 15;
+        else force = 20;
+
+        target.push(vector.x * force, 0, vector.z * force);
+
+        Global.LOGGER.log(ERROR, "punchTarget Client: " + attackCharge);
     }
 
 
