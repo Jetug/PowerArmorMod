@@ -21,13 +21,6 @@ public class PowerArmorItem extends PaItemBase {
         this.part = part;
     }
 
-    public ArmorPartSettings getSettings(){
-        if(armorPartSettings == null)
-            armorPartSettings = ClientConfig.resourceManager.getPartSettings(part);
-
-        return armorPartSettings;
-    }
-
     public PowerArmorMaterial getMaterial(){
         return material;
     }

@@ -1,5 +1,8 @@
 package com.jetug.power_armor_mod.common.foundation.item;
 
+import com.jetug.power_armor_mod.client.ClientConfig;
+import com.jetug.power_armor_mod.common.json.ArmorPartSettings;
+import com.jetug.power_armor_mod.common.util.helpers.ResourceHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,6 +12,14 @@ public class PaItemBase extends Item {
 
     public PaItemBase(Properties pProperties) {
         super(pProperties);
+    }
+
+    public ArmorPartSettings getPartSettings(){
+        return ClientConfig.resourceManager.getPartSettings(getName());
+    }
+
+    public String getName(){
+        return ResourceHelper.getResourceName(getRegistryName());
     }
 
     public static int getItemDamage(ItemStack itemStack) {

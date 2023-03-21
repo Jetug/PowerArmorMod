@@ -1,26 +1,28 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.model.ArmorModel;
+import com.jetug.power_armor_mod.client.*;
+import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.common.json.Attachment;
-import com.jetug.power_armor_mod.client.render.layers.ArmorPartLayer;
-import com.jetug.power_armor_mod.client.render.layers.PlayerHeadLayer;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import com.jetug.power_armor_mod.common.json.*;
+import com.jetug.power_armor_mod.client.render.layers.*;
+import com.jetug.power_armor_mod.common.foundation.entity.*;
+import com.jetug.power_armor_mod.common.foundation.item.*;
+import com.jetug.power_armor_mod.common.util.enums.*;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.resources.*;
+import net.minecraft.world.item.*;
+import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.renderers.geo.*;
+
+import java.util.Map;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
     private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
-    //private Map<BodyPart, Attachment>
+
+    private Map<Integer, Attachment> Attachments;
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -48,7 +50,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void updateArmor(PowerArmorEntity entity){
         for (var part : entity.armorParts) {
-            var itemStack = entity.getItem(part);
+            var itemStack = entity.getItemStack(part);
             if (!itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack)) {
                 updateModel(part, itemStack, true);
             }
@@ -58,22 +60,20 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-//    private void attachBones(ItemStack slot){
-//        updateModel(slot, true);
-//    }
-//
-//    private void detachBones(ItemStack slot){
-//        updateModel(slot, false);
-//    }
-
     private void updateModel(BodyPart part, ItemStack slot, Boolean isAttaching){
-        //var item = (PowerArmorItem)slot.getItem();
-        //var settings = item.armorPartSettings;
-        var settings = ClientConfig.resourceManager.getPartSettings(part);
-        if(settings == null) return;
+        if(!slot.isEmpty()) {
+            var item = (PowerArmorItem) slot.getItem();
+            var settings = item.getPartSettings();
+            if(settings == null) return;
+
+            handleAttachments(settings, isAttaching);
+        }
+    }
+
+    private void handleAttachments(ArmorPartSettings settings, Boolean isAttaching) {
         var attachments = settings.attachments;
 
-        if(attachments == null && attachments.length == 0) return;
+        if(attachments == null || attachments.length == 0) return;
 
         for (Attachment attachment : attachments) {
             var frameBone = getFrameBone(attachment.frame);
@@ -83,9 +83,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
             if(isAttaching)
                 addModelPart(attachment, frameBone, armorBone);
-            else {
-                removeModelPart(attachment, frameBone, armorBone, part);
-            }
+            else
+                removeModelPart(attachment, frameBone, armorBone);
         }
     }
 
@@ -110,8 +109,10 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone, BodyPart part) {
+    private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
         if(attachment.mode == null) return;
+
+
 
 //        var newBone = armorModel.getModel(POWER_ARMOR_MODEL_LOCATION).getBone(part.getName()).orElse(null);
 //        var oldBone = (GeoBone)powerArmorModel.getBone(part.getName());

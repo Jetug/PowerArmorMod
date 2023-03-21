@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.item.PaItemBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -250,9 +252,18 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-    public ItemStack getItem(BodyPart part) {
+    public ItemStack getItemStack(BodyPart part) {
         return inventory.getItem(part.ordinal());
     }
+
+    @Nullable
+    public PaItemBase getItem(BodyPart part) {
+        var stack = getItemStack(part);
+        if(!stack.isEmpty())
+            return (PaItemBase) stack.getItem();
+        return null;
+    }
+
 
     public void openGUI(Player player) {
         Global.referenceMob = this;

@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ArmorPartSettings {
     public BodyPart part;
+    public String name;
     public String model;
     public String texture;
     public Attachment[] attachments;

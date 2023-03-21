@@ -6,14 +6,16 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getResourceName;
 
 public class ModResourceManager {
 
@@ -22,7 +24,7 @@ public class ModResourceManager {
     private final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
     private Collection<ResourceLocation> partConfigs;
-    private final Map<BodyPart, ArmorPartSettings> partSettings = new HashMap<>();
+    private final Map<String, ArmorPartSettings> partSettings = new HashMap<>();
 
     public void loadConfigs(){
         partConfigs = resourceManager.listResources(CONFIG_FOLDER, fileName -> fileName.endsWith(".json"));
@@ -30,29 +32,34 @@ public class ModResourceManager {
         for (ResourceLocation config : partConfigs) {
             var settings = getPartSettings(config);
             if(settings != null){
-                partSettings.put(settings.part, settings);
+                partSettings.put(settings.name, settings);
             }
         }
     }
 
-    public ArmorPartSettings getPartSettings(BodyPart bodyPart){
-        if(partSettings.containsKey(bodyPart))
-            return partSettings.get(bodyPart);
-        return null;
+    @Nullable
+    public ArmorPartSettings getPartSettings(String itemId){
+        return partSettings.get(itemId);
     }
 
     @Nullable
     private ArmorPartSettings getPartSettings(ResourceLocation resourceLocation){
         try {
-            var readIn = getBufferedReader(resourceManager.getResource(resourceLocation).getInputStream());
-            var gson = new Gson();
-            return gson.fromJson(readIn, ArmorPartSettings.class);
-        } catch (Exception e) {
+            var readIn = getBufferedReader(resourceLocation);
+            var settings = new Gson().fromJson(readIn, ArmorPartSettings.class);
+            settings.name = getResourceName(resourceLocation);
+            return settings;
+        }
+        catch (Exception e) {
             return null;
         }
     }
+
+    private BufferedReader getBufferedReader(ResourceLocation resourceLocation) throws IOException {
+        return getBufferedReader(resourceManager.getResource(resourceLocation).getInputStream());
+    }
+
     private static BufferedReader getBufferedReader(InputStream stream){
         return new BufferedReader(new InputStreamReader(stream));
     }
-
 }

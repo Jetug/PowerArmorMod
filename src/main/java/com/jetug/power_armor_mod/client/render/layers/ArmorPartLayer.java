@@ -15,26 +15,37 @@ import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_AR
 
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;
-    public ResourceLocation texture;
+    //public ResourceLocation texture;
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
-        var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
-        this.texture = settings.getTexture();
+        //var settings = ClientConfig.resourceManager.getPartSettings(bodyPart);
+        //this.texture = settings.getTexture();
         this.bodyPart = bodyPart;
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity,
+                       float limbSwing, float limbSwingAmount, float partialTicks,
+                       float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.hasArmor(bodyPart) && !entity.isInvisible()) {
-            int overlay = OverlayTexture.NO_OVERLAY;
-            RenderType cameo = RenderType.armorCutoutNoCull(texture);
-            matrixStackIn.pushPose();
-            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
-            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-            this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entity, partialTicks, cameo, matrixStackIn,
-                    bufferIn, bufferIn.getBuffer(cameo), packedLightIn, overlay, 1f, 1f, 1f, 1f);
-            matrixStackIn.popPose();
+            var item = entity.getItem(bodyPart);
+            if (item.getPartSettings() == null) return;
+
+            var texture =  item.getPartSettings().getTexture();
+
+            render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
         }
+    }
+
+    private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float partialTicks, ResourceLocation texture) {
+        int overlay = OverlayTexture.NO_OVERLAY;
+        RenderType cameo = RenderType.armorCutoutNoCull(texture);
+        matrixStackIn.pushPose();
+        matrixStackIn.scale(1.0f, 1.0f, 1.0f);
+        matrixStackIn.translate(0.0d, 0.0d, 0.0d);
+        this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entity, partialTicks, cameo, matrixStackIn,
+                bufferIn, bufferIn.getBuffer(cameo), packedLightIn, overlay, 1f, 1f, 1f, 1f);
+        matrixStackIn.popPose();
     }
 }
