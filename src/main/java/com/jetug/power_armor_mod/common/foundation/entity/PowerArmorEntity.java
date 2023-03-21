@@ -101,10 +101,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             getPlayerPassenger().hurt(damageSource, finalDamage);
 
         if(isServerSide){
-            damageArmorItem(HEAD     ,damageSource , damage);
-            damageArmorItem(BODY     ,damageSource , damage);
-            damageArmorItem(LEFT_ARM ,damageSource , damage);
-            damageArmorItem(RIGHT_ARM,damageSource , damage);
+            damageArmorItem(HEAD     , damageSource , damage);
+            damageArmorItem(BODY     , damageSource , damage);
+            damageArmorItem(LEFT_ARM , damageSource , damage);
+            damageArmorItem(RIGHT_ARM, damageSource , damage);
 
             if(damageSource == DamageSource.FALL) {
                 damageArmorItem(LEFT_LEG, damageSource, damage);
@@ -118,22 +118,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     @Override
     public boolean causeFallDamage(float height, float multiplier, DamageSource damageSource) {
         if (height > 1) this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
-        if(height > 4) pushEntitiesAround();
+        if (height > 4) pushEntitiesAround();
 
         int damage = this.calculateFallDamage(height, multiplier);
         if (damage <= 0)
             return false;
 
-
-
         this.hurt(damageSource, damage);
-
-//        if (this.isVehicle()) {
-//            for(Entity entity : this.getIndirectPassengers()) {
-//                entity.hurt(damageSource, (float) damage);
-//            }
-//        }
-
         this.playBlockFallSound();
         return true;
     }

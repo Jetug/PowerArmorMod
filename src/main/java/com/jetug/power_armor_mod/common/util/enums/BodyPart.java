@@ -9,8 +9,10 @@ public enum BodyPart{
     @SerializedName("right_arm" ) RIGHT_ARM ("right_arm" ),
     @SerializedName("left_leg"  ) LEFT_LEG  ("left_leg"  ),
     @SerializedName("right_leg" ) RIGHT_LEG ("right_leg" ),
-    @SerializedName("left_hand" ) LEFT_HAND ("left_hand" ),
-    @SerializedName("right_hand") RIGHT_HAND("right_hand");
+    @SerializedName("engine"    ) ENGINE    ("engine"    );
+
+//    @SerializedName("left_hand" ) LEFT_HAND ("left_hand" ),
+//    @SerializedName("right_hand") RIGHT_HAND("right_hand");
 
     private final String name;
     private static final BodyPart[] values = BodyPart.values();

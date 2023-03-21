@@ -1,8 +1,8 @@
 package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.gui.HeatRenderer;
-import com.jetug.power_armor_mod.client.gui.GuiRegistry;
+import com.jetug.power_armor_mod.client.gui.*;
+import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.InputController;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;

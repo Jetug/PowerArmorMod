@@ -1,0 +1,34 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.engine",
+				"texture_width": 300,
+				"texture_height": 300,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "engine",
+					"pivot": [-0.05, 26, 4.03553],
+					"cubes": [
+						{"origin": [-3.65, 24.7, 3.25], "size": [2, 5, 2], "inflate": -0.2, "uv": [18, 293]},
+						{"origin": [2.1, 24.15, 3.75], "size": [1, 6, 1], "uv": [19, 285]},
+						{"origin": [1.6, 24.7, 3.25], "size": [2, 5, 2], "inflate": -0.2, "uv": [27, 293]},
+						{"origin": [0.9, 24.7, 4], "size": [2, 5, 2], "inflate": -0.2, "uv": [36, 293]},
+						{"origin": [1.4, 24.15, 3.75], "size": [1, 6, 1.75], "uv": [39, 285]},
+						{"origin": [-2.4, 24.15, 3.75], "size": [1, 6, 1.75], "uv": [34, 285]},
+						{"origin": [-1, 24.7, 4], "size": [2, 5, 2], "inflate": -0.2, "uv": [9, 293]},
+						{"origin": [-0.5, 24.15, 3.75], "size": [1, 6, 1.75], "uv": [29, 285]},
+						{"origin": [-2.9, 24.7, 4], "size": [2, 5, 2], "inflate": -0.2, "uv": [0, 293]},
+						{"origin": [-3.15, 24.15, 3.75], "size": [1, 6, 1], "uv": [24, 285]},
+						{"origin": [-3, 24.75, 2.25], "size": [6, 5, 3], "uv": [0, 284]}
+					]
+				}
+			]
+		}
+	]
+}

@@ -57,7 +57,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
-        subHeat(1);
+        subHeat(2);
     }
 
     @Override
