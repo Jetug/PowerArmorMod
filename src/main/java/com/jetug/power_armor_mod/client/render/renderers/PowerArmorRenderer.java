@@ -7,12 +7,14 @@ import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.enums.*;
+import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.*;
+import org.apache.logging.log4j.util.TriConsumer;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
@@ -56,13 +58,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        try{
-            updateArmor(entity);
-            super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        } catch (Exception e) {
-            throw e;
-            //LOGGER.log(Level.ERROR, e);
-        }
+        updateArmor(entity);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     private void updateArmor(PowerArmorEntity entity){
@@ -73,7 +70,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private void updateModel(PowerArmorEntity entity, BodyPart part, ItemStack slot, Boolean isAttaching){
+    private void updateModel2(PowerArmorEntity entity, BodyPart part, ItemStack slot, Boolean isAttaching){
         if(!slot.isEmpty()) {
             var item = (PowerArmorItem) slot.getItem();
             var settings = item.getPartSettings();
@@ -87,23 +84,62 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         var attachments = settings.attachments;
         if(attachments == null) return;
 
+        //handleAttachments(isAttaching, settings, attachments);
+
         for (Attachment attachment : attachments) {
             var frameBone = getFrameBone(attachment.frame);
             var armorBone = getArmorBone(settings.getModel(), attachment.armor);
-
-            if (frameBone == null || armorBone == null) continue;
+            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
 
             if(isAttaching)
-                addModelPart(entity, attachment, frameBone, armorBone);
+                addModelPart(attachment, frameBone, armorBone);
             else
-                removeModelPart(entity, attachment, frameBone, armorBone);
+                removeModelPart(attachment, frameBone, armorBone);
         }
     }
 
-    private void addModelPart(PowerArmorEntity entity, Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        if(attachment.mode == null) return;
-        //settingsHistory.put(entity.getId(), attachment);
 
+    private void updateModel(PowerArmorEntity entity, BodyPart part, ItemStack slot, Boolean isAttaching){
+        if(isAttaching) {
+            var item = (PowerArmorItem) slot.getItem();
+            var settings = item.getPartSettings();
+            if(settings == null) return;
+            putSettings(entity, settings);
+            forAllAttachments(settings, this::addModelPart);
+        }
+        else {
+            var settings = getSettings(entity, part);
+            if(settings.attachments == null) return;
+            forAllAttachments(settings, this::removeModelPart);
+        }
+    }
+
+
+    private void forAllAttachments(ArmorPartSettings settings, TriConsumer<Attachment, GeoBone, GeoBone> action) {
+        for (Attachment attachment : settings.attachments) {
+            var frameBone = getFrameBone(attachment.frame);
+            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
+            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
+
+            action.accept(attachment, frameBone, armorBone);
+        }
+    }
+
+
+    private void handleAttachments(Boolean isAttaching, ArmorPartSettings settings, Attachment[] attachments) {
+        for (Attachment attachment : attachments) {
+            var frameBone = getFrameBone(attachment.frame);
+            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
+            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
+
+            if(isAttaching)
+                addModelPart(attachment, frameBone, armorBone);
+            else
+                removeModelPart(attachment, frameBone, armorBone);
+        }
+    }
+
+    private void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
         switch (attachment.mode) {
             case ADD -> {
                 if (!frameBone.childBones.contains(armorBone)) {
@@ -122,10 +158,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private void removeModelPart(PowerArmorEntity entity,  Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        //var attachment = settingsHistory.get(entity.getId());
-        if(attachment == null || attachment.mode == null) return;
-
+    private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
         switch (attachment.mode) {
             case ADD -> frameBone.childBones.remove(armorBone);
             case REPLACE -> {
