@@ -7,13 +7,14 @@ import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.enums.*;
-import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.*;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.apache.logging.log4j.util.TriConsumer;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
@@ -30,29 +31,20 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         super(renderManager, new PowerArmorModel<>());
         powerArmorModel = (PowerArmorModel<PowerArmorEntity>)getGeoModelProvider();
         initLayers();
+
+        MinecraftForge.EVENT_BUS.addListener(this::onLivingDeath);
+    }
+
+    private void onLivingDeath(final LivingDeathEvent event) {
+        if(event.getEntityLiving() instanceof PowerArmorEntity){
+            settingsHistory.remove(event.getEntityLiving().getId());
+        }
     }
 
     private void initLayers(){
         for (int i = 0; i < 6; i++)
             addLayer(new ArmorPartLayer(this, BodyPart.getById(i)));
         addLayer(new PlayerHeadLayer(this));
-    }
-
-    private void putSettings(Entity entity, ArmorPartSettings settings){
-        var entry = settingsHistory.get(entity.getId());
-
-        if(entry == null){
-            var buff = new HashMap<BodyPart, ArmorPartSettings>();
-            buff.put(settings.part, settings);
-            settingsHistory.put(entity.getId(), buff);
-        }
-        else entry.put(settings.part, settings);
-    }
-
-    private ArmorPartSettings getSettings(Entity entity, BodyPart bodyPart){
-        var entry = settingsHistory.get(entity.getId());
-        if (entry == null) return null;
-        return entry.get(bodyPart);
     }
 
     @Override
@@ -64,78 +56,35 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private void updateArmor(PowerArmorEntity entity){
         for (var part : entity.armorParts) {
-            var itemStack = entity.getItemStack(part);
-            var isAttaching = !itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack);
-            updateModel(entity, part, itemStack, isAttaching);
+            //var isAttaching = !itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack);
+            updateModel(entity, part, entity.getItemStack(part));
         }
     }
 
-    private void updateModel2(PowerArmorEntity entity, BodyPart part, ItemStack slot, Boolean isAttaching){
-        if(!slot.isEmpty()) {
-            var item = (PowerArmorItem) slot.getItem();
+    @SuppressWarnings("ConstantConditions")
+    private void updateModel(PowerArmorEntity entity, BodyPart part, ItemStack itemStack){
+        if(!itemStack.isEmpty()) {
+            var item = (PowerArmorItem) itemStack.getItem();
             var settings = item.getPartSettings();
-            if(settings == null) return;
-
-            putSettings(entity, settings);
-        }
-
-        var settings = getSettings(entity, part);
-        if(settings == null) return;
-        var attachments = settings.attachments;
-        if(attachments == null) return;
-
-        //handleAttachments(isAttaching, settings, attachments);
-
-        for (Attachment attachment : attachments) {
-            var frameBone = getFrameBone(attachment.frame);
-            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
-            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
-
-            if(isAttaching)
-                addModelPart(attachment, frameBone, armorBone);
-            else
-                removeModelPart(attachment, frameBone, armorBone);
-        }
-    }
-
-
-    private void updateModel(PowerArmorEntity entity, BodyPart part, ItemStack slot, Boolean isAttaching){
-        if(isAttaching) {
-            var item = (PowerArmorItem) slot.getItem();
-            var settings = item.getPartSettings();
-            if(settings == null) return;
             putSettings(entity, settings);
             forAllAttachments(settings, this::addModelPart);
         }
         else {
             var settings = getSettings(entity, part);
-            if(settings.attachments == null) return;
             forAllAttachments(settings, this::removeModelPart);
         }
     }
 
 
     private void forAllAttachments(ArmorPartSettings settings, TriConsumer<Attachment, GeoBone, GeoBone> action) {
+        if(settings == null || settings.attachments == null) return;
+
         for (Attachment attachment : settings.attachments) {
             var frameBone = getFrameBone(attachment.frame);
             var armorBone = getArmorBone(settings.getModel(), attachment.armor);
             if (frameBone == null || armorBone == null || attachment.mode == null) continue;
 
             action.accept(attachment, frameBone, armorBone);
-        }
-    }
-
-
-    private void handleAttachments(Boolean isAttaching, ArmorPartSettings settings, Attachment[] attachments) {
-        for (Attachment attachment : attachments) {
-            var frameBone = getFrameBone(attachment.frame);
-            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
-            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
-
-            if(isAttaching)
-                addModelPart(attachment, frameBone, armorBone);
-            else
-                removeModelPart(attachment, frameBone, armorBone);
         }
     }
 
@@ -179,5 +128,21 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
 
     private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
+    }
+    private void putSettings(Entity entity, ArmorPartSettings settings){
+        var entry = settingsHistory.get(entity.getId());
+
+        if(entry == null){
+            var buff = new HashMap<BodyPart, ArmorPartSettings>();
+            buff.put(settings.part, settings);
+            settingsHistory.put(entity.getId(), buff);
+        }
+        else entry.put(settings.part, settings);
+    }
+
+    private ArmorPartSettings getSettings(Entity entity, BodyPart bodyPart){
+        var entry = settingsHistory.get(entity.getId());
+        if (entry == null) return null;
+        return entry.get(bodyPart);
     }
 }
