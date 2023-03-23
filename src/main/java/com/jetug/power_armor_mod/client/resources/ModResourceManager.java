@@ -1,52 +1,66 @@
 package com.jetug.power_armor_mod.client.resources;
 
-import com.google.gson.Gson;
-import com.jetug.power_armor_mod.common.json.ArmorPartSettings;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import org.apache.commons.io.FilenameUtils;
-
-import javax.annotation.Nullable;
+import com.google.gson.*;
+import com.jetug.power_armor_mod.common.json.*;
+import net.minecraft.client.*;
+import net.minecraft.resources.*;
+import javax.annotation.*;
 import java.io.*;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getResourceName;
+import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.*;
 
 public class ModResourceManager {
+    private static final String CONFIG_DIR = "configs";
+    private static final String EQUIPMENT_DIR = CONFIG_DIR + "/equipment";
+    private static final String FRAME_DIR = CONFIG_DIR + "/frame";
 
-    private static final String CONFIG_FOLDER = "configs";
+    private final Map<String, EquipmentSettings> equipmentSettings = new HashMap<>();
+    private final Map<String, FrameSettings> frameSettings = new HashMap<>();
 
-    private final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
-    private Collection<ResourceLocation> partConfigs;
-    private final Map<String, ArmorPartSettings> partSettings = new HashMap<>();
+    @Nullable
+    public EquipmentSettings getEquipmentSettings(String itemId){
+        return equipmentSettings.get(itemId);
+    }
+
+    @Nullable
+    public FrameSettings getFrameSettings(String frameId){
+        return frameSettings.get(frameId);
+    }
 
     public void loadConfigs(){
-        partConfigs = resourceManager.listResources(CONFIG_FOLDER, fileName -> fileName.endsWith(".json"));
+        loadEquipment();
+        loadFrame();
+    }
 
-        for (ResourceLocation config : partConfigs) {
-            var settings = getPartSettings(config);
-            if(settings != null){
-                partSettings.put(settings.name, settings);
-            }
+    private void loadEquipment() {
+        for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR)) {
+            var settings = getSettings(config, EquipmentSettings.class);
+            if(settings != null)
+                equipmentSettings.put(settings.name, settings);
         }
     }
 
-    @Nullable
-    public ArmorPartSettings getPartSettings(String itemId){
-        return partSettings.get(itemId);
+    private void loadFrame() {
+        for (ResourceLocation config : getJsonResources(FRAME_DIR)) {
+            var settings = getSettings(config, FrameSettings.class);
+            if(settings != null)
+                frameSettings.put(settings.name, settings);
+        }
+    }
+
+
+    private static Collection<ResourceLocation> getJsonResources(String path){
+        return Minecraft.getInstance().getResourceManager()
+                .listResources(path, fileName -> fileName.endsWith(".json"));
     }
 
     @Nullable
-    private ArmorPartSettings getPartSettings(ResourceLocation resourceLocation){
+    private EquipmentSettings getEquipmentSettings(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, ArmorPartSettings.class);
+            var settings = new Gson().fromJson(readIn, EquipmentSettings.class);
             settings.name = getResourceName(resourceLocation);
             return settings;
         }
@@ -55,8 +69,33 @@ public class ModResourceManager {
         }
     }
 
+    @Nullable
+    private FrameSettings getFrameSettings(ResourceLocation resourceLocation){
+        try {
+            var readIn = getBufferedReader(resourceLocation);
+            var settings = new Gson().fromJson(readIn, FrameSettings.class);
+            settings.name = getResourceName(resourceLocation);
+            return settings;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    private <T extends ModelSettingsBase> T getSettings(ResourceLocation resourceLocation, Class<T> classOfT){
+        try {
+            var readIn = getBufferedReader(resourceLocation);
+            var settings = new Gson().fromJson(readIn, classOfT);
+            settings.name = getResourceName(resourceLocation);
+            return settings;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
     private BufferedReader getBufferedReader(ResourceLocation resourceLocation) throws IOException {
-        return getBufferedReader(resourceManager.getResource(resourceLocation).getInputStream());
+        return getBufferedReader(Minecraft.getInstance().getResourceManager().getResource(resourceLocation).getInputStream());
     }
 
     private static BufferedReader getBufferedReader(InputStream stream){

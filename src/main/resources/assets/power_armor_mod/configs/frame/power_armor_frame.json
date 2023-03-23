@@ -3,26 +3,30 @@
   "model": "power_armor_frame.geo.json",
   "texture": "textures/entities/power_armor_frame.png",
 
-  "attachments": [
+  "attachments":[
     {
-      "mode": "replace",
-      "frame": "body_top_frame",
-      "armor": "body_top_armor"
+      "part": "head",
+      "bones" : ["head"]
     },
     {
-      "mode": "replace",
-      "frame": "body_bottom_frame",
-      "armor": "body_bottom_armor"
+      "part": "body",
+      "bones" : ["body_top_frame", "body_bottom_frame"]
     },
     {
-      "mode": "add",
-      "frame": "front_plate",
-      "armor": "front_plate_armor"
+      "part": "left_arm",
+      "bones" : ["left_upper_arm_frame", "left_forearm_frame"]
     },
     {
-      "mode": "add",
-      "frame": "back_plate",
-      "armor": "back_plate_armor"
+      "part": "right_arm",
+      "bones" : ["right_upper_arm_frame", "right_forearm_frame"]
+    },
+    {
+      "part": "left_leg",
+      "bones" : ["left_upper_leg_frame", "left_lower_leg_frame"]
+    },
+    {
+      "part": "right_leg",
+      "bones" : ["right_upper_leg_frame", "right_lower_leg_frame"]
     }
   ]
 }

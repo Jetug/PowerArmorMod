@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
+import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
 import com.jetug.power_armor_mod.common.json.*;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
     private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
-    private final Map<Integer, Map<BodyPart, ArmorPartSettings>> settingsHistory = new HashMap<>();
+    private final Map<Integer, Map<BodyPart, EquipmentSettings>> settingsHistory = new HashMap<>();
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -66,30 +67,44 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         if(!itemStack.isEmpty()) {
             var item = (PowerArmorItem) itemStack.getItem();
             var settings = item.getPartSettings();
-            putSettings(entity, settings);
+            //putSettings(entity, settings);
             forAllAttachments(settings, this::addModelPart);
         }
         else {
-            var settings = getSettings(entity, part);
-            forAllAttachments(settings, this::removeModelPart);
+            //var settings = getSettings(entity, part);
+            var frameSettings = ClientConfig.resourceManager.getFrameSettings("power_armor_frame");
+            frameSettings.getAttachments(part);
+
+            for (var bone : frameSettings.getAttachments(part).bones){
+                returnDefault(bone);
+            }
         }
     }
 
+    private void returnDefault(String boneName){
+        var bone = getFrameBone(boneName);
+        if(bone == null) return;
+        var parentBone = getFrameBone(bone.parent.name);
+        if(parentBone == null) return;
 
-    private void forAllAttachments(ArmorPartSettings settings, TriConsumer<Attachment, GeoBone, GeoBone> action) {
+        parentBone.childBones.remove(bone);
+        parentBone.childBones.add(getFrameBone(boneName));
+    }
+
+    private void forAllAttachments(EquipmentSettings settings, TriConsumer<EquipmentAttachment, GeoBone, GeoBone> action) {
         if(settings == null || settings.attachments == null) return;
 
-        for (Attachment attachment : settings.attachments) {
-            var frameBone = getFrameBone(attachment.frame);
-            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
-            if (frameBone == null || armorBone == null || attachment.mode == null) continue;
+        for (EquipmentAttachment equipmentAttachment : settings.attachments) {
+            var frameBone = getFrameBone(equipmentAttachment.frame);
+            var armorBone = getArmorBone(settings.getModel(), equipmentAttachment.armor);
+            if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
 
-            action.accept(attachment, frameBone, armorBone);
+            action.accept(equipmentAttachment, frameBone, armorBone);
         }
     }
 
-    private void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        switch (attachment.mode) {
+    private void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
+        switch (equipmentAttachment.mode) {
             case ADD -> {
                 if (!frameBone.childBones.contains(armorBone)) {
                     armorBone.parent = frameBone;
@@ -98,8 +113,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
             }
             case REPLACE -> {
                 var parentBone = frameBone.parent;
+                parentBone.childBones.remove(frameBone);
                 if(!parentBone.childBones.contains(armorBone)){
-                    parentBone.childBones.remove(frameBone);
                     parentBone.childBones.add(armorBone);
                     armorBone.parent = parentBone;
                 }
@@ -107,8 +122,8 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        switch (attachment.mode) {
+    private void removeModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
+        switch (equipmentAttachment.mode) {
             case ADD -> frameBone.childBones.remove(armorBone);
             case REPLACE -> {
                 var parentBone = frameBone.parent;
@@ -129,20 +144,20 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
     }
-    private void putSettings(Entity entity, ArmorPartSettings settings){
-        var entry = settingsHistory.get(entity.getId());
-
-        if(entry == null){
-            var buff = new HashMap<BodyPart, ArmorPartSettings>();
-            buff.put(settings.part, settings);
-            settingsHistory.put(entity.getId(), buff);
-        }
-        else entry.put(settings.part, settings);
-    }
-
-    private ArmorPartSettings getSettings(Entity entity, BodyPart bodyPart){
-        var entry = settingsHistory.get(entity.getId());
-        if (entry == null) return null;
-        return entry.get(bodyPart);
-    }
+//    private void putSettings(Entity entity, EquipmentSettings settings){
+//        var entry = settingsHistory.get(entity.getId());
+//
+//        if(entry == null){
+//            var buff = new HashMap<BodyPart, EquipmentSettings>();
+//            buff.put(settings.part, settings);
+//            settingsHistory.put(entity.getId(), buff);
+//        }
+//        else entry.put(settings.part, settings);
+//    }
+//
+//    private EquipmentSettings getSettings(Entity entity, BodyPart bodyPart){
+//        var entry = settingsHistory.get(entity.getId());
+//        if (entry == null) return null;
+//        return entry.get(bodyPart);
+//    }
 }
