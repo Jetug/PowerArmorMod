@@ -1,6 +1,8 @@
 package com.jetug.power_armor_mod.common.util.enums;
 
 import com.google.gson.annotations.*;
+import net.minecraft.client.model.TridentModel;
+import net.minecraftforge.client.event.RenderHandEvent;
 
 public enum BodyPart{
     @SerializedName("head"      ) HEAD      ("head"      ),
@@ -11,11 +13,9 @@ public enum BodyPart{
     @SerializedName("right_leg" ) RIGHT_LEG ("right_leg" ),
     @SerializedName("engine"    ) ENGINE    ("engine"    );
 
-//    @SerializedName("left_hand" ) LEFT_HAND ("left_hand" ),
-//    @SerializedName("right_hand") RIGHT_HAND("right_hand");
-
     private final String name;
     private static final BodyPart[] values = BodyPart.values();
+
 
     BodyPart(String name) {
         this.name = name;
@@ -23,6 +23,11 @@ public enum BodyPart{
 
     public static BodyPart getById(int id) {
         return values[id];
+        //TridentModel
+    }
+
+    public boolean isArmorItem(){
+        return this.ordinal() < 6;
     }
 
     public int getId(){

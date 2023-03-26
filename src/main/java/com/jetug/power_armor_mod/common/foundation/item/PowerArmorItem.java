@@ -7,16 +7,12 @@ import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 
-public class PowerArmorItem extends PaItemBase {
-    public static final String DAMAGE_KEY = "Damage";
-    private EquipmentSettings equipmentSettings = null;
+public class PowerArmorItem extends EquipmentBase {
     private final PowerArmorMaterial material;
-    public final BodyPart part;
 
     public PowerArmorItem(PowerArmorMaterial material, BodyPart part) {
-        super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB));
+        super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB), part);
         this.material = material;
-        this.part = part;
     }
 
     public PowerArmorMaterial getMaterial(){

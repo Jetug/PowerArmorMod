@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.client.gui;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.common.util.Pos2D;
@@ -24,7 +25,7 @@ import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
 
 public class PowerArmorContainer extends AbstractContainerMenu {
-    public static final int SIZE = 6;
+    public static final int SIZE = 7;
 
     private static final int HOTBAR_SLOT_COUNT = 9;
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
@@ -75,6 +76,7 @@ public class PowerArmorContainer extends AbstractContainerMenu {
         createSlot(RIGHT_ARM, LEFT_ARM_SLOT_POS );
         createSlot(LEFT_LEG , RIGHT_LEG_SLOT_POS);
         createSlot(RIGHT_LEG, LEFT_LEG_SLOT_POS );
+        createSlot(ENGINE   ,  ENGINE_SLOT_POS  );
     }
 
     @Override
@@ -143,7 +145,7 @@ public class PowerArmorContainer extends AbstractContainerMenu {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return super.mayPlace(stack)
-                        && stack.getItem() instanceof PowerArmorItem item
+                        && stack.getItem() instanceof EquipmentBase item
                         && item.part == bodyPart;
             }
 

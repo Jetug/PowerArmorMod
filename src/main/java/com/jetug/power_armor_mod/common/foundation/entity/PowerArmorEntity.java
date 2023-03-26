@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
-import com.jetug.power_armor_mod.common.foundation.item.PaItemBase;
+import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
@@ -9,6 +9,7 @@ import com.jetug.power_armor_mod.common.util.helpers.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -39,6 +39,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static com.jetug.power_armor_mod.client.input.InputController.isShiftDown;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.giveEntityItemToPlayer;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.getPercentOf;
@@ -233,14 +234,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return this.factory;
     }
 
-    @Override
-    public void registerControllers(AnimationData data) {
-        AnimationController<PowerArmorEntity> armController = new AnimationController<>(this, "arm_controller", 0, this::animateArms);
-        AnimationController<PowerArmorEntity> legController = new AnimationController<>(this, "leg_controller", 0, this::animateLegs);
-        data.addAnimationController(armController);
-        data.addAnimationController(legController);
-    }
-
     public void damageArmorItem(BodyPart bodyPart, DamageSource damageSource, float damage) {
         Global.LOGGER.info("damageArmorItem" + isClientSide);
 
@@ -252,18 +245,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-    public ItemStack getItemStack(BodyPart part) {
-        return inventory.getItem(part.ordinal());
-    }
-
     @Nullable
-    public PaItemBase getItem(BodyPart part) {
-        var stack = getItemStack(part);
+    public EquipmentBase getEquipmentItem(BodyPart part) {
+        var stack = getEquipment(part);
         if(!stack.isEmpty())
-            return (PaItemBase) stack.getItem();
+            return (EquipmentBase) stack.getItem();
         return null;
     }
-
 
     public void openGUI(Player player) {
         Global.referenceMob = this;
@@ -313,15 +301,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         var force = getPercentOf(MAX_PUNCH_FORCE, getAttackChargeInPercent());
 
         target.push(vector.x * force, vector.y * force, vector.z * force);
-    }
-
-    public void addAttackCharge(int attackCharge) {
-        if(this.attackCharge + attackCharge <= MAX_ATTACK_CHARGE)
-            this.attackCharge += attackCharge;
-    }
-
-    public void resetAttackCharge() {
-        this.attackCharge = 0;
     }
 
     private void _dash(DashDirection direction){
@@ -424,11 +403,20 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
     }
 
+    @Override
+    public void registerControllers(AnimationData data) {
+        var armController = new AnimationController<>(this, "arm_controller", 0, this::animateArms);
+        var legController = new AnimationController<>(this, "leg_controller", 0, this::animateLegs);
+        data.addAnimationController(armController);
+        data.addAnimationController(legController);
+    }
+
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
 
         var player = getPlayerPassenger();
+
         if (player != null) {
             if (player.attackAnim > 0) {
                 controller.animationSpeed = 2.0D;
@@ -440,7 +428,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 setAnimation(controller, "hurt", PLAY_ONCE);
                 return PlayState.CONTINUE;
             }
-            else if (event.isMoving()) {
+            else if (isMoving()) {
                 setAnimation(controller, "walk_arms", LOOP);
                 controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 return PlayState.CONTINUE;
@@ -451,16 +439,38 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
+    private Boolean isMoving(){
+        var deltaMovement = getDeltaMovement();
+        return deltaMovement.x != 0.0
+            && deltaMovement.z != 0.0;
+    }
+
     private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
+        if (getPlayerPassenger() == null)
+            return PlayState.STOP;
 
-        if (getPlayerPassenger() == null) return PlayState.STOP;
+        var move = getDeltaMovement();
 
-        if (event.isMoving()) {
-            setAnimation(controller, "walk_legs", LOOP);
-            controller.animationSpeed = speedometer.getSpeed() * 4.0D;
-            return PlayState.CONTINUE;
+        if(!isDashing) {
+            if (isMoving()) {
+                if (isShiftDown()){
+                    setAnimation(controller, "sneak_walk", LOOP);
+                }
+                else {
+                    setAnimation(controller, "walk_legs", LOOP);
+                    controller.animationSpeed = speedometer.getSpeed() * 4.0D;
+                }
+                return PlayState.CONTINUE;
+            }
+            else {
+                if (isShiftDown()) {
+                    setAnimation(controller, "sneak", PLAY_ONCE);
+                    setAnimation(controller, "sneak_end", LOOP);
+                    return PlayState.CONTINUE;
+                }
+            }
         }
         return PlayState.STOP;
     }

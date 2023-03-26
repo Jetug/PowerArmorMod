@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +30,16 @@ public class EventHandler {
                 break;
             case RENDER:
                 break;
+        }
+    }
+
+    @SubscribeEvent()
+    public static void onAttack(AttackEntityEvent event) {
+        var player = event.getPlayer();
+        var target = event.getTarget();
+
+        if(isWearingPowerArmor(player)){
+            getPlayerArmor(player).punchTarget(target);
         }
     }
 

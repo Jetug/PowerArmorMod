@@ -21,6 +21,8 @@ public class Gui {
     public static final Pos2D RIGHT_ARM_SLOT_POS   = new Pos2D(77, 26);
     public static final Pos2D LEFT_LEG_SLOT_POS    = new Pos2D(59, 62);
     public static final Pos2D RIGHT_LEG_SLOT_POS   = new Pos2D(77, 62);
+    public static final Pos2D ENGINE_SLOT_POS   = new Pos2D(98, 26);
+
 
     public static final Rectangle HEAD_ICON_OFFSET        = createStandardIcon(19, 0);
     public static final Rectangle BODY_ICON_OFFSET        = createStandardIcon(19, 17);

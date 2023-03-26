@@ -6,14 +6,13 @@ import com.jetug.power_armor_mod.client.model.PowerArmorModel;
 import com.jetug.power_armor_mod.common.json.*;
 import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
-import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.model.TridentModel;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.TridentItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -22,6 +21,8 @@ import software.bernie.geckolib3.renderers.geo.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.jetug.power_armor_mod.client.gui.PowerArmorContainer.*;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
@@ -43,7 +44,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void initLayers(){
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < SIZE; i++)
             addLayer(new ArmorPartLayer(this, BodyPart.getById(i)));
         addLayer(new PlayerHeadLayer(this));
     }
@@ -51,37 +52,32 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        updateArmor(entity);
+        updateModel(entity);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
-    private void updateArmor(PowerArmorEntity entity){
-        for (var part : entity.armorParts) {
-            //var isAttaching = !itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack);
-            updateModel(entity, part, entity.getItemStack(part));
+    private void updateModel(PowerArmorEntity entity){
+        for (var part : entity.equipment) {
+            updateModel(entity, part);
         }
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void updateModel(PowerArmorEntity entity, BodyPart part, ItemStack itemStack){
-        if(!itemStack.isEmpty()) {
-            var item = (PowerArmorItem) itemStack.getItem();
+    private void updateModel(PowerArmorEntity entity, BodyPart part){
+        if(entity.isEquipmentVisible(part)) {
+            var item = entity.getEquipmentItem(part);
             var settings = item.getPartSettings();
-            //putSettings(entity, settings);
             forAllAttachments(settings, this::addModelPart);
         }
         else {
-            //var settings = getSettings(entity, part);
             var frameSettings = ClientConfig.resourceManager.getFrameSettings("power_armor_frame");
-            frameSettings.getAttachments(part);
-
             for (var bone : frameSettings.getAttachments(part).bones){
-                returnDefault(bone);
+                returnToDefault(bone);
             }
         }
     }
 
-    private void returnDefault(String boneName){
+    private void returnToDefault(String boneName){
         var bone = getFrameBone(boneName);
         if(bone == null) return;
         var parentBone = getFrameBone(bone.parent.name);

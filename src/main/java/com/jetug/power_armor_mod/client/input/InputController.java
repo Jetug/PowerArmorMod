@@ -1,18 +1,43 @@
 package com.jetug.power_armor_mod.client.input;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.InputEvent;
 import org.apache.logging.log4j.Level;
+import org.lwjgl.glfw.GLFW;
 
 import static com.jetug.power_armor_mod.client.ClientConfig.OPTIONS;
 import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
+import static com.jetug.power_armor_mod.client.KeyBindings.LEAVE;
+import static com.jetug.power_armor_mod.common.util.constants.Global.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
+@SuppressWarnings("ConstantConditions")
 public class InputController {
+    private static boolean shiftIsDown = false;
+
+    public static Boolean isShiftDown(){
+        return shiftIsDown;
+    }
+
+    public static void onArmorKeyInput(InputEvent.KeyInputEvent event, PowerArmorEntity entity) {
+        if (OPTIONS.keyJump.isDown()) entity.jump();
+        if (OPTIONS.keyShift.isDown()) {
+            OPTIONS.keyShift.setDown(false);
+            shiftIsDown = true;
+        }
+
+        if (event.getAction() == GLFW.GLFW_PRESS) {
+            if (LEAVE.isDown()) {
+                stopWearingArmor(getLocalPlayer());
+            }
+        } else if (event.getAction() == GLFW.GLFW_RELEASE) {
+            onRelease(event.getKey());
+        }
+    }
+
     public static void onDoubleClick(InputEvent.KeyInputEvent event){
         if (getLocalPlayer() == null || !isWearingPowerArmor()) return;
 
@@ -40,10 +65,11 @@ public class InputController {
         armorEntity.dash(direction);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void onRepeat(int key, int ticks){
         if (isWearingPowerArmor()) {
             var options = Minecraft.getInstance().options;
-            Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
+            LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
 
             if(keysEqual(key, options.keyUse)){
                 var pa = getLocalPlayerArmor();
@@ -53,20 +79,17 @@ public class InputController {
     }
 
     public static void onLongRelease(int key, int ticks){
-//        if (isWearingPowerArmor()) {
-//            var options = Minecraft.getInstance().options;
-//            Global.LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
-//
-//            if(keysEqual(key, options.keyUse)){
-//                var pa = getLocalPlayerArmor();
-//                pa.resetAttackCharge();
-//            }
-//        }
+
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void onRelease(int key){
         if (isWearingPowerArmor()) {
             var options = Minecraft.getInstance().options;
+
+            if(keysEqual(key, options.keyShift)){
+                shiftIsDown = false;
+            }
 
             if(keysEqual(key, options.keyUse, options.keyAttack) ){
                 var pa = getLocalPlayerArmor();

@@ -27,6 +27,10 @@
     {
       "part": "right_leg",
       "bones" : ["right_upper_leg_frame", "right_lower_leg_frame"]
+    },
+    {
+      "part": "engine",
+      "bones" : ["engine_slot"]
     }
   ]
 }

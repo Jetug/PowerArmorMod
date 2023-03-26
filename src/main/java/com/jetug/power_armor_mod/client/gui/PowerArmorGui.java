@@ -99,12 +99,12 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     }
 
     private void renderIcon(BodyPart bodyPart, PoseStack poseStack, Pos2D pos, Rectangle icon){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getItemStack().isEmpty())
+        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty())
             blit(poseStack, leftPos + pos.x, topPos + pos.y, icon.x, icon.y, icon.width, icon.height);
     }
 
     private void renderIcon(BodyPart bodyPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2D pos){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getItemStack().isEmpty()) {
+        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty()) {
             RenderSystem.setShaderTexture(0, pTextureId);
             blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
         //}

@@ -4,7 +4,6 @@ import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.jetug.power_armor_mod.common.util.helpers.timer.LoopTimerTask;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.nbt.*;
@@ -35,13 +34,23 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     protected int attackCharge = 0;
     protected SimpleContainer inventory;
 
-    public final BodyPart[] armorParts = new BodyPart[]{
+    public final BodyPart[] armor = new BodyPart[]{
             HEAD      ,
             BODY      ,
             LEFT_ARM  ,
             RIGHT_ARM ,
             LEFT_LEG  ,
             RIGHT_LEG ,
+    };
+
+    public final BodyPart[] equipment = new BodyPart[]{
+            HEAD      ,
+            BODY      ,
+            LEFT_ARM  ,
+            RIGHT_ARM ,
+            LEFT_LEG  ,
+            RIGHT_LEG ,
+            ENGINE
     };
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -104,6 +113,15 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return getInPercents(attackCharge, MAX_ATTACK_CHARGE);
     }
 
+    public void addAttackCharge(int attackCharge) {
+        if(this.attackCharge + attackCharge <= MAX_ATTACK_CHARGE)
+            this.attackCharge += attackCharge;
+    }
+
+    public void resetAttackCharge() {
+        this.attackCharge = 0;
+    }
+
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
 
@@ -114,18 +132,24 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return items;
     }
 
+    public boolean isEquipmentVisible(BodyPart bodyPart){
+        if(bodyPart.isArmorItem())
+            return hasArmor(bodyPart);
+        else return !getEquipment(bodyPart).isEmpty();
+    }
+
     public boolean hasArmor(BodyPart bodyPart) {
         return getArmorDurability(bodyPart) != 0;
     }
 
+    public ItemStack getEquipment(BodyPart part) {
+        return inventory.getItem(part.ordinal());
+    }
+
     public int getArmorDurability(BodyPart bodyPart) {
         var itemStack = inventory.getItem(bodyPart.getId());
-
         if(itemStack.isEmpty()) return 0;
-
-        var dur = itemStack.getDamageValue();
-        var max = itemStack.getMaxDamage();
-        return max - dur;
+        return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
 
     public ArmorData getArmorData(){
@@ -202,12 +226,11 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         this.inventory.addListener(this);
     }
 
-
     private void getTotalArmor(){
         totalDefense   = 0;
         totalToughness = 0;
 
-        for (var part : armorParts){
+        for (var part : armor){
             var itemStack = inventory.getItem(part.ordinal());
             if (!itemStack.isEmpty()){
                 totalDefense += ((PowerArmorItem)itemStack.getItem()).getMaterial().getDefenseForSlot(part);

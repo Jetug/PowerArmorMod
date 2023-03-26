@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
-import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,8 +27,8 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
-        if(entity.hasArmor(bodyPart) && !entity.isInvisible()) {
-            var item = entity.getItem(bodyPart);
+        if(entity.isEquipmentVisible(bodyPart) && !entity.isInvisible()) {
+            var item = entity.getEquipmentItem(bodyPart);
             if (item.getPartSettings() == null) return;
 
             var texture =  item.getPartSettings().getTexture();

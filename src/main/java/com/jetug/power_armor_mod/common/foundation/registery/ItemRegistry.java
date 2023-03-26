@@ -2,6 +2,8 @@ package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.foundation.item.ArmorFrameItem;
+import com.jetug.power_armor_mod.common.foundation.item.EngineItem;
+import com.jetug.power_armor_mod.common.foundation.item.HandItem;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import net.minecraft.world.item.Item;
@@ -38,6 +40,12 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
             new PowerArmorItem(IRON, BodyPart.LEFT_LEG));
+
+    public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", () ->
+            new EngineItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
+            new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
 
     //tutor
     public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",
