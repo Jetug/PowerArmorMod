@@ -1,24 +1,32 @@
 package com.jetug.power_armor_mod.client.events;
 
+import com.jetug.power_armor_mod.client.render.*;
+import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderArmEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.*;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.eventbus.api.*;
+import net.minecraftforge.fml.common.*;
 import org.lwjgl.opengl.GL11;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
+import static com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer.HAND_MODEL;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.HAND;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
@@ -88,15 +96,69 @@ public class PlayerEvents
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
+    public static void onCamera(EntityViewRenderEvent.CameraSetup event)
+    {
+        cameraRoll = event.getRoll();
+    }
+
+    public static float cameraRoll;
+    public static CustomHandRenderer handRenderer;
+    public static HandAmimator handAmimator;
+
+    public static void applyItemArmTransform(PoseStack pMatrixStack, HumanoidArm pHand, float pEquippedProg) {
+        int i = pHand == HumanoidArm.RIGHT ? 1 : -1;
+        pMatrixStack.translate((float)i * 0.56F, -0.52F + pEquippedProg * -0.6F, -0.72F);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent()
     public static void onHandRender(RenderArmEvent event)
     {
-        HAND.get().getRenderer().renderByItem(
-                new ItemStack(HAND.get()),
-                ItemTransforms.TransformType.GROUND,
-                event.getPoseStack(),
+        if(handRenderer == null)
+            handRenderer = new CustomHandRenderer();
+
+        var minecraft = Minecraft.getInstance();
+
+        var camera = minecraft.cameraEntity;
+        var poseStack = new PoseStack();
+
+        //poseStack.mulPose(Vector3f.ZP.rotationDegrees(cameraRoll));
+
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(camera.getXRot()));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
+//        Matrix3f matrix3f = poseStack.last().normal().copy();
+//        if (matrix3f.invert()) {
+//            RenderSystem.setInverseViewRotationMatrix(matrix3f);
+//        }
+
+        ///
+//        var poseStack = new PoseStack();
+//        poseStack.translate(-556, -59, 62);
+
+        //poseStack.pushPose();
+
+        applyItemArmTransform(poseStack, HumanoidArm.RIGHT, 1);
+
+//        poseStack.translate(-0.5D, -0.5D, -0.5D);
+
+//        poseStack.scale(1.0F, -1.0F, -1.0F);
+//        poseStack.translate(0.5f, 0.51f, 0.5f);
+
+
+        handRenderer.render(
+                null,
+                poseStack,
                 event.getMultiBufferSource(),
-                event.getPackedLight(),
-                OverlayTexture.NO_OVERLAY);
+                event.getPackedLight());
+
+
+//        HAND.get().getRenderer().renderByItem(
+//                new ItemStack(HAND.get()),
+//                ItemTransforms.TransformType.GROUND,
+//                poseStack,
+//                event.getMultiBufferSource(),
+//                event.getPackedLight(),
+//                OverlayTexture.NO_OVERLAY);
 
 //        HAND.get().getRenderer().render(
 //                HAND.get(),
