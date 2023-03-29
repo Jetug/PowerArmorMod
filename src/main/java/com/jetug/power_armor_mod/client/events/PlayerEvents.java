@@ -2,32 +2,17 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.render.*;
 import com.jetug.power_armor_mod.client.render.renderers.*;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fml.common.*;
-import org.lwjgl.opengl.GL11;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-import static com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer.HAND_MODEL;
-import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.HAND;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -98,10 +83,10 @@ public class PlayerEvents
     @SubscribeEvent()
     public static void onCamera(EntityViewRenderEvent.CameraSetup event)
     {
-        cameraRoll = event.getRoll();
+        cameraSetup = event;
     }
 
-    public static float cameraRoll;
+    public static EntityViewRenderEvent.CameraSetup cameraSetup;
     public static CustomHandRenderer handRenderer;
     public static HandAmimator handAmimator;
 
@@ -118,14 +103,20 @@ public class PlayerEvents
             handRenderer = new CustomHandRenderer();
 
         var minecraft = Minecraft.getInstance();
-
-        var camera = minecraft.cameraEntity;
+        var gameRenderer = minecraft.gameRenderer;
+        var camera = minecraft.gameRenderer.getMainCamera();
         var poseStack = new PoseStack();
-
+        var partialTick = minecraft.getFrameTime();
         //poseStack.mulPose(Vector3f.ZP.rotationDegrees(cameraRoll));
 
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(camera.getXRot()));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
+//        camera.setup(minecraft.level,
+//                minecraft.getCameraEntity() == null ? minecraft.player : minecraft.getCameraEntity(),
+//                !minecraft.options.getCameraType().isFirstPerson(),
+//                minecraft.options.getCameraType().isMirrored(), 1.0F);
+//
+//        camera.setAnglesInternal(cameraSetup.getYaw(), cameraSetup.getPitch());
+
+
 //        Matrix3f matrix3f = poseStack.last().normal().copy();
 //        if (matrix3f.invert()) {
 //            RenderSystem.setInverseViewRotationMatrix(matrix3f);
@@ -137,20 +128,47 @@ public class PlayerEvents
 
         //poseStack.pushPose();
 
+
+//www
+
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(camera.getXRot()));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(camera.getYRot() + 180.0F));
         applyItemArmTransform(poseStack, HumanoidArm.RIGHT, 1);
+        poseStack.pushPose();
+
+
+        bobView(poseStack, partialTick);
+
+//        double d0 = minecraft.options.fov;
+//
+//        minecraft.levelRenderer.prepareCullFrustum(poseStack, camera.getPosition(),
+//                gameRenderer.getProjectionMatrix(Math.max(d0, minecraft.options.fov)));
+
+
+
+//        try {
+//            poseStack.pushPose();
+//            var mt = GameRenderer.class.getDeclaredMethod("bobView", PoseStack.class, float.class);
+//            mt.setAccessible(true);
+//
+//            mt.invoke(gameRenderer, poseStack, 1f);
+//            poseStack.popPose();
+//
+//            mt.invoke(gameRenderer, poseStack, 1f);
+//
+//        } catch (Exception e) {
+//            var i = e;
+//        }
 
 //        poseStack.translate(-0.5D, -0.5D, -0.5D);
-
 //        poseStack.scale(1.0F, -1.0F, -1.0F);
 //        poseStack.translate(0.5f, 0.51f, 0.5f);
-
 
         handRenderer.render(
                 null,
                 poseStack,
                 event.getMultiBufferSource(),
                 event.getPackedLight());
-
 
 //        HAND.get().getRenderer().renderByItem(
 //                new ItemStack(HAND.get()),
@@ -169,6 +187,16 @@ public class PlayerEvents
 //        );
         //IGeoRenderer
         event.setCanceled(true);
+    }
+
+    private static void bobView(PoseStack pMatrixStack, float pPartialTicks) {
+        if (!(Minecraft.getInstance().getCameraEntity() instanceof Player player)) return;
+        float dist = player.walkDist - player.walkDistO;
+        float f1 = -(player.walkDist + dist * pPartialTicks);
+        float f2 = Mth.lerp(pPartialTicks, player.oBob, player.bob);
+        pMatrixStack.translate(Mth.sin(f1 * (float)Math.PI) * f2 * 0.5F, -Math.abs(Mth.cos(f1 * (float)Math.PI) * f2), 0.0D);
+        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.sin(f1 * (float)Math.PI) * f2 * 3.0F));
+        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees(Math.abs(Mth.cos(f1 * (float)Math.PI - 0.2F) * f2) * 5.0F));
     }
 
 //    @OnlyIn(Dist.CLIENT)
