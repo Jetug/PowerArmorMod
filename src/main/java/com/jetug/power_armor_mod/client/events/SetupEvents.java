@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 
 import static com.jetug.power_armor_mod.client.KeyBindings.*;
+import static com.jetug.power_armor_mod.client.render.CustomHandRenderer.registerHandRenderer;
 import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry.*;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -48,6 +49,7 @@ public final class SetupEvents {
         ClientConfig.resourceManager.loadConfigs();
         registerClickListeners();
         setupGui(event);
+        registerHandRenderer();
     }
 
     private static void registerClickListeners() {

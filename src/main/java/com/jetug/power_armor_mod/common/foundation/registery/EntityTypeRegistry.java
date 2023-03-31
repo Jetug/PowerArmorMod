@@ -18,7 +18,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
             registerEntity("power_armor", EntityType.Builder
                     .of(PowerArmorEntity::new, MobCategory.MISC)
-                    .sized(1.1f, 2.2f));
+                    .sized(1.0f, 2.3f));
 
     public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_PART =
             registerEntity("power_armor_part", EntityType.Builder.of(PowerArmorPartEntity::new, MobCategory.MISC));

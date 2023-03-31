@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -39,11 +40,13 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.client.input.InputController.isShiftDown;
-import static com.jetug.power_armor_mod.common.foundation.EntityHelper.giveEntityItemToPlayer;
+import static com.jetug.power_armor_mod.client.input.InputController.*;
+import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.setAnimation;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.getPercentOf;
 import static net.minecraft.util.Mth.*;
+import static net.minecraft.world.entity.EntityDimensions.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -78,6 +81,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 .add(Attributes.JUMP_STRENGTH, 0.5D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pPose) {
+        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
+    }
+
+
 
     @Override
     public void tick() {
@@ -186,16 +196,17 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        float posX = sin(this.yBodyRot * ROTATION);
-        float posZ = cos(this.yBodyRot * ROTATION);
-        double posXZ = -0.3;
-        double posY = 0.9;
-        entity.setPos(this.getX() + (posXZ * posX),
-                this.getY() + this.getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
-                this.getZ() - (posXZ * posZ));
+        double posX = sin(yBodyRot * ROTATION);
+        double posZ = cos(yBodyRot * ROTATION);
+        double posY = isShiftDown() ?  1.5 : 0.9;
+        double posXZ = 0;
+
+        entity.setPos(getX() + (posXZ * posX),
+                getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
+                getZ() - (posXZ * posZ));
 
         if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.yBodyRot = this.yBodyRot;
+            livingEntity.yBodyRot = yBodyRot;
         }
     }
 
@@ -309,7 +320,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
         isDashing = true;
         dashDirection = direction;
-        timer.addTimer(new PlayOnceTimerTask(DASH_DURATION, () -> isDashing = false));
+        timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
 
         push(direction, player);
     }
@@ -439,7 +450,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-    private Boolean isMoving(){
+    public Boolean isMoving(){
         var deltaMovement = getDeltaMovement();
         return deltaMovement.x != 0.0
             && deltaMovement.z != 0.0;
@@ -466,8 +477,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             }
             else {
                 if (isShiftDown()) {
-                    setAnimation(controller, "sneak", PLAY_ONCE);
-                    setAnimation(controller, "sneak_end", LOOP);
+                    controller.setAnimation(new AnimationBuilder()
+                            .addAnimation("sneak", PLAY_ONCE)
+                            .addAnimation("sneak_end", LOOP));
+
+//                    setAnimation(controller, "sneak", PLAY_ONCE);
+//                    setAnimation(controller, "sneak_end", LOOP);
                     return PlayState.CONTINUE;
                 }
             }
@@ -486,9 +501,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-    private void setAnimation(AnimationController<?> controller, String name, ILoopType loopType){
-        controller.setAnimation(new AnimationBuilder().addAnimation(name, loopType));
-    }
+
 
     private void baseTravel(Vec3 travelVector) {
         if (!isAlive()) return;

@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.client.input;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
+import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.InputEvent;
@@ -72,7 +73,7 @@ public class InputController {
             LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
 
             if(keysEqual(key, options.keyUse)){
-                var pa = getLocalPlayerArmor();
+                var pa = PlayerExtension.getPlayerArmor();
                 pa.addAttackCharge(1);
             }
         }
@@ -92,7 +93,7 @@ public class InputController {
             }
 
             if(keysEqual(key, options.keyUse, options.keyAttack) ){
-                var pa = getLocalPlayerArmor();
+                var pa = PlayerExtension.getPlayerArmor();
                 pa.resetAttackCharge();
             }
         }

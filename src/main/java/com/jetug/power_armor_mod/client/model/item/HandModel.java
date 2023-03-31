@@ -24,6 +24,6 @@ public class HandModel extends AnimatedGeoModel {
 
     @Override
     public ResourceLocation getAnimationFileLocation(Object animatable) {
-        return POWER_ARMOR_ANIMATION_LOCATION;
+        return HAND_ANIMATION_LOCATION;
     }
 }

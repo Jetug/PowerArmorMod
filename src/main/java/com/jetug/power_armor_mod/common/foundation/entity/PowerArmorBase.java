@@ -113,6 +113,14 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return getInPercents(attackCharge, MAX_ATTACK_CHARGE);
     }
 
+    public boolean isChargingAttack(){
+        return attackCharge > 0;
+    }
+
+    public boolean isMaxCharge(){
+        return attackCharge == MAX_ATTACK_CHARGE;
+    }
+
     public void addAttackCharge(int attackCharge) {
         if(this.attackCharge + attackCharge <= MAX_ATTACK_CHARGE)
             this.attackCharge += attackCharge;

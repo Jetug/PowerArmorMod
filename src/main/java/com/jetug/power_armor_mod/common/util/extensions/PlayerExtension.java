@@ -20,7 +20,7 @@ public class PlayerExtension {
         return player.getVehicle() instanceof PowerArmorEntity;
     }
 
-    public static PowerArmorEntity getLocalPlayerArmor(){
+    public static PowerArmorEntity getPlayerArmor(){
         try{
             return (PowerArmorEntity) Minecraft.getInstance().player.getVehicle();
         }

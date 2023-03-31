@@ -1,60 +1,34 @@
 package com.jetug.power_armor_mod.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexMultiConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.util.Color;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.provider.GeoModelProvider;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import com.jetug.power_armor_mod.client.render.renderers.*;
+import software.bernie.geckolib3.core.*;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.model.*;
 
 import static com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer.HAND_MODEL;
 
-public class CustomHandRenderer implements IGeoRenderer {
-    protected MultiBufferSource rtb = null;
+public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
+    private static CustomHandRenderer handRenderer;
+    private static HandAmimator handAmimator;
 
-    @Override
-    public void setCurrentRTB(MultiBufferSource bufferSource) {
-        this.rtb = bufferSource;
+    static {
+        AnimationController.addModelFetcher(animatable -> animatable instanceof HandAmimator? HAND_MODEL: null);
     }
 
-    @Override
-    public MultiBufferSource getCurrentRTB() {
-        return this.rtb;
+    public CustomHandRenderer(AnimatedGeoModel<IAnimatable> model) {
+        super(model);
     }
 
-    @Override
-    public GeoModelProvider getGeoModelProvider() {
-        return HAND_MODEL;
+    public static void registerHandRenderer(){
+        handRenderer = new CustomHandRenderer(HAND_MODEL);
+        handAmimator = new HandAmimator();
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(Object animatable) {
-        return HAND_MODEL.getTextureLocation(animatable);
-
+    public static CustomHandRenderer getHandRenderer(){
+        return handRenderer;
     }
 
-    public void render(Object animatable,
-                       PoseStack poseStack,
-                       @Nullable MultiBufferSource bufferSource,
-                       int packedLight) {
-
-        Color renderColor = getRenderColor(animatable, 0, poseStack, bufferSource, null, packedLight);
-        RenderType renderType = getRenderType(animatable, 0, poseStack, bufferSource, null, packedLight,
-                getTextureLocation(animatable));
-        render(getModel(), animatable, 0, renderType, poseStack, bufferSource, null, packedLight, OverlayTexture.NO_OVERLAY,
-                renderColor.getRed() / 255f, renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
-                renderColor.getAlpha() / 255f);
-
-    }
-
-    public GeoModel getModel(){
-        return getGeoModelProvider().getModel(getGeoModelProvider().getModelLocation(null));
+    public static HandAmimator getHandAmimator(){
+        return handAmimator;
     }
 }
