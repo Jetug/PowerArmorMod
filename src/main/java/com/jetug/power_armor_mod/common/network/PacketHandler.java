@@ -34,6 +34,7 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++, PowerArmorPacket.class , PowerArmorPacket::write , PowerArmorPacket::read, PowerArmorPacket::handle );
 		HANDLER.registerMessage(disc++, InteractPacket.class   , InteractPacket::write	 , InteractPacket::read	 , InteractPacket::handle	);
 		HANDLER.registerMessage(disc++, HurtPacket.class	   , HurtPacket::write		 , HurtPacket::read	 	 , HurtPacket::handle		);
+		HANDLER.registerMessage(disc++, GenericPacket.class	   , GenericPacket::write	 , GenericPacket::read	 , GenericPacket::handle	);
 	}
 
 	public static void sendTo(Object msg, ServerPlayer player) {

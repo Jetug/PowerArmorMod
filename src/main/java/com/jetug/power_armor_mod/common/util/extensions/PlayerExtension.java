@@ -20,7 +20,7 @@ public class PlayerExtension {
         return player.getVehicle() instanceof PowerArmorEntity;
     }
 
-    public static PowerArmorEntity getPlayerArmor(){
+    public static PowerArmorEntity getPlayerPowerArmor(){
         try{
             return (PowerArmorEntity) Minecraft.getInstance().player.getVehicle();
         }
@@ -29,7 +29,7 @@ public class PlayerExtension {
         }
     }
 
-    public static PowerArmorEntity getPlayerArmor(Player player){
+    public static PowerArmorEntity getPlayerPowerArmor(Player player){
         try{ return (PowerArmorEntity) player.getVehicle(); }
         catch (Exception e){ return null; }
     }

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -32,19 +31,19 @@ public class HandAmimator implements IAnimatable {
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
         if(!isWearingPowerArmor()) return PlayState.STOP;
         var controller = event.getController();
-        var pa = getPlayerArmor();
+        var pa = getPlayerPowerArmor();
         controller.animationSpeed = 1;
 
 
-//        if(pa.isPunching()){
-//            setAnimation(controller,"punch", PLAY_ONCE);
-//        }
-        if(pa.isMaxCharge()){
+        if(pa.isPunching()){
+            setAnimation(controller,"punch", PLAY_ONCE);
+        }
+        else if(pa.isMaxCharge()){
             setAnimation(controller,"punch_max_charge", LOOP);
         }
         else if(pa.isChargingAttack()){
-            controller.animationSpeed = 0.35;
-            setAnimation(controller,"punch_charge", HOLD_ON_LAST_FRAME);
+            controller.animationSpeed = 0.3;
+            setAnimation(controller,"punch_charge", LOOP);
         }
         else if(player.swinging){
             controller.animationSpeed = 2;

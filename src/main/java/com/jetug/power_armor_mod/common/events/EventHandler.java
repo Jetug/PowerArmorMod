@@ -1,14 +1,9 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.constants.Global;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -39,7 +34,7 @@ public class EventHandler {
         var target = event.getTarget();
 
         if(isWearingPowerArmor(player)){
-            getPlayerArmor(player).punchTarget(target);
+            getPlayerPowerArmor(player).punchTarget(target);
         }
     }
 

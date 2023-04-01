@@ -73,8 +73,8 @@ public class InputController {
             LOGGER.log(Level.INFO, "onRepeat: ticks:" + ticks);
 
             if(keysEqual(key, options.keyUse)){
-                var pa = PlayerExtension.getPlayerArmor();
-                pa.addAttackCharge(1);
+                var pa = PlayerExtension.getPlayerPowerArmor();
+                pa.addAttackCharge();
             }
         }
     }
@@ -93,7 +93,7 @@ public class InputController {
             }
 
             if(keysEqual(key, options.keyUse, options.keyAttack) ){
-                var pa = PlayerExtension.getPlayerArmor();
+                var pa = PlayerExtension.getPlayerPowerArmor();
                 pa.resetAttackCharge();
             }
         }

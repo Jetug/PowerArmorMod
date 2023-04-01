@@ -29,7 +29,7 @@ public class HeatRenderer implements IIngameOverlay
         gui.blit(poseStack, x, y, 0, 0, 9, BAR_HEIGHT);
 
         RenderSystem.setShaderTexture(0, ICONS_LOCATION);
-        var armor = PlayerExtension.getPlayerArmor();
+        var armor = PlayerExtension.getPlayerPowerArmor();
         int heat = armor.getHeatInPercent() / 2;
 
         var offset = 50 - heat + 1;

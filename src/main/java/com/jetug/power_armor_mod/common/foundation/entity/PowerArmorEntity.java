@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.network.actions.DashAction;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
@@ -42,9 +43,10 @@ import java.util.List;
 
 import static com.jetug.power_armor_mod.client.input.InputController.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
+import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.setAnimation;
-import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.getPercentOf;
+import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
+import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 import static net.minecraft.util.Mth.*;
 import static net.minecraft.world.entity.EntityDimensions.*;
 import static org.apache.logging.log4j.Level.*;
@@ -54,8 +56,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
     public static final int DASH_HEAT = 100;
+    public static final int PUNCH_HEAT = 100;
     public static final int MAX_PUNCH_FORCE = 20;
     public static final int DASH_DURATION = 10;
+    public static final int PUNCH_DURATION = 10;
 
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     public final Speedometer speedometer = new Speedometer(this);
@@ -66,6 +70,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     private boolean isDashing = false;
+    private boolean isPunching = false;
     private DashDirection dashDirection;
 
     public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
@@ -92,6 +97,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
+
+        if(attackCharge < 0){
+            var i = attackCharge;
+        }
+
 
         if(isServerSide && isDashing) {
             pushEntitiesAround();
@@ -298,6 +308,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     public void dash(DashDirection direction) {
+        if(isClientSide)
+            doServerAction(new DashAction(direction), getId());
         doHeatAction(DASH_HEAT, () -> _dash(direction));
     }
 
@@ -308,10 +320,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void punchTarget(Entity target){
         if(!hasPlayerPassenger()) return;
 
-        var vector = getPlayerPassenger().getViewVector(1.0F);
-        var force = getPercentOf(MAX_PUNCH_FORCE, getAttackChargeInPercent());
+        doHeatAction(PUNCH_HEAT, () -> {
+            var vector = getPlayerPassenger().getViewVector(1.0F);
+            var force = getPercentOf(MAX_PUNCH_FORCE, getAttackChargeInPercent());
 
-        target.push(vector.x * force, vector.y * force, vector.z * force);
+            target.push(vector.x * force, vector.y * force, vector.z * force);
+            isPunching = true;
+            timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
+        });
     }
 
     private void _dash(DashDirection direction){
@@ -558,5 +574,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         this.setYRot(livingEntity.getYRot());
         this.setXRot(livingEntity.getXRot() * 0.5F);
         this.setRot(getYRot(), getXRot());
+    }
+
+    public boolean isPunching() {
+        return isPunching;
     }
 }

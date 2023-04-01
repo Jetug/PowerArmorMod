@@ -2,7 +2,10 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.network.actions.DashAction;
+import com.jetug.power_armor_mod.common.network.actions.InventorySyncAction;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
+import com.jetug.power_armor_mod.common.util.enums.ActionType;
 import com.jetug.power_armor_mod.common.util.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
@@ -15,14 +18,16 @@ import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 
-import static com.jetug.power_armor_mod.common.network.data.ArmorData.HEAT;
+import static com.jetug.power_armor_mod.common.network.PacketSender.*;
+import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
+import static com.jetug.power_armor_mod.common.util.constants.NBT.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.getInPercents;
+import static com.jetug.power_armor_mod.common.util.helpers.InventoryHelper.*;
+import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
-    protected static final String SLOT_TAG = "Slot";
-    protected static final String ITEMS_TAG = "Items";
     protected static final int MAX_ATTACK_CHARGE = 60;
+    public static final int COOLING = 5;
 
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
@@ -66,7 +71,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
-        subHeat(2);
+        subHeat(COOLING);
     }
 
     @Override
@@ -85,8 +90,10 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     @Override
     public void containerChanged(@NotNull Container container) {
-        //syncDataWithClient();
         getTotalArmor();
+
+//        if(isServerSide)
+//            doClientAction(new InventorySyncAction(inventory), get);
     }
 
     public void addHeat(int value){
@@ -121,13 +128,27 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return attackCharge == MAX_ATTACK_CHARGE;
     }
 
-    public void addAttackCharge(int attackCharge) {
-        if(this.attackCharge + attackCharge <= MAX_ATTACK_CHARGE)
-            this.attackCharge += attackCharge;
+    public void addAttackCharge() {
+        var value = 1;
+        if(isClientSide) doServerAction(ActionType.ADD_ATTACK_CHARGE);
+        if(attackCharge + value <= MAX_ATTACK_CHARGE)
+            attackCharge += value;
     }
 
     public void resetAttackCharge() {
-        this.attackCharge = 0;
+        setAttackCharge(0);
+    }
+
+    public void setAttackCharge(int value){
+        if(value == 0){
+            var v = attackCharge;
+        }
+        if(value < 0)
+            attackCharge = 0;
+        else if(value > MAX_ATTACK_CHARGE)
+            attackCharge = MAX_ATTACK_CHARGE;
+        else
+            attackCharge = value;
     }
 
     public Iterable<ItemStack> getPartSlots(){
@@ -164,7 +185,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         var data = new ArmorData(getId());
         data.inventory = serializeInventory(inventory);
         data.heat = heat;
-        data.attackCharge = attackCharge;
+        //data.attackCharge = attackCharge;
 
         return data;
     }
@@ -180,14 +201,13 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     public void setServerArmorData(ArmorData data){
         //deserializeInventory(inventory, data.inventory);
-        heat = data.heat;
-        attackCharge = data.attackCharge;
+        //heat = data.heat;
+        //setAttackCharge(data.attackCharge);
     }
 
     public void setInventory(ListTag tags){
         deserializeInventory(inventory, tags);
     }
-
 
     protected void doHeatAction(int heat, SimpleAction action){
         if(!canDoAction(heat)) return;
@@ -247,25 +267,5 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         }
     }
 
-    private ListTag serializeInventory(@NotNull SimpleContainer inventory){
-        ListTag nbtTags = new ListTag();
 
-        for (int slotId = 0; slotId < inventory.getContainerSize(); ++slotId) {
-            var itemStack = inventory.getItem(slotId);
-            CompoundTag compoundNBT = new CompoundTag();
-            compoundNBT.putByte(SLOT_TAG, (byte) slotId);
-            itemStack.save(compoundNBT);
-            nbtTags.add(compoundNBT);
-        }
-
-        return nbtTags;
-    }
-
-    private void deserializeInventory(SimpleContainer inventory, ListTag nbtTags){
-        for (Tag nbt : nbtTags) {
-            var compoundNBT = (CompoundTag) nbt;
-            int slotId = compoundNBT.getByte(SLOT_TAG) & 255;
-            inventory.setItem(slotId, ItemStack.of(compoundNBT));
-        }
-    }
 }

@@ -57,7 +57,7 @@ PlayerRenderMixin {
 //            var renderer = HAND.get().getRenderer();
 //            //renderer.renderByItem(new ItemStack(HAND.get()), ItemTransforms.TransformType.GROUND, pMatrixStack, pBuffer, pCombinedLight, 0);
 //
-//            var entity = getPlayerArmor();
+//            var entity = getPlayerPowerArmor();
 //            Minecraft.getInstance().getItemInHandRenderer().renderItem(entity, new ItemStack(HAND.get()), ItemTransforms.TransformType.GROUND, false, pMatrixStack, pBuffer, pCombinedLight);
 //
 //            ci.cancel();
