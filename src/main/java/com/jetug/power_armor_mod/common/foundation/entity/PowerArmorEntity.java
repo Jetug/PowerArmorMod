@@ -7,10 +7,8 @@ import com.jetug.power_armor_mod.common.network.actions.DashAction;
 import com.jetug.power_armor_mod.common.util.constants.Global;
 import com.jetug.power_armor_mod.common.util.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.*;
-import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +20,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
-import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +29,6 @@ import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -45,10 +41,10 @@ import static com.jetug.power_armor_mod.client.input.InputController.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 import static net.minecraft.util.Mth.*;
-import static net.minecraft.world.entity.EntityDimensions.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -87,10 +83,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
-    @Override
-    public EntityDimensions getDimensions(Pose pPose) {
-        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
-    }
+//    @Override
+//    public EntityDimensions getDimensions(Pose pPose) {
+//        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
+//    }
 
 
 
@@ -206,10 +202,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        double posX = sin(yBodyRot * ROTATION);
-        double posZ = cos(yBodyRot * ROTATION);
-        double posY = isShiftDown() ?  1.5 : 0.9;
-        double posXZ = 0;
+        var player = getPlayerPassenger();
+        var posX = sin(yBodyRot * ROTATION);
+        var posZ = cos(yBodyRot * ROTATION);
+        var posY = player.isShiftKeyDown() ?  1.5f : 0.9f;
+        var posXZ = 0;
 
         entity.setPos(getX() + (posXZ * posX),
                 getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
@@ -455,7 +452,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 setAnimation(controller, "hurt", PLAY_ONCE);
                 return PlayState.CONTINUE;
             }
-            else if (isMoving()) {
+            else if (isWalking()) {
                 setAnimation(controller, "walk_arms", LOOP);
                 controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 return PlayState.CONTINUE;
@@ -466,7 +463,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-    public Boolean isMoving(){
+    public Boolean isWalking(){
         var deltaMovement = getDeltaMovement();
         return deltaMovement.x != 0.0
             && deltaMovement.z != 0.0;
@@ -475,14 +472,16 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
-        if (getPlayerPassenger() == null)
-            return PlayState.STOP;
+        if (getPlayerPassenger() == null) return PlayState.STOP;
 
         var move = getDeltaMovement();
 
+        var player = getPlayerPassenger();
+        var pa = getPlayerPowerArmor(player);
+
         if(!isDashing) {
-            if (isMoving()) {
-                if (isShiftDown()){
+            if (pa.isWalking()) {
+                if (player.isShiftKeyDown()){
                     setAnimation(controller, "sneak_walk", LOOP);
                 }
                 else {
@@ -492,9 +491,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 return PlayState.CONTINUE;
             }
             else {
-                if (isShiftDown()) {
+                if (player.isShiftKeyDown()) {
                     controller.setAnimation(new AnimationBuilder()
-                            .addAnimation("sneak", PLAY_ONCE)
+                            //.addAnimation("sneak", PLAY_ONCE)
                             .addAnimation("sneak_end", LOOP));
 
 //                    setAnimation(controller, "sneak", PLAY_ONCE);

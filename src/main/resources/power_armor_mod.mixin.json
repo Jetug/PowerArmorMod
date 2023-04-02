@@ -15,6 +15,7 @@
   "refmap": "power_armor_mod.mixin-refmap.json",
   "minVersion": "0.8",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "PlayerMixin"
   ]
 }

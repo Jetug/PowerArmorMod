@@ -25,10 +25,10 @@ public class InputController {
 
     public static void onArmorKeyInput(InputEvent.KeyInputEvent event, PowerArmorEntity entity) {
         if (OPTIONS.keyJump.isDown()) entity.jump();
-        if (OPTIONS.keyShift.isDown()) {
-            OPTIONS.keyShift.setDown(false);
-            shiftIsDown = true;
-        }
+//        if (OPTIONS.keyShift.isDown()) {
+//            OPTIONS.keyShift.setDown(false);
+//            shiftIsDown = true;
+//        }
 
         if (event.getAction() == GLFW.GLFW_PRESS) {
             if (LEAVE.isDown()) {

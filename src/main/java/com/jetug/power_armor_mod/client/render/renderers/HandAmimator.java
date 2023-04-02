@@ -49,7 +49,7 @@ public class HandAmimator implements IAnimatable {
             controller.animationSpeed = 2;
             setAnimation(controller,"hit", LOOP);
         }
-        else if(pa.isMoving()){
+        else if(pa.isWalking()){
             setAnimation(controller,"walk", LOOP);
         }
         else {
