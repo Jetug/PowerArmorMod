@@ -37,7 +37,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.jetug.power_armor_mod.client.input.InputController.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
@@ -198,28 +197,28 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        var player = getPlayerPassenger();
-        var posX = sin(yBodyRot * ROTATION);
-        var posZ = cos(yBodyRot * ROTATION);
-        var posY = player.isShiftKeyDown() ?  1.5f : 0.9f;
-        var posXZ = 0;
+        var height = getPlayerPassenger().isShiftKeyDown() ?  1.5f : 0.9f;
+        var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - height;
+        entity.setPos(getX(), posY, getZ());
 
-        entity.setPos(getX() + (posXZ * posX),
-                getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - posY,
-                getZ() - (posXZ * posZ));
-
-        if (entity instanceof LivingEntity livingEntity) {
+        if (entity instanceof LivingEntity livingEntity)
             livingEntity.yBodyRot = yBodyRot;
-        }
     }
 
     @Override
     public void travel(@NotNull Vec3 travelVector) {
-        baseTravel(travelVector);
+        if (!isAlive()) return;
+        if (isVehicle() && hasPlayerPassenger())
+            travelWithPlayerPassenger(travelVector);
+        else {
+            this.flyingSpeed = 0.02F;
+            super.travel(travelVector);
+        }
     }
 
     @Override
@@ -289,11 +288,18 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
+    public Boolean isWalking(){
+        if (!hasPlayerPassenger())
+            return false;
+
+        var player = getPlayerPassenger();
+        return player.xxa != 0.0 || player.zza != 0.0;
+    }
+
     public boolean hasPlayerPassenger(){
         return getControllingPassenger() instanceof Player;
     }
 
-    @Nullable
     public Player getPlayerPassenger(){
         if(getControllingPassenger() instanceof Player player)
             return player;
@@ -463,12 +469,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-    public Boolean isWalking(){
-        var deltaMovement = getDeltaMovement();
-        return deltaMovement.x != 0.0
-            && deltaMovement.z != 0.0;
-    }
-
     private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
@@ -516,17 +516,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-
-
-    private void baseTravel(Vec3 travelVector) {
-        if (!isAlive()) return;
-        if (isVehicle() && hasPlayerPassenger())
-            travelWithPlayerPassenger(travelVector);
-        else {
-            this.flyingSpeed = 0.02F;
-            super.travel(travelVector);
-        }
-    }
 
     private void travelWithPlayerPassenger(Vec3 travelVector) {
         var player = getPlayerPassenger();

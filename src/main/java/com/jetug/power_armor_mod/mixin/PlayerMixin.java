@@ -22,6 +22,7 @@ public abstract class PlayerMixin extends Entity {
 
     @Inject(at = @At(value = "HEAD"), method = "wantsToStopRiding", cancellable = true)
     private void wantsToStopRiding(CallbackInfoReturnable<Boolean> cir) {
-        if(isWearingPowerArmor()) cir.setReturnValue(false);
+        if(isWearingPowerArmor(this))
+            cir.setReturnValue(false);
     }
 }

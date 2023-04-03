@@ -17,19 +17,8 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*
 
 @SuppressWarnings("ConstantConditions")
 public class InputController {
-    private static boolean shiftIsDown = false;
-
-    public static Boolean isShiftDown(){
-        return shiftIsDown;
-    }
-
     public static void onArmorKeyInput(InputEvent.KeyInputEvent event, PowerArmorEntity entity) {
         if (OPTIONS.keyJump.isDown()) entity.jump();
-//        if (OPTIONS.keyShift.isDown()) {
-//            OPTIONS.keyShift.setDown(false);
-//            shiftIsDown = true;
-//        }
-
         if (event.getAction() == GLFW.GLFW_PRESS) {
             if (LEAVE.isDown()) {
                 stopWearingArmor(getLocalPlayer());
@@ -44,7 +33,7 @@ public class InputController {
 
         var key = event.getKey();
         var armorEntity = (PowerArmorEntity) getLocalPlayer().getVehicle();
-        DashDirection direction = null;
+        DashDirection direction;
 
         if (keysEqual(key, OPTIONS.keyUp)) {
             direction = DashDirection.FORWARD;
@@ -87,10 +76,6 @@ public class InputController {
     public static void onRelease(int key){
         if (isWearingPowerArmor()) {
             var options = Minecraft.getInstance().options;
-
-            if(keysEqual(key, options.keyShift)){
-                shiftIsDown = false;
-            }
 
             if(keysEqual(key, options.keyUse, options.keyAttack) ){
                 var pa = PlayerExtension.getPlayerPowerArmor();
