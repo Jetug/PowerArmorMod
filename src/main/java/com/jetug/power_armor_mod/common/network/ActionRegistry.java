@@ -1,4 +1,8 @@
-package com.jetug.power_armor_mod.common.network.actions;
+package com.jetug.power_armor_mod.common.network;
+
+import com.jetug.power_armor_mod.common.network.actions.Action;
+import com.jetug.power_armor_mod.common.network.actions.DashAction;
+import com.jetug.power_armor_mod.common.network.actions.InventorySyncAction;
 
 import java.util.*;
 

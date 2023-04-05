@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import static com.jetug.power_armor_mod.client.ClientConfig.*;
-import static com.jetug.power_armor_mod.client.input.InputController.*;
+import static com.jetug.power_armor_mod.client.input.InputHandler.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -25,7 +25,7 @@ public class InputEvents {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    //@OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onMouseKeyInput(InputEvent.MouseInputEvent event) {
         if (event.getAction() == GLFW.GLFW_PRESS) {

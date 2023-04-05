@@ -1,14 +1,9 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.network.actions.Action;
-import com.jetug.power_armor_mod.common.network.actions.ActionRegistry;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
-import net.minecraft.client.Minecraft;
+import com.jetug.power_armor_mod.common.network.ActionRegistry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;

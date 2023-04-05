@@ -1,14 +1,10 @@
 package com.jetug.power_armor_mod.common.network.actions;
 
-import com.jetug.power_armor_mod.common.network.packet.GenericPacket;
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
+import com.jetug.power_armor_mod.common.network.ActionRegistry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.network.actions.ActionRegistry.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
 import static net.minecraftforge.network.NetworkEvent.*;
 

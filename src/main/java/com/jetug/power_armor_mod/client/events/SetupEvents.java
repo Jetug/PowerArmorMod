@@ -2,8 +2,8 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.*;
+import com.jetug.power_armor_mod.client.input.InputHandler;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
-import com.jetug.power_armor_mod.client.input.InputController;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
@@ -53,9 +53,9 @@ public final class SetupEvents {
     }
 
     private static void registerClickListeners() {
-        DOUBLE_CLICK_CONTROLLER.addListener(InputController::onDoubleClick);
-        LONG_CLICK_CONTROLLER.addRepeatListener(InputController::onRepeat);
-        LONG_CLICK_CONTROLLER.addReleaseListener(InputController::onLongRelease);
+        DOUBLE_CLICK_CONTROLLER.addListener(InputHandler::onDoubleClick);
+        LONG_CLICK_CONTROLLER.setRepeatListener(InputHandler::onRepeat);
+        LONG_CLICK_CONTROLLER.setReleaseListener(InputHandler::onLongRelease);
     }
 
     public static void setupGui(FMLClientSetupEvent event)

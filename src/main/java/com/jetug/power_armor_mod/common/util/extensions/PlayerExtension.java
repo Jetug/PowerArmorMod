@@ -35,7 +35,7 @@ public class PlayerExtension {
         catch (Exception e){ return null; }
     }
 
-    public static void stopWearingArmor(LocalPlayer player) {
+    public static void stopWearingArmor(Player player) {
         player.stopRiding();
         doServerAction(ActionType.DISMOUNT);
         player.setInvisible(false);

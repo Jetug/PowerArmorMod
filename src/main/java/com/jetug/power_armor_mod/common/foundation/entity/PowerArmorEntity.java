@@ -324,8 +324,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         if(!hasPlayerPassenger()) return;
 
         doHeatAction(PUNCH_HEAT, () -> {
-            var vector = getPlayerPassenger().getViewVector(1.0F);
-            var force = getPercentOf(MAX_PUNCH_FORCE, getAttackChargeInPercent());
+            var vector= getPlayerPassenger().getViewVector(1.0F);
+            var charge = getAttackChargeInPercent();
+            var force = getPercentOf(MAX_PUNCH_FORCE, charge);
 
             target.push(vector.x * force, vector.y * force, vector.z * force);
             isPunching = true;

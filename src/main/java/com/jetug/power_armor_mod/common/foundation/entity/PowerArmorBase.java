@@ -136,6 +136,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     }
 
     public void resetAttackCharge() {
+        if(isClientSide) doServerAction(ActionType.RESET_ATTACK_CHARGE);
         setAttackCharge(0);
     }
 
