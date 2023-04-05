@@ -66,9 +66,7 @@ public class InputHandler {
         }
     }
 
-    public static void onLongRelease(int key, int ticks){
-
-    }
+    public static void onLongRelease(int key, int ticks){}
 
     @SuppressWarnings("ConstantConditions")
     public static void onRelease(int key){
