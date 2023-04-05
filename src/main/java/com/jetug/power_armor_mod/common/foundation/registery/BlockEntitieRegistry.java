@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.test.block.entity.custom.GemCuttingStationBlockEntity;
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.test.block.entity.custom.GemCuttingStationBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

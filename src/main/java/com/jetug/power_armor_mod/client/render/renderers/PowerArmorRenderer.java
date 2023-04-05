@@ -3,16 +3,17 @@ package com.jetug.power_armor_mod.client.render.renderers;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.common.json.*;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.json.EquipmentAttachment;
+import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
+
 import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
-import com.jetug.power_armor_mod.common.util.enums.*;
+
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.model.TridentModel;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
-import net.minecraft.world.item.TridentItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.apache.logging.log4j.util.TriConsumer;

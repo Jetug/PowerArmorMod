@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;

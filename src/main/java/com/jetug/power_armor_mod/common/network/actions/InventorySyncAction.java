@@ -1,15 +1,13 @@
 package com.jetug.power_armor_mod.common.network.actions;
 
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.util.constants.NBT.ITEMS_TAG;
+import static com.jetug.power_armor_mod.common.data.constants.NBT.ITEMS_TAG;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.InventoryHelper.*;
 import static net.minecraftforge.network.NetworkEvent.*;

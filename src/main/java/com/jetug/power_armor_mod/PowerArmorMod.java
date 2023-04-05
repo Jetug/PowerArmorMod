@@ -1,8 +1,8 @@
 package com.jetug.power_armor_mod;
 
 import com.jetug.power_armor_mod.common.foundation.registery.*;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.test.screen.ModMenuTypes;
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.test.screen.ModMenuTypes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

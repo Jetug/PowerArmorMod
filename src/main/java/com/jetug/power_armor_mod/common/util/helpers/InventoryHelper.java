@@ -7,7 +7,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.power_armor_mod.common.util.constants.NBT.*;
+import static com.jetug.power_armor_mod.common.data.constants.NBT.*;
 
 public class InventoryHelper {
     public static ListTag serializeInventory(@NotNull SimpleContainer inventory){

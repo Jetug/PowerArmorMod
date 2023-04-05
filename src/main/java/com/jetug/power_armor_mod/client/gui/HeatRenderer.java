@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 public class HeatRenderer implements IIngameOverlay

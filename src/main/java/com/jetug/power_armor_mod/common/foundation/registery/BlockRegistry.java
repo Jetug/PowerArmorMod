@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.test.block.custom.GemCuttingStationBlock;
+import com.jetug.power_armor_mod.common.test.block.custom.GemCuttingStationBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -16,7 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
+import static com.jetug.power_armor_mod.common.data.constants.Global.MOD_ID;
 
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);

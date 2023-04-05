@@ -1,7 +1,9 @@
 package com.jetug.power_armor_mod.client.resources;
 
 import com.google.gson.*;
-import com.jetug.power_armor_mod.common.json.*;
+import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
+import com.jetug.power_armor_mod.common.data.json.FrameSettings;
+import com.jetug.power_armor_mod.common.data.json.ModelSettingsBase;
 import net.minecraft.client.*;
 import net.minecraft.resources.*;
 import javax.annotation.*;

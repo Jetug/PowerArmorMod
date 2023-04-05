@@ -21,7 +21,7 @@ public class InputAction extends Action<InputAction>{
     }
 
     public int getId(){
-        return 0;
+        return 2;
     }
 
     @Override

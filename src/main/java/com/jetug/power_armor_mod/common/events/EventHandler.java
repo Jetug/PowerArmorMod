@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;

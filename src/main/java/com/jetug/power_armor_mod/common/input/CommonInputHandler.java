@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.input;
 
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
+import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import net.minecraft.world.entity.player.Player;
 
 import static com.jetug.power_armor_mod.common.input.KeyAction.*;
@@ -54,5 +54,4 @@ public class CommonInputHandler {
             getPlayerPowerArmor(player).addAttackCharge();
         }
     }
-
 }

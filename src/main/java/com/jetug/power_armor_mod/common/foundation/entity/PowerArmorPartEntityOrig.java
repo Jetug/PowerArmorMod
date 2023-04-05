@@ -2,8 +2,8 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

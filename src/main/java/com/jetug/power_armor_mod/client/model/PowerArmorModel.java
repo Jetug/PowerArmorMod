@@ -8,8 +8,8 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static com.jetug.power_armor_mod.common.util.constants.Bones.HEAD_BONE_NAME;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.HEAD_BONE_NAME;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
 public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {

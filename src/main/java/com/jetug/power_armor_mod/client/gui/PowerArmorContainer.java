@@ -2,27 +2,21 @@ package com.jetug.power_armor_mod.client.gui;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.common.util.Pos2D;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.mojang.datafixers.util.Pair;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
+import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 
 public class PowerArmorContainer extends AbstractContainerMenu {
     public static final int SIZE = 7;

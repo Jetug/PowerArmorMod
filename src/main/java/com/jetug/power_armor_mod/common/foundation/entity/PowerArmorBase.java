@@ -2,11 +2,9 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.network.actions.DashAction;
-import com.jetug.power_armor_mod.common.network.actions.InventorySyncAction;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.nbt.*;
@@ -20,8 +18,8 @@ import java.util.ArrayList;
 
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
-import static com.jetug.power_armor_mod.common.util.constants.NBT.*;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.data.constants.NBT.*;
+import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.InventoryHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 

@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.util.helpers;
 
 import com.google.gson.JsonParser;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import org.apache.logging.log4j.Level;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;

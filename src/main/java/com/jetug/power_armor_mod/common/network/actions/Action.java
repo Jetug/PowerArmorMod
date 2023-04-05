@@ -13,6 +13,23 @@ public abstract class Action<T extends Action<T>> {
         return ActionRegistry.getActionId(this.getClass());
     }
 
+    public String getName(){
+        return this.getClass().getCanonicalName();
+    }
+
+    public static Action<?> getClassByName(String name){
+        try {
+            var act = Class.forName(name);
+            var o = (Object)act;
+            var action = (Action<?>)o;
+
+            return action;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void doServerAction(T message, Supplier<Context> context, int entityId) {}
 
     public void doClientAction(T message, Supplier<Context> context, int entityId) {}

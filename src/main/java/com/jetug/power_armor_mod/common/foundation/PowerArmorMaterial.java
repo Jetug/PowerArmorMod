@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation;
 
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;

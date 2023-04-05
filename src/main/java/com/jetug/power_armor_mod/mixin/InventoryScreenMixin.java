@@ -24,7 +24,7 @@ package com.jetug.power_armor_mod.mixin;
 
 import java.awt.*;
 
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,8 +41,8 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
-import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static net.minecraft.world.item.Items.*;
 

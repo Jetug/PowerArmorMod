@@ -2,14 +2,14 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.*;
-import com.jetug.power_armor_mod.client.input.InputHandler;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.client.input.DoubleClickController;
-import com.jetug.power_armor_mod.test.screen.*;
+import com.jetug.power_armor_mod.common.test.screen.GemCuttingStationScreen;
+import com.jetug.power_armor_mod.common.test.screen.ModMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,9 +53,9 @@ public final class SetupEvents {
     }
 
     private static void registerClickListeners() {
-        DOUBLE_CLICK_CONTROLLER.addListener(InputHandler::onDoubleClick);
-        LONG_CLICK_CONTROLLER.setRepeatListener(InputHandler::onLongClick);
-        LONG_CLICK_CONTROLLER.setReleaseListener(InputHandler::onLongRelease);
+        DOUBLE_CLICK_CONTROLLER.addListener(InputEvents::onDoubleClick);
+        LONG_CLICK_CONTROLLER.setRepeatListener(InputEvents::onLongClick);
+        LONG_CLICK_CONTROLLER.setReleaseListener(InputEvents::onLongRelease);
     }
 
     public static void setupGui(FMLClientSetupEvent event)

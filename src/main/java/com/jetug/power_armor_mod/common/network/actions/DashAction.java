@@ -1,13 +1,10 @@
 package com.jetug.power_armor_mod.common.network.actions;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorBase;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
+import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
-
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @SuppressWarnings("ConstantConditions")
 public class DashAction extends Action<DashAction>{

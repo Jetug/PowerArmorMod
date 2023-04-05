@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.util.extensions;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;

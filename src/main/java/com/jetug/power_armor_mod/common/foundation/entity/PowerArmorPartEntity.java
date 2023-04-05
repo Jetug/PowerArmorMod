@@ -1,15 +1,14 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.network.*;
 import com.jetug.power_armor_mod.common.network.packet.*;
-import com.jetug.power_armor_mod.common.util.constants.*;
-import com.jetug.power_armor_mod.common.util.enums.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;

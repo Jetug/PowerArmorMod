@@ -1,23 +1,16 @@
 package com.jetug.power_armor_mod.common.network;
 
 import com.jetug.power_armor_mod.common.network.packet.*;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import net.minecraft.network.FriendlyByteBuf;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class PacketHandler {
 	private static final String PROTOCOL_VERSION = Integer.toString(1);

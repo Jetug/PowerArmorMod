@@ -22,8 +22,7 @@
 
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -33,7 +32,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,12 +45,9 @@ import java.awt.*;
 import static com.jetug.power_armor_mod.client.gui.PowerArmorGui.TABS_WIDTH;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
-import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_HEIGHT;
-import static com.jetug.power_armor_mod.common.util.constants.Gui.TAB_WIDTH;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.PLAYER_INVENTORY_TABS;
+import static com.jetug.power_armor_mod.common.data.constants.Gui.TAB_HEIGHT;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
-import static net.minecraft.world.item.Items.CHEST;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

@@ -2,8 +2,8 @@ package com.jetug.power_armor_mod.client.gui;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.Pos2D;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,15 +12,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import oshi.util.tuples.Pair;
 
 import java.awt.*;
 
-import static com.jetug.power_armor_mod.client.gui.PowerArmorContainer.*;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
-import static com.jetug.power_armor_mod.common.util.constants.Gui.*;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static net.minecraft.world.item.Items.*;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})

@@ -5,7 +5,7 @@ import com.jetug.power_armor_mod.common.foundation.item.ArmorFrameItem;
 import com.jetug.power_armor_mod.common.foundation.item.EngineItem;
 import com.jetug.power_armor_mod.common.foundation.item.HandItem;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.ArmorMaterialRegistry.IRON;
-import static com.jetug.power_armor_mod.common.util.constants.Global.MOD_ID;
+import static com.jetug.power_armor_mod.common.data.constants.Global.MOD_ID;
 
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =

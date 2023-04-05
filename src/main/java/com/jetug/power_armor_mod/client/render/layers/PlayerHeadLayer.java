@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -15,7 +15,7 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-import static com.jetug.power_armor_mod.common.util.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
 import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getHeadLayerTexture;
 import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getTextureSize;
 

@@ -3,8 +3,7 @@ package com.jetug.power_armor_mod.common.network;
 import com.jetug.power_armor_mod.common.network.actions.Action;
 import com.jetug.power_armor_mod.common.network.packet.ActionPacket;
 import com.jetug.power_armor_mod.common.network.packet.GenericPacket;
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
-import net.minecraft.server.level.ServerPlayer;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
 
 import static com.jetug.power_armor_mod.common.network.PacketHandler.*;
 

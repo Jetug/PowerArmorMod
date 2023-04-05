@@ -1,9 +1,8 @@
 package com.jetug.power_armor_mod.common.util.helpers;
 
-import com.jetug.power_armor_mod.common.util.constants.Global;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Level;
 
@@ -13,8 +12,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
-import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.*;
 
 public class BufferedImageHelper {
     @Nullable

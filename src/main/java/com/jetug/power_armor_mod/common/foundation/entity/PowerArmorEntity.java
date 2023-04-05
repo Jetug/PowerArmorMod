@@ -1,11 +1,12 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.actions.DashAction;
-import com.jetug.power_armor_mod.common.util.constants.Global;
-import com.jetug.power_armor_mod.common.util.enums.*;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -39,7 +40,7 @@ import java.util.List;
 
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
-import static com.jetug.power_armor_mod.common.util.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
@@ -311,8 +312,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     public void dash(DashDirection direction) {
-        if(isClientSide)
-            doServerAction(new DashAction(direction), getId());
+//        if(isClientSide)
+//            doServerAction(new DashAction(direction), getId());
         doHeatAction(DASH_HEAT, () -> _dash(direction));
     }
 
