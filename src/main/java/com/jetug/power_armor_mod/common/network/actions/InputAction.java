@@ -34,6 +34,6 @@ public class InputAction extends Action<InputAction>{
     @Override
     public void doServerAction(InputAction message, Supplier<NetworkEvent.Context> context, int entityId) {
         var player = context.get().getSender();
-        ((PowerArmorEntity)player.level.getEntity(entityId)).dash(message.direction);
+        //((PowerArmorEntity)player.level.getEntity(entityId)).dash(message.direction);
     }
 }
