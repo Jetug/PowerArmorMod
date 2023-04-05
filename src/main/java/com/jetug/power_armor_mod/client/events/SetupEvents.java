@@ -54,7 +54,7 @@ public final class SetupEvents {
 
     private static void registerClickListeners() {
         DOUBLE_CLICK_CONTROLLER.addListener(InputHandler::onDoubleClick);
-        LONG_CLICK_CONTROLLER.setRepeatListener(InputHandler::onRepeat);
+        LONG_CLICK_CONTROLLER.setRepeatListener(InputHandler::onLongClick);
         LONG_CLICK_CONTROLLER.setReleaseListener(InputHandler::onLongRelease);
     }
 

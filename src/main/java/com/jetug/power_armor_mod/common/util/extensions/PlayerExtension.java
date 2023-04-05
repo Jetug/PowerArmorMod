@@ -3,36 +3,35 @@ package com.jetug.power_armor_mod.common.util.extensions;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.enums.ActionType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
+import static com.jetug.power_armor_mod.client.ClientConfig.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 
 public class PlayerExtension {
 
     public static boolean isWearingPowerArmor(){
-        var player = Minecraft.getInstance().player;
-        return player != null && isWearingPowerArmor(player);
+        return isWearingPowerArmor(getLocalPlayer());
     }
 
     public static boolean isWearingPowerArmor(Entity player){
-        return player.getVehicle() instanceof PowerArmorEntity;
+        return player != null && player.getVehicle() instanceof PowerArmorEntity;
     }
 
     public static PowerArmorEntity getPlayerPowerArmor(){
-        try{
-            return (PowerArmorEntity) Minecraft.getInstance().player.getVehicle();
-        }
-        catch (Exception e){
-            return null;
-        }
+//        if(getLocalPlayer().getVehicle() instanceof PowerArmorEntity)
+//            return (PowerArmorEntity) getLocalPlayer().getVehicle();
+//        else return null;
+
+        return getPlayerPowerArmor(getLocalPlayer());
     }
 
     public static PowerArmorEntity getPlayerPowerArmor(Player player){
-        try{ return (PowerArmorEntity) player.getVehicle(); }
-        catch (Exception e){ return null; }
+        if(player.getVehicle() instanceof PowerArmorEntity)
+            return (PowerArmorEntity) player.getVehicle();
+        else return null;
     }
 
     public static void stopWearingArmor(Player player) {

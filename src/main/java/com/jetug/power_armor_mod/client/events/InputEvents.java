@@ -31,7 +31,7 @@ public class InputEvents {
         if (event.getAction() == GLFW.GLFW_PRESS) {
 
         } else if (event.getAction() == GLFW.GLFW_RELEASE) {
-            onRelease(event.getButton());
+            onMouseRelease(event.getButton());
         }
     }
 }

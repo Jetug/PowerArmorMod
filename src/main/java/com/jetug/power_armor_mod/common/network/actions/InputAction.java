@@ -1,22 +1,21 @@
 package com.jetug.power_armor_mod.common.network.actions;
 
 import com.jetug.power_armor_mod.common.input.InputKey;
-import com.jetug.power_armor_mod.common.input.KeyInputAction;
-import com.jetug.power_armor_mod.common.util.enums.DashDirection;
+import com.jetug.power_armor_mod.common.input.KeyAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.input.CommonInputHandler.onArmorKeyInput;
+import static com.jetug.power_armor_mod.common.input.CommonInputHandler.onKeyInput;
 
 @SuppressWarnings("ConstantConditions")
 public class InputAction extends Action<InputAction>{
     private InputKey key;
-    private KeyInputAction action;
+    private KeyAction action;
 
     public InputAction() {}
-    public InputAction(InputKey key, KeyInputAction action) {
+    public InputAction(InputKey key, KeyAction action) {
         this.key = key;
         this.action = action;
     }
@@ -36,12 +35,12 @@ public class InputAction extends Action<InputAction>{
     public InputAction read(FriendlyByteBuf buffer) {
         return new InputAction(
                 buffer.readEnum(InputKey.class),
-                buffer.readEnum(KeyInputAction.class));
+                buffer.readEnum(KeyAction.class));
     }
 
     @Override
     public void doServerAction(InputAction message, Supplier<NetworkEvent.Context> context, int entityId) {
         var player = context.get().getSender();
-        onArmorKeyInput(message.key, message.action, player);
+        onKeyInput(message.key, message.action, player);
     }
 }

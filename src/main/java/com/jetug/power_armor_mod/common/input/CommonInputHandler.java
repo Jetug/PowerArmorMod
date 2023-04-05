@@ -3,20 +3,20 @@ package com.jetug.power_armor_mod.common.input;
 import com.jetug.power_armor_mod.common.util.enums.DashDirection;
 import net.minecraft.world.entity.player.Player;
 
-import static com.jetug.power_armor_mod.common.input.KeyInputAction.*;
+import static com.jetug.power_armor_mod.common.input.KeyAction.*;
 import static com.jetug.power_armor_mod.common.input.InputKey.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
-    public static void onArmorKeyInput(InputKey key, KeyInputAction action, Player player) {
-        if (isWearingPowerArmor(player)) {
+    public static void onKeyInput(InputKey key, KeyAction action, Player player) {
+        if (isWearingPowerArmor(player) && key != null) {
             if((action == PRESS || action == REPEAT) && key == JUMP)
                 getPlayerPowerArmor(player).jump();
 
             switch (action) {
                 case PRESS -> onPress(key, player);
-                case REPEAT -> onRelease(key, player);
+                case RELEASE -> onRelease(key, player);
                 case DOUBLE_CLICK -> onDoubleClick(key, player);
                 case LONG_PRESS -> onLongPress(key, player);
             }
@@ -37,11 +37,11 @@ public class CommonInputHandler {
         if (!isWearingPowerArmor(player)) return;
 
         DashDirection direction = switch (key){
-            case UP -> DashDirection.FORWARD;
-            case DOWN -> DashDirection.BACK;
-            case LEFT -> DashDirection.LEFT;
+            case UP    -> DashDirection.FORWARD;
+            case DOWN  -> DashDirection.BACK;
+            case LEFT  -> DashDirection.LEFT;
             case RIGHT -> DashDirection.RIGHT;
-            case JUMP -> DashDirection.UP;
+            case JUMP  -> DashDirection.UP;
             default -> null;
         };
 

@@ -21,9 +21,9 @@ public enum InputKey {
         this.key = key;
     }
 
-    public static InputKey getByKey(KeyMapping key){
+    public static InputKey getByKey(int key){
         for (InputKey value : values()) {
-            if (value.key == key)
+            if (value.key.getKey().getValue() == key)
                 return value;
         }
         return null;
