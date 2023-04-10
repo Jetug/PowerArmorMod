@@ -30,14 +30,19 @@ public class InputEvents {
         else
             action = KeyAction.REPEAT;
 
-        CommonInputHandler.onKeyInput(InputKey.getByKey(event.getKey()), action, getLocalPlayer());
+        handleInput(event.getKey(), action);
+        //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getKey()), action, getLocalPlayer());
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onMouseKeyInput(InputEvent.MouseInputEvent event) {
-        if (event.getAction() == GLFW.GLFW_RELEASE)
-            CommonInputHandler.onKeyInput(InputKey.getByKey(event.getButton()), KeyAction.RELEASE,  getLocalPlayer());
+        switch (event.getAction()) {
+            case GLFW.GLFW_PRESS -> {}
+            case GLFW.GLFW_RELEASE -> handleInput(event.getButton(), KeyAction.RELEASE);
+        }
+
+        //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getButton()), KeyAction.RELEASE,  getLocalPlayer());
     }
 
     public static void onDoubleClick(InputEvent.KeyInputEvent event){
@@ -46,9 +51,8 @@ public class InputEvents {
 
     public static void onLongClick(int key, int ticks){
         if(Minecraft.getInstance().isPaused()) return;
-        CommonInputHandler.onKeyInput(InputKey.getByKey(key), KeyAction.LONG_PRESS,  getLocalPlayer());
-
-        //handleInput(key, KeyAction.LONG_PRESS);
+        //CommonInputHandler.onKeyInput(InputKey.getByKey(key), KeyAction.LONG_PRESS,  getLocalPlayer());
+        handleInput(key, KeyAction.LONG_PRESS);
     }
 
     public static void onLongRelease(int key, int ticks){}

@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.client.gui;
 
+import com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.data.constants.Global;

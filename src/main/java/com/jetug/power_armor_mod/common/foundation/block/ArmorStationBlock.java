@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.common.test.block.custom;
+package com.jetug.power_armor_mod.common.foundation.block;
 
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
-import com.jetug.power_armor_mod.common.test.block.entity.custom.GemCuttingStationBlockEntity;
+import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -24,21 +24,18 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class GemCuttingStationBlock extends BaseEntityBlock {
+public class ArmorStationBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 8, 16);
 
-    public GemCuttingStationBlock(Properties properties) {
+    public ArmorStationBlock(Properties properties) {
         super(properties);
     }
-
-    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 8, 16);
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
-
-    /* FACING */
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
@@ -71,8 +68,8 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof GemCuttingStationBlockEntity) {
-                ((GemCuttingStationBlockEntity) blockEntity).drops();
+            if (blockEntity instanceof ArmorStationBlockEntity) {
+                ((ArmorStationBlockEntity) blockEntity).drops();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
@@ -83,8 +80,8 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof GemCuttingStationBlockEntity) {
-                NetworkHooks.openGui(((ServerPlayer)pPlayer), (GemCuttingStationBlockEntity)entity, pPos);
+            if(entity instanceof ArmorStationBlockEntity) {
+                NetworkHooks.openGui(((ServerPlayer)pPlayer), (ArmorStationBlockEntity)entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -96,13 +93,12 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new GemCuttingStationBlockEntity(pPos, pState);
+        return new ArmorStationBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, BlockEntitieRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY.get(),
-                GemCuttingStationBlockEntity::tick);
+        return createTickerHelper(pBlockEntityType, BlockEntitieRegistry.ARMOR_STATION_BLOCK_ENTITY.get(), ArmorStationBlockEntity::tick);
     }
 }

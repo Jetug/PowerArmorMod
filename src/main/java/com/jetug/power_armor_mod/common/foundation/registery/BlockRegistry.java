@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.test.block.custom.GemCuttingStationBlock;
+import com.jetug.power_armor_mod.common.foundation.block.ArmorStationBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -25,8 +25,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> TEST_BLOCK = (RegistryObject<Block>) registerBlock("test_block",
             ()-> new Block(Block.Properties.of(Material.CACTUS).strength(1f)), ModCreativeModeTab.MY_TAB);
 
-    public static final RegistryObject<Block> GEM_CUTTING_STATION = registerBlock("gem_cutting_station",
-            () -> new GemCuttingStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
+    public static final RegistryObject<Block> ARMOR_STATION = registerBlock("armor_station",
+            () -> new ArmorStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
             ModCreativeModeTab.MY_TAB);
 
 //}

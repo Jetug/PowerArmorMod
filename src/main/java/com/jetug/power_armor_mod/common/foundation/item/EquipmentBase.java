@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.util.helpers.ResourceHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -16,7 +17,11 @@ public class EquipmentBase extends Item {
     public EquipmentBase(Properties pProperties, BodyPart part) {
         super(pProperties);
         this.part = part;
+    }
 
+    public EquipmentBase(BodyPart part) {
+        super(new Item.Properties().tab(ModCreativeModeTab.MY_TAB));
+        this.part = part;
     }
 
     public EquipmentSettings getPartSettings(){

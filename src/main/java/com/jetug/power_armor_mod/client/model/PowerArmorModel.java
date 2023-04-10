@@ -19,12 +19,12 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 
     @Override
     public ResourceLocation getModelLocation(Type object) {
-        return POWER_ARMOR_MODEL_LOCATION;
+        return FRAME_MODEL_LOCATION;
     }
 
     @Override
     public ResourceLocation getTextureLocation(Type object) {
-        return POWER_ARMOR_TEXTURE_LOCATION;
+        return FRAME_TEXTURE_LOCATION;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
-        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head").get();
+        //GeoBone bone = this.registerBone().getModel(FRAME_MODEL_LOCATION)..getBone("head").get();
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

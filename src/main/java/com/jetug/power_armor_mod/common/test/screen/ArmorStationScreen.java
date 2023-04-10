@@ -9,10 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingStationMenu> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Global.MOD_ID, "textures/gui/gem_cutting_station_gui.png");
+public class ArmorStationScreen extends AbstractContainerScreen<ArmorStationMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Global.MOD_ID, "textures/gui/armor_station_gui.png");
 
-    public GemCuttingStationScreen(GemCuttingStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public ArmorStationScreen(ArmorStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 

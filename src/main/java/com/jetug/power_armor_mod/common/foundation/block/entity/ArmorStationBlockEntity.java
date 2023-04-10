@@ -1,13 +1,13 @@
-package com.jetug.power_armor_mod.common.test.block.entity.custom;
+package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
 import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
-import com.jetug.power_armor_mod.common.test.screen.GemCuttingStationMenu;
+import com.jetug.power_armor_mod.common.test.screen.ArmorStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -31,8 +31,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class GemCuttingStationBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
+import static com.jetug.power_armor_mod.common.test.screen.ArmorStationMenu.*;
+
+public class ArmorStationBlockEntity extends BlockEntity implements MenuProvider {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(TE_INVENTORY_SLOT_COUNT) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -41,19 +43,19 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    public GemCuttingStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(BlockEntitieRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
+    public ArmorStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(BlockEntitieRegistry.ARMOR_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
     }
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Gem Cutting Station");
+        return new TranslatableComponent("container.armor_station");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new GemCuttingStationMenu(pContainerId, pInventory, this);
+        return new ArmorStationMenu(pContainerId, pInventory, this);
     }
 
     @Nonnull
@@ -100,13 +102,14 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
     }
 
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GemCuttingStationBlockEntity pBlockEntity) {
-        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
-            craftItem(pBlockEntity);
+    public static void tick(Level level, BlockPos pos, BlockState state, ArmorStationBlockEntity blockEntity) {
+        if(hasRecipe(blockEntity) && hasNotReachedStackLimit(blockEntity)) {
+            craftItem(blockEntity);
         }
+
     }
 
-    private static void craftItem(GemCuttingStationBlockEntity entity) {
+    private static void craftItem(ArmorStationBlockEntity entity) {
         entity.itemHandler.extractItem(0, 1, false);
         entity.itemHandler.extractItem(1, 1, false);
         entity.itemHandler.getStackInSlot(2).hurt(1, new Random(), null);
@@ -115,7 +118,7 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
                 entity.itemHandler.getStackInSlot(3).getCount() + 1));
     }
 
-    private static boolean hasRecipe(GemCuttingStationBlockEntity entity) {
+    private static boolean hasRecipe(ArmorStationBlockEntity entity) {
         boolean hasItemInWaterSlot = PotionUtils.getPotion(entity.itemHandler.getStackInSlot(0)) == Potions.WATER;
         boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ItemRegistry.RAW_CITRINE.get();
         boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ItemRegistry.GEM_CUTTER_TOOL.get();
@@ -123,7 +126,7 @@ public class GemCuttingStationBlockEntity extends BlockEntity implements MenuPro
         return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
     }
 
-    private static boolean hasNotReachedStackLimit(GemCuttingStationBlockEntity entity) {
+    private static boolean hasNotReachedStackLimit(ArmorStationBlockEntity entity) {
         return entity.itemHandler.getStackInSlot(3).getCount() < entity.itemHandler.getStackInSlot(3).getMaxStackSize();
     }
 }

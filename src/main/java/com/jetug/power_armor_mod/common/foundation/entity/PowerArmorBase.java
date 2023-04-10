@@ -1,9 +1,8 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
-import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 
-import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
 import static com.jetug.power_armor_mod.common.data.constants.NBT.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
@@ -128,13 +126,13 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     public void addAttackCharge() {
         var value = 1;
-        if(isClientSide) doServerAction(ActionType.ADD_ATTACK_CHARGE);
+        //if(isClientSide) doServerAction(ActionType.ADD_ATTACK_CHARGE);
         if(attackCharge + value <= MAX_ATTACK_CHARGE)
             attackCharge += value;
     }
 
     public void resetAttackCharge() {
-        if(isClientSide) doServerAction(ActionType.RESET_ATTACK_CHARGE);
+        //if(isClientSide) doServerAction(ActionType.RESET_ATTACK_CHARGE);
         setAttackCharge(0);
     }
 

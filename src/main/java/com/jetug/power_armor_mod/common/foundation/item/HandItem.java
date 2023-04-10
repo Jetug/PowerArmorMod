@@ -38,9 +38,7 @@ public class HandItem extends Item implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-
-    }
+    public void registerControllers(AnimationData data) {}
 
     @Override
     public AnimationFactory getFactory() {

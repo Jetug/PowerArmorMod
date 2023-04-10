@@ -1,10 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.item.ArmorFrameItem;
-import com.jetug.power_armor_mod.common.foundation.item.EngineItem;
-import com.jetug.power_armor_mod.common.foundation.item.HandItem;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,8 +11,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.foundation.registery.ArmorMaterialRegistry.IRON;
-import static com.jetug.power_armor_mod.common.data.constants.Global.MOD_ID;
+import static com.jetug.power_armor_mod.common.foundation.registery.ArmorMaterialRegistry.*;
+import static com.jetug.power_armor_mod.common.data.constants.Global.*;
 
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =
@@ -46,6 +43,21 @@ public class ItemRegistry {
 
     public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
             new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> FRAME_BODY = ITEMS.register("frame_body", () ->
+            new FramePartItem(BodyPart.BODY));
+
+    public static final RegistryObject<Item> FRAME_RIGHT_ARM = ITEMS.register("frame_right_arm", () ->
+            new FramePartItem(BodyPart.RIGHT_ARM));
+
+    public static final RegistryObject<Item> FRAME_LEFT_ARM = ITEMS.register("frame_left_arm", () ->
+            new FramePartItem(BodyPart.LEFT_ARM));
+
+    public static final RegistryObject<Item> FRAME_RIGHT_LEG = ITEMS.register("frame_right_leg", () ->
+            new FramePartItem(BodyPart.RIGHT_LEG));
+
+    public static final RegistryObject<Item> FRAME_LEFT_LEG = ITEMS.register("frame_left_leg", () ->
+            new FramePartItem(BodyPart.LEFT_LEG));
 
     //tutor
     public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",

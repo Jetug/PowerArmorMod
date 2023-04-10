@@ -1,11 +1,10 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.client.gui.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.network.actions.DashAction;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
@@ -39,7 +38,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
-import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;

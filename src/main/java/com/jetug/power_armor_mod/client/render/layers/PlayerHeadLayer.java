@@ -15,7 +15,7 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-import static com.jetug.power_armor_mod.common.data.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.FRAME_MODEL_LOCATION;
 import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getHeadLayerTexture;
 import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.getTextureSize;
 
@@ -42,7 +42,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
             matrixStackIn.scale(1.0f, 1.0f, 1.0f);
             matrixStackIn.translate(0.0d, 0.0d, 0.0d);
             this.getRenderer().render(
-                    getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION),
+                    getEntityModel().getModel(FRAME_MODEL_LOCATION),
                     entity,
                     partialTicks,
                     cameo,

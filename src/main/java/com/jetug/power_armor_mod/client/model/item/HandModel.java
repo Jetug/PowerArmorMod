@@ -17,7 +17,7 @@ public class HandModel extends AnimatedGeoModel {
 
     @Override
     public ResourceLocation getTextureLocation(Object object) {
-        return POWER_ARMOR_TEXTURE_LOCATION;
+        return FRAME_TEXTURE_LOCATION;
     }
 
     @Override

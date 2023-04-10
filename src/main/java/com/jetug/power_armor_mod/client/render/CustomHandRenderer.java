@@ -5,7 +5,7 @@ import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.model.*;
 
-import static com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer.HAND_MODEL;
+import static com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer.*;
 
 public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
     private static CustomHandRenderer handRenderer;

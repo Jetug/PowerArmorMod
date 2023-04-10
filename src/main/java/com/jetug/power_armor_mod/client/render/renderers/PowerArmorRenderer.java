@@ -23,7 +23,7 @@ import software.bernie.geckolib3.renderers.geo.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jetug.power_armor_mod.client.gui.PowerArmorContainer.*;
+import static com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer.*;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;

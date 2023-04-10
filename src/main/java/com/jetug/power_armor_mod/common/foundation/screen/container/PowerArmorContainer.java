@@ -1,8 +1,9 @@
-package com.jetug.power_armor_mod.client.gui;
+package com.jetug.power_armor_mod.common.foundation.screen.container;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
+import com.jetug.power_armor_mod.common.foundation.screen.slot.EquipmentSlot;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.resources.ResourceLocation;
@@ -131,22 +132,6 @@ public class PowerArmorContainer extends AbstractContainerMenu {
     }
 
     private void createSlot(BodyPart bodyPart, Pos2D pos){
-        this.addSlot(new Slot(armorInventory, bodyPart.getId(), pos.x, pos.y) {
-            @Override
-            public void setChanged() {
-                container.setChanged();
-            }
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return super.mayPlace(stack)
-                        && stack.getItem() instanceof EquipmentBase item
-                        && item.part == bodyPart;
-            }
-
-//            @Override
-//            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-//                return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_HEAD);
-//            }
-        });
+        this.addSlot(new EquipmentSlot(bodyPart, armorInventory, bodyPart.getId(), pos.x, pos.y));
     }
 }

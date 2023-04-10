@@ -10,16 +10,16 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
     public static void onKeyInput(InputKey key, KeyAction action, Player player) {
-        if (isWearingPowerArmor(player) && key != null) {
-            if((action == PRESS || action == REPEAT) && key == JUMP)
-                getPlayerPowerArmor(player).jump();
+        if (!isWearingPowerArmor(player) || key == null) return;
 
-            switch (action) {
-                case PRESS -> onPress(key, player);
-                case RELEASE -> onRelease(key, player);
-                case DOUBLE_CLICK -> onDoubleClick(key, player);
-                case LONG_PRESS -> onLongPress(key, player);
-            }
+        if((action == PRESS || action == REPEAT) && key == JUMP)
+            getPlayerPowerArmor(player).jump();
+
+        switch (action) {
+            case PRESS -> onPress(key, player);
+            case RELEASE -> onRelease(key, player);
+            case DOUBLE_CLICK -> onDoubleClick(key, player);
+            case LONG_PRESS -> onLongPress(key, player);
         }
     }
 

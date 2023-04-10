@@ -4,8 +4,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class Resources {
     public static final ResourceLocation ARMOR_INVENTORY_TEXTURE = resourceLocation("textures/gui/armor_inventory.png");
-    public static final ResourceLocation POWER_ARMOR_MODEL_LOCATION = resourceLocation("geo/power_armor_frame.geo.json");
-    public static final ResourceLocation POWER_ARMOR_TEXTURE_LOCATION = resourceLocation("textures/entities/power_armor_frame.png");
+    public static final ResourceLocation FRAME_MODEL_LOCATION = resourceLocation("geo/power_armor_frame.geo.json");
+    public static final ResourceLocation FRAME_TEXTURE_LOCATION = resourceLocation("textures/entities/power_armor_frame.png");
     public static final ResourceLocation POWER_ARMOR_ANIMATION_LOCATION = resourceLocation("animations/power_armor.animation.json");
     public static final ResourceLocation ARMOR_MODEL_LOCATION = resourceLocation("geo/armor.geo.json");
     public static final ResourceLocation ARMOR_TEXTURE_LOCATION = resourceLocation("textures/entities/armor.png");
@@ -24,6 +24,12 @@ public class Resources {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_RIGHT_ARM = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_right_arm.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_LEFT_LEG  = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_left_leg.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_RIGHT_LEG = new ResourceLocation(Global.MOD_ID ,"textures/gui/empty_armor_slot_right_leg.png");
+
+    public static final ResourceLocation FRAME_MODEL_BODY      = new ResourceLocation(Global.MOD_ID ,"geo/frame_body.geo.json");
+    public static final ResourceLocation FRAME_MODEL_LEFT_ARM  = new ResourceLocation(Global.MOD_ID ,"geo/frame_left_arm.geo.json");
+    public static final ResourceLocation FRAME_MODEL_RIGHT_ARM = new ResourceLocation(Global.MOD_ID ,"geo/frame_right_arm.geo.json");
+    public static final ResourceLocation FRAME_MODEL_LEFT_LEG  = new ResourceLocation(Global.MOD_ID ,"geo/frame_left_leg.geo.json");
+    public static final ResourceLocation FRAME_MODEL_RIGHT_LEG = new ResourceLocation(Global.MOD_ID ,"geo/frame_right_leg.geo.json");
 
     public static ResourceLocation resourceLocation(String location){
         return new ResourceLocation(Global.MOD_ID, location);

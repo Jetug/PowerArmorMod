@@ -10,16 +10,14 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-import static com.jetug.power_armor_mod.common.data.constants.Resources.POWER_ARMOR_MODEL_LOCATION;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
+@SuppressWarnings("ConstantConditions")
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;
-    //public ResourceLocation texture;
 
     public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
-        //var settings = ClientConfig.resourceManager.getEquipmentSettings(bodyPart);
-        //this.texture = settings.getTexture();
         this.bodyPart = bodyPart;
     }
 
@@ -43,7 +41,7 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
         matrixStackIn.pushPose();
         matrixStackIn.scale(1.0f, 1.0f, 1.0f);
         matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-        this.getRenderer().render(this.getEntityModel().getModel(POWER_ARMOR_MODEL_LOCATION), entity, partialTicks, cameo, matrixStackIn,
+        this.getRenderer().render(this.getEntityModel().getModel(FRAME_MODEL_LOCATION), entity, partialTicks, cameo, matrixStackIn,
                 bufferIn, bufferIn.getBuffer(cameo), packedLightIn, overlay, 1f, 1f, 1f, 1f);
         matrixStackIn.popPose();
     }
