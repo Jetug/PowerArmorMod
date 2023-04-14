@@ -16,19 +16,18 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BlockEntityBase extends BlockEntity{
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-    private int inventorySize;
-
-    public final ItemStackHandler itemHandler = new ItemStackHandler(inventorySize) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-    };
+    protected LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    public final ItemStackHandler itemHandler;
 
     public BlockEntityBase(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, int inventorySize) {
         super(pType, pPos, pBlockState);
-        this.inventorySize = inventorySize;
+
+        itemHandler = new ItemStackHandler(inventorySize) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+            }
+        };
     }
 
     @Override

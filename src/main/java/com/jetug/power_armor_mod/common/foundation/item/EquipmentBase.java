@@ -20,7 +20,7 @@ public class EquipmentBase extends Item {
     }
 
     public EquipmentBase(BodyPart part) {
-        super(new Item.Properties().tab(ModCreativeModeTab.MY_TAB));
+        super(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).stacksTo(1));
         this.part = part;
     }
 

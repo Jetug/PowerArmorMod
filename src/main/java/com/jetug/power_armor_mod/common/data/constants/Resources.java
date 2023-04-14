@@ -31,6 +31,8 @@ public class Resources {
     public static final ResourceLocation FRAME_MODEL_LEFT_LEG  = new ResourceLocation(Global.MOD_ID ,"geo/frame_left_leg.geo.json");
     public static final ResourceLocation FRAME_MODEL_RIGHT_LEG = new ResourceLocation(Global.MOD_ID ,"geo/frame_right_leg.geo.json");
 
+    public static final ResourceLocation ARMOR_STATION_GUI = new ResourceLocation(Global.MOD_ID, "textures/gui/armor_station_gui.png");
+
     public static ResourceLocation resourceLocation(String location){
         return new ResourceLocation(Global.MOD_ID, location);
     }

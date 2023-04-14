@@ -26,16 +26,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class ArmorStationBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 8, 16);
+    //private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 8, 16);
 
     public ArmorStationBlock(Properties properties) {
         super(properties);
     }
 
-    @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return SHAPE;
-    }
+//    @Override
+//    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+//        return SHAPE;
+//    }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {

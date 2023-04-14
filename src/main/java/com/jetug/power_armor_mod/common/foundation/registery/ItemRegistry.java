@@ -59,6 +59,25 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FRAME_LEFT_LEG = ITEMS.register("frame_left_leg", () ->
             new FramePartItem(BodyPart.LEFT_LEG));
 
+    public static final RegistryObject<Item> CAST_HELMET = ITEMS.register("cast_helmet", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> CAST_BODY = ITEMS.register("cast_body", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> CAST_RIGHT_ARM = ITEMS.register("cast_right_arm", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> CAST_LEFT_ARM = ITEMS.register("cast_left_arm", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> CAST_RIGHT_LEG = ITEMS.register("cast_right_leg", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+    public static final RegistryObject<Item> CAST_LEFT_LEG = ITEMS.register("cast_left_leg", () ->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+
+
     //tutor
     public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
