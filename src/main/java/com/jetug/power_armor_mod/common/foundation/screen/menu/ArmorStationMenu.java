@@ -4,7 +4,7 @@ import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
 import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
-import com.jetug.power_armor_mod.common.test.screen.ModMenuTypes;
+import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

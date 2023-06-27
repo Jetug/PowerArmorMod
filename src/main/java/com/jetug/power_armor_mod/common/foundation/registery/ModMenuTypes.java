@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.test.screen;
+package com.jetug.power_armor_mod.common.foundation.registery;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu;
