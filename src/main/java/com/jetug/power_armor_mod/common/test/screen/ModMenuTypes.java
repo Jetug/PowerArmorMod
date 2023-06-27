@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.test.screen;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;

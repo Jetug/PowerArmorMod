@@ -1,9 +1,10 @@
-package com.jetug.power_armor_mod.common.test.screen;
+package com.jetug.power_armor_mod.common.foundation.screen.menu;
 
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
 import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
+import com.jetug.power_armor_mod.common.test.screen.ModMenuTypes;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,6 +31,12 @@ public class ArmorStationMenu extends AbstractContainerMenu {
     private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
+    private static final int SLOT_SIZE = 18;
+    private static final int INVENTORY_POS_X = 8;
+    private static final int INVENTORY_POS_Y = 105;
+    private static final int HOTBAR_POS_Y = 163;
+    private static final int HOTBAR_POS_X = INVENTORY_POS_X;
+    private static final int INVENTORY_ROW_SIZE = 9;
 
     public  static final int TE_INVENTORY_SLOT_COUNT = 5;
 
@@ -107,16 +114,19 @@ public class ArmorStationMenu extends AbstractContainerMenu {
     }
 
     private void addPlayerInventory(Inventory playerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
+        for (int row = 0; row < 3; ++row) {
+            for (int slot = 0; slot < INVENTORY_ROW_SIZE; ++slot) {
+                this.addSlot(new Slot(playerInventory,
+                        slot + row * INVENTORY_ROW_SIZE + INVENTORY_ROW_SIZE,
+                        INVENTORY_POS_X + slot * SLOT_SIZE,
+                        INVENTORY_POS_Y + row * SLOT_SIZE));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
+        for (int slot = 0; slot < 9; ++slot) {
+            this.addSlot(new Slot(playerInventory, slot, HOTBAR_POS_X + slot * SLOT_SIZE, HOTBAR_POS_Y));
         }
     }
 }

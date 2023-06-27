@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
-import com.jetug.power_armor_mod.common.test.screen.ArmorStationMenu;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
 import net.minecraft.world.MenuProvider;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.*;
 
-import static com.jetug.power_armor_mod.common.test.screen.ArmorStationMenu.*;
+import static com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu.*;
 
 public class ArmorStationBlockEntity extends BlockEntityBase implements MenuProvider {
     public ArmorStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {

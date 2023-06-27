@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.test.screen;
 
 import com.jetug.power_armor_mod.common.data.constants.Resources;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -35,7 +36,7 @@ public class ArmorStationGui extends AbstractContainerScreen<ArmorStationMenu> {
         int y = (height - imageHeight) / 2;
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        setShaderTexture(0, Resources.ARMOR_STATION_GUI);
+        //setShaderTexture(0, Resources.ARMOR_STATION_GUI);
         if(menu.blockEntity.frame != null)
             blit(pPoseStack, x + 160, y + 5, 178, 0, 6, 6);
         else{

@@ -9,10 +9,10 @@ import static com.jetug.power_armor_mod.client.render.renderers.item.HandRendere
 
 public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
     private static CustomHandRenderer handRenderer;
-    private static HandAmimator handAmimator;
+    private static PovHandAmimator handAmimator;
 
     static {
-        AnimationController.addModelFetcher(animatable -> animatable instanceof HandAmimator? HAND_MODEL: null);
+        AnimationController.addModelFetcher(animatable -> animatable instanceof PovHandAmimator ? HAND_MODEL: null);
     }
 
     public CustomHandRenderer(AnimatedGeoModel<IAnimatable> model) {
@@ -21,14 +21,14 @@ public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
 
     public static void registerHandRenderer(){
         handRenderer = new CustomHandRenderer(HAND_MODEL);
-        handAmimator = new HandAmimator();
+        handAmimator = new PovHandAmimator();
     }
 
     public static CustomHandRenderer getHandRenderer(){
         return handRenderer;
     }
 
-    public static HandAmimator getHandAmimator(){
+    public static PovHandAmimator getHandAmimator(){
         return handAmimator;
     }
 }

@@ -6,6 +6,14 @@ import oshi.util.tuples.Pair;
 import java.awt.*;
 
 public class Gui {
+    public static final int HOTBAR_SLOT_COUNT = 9;
+    public static final int PLAYER_INVENTORY_ROW_COUNT = 3;
+    public static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
+    public static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
+    public static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
+    public static final int VANILLA_FIRST_SLOT_INDEX = 0;
+    public static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
+
     public static final int TAB_HEIGHT = 27;
     public static final int TAB_WIDTH = 29;
 
@@ -23,11 +31,11 @@ public class Gui {
     public static final Pos2D RIGHT_LEG_SLOT_POS   = new Pos2D(77, 62);
     public static final Pos2D ENGINE_SLOT_POS      = new Pos2D(98, 26);
 
-    public static final Pos2D FRAME_BODY_SLOT_POS        = new Pos2D(36 , 35);
-    public static final Pos2D FRAME_LEFT_ARM_SLOT_POS    = new Pos2D(124, 9);
-    public static final Pos2D FRAME_RIGHT_ARM_SLOT_POS   = new Pos2D(36 , 9);
-    public static final Pos2D FRAME_LEFT_LEG_SLOT_POS    = new Pos2D(124, 61);
-    public static final Pos2D FRAME_RIGHT_LEG_SLOT_POS   = new Pos2D(36 , 61);
+    public static final Pos2D FRAME_BODY_SLOT_POS        = new Pos2D(9 , 43);
+    public static final Pos2D FRAME_LEFT_ARM_SLOT_POS    = new Pos2D(9, 16);
+    public static final Pos2D FRAME_RIGHT_ARM_SLOT_POS   = new Pos2D(37 , 16);
+    public static final Pos2D FRAME_LEFT_LEG_SLOT_POS    = new Pos2D(9, 72);
+    public static final Pos2D FRAME_RIGHT_LEG_SLOT_POS   = new Pos2D(37 , 72);
 
     public static final Rectangle HEAD_ICON_OFFSET        = createStandardIcon(19, 0);
     public static final Rectangle BODY_ICON_OFFSET        = createStandardIcon(19, 17);

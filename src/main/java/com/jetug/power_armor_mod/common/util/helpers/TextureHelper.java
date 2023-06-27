@@ -2,14 +2,20 @@ package com.jetug.power_armor_mod.common.util.helpers;
 
 import com.google.gson.JsonParser;
 import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import oshi.util.tuples.Pair;
+
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -23,6 +29,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
+import static com.mojang.authlib.minecraft.MinecraftProfileTexture.*;
 import static org.apache.logging.log4j.Level.*;
 
 
@@ -32,10 +39,41 @@ public class TextureHelper {
     @Nullable
     public static BufferedImage getPlayerHeadImage(AbstractClientPlayer clientPlayer) {
         var playerSkin = getPlayerSkinImage(clientPlayer);
+        //var playerSkin = resourceToBufferedImage(getPlayerSkinLocation(clientPlayer));
+
         if(playerSkin == null) return null;
         cropImage(playerSkin, 64, 16);
         return playerSkin;
     }
+
+    public static ResourceLocation getPlayerSkinLocation(AbstractClientPlayer player) {
+//        var minecraft = Minecraft.getInstance();
+//        //var gameProfile = clientPlayer.getGameProfile();
+//
+//        clientPlayer.getSkinTextureLocation();
+//
+//        var gameProfile = new GameProfile(UUID.fromString("494036be-71f6-4b58-bb8d-a483a18a322f"), null);
+//
+//        var map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
+//
+//        var skin = map.containsKey(Type.SKIN) ?
+//                minecraft.getSkinManager().registerTexture(map.get(Type.SKIN), Type.SKIN) :
+//                DefaultPlayerSkin.getDefaultSkin(clientPlayer.getUUID());
+;;
+
+        var gameProfile = player.getGameProfile();
+        var propertyMap = gameProfile.getProperties();
+        if(!propertyMap.containsKey("textures"))
+            return player.getSkinTextureLocation();
+        var property = propertyMap.get("textures").iterator().next();
+
+        var textureValue = property.getValue();
+        ResourceLocation skinLocation = new ResourceLocation("textures/" + textureValue);
+
+        return skinLocation;
+        //return player.getSkinTextureLocation();
+    }
+
 
 //    @Nullable
 //    public static BufferedImage getPlayerHeadwearImage(AbstractClientPlayer clientPlayer) {
@@ -48,8 +86,7 @@ public class TextureHelper {
     @Nullable
     private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {
         var skin = skinRequest(clientPlayer.getUUID());
-        return Objects.requireNonNullElse(skin,
-                resourceToBufferedImage(clientPlayer.getSkinTextureLocation()));
+        return Objects.requireNonNullElse(skin, resourceToBufferedImage(clientPlayer.getSkinTextureLocation()));
     }
 
     @Nullable

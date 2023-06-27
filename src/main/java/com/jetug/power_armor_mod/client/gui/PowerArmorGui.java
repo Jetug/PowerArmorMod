@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.gui;
 
-import com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.data.constants.Global;
@@ -23,7 +23,7 @@ import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static net.minecraft.world.item.Items.*;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
-public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> {
+public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
     public static final float MIN_SCALE = 0.0001F;
@@ -34,7 +34,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorContainer> 
     private int right;
     private int bottom;
 
-    public PowerArmorGui(PowerArmorContainer container, Inventory inventory, Component name) {
+    public PowerArmorGui(PowerArmorMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
 

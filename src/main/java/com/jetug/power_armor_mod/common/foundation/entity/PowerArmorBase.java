@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.common.foundation.screen.container.PowerArmorContainer;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
@@ -151,7 +151,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
 
-        for(int i = 0; i < PowerArmorContainer.SIZE; i++){
+        for(int i = 0; i < PowerArmorMenu.SIZE; i++){
             items.add(inventory.getItem(i));
         }
 
@@ -237,7 +237,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     protected void initInventory(){
         SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(PowerArmorContainer.SIZE);
+        this.inventory = new SimpleContainer(PowerArmorMenu.SIZE);
         if (inventoryBuff != null) {
             inventoryBuff.removeListener(this);
             int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());

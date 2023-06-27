@@ -14,7 +14,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 import static software.bernie.geckolib3.util.GeckoLibUtil.*;
 
-public class HandAmimator implements IAnimatable {
+public class PovHandAmimator implements IAnimatable {
     public AnimationFactory factory = createFactory(this);
     public Minecraft minecraft;
     public LocalPlayer player;
