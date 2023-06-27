@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
+import static java.lang.System.*;
 
 public class MenuBase extends AbstractContainerMenu {
     private static final int SLOT_SIZE = 18;
@@ -56,7 +57,7 @@ public class MenuBase extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else {
-            System.out.println("Invalid slotIndex:" + index);
+            out.println("Invalid slotIndex:" + index);
             return ItemStack.EMPTY;
         }
         if (sourceStack.getCount() == 0) {
