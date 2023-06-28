@@ -1,9 +1,11 @@
 package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,6 +37,19 @@ public class EventHandler {
 
         if(isWearingPowerArmor(player)){
             getPlayerPowerArmor(player).punchTarget(target);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        var world = event.getWorld();
+        var pos = event.getPos();
+        var player = event.getPlayer();
+        var state = world.getBlockState(pos);
+        var blockEntity = world.getBlockEntity(pos);
+
+        if (blockEntity instanceof ArmorStationBlockEntity stationBlockEntity) {
+            stationBlockEntity.frame.openStationGUI(player);
         }
     }
 

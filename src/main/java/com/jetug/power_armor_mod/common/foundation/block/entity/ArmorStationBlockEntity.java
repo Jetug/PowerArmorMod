@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
 import net.minecraft.world.MenuProvider;

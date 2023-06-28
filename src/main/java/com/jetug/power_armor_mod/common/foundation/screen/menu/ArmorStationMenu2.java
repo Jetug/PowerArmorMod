@@ -37,7 +37,7 @@ public class ArmorStationMenu2 extends MenuBase {
     }
 
     public ArmorStationMenu2(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
-        super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
+        super(ContainerRegistry.ARMOR_STATION_MENU.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
         createSlot(BODY     , FRAME_BODY_SLOT_POS     );
         createSlot(LEFT_ARM , FRAME_LEFT_ARM_SLOT_POS );
         createSlot(RIGHT_ARM, FRAME_RIGHT_ARM_SLOT_POS);

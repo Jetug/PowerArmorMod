@@ -1,5 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
+import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
@@ -277,6 +279,24 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
                     return new PowerArmorMenu(id, inventory, menu, PowerArmorEntity.this);
+                }
+
+                @Override
+                public Component getDisplayName() {
+                    return PowerArmorEntity.this.getDisplayName();
+                }
+            });
+        }
+    }
+
+    public void openStationGUI(Player player) {
+        Global.referenceMob = this;
+
+        if (isServerSide) {
+            player.openMenu(new MenuProvider() {
+                @Override
+                public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
+                    return new ArmorStationMenu2(id, inventory, menu, PowerArmorEntity.this);
                 }
 
                 @Override
