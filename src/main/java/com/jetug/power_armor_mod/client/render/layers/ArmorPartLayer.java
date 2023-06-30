@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

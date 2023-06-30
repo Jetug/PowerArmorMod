@@ -1,41 +1,40 @@
-package com.jetug.power_armor_mod.client.gui;
+package com.jetug.power_armor_mod.client.gui.menu;
 
-import com.jetug.power_armor_mod.common.data.constants.*;
-import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.foundation.entity.*;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
-import com.jetug.power_armor_mod.common.util.*;
-import com.mojang.blaze3d.systems.*;
-import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.gui.screens.inventory.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.network.chat.*;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.util.Pos2D;
+import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.data.enums.*;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.*;
-import net.minecraft.world.entity.player.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 import java.awt.*;
 
+import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
-import static net.minecraft.world.item.Items.CHEST;
-import static net.minecraft.world.item.Items.CRAFTING_TABLE;
+import static net.minecraft.world.item.Items.*;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
-public class ArmorStationGui2 extends AbstractContainerScreen<ArmorStationMenu2> {
+public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
-    public static final float MIN_SCALE = 0.0001F;
     public static final int TABS_WIDTH = 57;
+    public static final float MIN_SCALE = 0.0001F;
 
     private float mousePosX;
     private float mousePosY;
     private int right;
     private int bottom;
 
-    public ArmorStationGui2(ArmorStationMenu2 container, Inventory inventory, Component name) {
+    public PowerArmorGui(PowerArmorMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
 
@@ -88,12 +87,12 @@ public class ArmorStationGui2 extends AbstractContainerScreen<ArmorStationMenu2>
 
         //RenderSystem.setShaderTexture(0, ICONS_LOCATION);
 
-        renderIcon(HEAD     , EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
-        renderIcon(BODY     , EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
-        renderIcon(LEFT_ARM , EMPTY_ARMOR_SLOT_LEFT_ARM , poseStack, RIGHT_ARM_SLOT_POS);
-        renderIcon(RIGHT_ARM, EMPTY_ARMOR_SLOT_RIGHT_ARM, poseStack, LEFT_ARM_SLOT_POS );
-        renderIcon(LEFT_LEG , EMPTY_ARMOR_SLOT_LEFT_LEG , poseStack, RIGHT_LEG_SLOT_POS);
-        renderIcon(RIGHT_LEG, EMPTY_ARMOR_SLOT_RIGHT_LEG, poseStack, LEFT_LEG_SLOT_POS );
+        renderIcon(HELMET, EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
+        renderIcon(BODY_ARMOR, EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
+        renderIcon(LEFT_ARM_ARMOR, EMPTY_ARMOR_SLOT_LEFT_ARM , poseStack, RIGHT_ARM_SLOT_POS);
+        renderIcon(RIGHT_ARM_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_ARM, poseStack, LEFT_ARM_SLOT_POS );
+        renderIcon(LEFT_LEG_ARMOR, EMPTY_ARMOR_SLOT_LEFT_LEG , poseStack, RIGHT_LEG_SLOT_POS);
+        renderIcon(RIGHT_LEG_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_LEG, poseStack, LEFT_LEG_SLOT_POS );
 
         this.renderTooltip(poseStack, mouseX, mouseY);
     }
@@ -115,8 +114,8 @@ public class ArmorStationGui2 extends AbstractContainerScreen<ArmorStationMenu2>
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ARMOR_STATION_GUI);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        RenderSystem.setShaderTexture(0, ARMOR_INVENTORY_TEXTURE);
+        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         if (Global.referenceMob instanceof PowerArmorEntity powerArmor) {
             renderEntity(powerArmor);

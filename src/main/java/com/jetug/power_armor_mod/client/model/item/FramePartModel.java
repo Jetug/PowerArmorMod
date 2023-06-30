@@ -11,11 +11,11 @@ public class FramePartModel extends AnimatedGeoModel<FramePartItem> {
     @Override
     public ResourceLocation getModelLocation(FramePartItem object) {
         return switch (object.bodyPart) {
-            case BODY      -> FRAME_MODEL_BODY     ;
-            case LEFT_ARM  -> FRAME_MODEL_LEFT_ARM ;
-            case RIGHT_ARM -> FRAME_MODEL_RIGHT_ARM;
-            case LEFT_LEG  -> FRAME_MODEL_LEFT_LEG ;
-            case RIGHT_LEG -> FRAME_MODEL_RIGHT_LEG;
+            case BODY_ARMOR -> FRAME_MODEL_BODY     ;
+            case LEFT_ARM_ARMOR -> FRAME_MODEL_LEFT_ARM ;
+            case RIGHT_ARM_ARMOR -> FRAME_MODEL_RIGHT_ARM;
+            case LEFT_LEG_ARMOR -> FRAME_MODEL_LEFT_LEG ;
+            case RIGHT_LEG_ARMOR -> FRAME_MODEL_RIGHT_LEG;
             default -> FRAME_MODEL_LOCATION;
         };
     }

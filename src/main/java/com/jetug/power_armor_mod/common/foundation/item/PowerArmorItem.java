@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.common.foundation.PowerArmorMaterial;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 

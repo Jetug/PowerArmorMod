@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
 import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.nbt.*;
@@ -36,21 +36,21 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     protected SimpleContainer inventory;
 
     public final BodyPart[] armor = new BodyPart[]{
-            HEAD      ,
-            BODY      ,
-            LEFT_ARM  ,
-            RIGHT_ARM ,
-            LEFT_LEG  ,
-            RIGHT_LEG ,
+            HELMET,
+            BODY_ARMOR,
+            LEFT_ARM_ARMOR,
+            RIGHT_ARM_ARMOR,
+            LEFT_LEG_ARMOR,
+            RIGHT_LEG_ARMOR,
     };
 
     public final BodyPart[] equipment = new BodyPart[]{
-            HEAD      ,
-            BODY      ,
-            LEFT_ARM  ,
-            RIGHT_ARM ,
-            LEFT_LEG  ,
-            RIGHT_LEG ,
+            HELMET,
+            BODY_ARMOR,
+            LEFT_ARM_ARMOR,
+            RIGHT_ARM_ARMOR,
+            LEFT_LEG_ARMOR,
+            RIGHT_LEG_ARMOR,
             ENGINE
     };
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {

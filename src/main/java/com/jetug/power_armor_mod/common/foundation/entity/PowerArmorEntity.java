@@ -1,9 +1,8 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
@@ -120,14 +119,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             getPlayerPassenger().hurt(damageSource, finalDamage);
 
         if(isServerSide){
-            damageArmorItem(HEAD     , damageSource , damage);
-            damageArmorItem(BODY     , damageSource , damage);
-            damageArmorItem(LEFT_ARM , damageSource , damage);
-            damageArmorItem(RIGHT_ARM, damageSource , damage);
+            damageArmorItem(HELMET, damageSource , damage);
+            damageArmorItem(BODY_ARMOR, damageSource , damage);
+            damageArmorItem(LEFT_ARM_ARMOR, damageSource , damage);
+            damageArmorItem(RIGHT_ARM_ARMOR, damageSource , damage);
 
             if(damageSource == DamageSource.FALL) {
-                damageArmorItem(LEFT_LEG, damageSource, damage);
-                damageArmorItem(RIGHT_LEG, damageSource, damage);
+                damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
+                damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
             }
         }
 

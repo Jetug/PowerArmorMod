@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.screen.slot;
 
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;

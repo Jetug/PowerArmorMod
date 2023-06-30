@@ -4,7 +4,7 @@ import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import com.jetug.power_armor_mod.common.foundation.screen.slot.EquipmentSlot;
 import com.jetug.power_armor_mod.common.util.Pos2D;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,12 +32,12 @@ public class PowerArmorMenu extends MenuBase {
 
     public PowerArmorMenu(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
         super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
-        createSlot(HEAD     , HEAD_SLOT_POS     );
-        createSlot(BODY     , BODY_SLOT_POS     );
-        createSlot(LEFT_ARM , RIGHT_ARM_SLOT_POS);
-        createSlot(RIGHT_ARM, LEFT_ARM_SLOT_POS );
-        createSlot(LEFT_LEG , RIGHT_LEG_SLOT_POS);
-        createSlot(RIGHT_LEG, LEFT_LEG_SLOT_POS );
+        createSlot(HELMET, HEAD_SLOT_POS     );
+        createSlot(BODY_ARMOR, BODY_SLOT_POS     );
+        createSlot(LEFT_ARM_ARMOR, RIGHT_ARM_SLOT_POS);
+        createSlot(RIGHT_ARM_ARMOR, LEFT_ARM_SLOT_POS );
+        createSlot(LEFT_LEG_ARMOR, RIGHT_LEG_SLOT_POS);
+        createSlot(RIGHT_LEG_ARMOR, LEFT_LEG_SLOT_POS );
         createSlot(ENGINE   , ENGINE_SLOT_POS   );
     }
 

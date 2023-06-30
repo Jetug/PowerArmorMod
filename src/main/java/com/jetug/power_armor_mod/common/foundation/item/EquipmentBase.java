@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.util.helpers.ResourceHelper;
 import net.minecraft.nbt.CompoundTag;

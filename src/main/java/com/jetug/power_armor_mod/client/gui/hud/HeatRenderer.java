@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.client.gui;
+package com.jetug.power_armor_mod.client.gui.hud;
 
 import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import com.jetug.power_armor_mod.common.util.helpers.MathHelper;

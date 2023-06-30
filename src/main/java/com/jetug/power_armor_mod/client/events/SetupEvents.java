@@ -1,14 +1,14 @@
 package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.gui.*;
+import com.jetug.power_armor_mod.client.gui.hud.HeatRenderer;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.client.input.DoubleClickController;
-import com.jetug.power_armor_mod.client.gui.ArmorStationGui;
+import com.jetug.power_armor_mod.client.gui.menu.ArmorStationGui;
 import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;

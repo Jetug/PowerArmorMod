@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.client.render.renderers.item.FramePartRenderer;
 import com.jetug.power_armor_mod.client.render.renderers.item.HandRenderer;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.IItemRenderProperties;
 import software.bernie.geckolib3.core.IAnimatable;

@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.client.render.renderers;
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.json.EquipmentAttachment;
 import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
 

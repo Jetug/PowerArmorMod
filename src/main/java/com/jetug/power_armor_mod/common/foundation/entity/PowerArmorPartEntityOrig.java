@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
 import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +68,7 @@ public class PowerArmorPartEntityOrig extends PartEntity<PowerArmorEntity> {
             PacketHandler.sendToServer(new InteractPacket(this.getId(), hand ,vector));
         }
 
-        Global.LOGGER.log(INFO, "interactAt " + bodyPart.getName() + level.isClientSide);
+        //Global.LOGGER.log(INFO, "interactAt " + bodyPart.getName() + level.isClientSide);
         return parentMob.interactAt(player, vector, hand);
     }
 

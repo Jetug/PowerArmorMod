@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.screen.menu;
 
-import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
 import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
@@ -58,11 +58,11 @@ public class ArmorStationMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            createSlot(handler, BODY     , FRAME_BODY_SLOT_POS     );
-            createSlot(handler, LEFT_ARM , FRAME_LEFT_ARM_SLOT_POS );
-            createSlot(handler, RIGHT_ARM, FRAME_RIGHT_ARM_SLOT_POS);
-            createSlot(handler, LEFT_LEG , FRAME_LEFT_LEG_SLOT_POS );
-            createSlot(handler, RIGHT_LEG, FRAME_RIGHT_LEG_SLOT_POS);
+            createSlot(handler, BODY_ARMOR, FRAME_BODY_SLOT_POS     );
+            createSlot(handler, LEFT_ARM_ARMOR, FRAME_LEFT_ARM_SLOT_POS );
+            createSlot(handler, RIGHT_ARM_ARMOR, FRAME_RIGHT_ARM_SLOT_POS);
+            createSlot(handler, LEFT_LEG_ARMOR, FRAME_LEFT_LEG_SLOT_POS );
+            createSlot(handler, RIGHT_LEG_ARMOR, FRAME_RIGHT_LEG_SLOT_POS);
         });
     }
 

@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.client.gui;
+package com.jetug.power_armor_mod.client.gui.menu;
 
 import com.jetug.power_armor_mod.common.data.constants.Resources;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
