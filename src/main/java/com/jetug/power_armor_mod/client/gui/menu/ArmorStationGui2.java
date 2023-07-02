@@ -19,135 +19,40 @@ import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
+import static com.mojang.blaze3d.systems.RenderSystem.*;
 import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
-@SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
 public class ArmorStationGui2 extends AbstractContainerScreen<ArmorStationMenu2> {
-    public static final int ENTITY_POS_X = 41;
-    public static final int ENTITY_POS_Y = 73;
-    public static final float MIN_SCALE = 0.0001F;
-    public static final int TABS_WIDTH = 57;
+    private final ArmorStationMenu2 menu;
 
-    private float mousePosX;
-    private float mousePosY;
-    private int right;
-    private int bottom;
-
-    public ArmorStationGui2(ArmorStationMenu2 container, Inventory inventory, Component name) {
-        super(container, inventory, name);
+    public ArmorStationGui2(ArmorStationMenu2 menu, Inventory pPlayerInventory, Component pTitle) {
+        super(menu, pPlayerInventory, pTitle);
+        this.menu = menu;
+        this.imageHeight = 187;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        right = getRight();
-        bottom = getBottom();
-
-//        addWidget(new Button(leftPos, topPos, 50, 50, new TextComponent("TEST"), (c) -> {
-//            minecraft.setScreen(new InventoryScreen(minecraft.player));
-//        }));
+    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
+        renderBackground(pPoseStack);
+        super.render(pPoseStack, mouseX, mouseY, delta);
+        renderTooltip(pPoseStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {}
+    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        setShader(GameRenderer::getPositionTexShader);
+        setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        setShaderTexture(0, Resources.ARMOR_STATION_GUI);
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
-        var rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        if (minecraft.player.isCreative()) {
-            rect = new Rectangle(right - 25, bottom, 25, TAB_HEIGHT);
-        } else {
-            rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
-        }
-        if(rect.contains(mouseX, mouseY)){
-            minecraft.setScreen(new InventoryScreen(minecraft.player));
-        }
-
-        return super.mouseClicked(mouseX, mouseY, pButton);
-    }
-
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.mousePosX = mouseX;
-        this.mousePosY = mouseY;
-
-
-        if (minecraft.player.isCreative()) {
-            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , right - 6  - 16, bottom + 4);
-            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), right - 30 - 16, bottom + 4);
-        } else {
-            this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos + -20);
-            this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + 35, topPos + -20);
-        }
-
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-
-        //RenderSystem.setShaderTexture(0, ICONS_LOCATION);
-
-        renderIcon(HELMET, EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
-        renderIcon(BODY_ARMOR, EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
-        renderIcon(LEFT_ARM_ARMOR, EMPTY_ARMOR_SLOT_LEFT_ARM , poseStack, RIGHT_ARM_SLOT_POS);
-        renderIcon(RIGHT_ARM_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_ARM, poseStack, LEFT_ARM_SLOT_POS );
-        renderIcon(LEFT_LEG_ARMOR, EMPTY_ARMOR_SLOT_LEFT_LEG , poseStack, RIGHT_LEG_SLOT_POS);
-        renderIcon(RIGHT_LEG_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_LEG, poseStack, LEFT_LEG_SLOT_POS );
-
-        this.renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    private void renderIcon(BodyPart bodyPart, PoseStack poseStack, Pos2D pos, Rectangle icon){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty())
-            blit(poseStack, leftPos + pos.x, topPos + pos.y, icon.x, icon.y, icon.width, icon.height);
-    }
-
-    private void renderIcon(BodyPart bodyPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2D pos){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty()) {
-            RenderSystem.setShaderTexture(0, pTextureId);
-            blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
-        //}
-    }
-
-
-    @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ARMOR_STATION_GUI);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-        if (Global.referenceMob instanceof PowerArmorEntity powerArmor) {
-            renderEntity(powerArmor);
-        }
-
-        if(minecraft.player.isCreative()){
-            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
-            this.blit(poseStack, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
-        }
-        else{
-            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-            this.blit(poseStack, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
-        }
-    }
-
-    private int getRight(){
-        return leftPos + imageWidth;
-    }
-
-    private int getBottom(){
-        return topPos + imageHeight;
-    }
-
-    private void renderEntity(PowerArmorEntity powerArmor) {
-        var scale = 1F / Math.max(MIN_SCALE, powerArmor.getScale());
-
-        InventoryScreen.renderEntityInInventory(
-                leftPos + ENTITY_POS_X,
-                topPos + ENTITY_POS_Y,
-                (int)(scale * 23F),
-                leftPos + 51 - mousePosX,
-                topPos + 75 - 50 - mousePosY,
-                powerArmor);
+//        if(menu.blockEntity.frame != null)
+//            blit(pPoseStack, x + 160, y + 5, 178, 0, 6, 6);
+//        else{
+            blit(pPoseStack, x + 160, y + 5, 178, 6, 6, 6);
+//        }
     }
 }

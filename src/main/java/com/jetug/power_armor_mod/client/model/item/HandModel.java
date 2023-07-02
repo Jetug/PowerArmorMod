@@ -8,8 +8,6 @@ import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
 @SuppressWarnings("rawtypes")
 public class HandModel extends AnimatedGeoModel {
-    public static final ResourceLocation HAND_MODEL_LOCATION = new ResourceLocation(Global.MOD_ID, "geo/hand.geo.json");
-
     @Override
     public ResourceLocation getModelLocation(Object object) {
         return HAND_MODEL_LOCATION;

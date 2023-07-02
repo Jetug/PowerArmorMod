@@ -68,11 +68,14 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
             var settings = item.getPartSettings();
+
             forAllAttachments(settings, this::addModelPart);
         }
         else {
             var frameSettings = ClientConfig.resourceManager.getFrameSettings("power_armor_frame");
-            for (var bone : frameSettings.getAttachments(part).bones){
+            var attachments =  frameSettings.getAttachments(part);
+            if (attachments == null) return;
+            for (var bone : attachments.bones){
                 returnToDefault(bone);
             }
         }

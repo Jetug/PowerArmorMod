@@ -37,7 +37,6 @@ public class ArmorStationMenu extends AbstractContainerMenu {
     private static final int HOTBAR_POS_Y = 163;
     private static final int HOTBAR_POS_X = INVENTORY_POS_X;
     private static final int INVENTORY_ROW_SIZE = 9;
-
     public  static final int TE_INVENTORY_SLOT_COUNT = 5;
 
     public final ArmorStationBlockEntity blockEntity;

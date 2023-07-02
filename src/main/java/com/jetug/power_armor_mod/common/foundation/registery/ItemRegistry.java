@@ -38,26 +38,25 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
             new PowerArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR));
 
-    public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", () ->
-            new EngineItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+    public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", EngineItem::new);
 
     public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
             new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
 
     public static final RegistryObject<Item> FRAME_BODY = ITEMS.register("frame_body", () ->
-            new FramePartItem(BodyPart.BODY_ARMOR));
+            new FramePartItem(BodyPart.BODY_FRAME));
 
     public static final RegistryObject<Item> FRAME_RIGHT_ARM = ITEMS.register("frame_right_arm", () ->
-            new FramePartItem(BodyPart.RIGHT_ARM_ARMOR));
+            new FramePartItem(BodyPart.RIGHT_ARM_FRAME));
 
     public static final RegistryObject<Item> FRAME_LEFT_ARM = ITEMS.register("frame_left_arm", () ->
-            new FramePartItem(BodyPart.LEFT_ARM_ARMOR));
+            new FramePartItem(BodyPart.LEFT_ARM_FRAME));
 
     public static final RegistryObject<Item> FRAME_RIGHT_LEG = ITEMS.register("frame_right_leg", () ->
-            new FramePartItem(BodyPart.RIGHT_LEG_ARMOR));
+            new FramePartItem(BodyPart.RIGHT_LEG_FRAME));
 
     public static final RegistryObject<Item> FRAME_LEFT_LEG = ITEMS.register("frame_left_leg", () ->
-            new FramePartItem(BodyPart.LEFT_LEG_ARMOR));
+            new FramePartItem(BodyPart.LEFT_LEG_FRAME));
 
     public static final RegistryObject<Item> CAST_HELMET = ITEMS.register("cast_helmet", () ->
             new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));

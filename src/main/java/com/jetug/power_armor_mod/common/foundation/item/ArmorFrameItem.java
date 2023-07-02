@@ -31,7 +31,6 @@ public class ArmorFrameItem extends Item {
         itemStack.setTag(new CompoundTag());
     }
 
-
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (context.getClickedFace() != Direction.UP)

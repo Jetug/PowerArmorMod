@@ -24,6 +24,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
     protected static final int MAX_ATTACK_CHARGE = 60;
     public static final int COOLING = 5;
+    public static final int P_SIZE = 14;
 
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
@@ -51,6 +52,11 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             RIGHT_ARM_ARMOR,
             LEFT_LEG_ARMOR,
             RIGHT_LEG_ARMOR,
+            BODY_FRAME,
+            LEFT_ARM_FRAME,
+            RIGHT_ARM_FRAME,
+            LEFT_LEG_FRAME,
+            RIGHT_LEG_FRAME,
             ENGINE
     };
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
@@ -237,7 +243,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     protected void initInventory(){
         SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(PowerArmorMenu.SIZE);
+        this.inventory = new SimpleContainer(P_SIZE);
         if (inventoryBuff != null) {
             inventoryBuff.removeListener(this);
             int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());

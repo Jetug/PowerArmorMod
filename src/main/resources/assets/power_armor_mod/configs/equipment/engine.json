@@ -1,6 +1,6 @@
 {
 	"part": "engine",
-	"model": "geo/engine.geo.json",
+	"model": "geo/equipment/engine.geo.json",
 	"texture": "textures/entities/engine.png",
 
 	"attachments": [

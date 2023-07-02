@@ -6,7 +6,7 @@ import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 
-public class PowerArmorItem extends EquipmentBase {
+public class PowerArmorItem extends DamageableItem {
     private final PowerArmorMaterial material;
 
     public PowerArmorItem(PowerArmorMaterial material, BodyPart part) {

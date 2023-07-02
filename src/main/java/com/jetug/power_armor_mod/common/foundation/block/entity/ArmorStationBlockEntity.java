@@ -13,24 +13,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.*;
 
+import javax.swing.*;
+
 import static com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu.*;
 
-public class ArmorStationBlockEntity extends BlockEntityBase implements MenuProvider {
+public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuProvider*/ {
     public ArmorStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(BlockEntitieRegistry.ARMOR_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState, TE_INVENTORY_SLOT_COUNT);
     }
 
     public PowerArmorEntity frame;
 
-    @Override
-    public Component getDisplayName() {
-        return new TranslatableComponent("container.armor_station");
-    }
+//    @Override
+//    public Component getDisplayName() {
+//        return new TranslatableComponent("container.armor_station");
+//    }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new ArmorStationMenu(pContainerId, pInventory, this);
+//    @Nullable
+//    @Override
+//    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+//        return new ArmorStationMenu(pContainerId, pInventory, this);
+//    }
+
+    public  void openGui(Player player){
+        if(frame != null) frame.openStationGUI(player);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ArmorStationBlockEntity blockEntity) {

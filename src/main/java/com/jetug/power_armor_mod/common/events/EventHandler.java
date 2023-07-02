@@ -49,7 +49,7 @@ public class EventHandler {
         var blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof ArmorStationBlockEntity stationBlockEntity) {
-            stationBlockEntity.frame.openStationGUI(player);
+            stationBlockEntity.openGui(player);
         }
     }
 

@@ -22,7 +22,7 @@ public class MenuBase extends AbstractContainerMenu {
     protected final int inventoryPosY;
     protected final int hotbarPosY;
     protected final Container container;
-    protected int size = 7;
+    protected int size;
 
     public MenuBase(MenuType<?> pMenuType, int containerId, Container container, Inventory playerInventory, Entity entity, int size, int inventoryPosY) {
         super(pMenuType, containerId);
@@ -31,6 +31,7 @@ public class MenuBase extends AbstractContainerMenu {
         this.container.startOpen(playerInventory.player);
         this.inventoryPosY = inventoryPosY;
         this.hotbarPosY = inventoryPosY + 58;
+        this.size = size;
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
     }

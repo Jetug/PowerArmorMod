@@ -9,8 +9,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 public class EquipmentBase extends Item {
-    private static final String DAMAGE_KEY = "Damage";
 
     public final BodyPart part;
 
@@ -24,6 +25,7 @@ public class EquipmentBase extends Item {
         this.part = part;
     }
 
+    @Nullable
     public EquipmentSettings getPartSettings(){
         return ClientConfig.resourceManager.getEquipmentSettings(getName());
     }
@@ -32,17 +34,4 @@ public class EquipmentBase extends Item {
         return ResourceHelper.getResourceName(getRegistryName());
     }
 
-    public static int getItemDamage(ItemStack itemStack) {
-        if(itemStack.hasTag()) {
-            CompoundTag nbt = itemStack.getOrCreateTag();
-            return nbt.getInt(DAMAGE_KEY);
-        }
-        else return 0;
-    }
-
-    public static void setItemDamage(ItemStack head, int totalDamage)
-    {
-        CompoundTag nbt = head.getOrCreateTag();
-        nbt.putInt(DAMAGE_KEY, totalDamage);
-    }
 }
