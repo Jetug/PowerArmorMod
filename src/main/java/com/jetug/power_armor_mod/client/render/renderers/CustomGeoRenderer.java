@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.client.render;
+package com.jetug.power_armor_mod.client.render.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

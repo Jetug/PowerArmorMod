@@ -1,6 +1,5 @@
-package com.jetug.power_armor_mod.client.render;
+package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.client.render.renderers.*;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.model.*;

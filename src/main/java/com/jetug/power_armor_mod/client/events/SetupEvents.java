@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 
 import static com.jetug.power_armor_mod.client.KeyBindings.*;
-import static com.jetug.power_armor_mod.client.render.CustomHandRenderer.registerHandRenderer;
+import static com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer.*;
 import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry.*;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
