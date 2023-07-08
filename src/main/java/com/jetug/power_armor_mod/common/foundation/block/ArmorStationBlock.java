@@ -77,15 +77,14 @@ public class ArmorStationBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
-                                 Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-//        if (!pLevel.isClientSide()) {
-//            BlockEntity entity = pLevel.getBlockEntity(pPos);
-//            if(entity instanceof ArmorStationBlockEntity) {
-//                NetworkHooks.openGui(((ServerPlayer)pPlayer), (ArmorStationBlockEntity)entity, pPos);
-//            } else {
-//                throw new IllegalStateException("Our Container provider is missing!");
-//            }
-//        }
+                                 Player player, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide()) {
+            BlockEntity entity = pLevel.getBlockEntity(pPos);
+            if(entity instanceof ArmorStationBlockEntity armorStation) {
+                //NetworkHooks.openGui(((ServerPlayer)player), (ArmorStationBlockEntity)entity, pPos);
+                armorStation.openGui(player);
+            }
+        }
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }

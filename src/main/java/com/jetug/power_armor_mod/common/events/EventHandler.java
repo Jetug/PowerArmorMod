@@ -40,18 +40,18 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        var world = event.getWorld();
-        var pos = event.getPos();
-        var player = event.getPlayer();
-        var state = world.getBlockState(pos);
-        var blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity instanceof ArmorStationBlockEntity stationBlockEntity) {
-            stationBlockEntity.openGui(player);
-        }
-    }
+//    @SubscribeEvent
+//    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+//        var world = event.getWorld();
+//        var pos = event.getPos();
+//        var player = event.getPlayer();
+//        var state = world.getBlockState(pos);
+//        var blockEntity = world.getBlockEntity(pos);
+//
+//        if (blockEntity instanceof ArmorStationBlockEntity stationBlockEntity) {
+//            stationBlockEntity.openGui(player);
+//        }
+//    }
 
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
