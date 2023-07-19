@@ -1,0 +1,13 @@
+{
+	"part": "back",
+	"model": "geo/equipment/jetpack.geo.json",
+	"texture": "textures/entities/jetpack.png",
+
+	"attachments": [
+		{
+			"mode": "add",
+			"frame": "back_slot",
+			"armor": "jetpack"
+		}
+	]
+}

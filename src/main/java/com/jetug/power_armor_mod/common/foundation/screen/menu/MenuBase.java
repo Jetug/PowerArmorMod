@@ -1,5 +1,8 @@
 package com.jetug.power_armor_mod.common.foundation.screen.menu;
 
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
+import com.jetug.power_armor_mod.common.foundation.screen.slot.EquipmentSlot;
+import com.jetug.power_armor_mod.common.util.Pos2D;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,6 +12,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.HashMap;
+
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static java.lang.System.*;
 
@@ -17,6 +22,9 @@ public class MenuBase extends AbstractContainerMenu {
     private static final int INVENTORY_POS_X = 8;
     private static final int HOTBAR_POS_X = INVENTORY_POS_X;
     private static final int INVENTORY_ROW_SIZE = 9;
+
+    private final HashMap<BodyPart, Integer> slotsMap = new HashMap<>();
+    private Integer slotId = 0;
 
     protected final Entity entity;
     protected final int inventoryPosY;
@@ -59,11 +67,10 @@ public class MenuBase extends AbstractContainerMenu {
             out.println("Invalid slotIndex:" + index);
             return ItemStack.EMPTY;
         }
-        if (sourceStack.getCount() == 0) {
-            sourceSlot.set(ItemStack.EMPTY);
-        } else {
-            sourceSlot.setChanged();
-        }
+
+        if (sourceStack.getCount() == 0) sourceSlot.set(ItemStack.EMPTY);
+        else sourceSlot.setChanged();
+
         sourceSlot.onTake(playerIn, sourceStack);
         return copyOfSourceStack;
     }
@@ -89,5 +96,11 @@ public class MenuBase extends AbstractContainerMenu {
         for (int slot = 0; slot < 9; ++slot) {
             this.addSlot(new Slot(playerInventory, slot, HOTBAR_POS_X + slot * SLOT_SIZE, hotbarPosY));
         }
+    }
+
+    protected void createSlot(BodyPart bodyPart, Pos2D pos){
+        slotsMap.put(bodyPart, slotId);
+        this.addSlot(new EquipmentSlot(bodyPart, container, bodyPart.getId(), pos.x, pos.y));
+        slotId++;
     }
 }

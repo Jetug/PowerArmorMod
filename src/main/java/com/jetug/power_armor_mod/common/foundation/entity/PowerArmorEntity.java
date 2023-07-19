@@ -253,13 +253,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     public void damageArmorItem(BodyPart bodyPart, DamageSource damageSource, float damage) {
         Global.LOGGER.info("damageArmorItem" + isClientSide);
-
         var itemStack = inventory.getItem(bodyPart.getId());
 
-        if(!itemStack.isEmpty()){
-            var item = (PowerArmorItem)itemStack.getItem();
-            item.damageArmor(itemStack, (int) damage);
-        }
+        if(itemStack.getItem() instanceof PowerArmorItem armorItem)
+            armorItem.damageArmor(itemStack, (int) damage);
     }
 
     @Nullable

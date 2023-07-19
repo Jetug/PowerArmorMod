@@ -7,16 +7,16 @@ public enum BodyPart{
     @SerializedName("body"           ) BODY_ARMOR     ,
     @SerializedName("left_arm"       ) LEFT_ARM_ARMOR ,
     @SerializedName("right_arm"      ) RIGHT_ARM_ARMOR,
-    @SerializedName("left_leg"       ) LEFT_LEG_ARMOR ,
+    @SerializedName("left_leg"       ) LEFT_LEG_ARMOR , //5
     @SerializedName("right_leg"      ) RIGHT_LEG_ARMOR,
     @SerializedName("engine"         ) ENGINE         ,
+    @SerializedName("back"           ) BACK           ,
+    @SerializedName("cooling"        ) COOLING        ,
     @SerializedName("body_frame"     ) BODY_FRAME     ,
     @SerializedName("left_arm_frame" ) LEFT_ARM_FRAME ,
     @SerializedName("right_arm_frame") RIGHT_ARM_FRAME,
     @SerializedName("left_leg_frame" ) LEFT_LEG_FRAME ,
-    @SerializedName("right_leg_frame") RIGHT_LEG_FRAME,
-    @SerializedName("back"           ) BACK           ,
-    @SerializedName("cooling"        ) COOLING        ;
+    @SerializedName("right_leg_frame") RIGHT_LEG_FRAME; //14
 
     private static final BodyPart[] values = BodyPart.values();
 

@@ -62,6 +62,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ENGINE_MEDIUM = ITEMS.register("engine_medium", () ->
             new EngineItem(150, 3, 1.5f));
 
+    public static final RegistryObject<Item> JETPACK = ITEMS.register("jetpack", () ->
+            new JetpackItem( 3, 1.5f));
+
     public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
             new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
 

@@ -31,6 +31,10 @@
     {
       "part": "engine",
       "bones" : ["engine_slot"]
+    },
+    {
+      "part": "back",
+      "bones" : ["back_slot"]
     }
   ]
 }

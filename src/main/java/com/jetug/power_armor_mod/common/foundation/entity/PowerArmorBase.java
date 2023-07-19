@@ -57,7 +57,9 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             RIGHT_ARM_FRAME,
             LEFT_LEG_FRAME,
             RIGHT_LEG_FRAME,
-            ENGINE
+            ENGINE,
+            BACK,
+            BodyPart.COOLING
     };
 
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
@@ -264,7 +266,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         if(inventory.getItem(ENGINE.ordinal()).getItem() instanceof EngineItem engine)
              setSpeed(getSpeedAttribute() * engine.speed);
         else {
-            setSpeed(0);
+            setSpeed(0.05f);
             return;
         }
 

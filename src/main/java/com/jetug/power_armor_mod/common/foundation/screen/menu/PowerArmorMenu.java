@@ -41,7 +41,7 @@ public class PowerArmorMenu extends MenuBase {
         createSlot(ENGINE   , ENGINE_SLOT_POS   );
     }
 
-    private void createSlot(BodyPart bodyPart, Pos2D pos){
-        this.addSlot(new EquipmentSlot(bodyPart, container, bodyPart.getId(), pos.x, pos.y));
-    }
+//    private void createSlot(BodyPart bodyPart, Pos2D pos){
+//        this.addSlot(new EquipmentSlot(bodyPart, container, bodyPart.getId(), pos.x, pos.y));
+//    }
 }

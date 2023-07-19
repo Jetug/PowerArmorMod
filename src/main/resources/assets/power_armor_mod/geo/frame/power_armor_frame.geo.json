@@ -326,6 +326,11 @@
 					"pivot": [-0.3, 27, 3]
 				},
 				{
+					"name": "back_slot",
+					"parent": "body_top",
+					"pivot": [-0.3, 29.25, 3]
+				},
+				{
 					"name": "body_bottom",
 					"parent": "body",
 					"pivot": [0, 21, 0],
