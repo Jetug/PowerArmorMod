@@ -18,7 +18,6 @@ public enum BodyPart{
     @SerializedName("back"           ) BACK           ,
     @SerializedName("cooling"        ) COOLING        ;
 
-
     private static final BodyPart[] values = BodyPart.values();
 
     public static BodyPart getById(int id) {

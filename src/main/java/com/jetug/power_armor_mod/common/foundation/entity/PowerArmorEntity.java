@@ -546,7 +546,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         this.flyingSpeed = getSpeed() * 0.1F;
 
         if (isControlledByLocalInstance()) {
-            this.setSpeed((float)getAttributeValue(Attributes.MOVEMENT_SPEED));
+            //this.setSpeed((float)getAttributeValue(Attributes.MOVEMENT_SPEED));
             super.travel(new Vec3(player.xxa, travelVector.y, player.zza));
         } else {
             setDeltaMovement(Vec3.ZERO);

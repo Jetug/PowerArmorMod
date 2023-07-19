@@ -1,19 +1,19 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.network.data.ArmorData;
+import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
+import com.jetug.power_armor_mod.common.foundation.item.*;
+import com.jetug.power_armor_mod.common.util.helpers.timer.*;
+import com.jetug.power_armor_mod.common.util.interfaces.*;
+import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.util.helpers.timer.TickTimer;
-import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.*;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
-
-import java.util.ArrayList;
+import java.util.*;
 
 import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
 import static com.jetug.power_armor_mod.common.data.constants.NBT.*;
@@ -59,13 +59,12 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             RIGHT_LEG_FRAME,
             ENGINE
     };
+
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         noCulling = true;
         initInventory();
-//        syncDataWithClient();
-//        syncDataWithClient();
-        getTotalArmor();
+        updateParams();
     }
 
     @Override
@@ -92,10 +91,26 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     @Override
     public void containerChanged(@NotNull Container container) {
-        getTotalArmor();
-
+        updateParams();
 //        if(isServerSide)
 //            doClientAction(new InventorySyncAction(inventory), get);
+    }
+
+    private void updateParams(){
+        updateTotalArmor();
+        updateSpeed();
+    }
+
+    private void updateSpeed(){
+        var itemStack = inventory.getItem(ENGINE.ordinal());
+        if(itemStack.getItem() instanceof EngineItem engine){
+            setSpeed(getSpeedAttribute() * engine.speed);
+        }
+        else setSpeed(getSpeedAttribute());
+    }
+
+    private float getSpeedAttribute(){
+        return (float)getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
     public void addHeat(int value){
@@ -257,7 +272,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         this.inventory.addListener(this);
     }
 
-    private void getTotalArmor(){
+    private void updateTotalArmor(){
         totalDefense   = 0;
         totalToughness = 0;
 
