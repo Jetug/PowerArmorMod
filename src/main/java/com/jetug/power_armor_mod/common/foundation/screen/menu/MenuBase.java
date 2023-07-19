@@ -51,28 +51,33 @@ public class MenuBase extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
-        var sourceSlot = slots.get(index);
-        if (!sourceSlot.hasItem()) return ItemStack.EMPTY;
-        var sourceStack = sourceSlot.getItem();
-        var copyOfSourceStack = sourceStack.copy();
+        try{
+            var sourceSlot = slots.get(index);
+            if (!sourceSlot.hasItem()) return ItemStack.EMPTY;
+            var sourceStack = sourceSlot.getItem();
+            var copyOfSourceStack = sourceStack.copy();
 
-        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            if (!moveItemStackTo(sourceStack, INVENTORY_FIRST_SLOT_INDEX,
-                    INVENTORY_FIRST_SLOT_INDEX + size, false))
+            if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+                if (!moveItemStackTo(sourceStack, INVENTORY_FIRST_SLOT_INDEX,
+                        INVENTORY_FIRST_SLOT_INDEX + size, false))
+                    return ItemStack.EMPTY;
+            } else if (index < INVENTORY_FIRST_SLOT_INDEX + size) {
+                if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false))
+                    return ItemStack.EMPTY;
+            } else {
+                out.println("Invalid slotIndex:" + index);
                 return ItemStack.EMPTY;
-        } else if (index < INVENTORY_FIRST_SLOT_INDEX + size) {
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false))
-                return ItemStack.EMPTY;
-        } else {
-            out.println("Invalid slotIndex:" + index);
+            }
+
+            if (sourceStack.getCount() == 0) sourceSlot.set(ItemStack.EMPTY);
+            else sourceSlot.setChanged();
+            sourceSlot.onTake(playerIn, sourceStack);
+            return copyOfSourceStack;
+        }
+        catch (Exception ignored){
             return ItemStack.EMPTY;
         }
 
-        if (sourceStack.getCount() == 0) sourceSlot.set(ItemStack.EMPTY);
-        else sourceSlot.setChanged();
-
-        sourceSlot.onTake(playerIn, sourceStack);
-        return copyOfSourceStack;
     }
 
     @Override

@@ -222,6 +222,22 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return heat + this.heat <= maxHeat;
     }
 
+    protected void initInventory(){
+        SimpleContainer inventoryBuff = this.inventory;
+        this.inventory = new SimpleContainer(P_SIZE);
+        if (inventoryBuff != null) {
+            inventoryBuff.removeListener(this);
+            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = inventoryBuff.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    this.inventory.setItem(j, itemstack.copy());
+                }
+            }
+        }
+        this.inventory.addListener(this);
+    }
+
     protected void syncDataWithClient() {
         if(isServerSide) getArmorData().sentToClient();
     }
@@ -239,22 +255,6 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         ListTag nbtTags = compound.getList(ITEMS_TAG, 10);
         initInventory();
         deserializeInventory(inventory, nbtTags);
-    }
-
-    protected void initInventory(){
-        SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(P_SIZE);
-        if (inventoryBuff != null) {
-            inventoryBuff.removeListener(this);
-            int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
-            for (int j = 0; j < i; ++j) {
-                ItemStack itemstack = inventoryBuff.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
-                }
-            }
-        }
-        this.inventory.addListener(this);
     }
 
     private void updateParams(){

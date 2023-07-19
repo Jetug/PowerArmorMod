@@ -13,18 +13,18 @@ import java.util.HashMap;
 
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorBase.P_SIZE;
 import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.*;
 
 public class ArmorStationMenu2 extends MenuBase {
     private static final int INVENTORY_POS_Y = 105;
-    public  static final int SIZE = 14;
 
     public ArmorStationMenu2(int i, Inventory playerInventory) {
-        this(i, new SimpleContainer(SIZE), playerInventory, null);
+        this(i, new SimpleContainer(P_SIZE), playerInventory, null);
     }
 
     public ArmorStationMenu2(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
-        super(ARMOR_STATION_MENU.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
+        super(ARMOR_STATION_MENU.get(), containerId, container, playerInventory, entity, P_SIZE, INVENTORY_POS_Y);
         createSlot(BODY_FRAME       , FRAME_BODY_SLOT_POS      );
         createSlot(LEFT_ARM_FRAME   , FRAME_LEFT_ARM_SLOT_POS  );
         createSlot(RIGHT_ARM_FRAME  , FRAME_RIGHT_ARM_SLOT_POS );
