@@ -96,23 +96,6 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 //            doClientAction(new InventorySyncAction(inventory), get);
     }
 
-    private void updateParams(){
-        updateTotalArmor();
-        updateSpeed();
-    }
-
-    private void updateSpeed(){
-        var itemStack = inventory.getItem(ENGINE.ordinal());
-        if(itemStack.getItem() instanceof EngineItem engine){
-            setSpeed(getSpeedAttribute() * engine.speed);
-        }
-        else setSpeed(getSpeedAttribute());
-    }
-
-    private float getSpeedAttribute(){
-        return (float)getAttributeValue(Attributes.MOVEMENT_SPEED);
-    }
-
     public void addHeat(int value){
         if(value <= 0) return;
 
@@ -272,18 +255,40 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         this.inventory.addListener(this);
     }
 
+    private void updateParams(){
+        updateTotalArmor();
+        updateSpeed();
+    }
+
+    private void updateSpeed(){
+        if(inventory.getItem(ENGINE.ordinal()).getItem() instanceof EngineItem engine)
+             setSpeed(getSpeedAttribute() * engine.speed);
+        else {
+            setSpeed(0);
+            return;
+        }
+
+        for (var part : armor){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem){
+                setSpeed(getSpeed() * armorItem.speed);
+            }
+        }
+    }
+
     private void updateTotalArmor(){
         totalDefense   = 0;
         totalToughness = 0;
 
         for (var part : armor){
             var itemStack = inventory.getItem(part.ordinal());
-            if (!itemStack.isEmpty()){
-                totalDefense += ((PowerArmorItem)itemStack.getItem()).getMaterial().getDefenseForSlot(part);
-                totalToughness += ((PowerArmorItem)itemStack.getItem()).getMaterial().getToughness();
+            if (itemStack.getItem() instanceof PowerArmorItem armorItem){
+                totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
+                totalToughness += armorItem.getMaterial().getToughness();
             }
         }
     }
 
-
+    private float getSpeedAttribute(){
+        return (float)getAttributeValue(Attributes.MOVEMENT_SPEED);
+    }
 }

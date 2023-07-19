@@ -8,10 +8,16 @@ import net.minecraft.world.item.ItemStack;
 
 public class PowerArmorItem extends DamageableItem {
     private final PowerArmorMaterial material;
+    public final float speed;
 
     public PowerArmorItem(PowerArmorMaterial material, BodyPart part) {
+        this(material, part, 1f);
+    }
+
+    public PowerArmorItem(PowerArmorMaterial material, BodyPart part, float speed) {
         super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB), part);
         this.material = material;
+        this.speed = speed;
     }
 
     public PowerArmorMaterial getMaterial(){
