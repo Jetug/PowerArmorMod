@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "power_armor_mod:block/armor_station" }
+  }
+}

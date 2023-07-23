@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "CB"
+  ],
+  "key": {
+    "C": {
+      "item": "power_armor_mod:cast_helmet"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "power_armor_mod:pa_helmet"
+  }
+}

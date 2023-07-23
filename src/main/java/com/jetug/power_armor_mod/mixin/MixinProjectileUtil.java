@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
 @Mixin(ProjectileUtil.class)
 public class MixinProjectileUtil {
@@ -37,8 +37,7 @@ public class MixinProjectileUtil {
                 return filter.test(levelEntity) && isNotPowerArmorEntity && isNotPowerArmorPartEntity;
             };
 
-            var result = originalMethod(cameraEntity, eyePosition, pickVector, box, newFilter, pickRange, info);
-            info.setReturnValue(result);
+            info.setReturnValue(originalMethod(cameraEntity, eyePosition, pickVector, box, newFilter, pickRange, info));
         }
     }
 

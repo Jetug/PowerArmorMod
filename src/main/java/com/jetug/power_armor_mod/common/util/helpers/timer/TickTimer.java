@@ -20,5 +20,10 @@ public class TickTimer {
     public void addTimer(TimerTask task){
         tasks.add(task);
     }
+
+    public void addCooldownTimer(int duration, Runnable predicate){
+        tasks.add(new PlayOnceTimerTask(duration, predicate));
+    }
+
 }
 

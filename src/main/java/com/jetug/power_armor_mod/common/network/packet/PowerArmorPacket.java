@@ -1,13 +1,13 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.function.Supplier;
 
@@ -39,12 +39,16 @@ public class PowerArmorPacket{
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
+
+        boolean isClientSide = context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT || context.get().getDirection() == NetworkDirection.LOGIN_TO_CLIENT;
+        boolean isServerSide = context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER || context.get().getDirection() == NetworkDirection.LOGIN_TO_SERVER;
+
         Player player = null;
 
-        if(context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT){
+        if(isClientSide){
             player = Minecraft.getInstance().player;
         }
-        else if(context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
+        else if(isServerSide) {
             player = context.get().getSender();
         }
 
@@ -53,6 +57,5 @@ public class PowerArmorPacket{
 
         if(entity instanceof PowerArmorEntity powerArmor)
             powerArmor.setArmorData(data);
-
     }
 }

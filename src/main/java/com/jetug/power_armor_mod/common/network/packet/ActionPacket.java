@@ -1,12 +1,15 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.util.enums.ActionType;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
+
+@SuppressWarnings("ConstantConditions")
 public class ActionPacket{
     ActionType action = null;
 
@@ -26,9 +29,15 @@ public class ActionPacket{
     }
 
     public static void handle(ActionPacket message, Supplier<NetworkEvent.Context> context) {
-        ServerPlayer player = context.get().getSender();
-        if (player != null && message.action == ActionType.DISMOUNT) {
-            player.stopRiding();
+        var player = context.get().getSender();
+        if (player == null || !isWearingPowerArmor(player)) return;
+        var armor = (PowerArmorEntity)player.getVehicle();
+
+        switch (message.action){
+            case DISMOUNT -> player.stopRiding();
+            case OPEN_GUI -> armor.openGUI(player);
+            case ADD_ATTACK_CHARGE -> armor.addAttackCharge();
+            case RESET_ATTACK_CHARGE -> armor.resetAttackCharge();
         }
     }
 }

@@ -1,0 +1,28 @@
+{
+  "part": "body",
+  "model": "geo/armor/armor_body.geo.json",
+  "texture": "textures/entities/armor_body.png",
+
+  "attachments": [
+    {
+      "mode": "replace",
+      "frame": "body_top_frame",
+      "armor": "body_top_armor"
+    },
+    {
+      "mode": "replace",
+      "frame": "body_bottom_frame",
+      "armor": "body_bottom_armor"
+    },
+    {
+      "mode": "add",
+      "frame": "front_plate",
+      "armor": "front_plate_armor"
+    },
+    {
+      "mode": "add",
+      "frame": "back_plate",
+      "armor": "back_plate_armor"
+    }
+  ]
+}

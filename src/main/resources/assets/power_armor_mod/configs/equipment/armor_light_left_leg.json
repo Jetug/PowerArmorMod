@@ -1,0 +1,33 @@
+{
+  "part": "left_leg",
+  "model": "geo/armor/armor_left_leg.geo.json",
+  "texture": "textures/entities/armor_left_leg.png",
+
+  "attachments": [
+    {
+      "mode": "replace",
+      "frame": "left_upper_leg_frame",
+      "armor": "left_upper_leg_armor"
+    },
+    {
+      "mode": "add",
+      "frame": "left_lower_leg",
+      "armor": "left_knee"
+    },
+    {
+      "mode": "replace",
+      "frame": "left_lower_leg_frame",
+      "armor": "left_lower_leg_armor"
+    },
+    {
+      "mode": "add",
+      "frame": "left_shoe",
+      "armor": "left_shoe_armor"
+    },
+    {
+      "mode": "add",
+      "frame": "left_toes",
+      "armor": "left_toes_armor"
+    }
+  ]
+}

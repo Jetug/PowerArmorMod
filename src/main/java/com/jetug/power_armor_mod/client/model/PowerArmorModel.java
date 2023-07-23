@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.minecraft.entity.IPowerArmor;
+import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -8,10 +8,10 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static com.jetug.power_armor_mod.common.util.constants.Bones.HEAD_BONE_NAME;
-import static com.jetug.power_armor_mod.common.util.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.HEAD_BONE_NAME;
+import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
-public class PowerArmorModel<Type extends IPowerArmor & IAnimatable> extends AnimatedGeoModel<Type>
+public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {
     public PowerArmorModel(){
         super();
@@ -19,12 +19,12 @@ public class PowerArmorModel<Type extends IPowerArmor & IAnimatable> extends Ani
 
     @Override
     public ResourceLocation getModelLocation(Type object) {
-        return POWER_ARMOR_MODEL_LOCATION;
+        return FRAME_MODEL_LOCATION;
     }
 
     @Override
     public ResourceLocation getTextureLocation(Type object) {
-        return POWER_ARMOR_TEXTURE_LOCATION;
+        return FRAME_TEXTURE_LOCATION;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PowerArmorModel<Type extends IPowerArmor & IAnimatable> extends Ani
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
-        //GeoBone bone = this.registerBone().getModel(POWER_ARMOR_MODEL_LOCATION)..getBone("head").get();
+        //GeoBone bone = this.registerBone().getModelLocation(FRAME_MODEL_LOCATION)..getBone("head").get();
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

@@ -1,26 +1,21 @@
 package com.jetug.power_armor_mod.common.util.helpers.timer;
 
-import com.jetug.power_armor_mod.common.util.interfaces.SimplePredicate;
+
 
 public class LoopTimerTask implements TimerTask {
-    private final SimplePredicate predicate;
-    private boolean isCompleted = false;
+    private final Runnable predicate;
 
-    public LoopTimerTask(SimplePredicate predicate) {
+    public LoopTimerTask(Runnable predicate) {
         this.predicate = predicate;
-    }
-
-    public void reset() {
-        isCompleted = false;
-    }
-
-    @Override
-    public boolean isCompleted() {
-        return isCompleted;
     }
 
     @Override
     public void tick() {
-        predicate.execute();
+        predicate.run();
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return false;
     }
 }

@@ -1,21 +1,24 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.model.ArmorModel;
+import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.client.render.Attachment;
-import com.jetug.power_armor_mod.client.render.layers.ArmorPartLayer;
-import com.jetug.power_armor_mod.client.render.layers.PlayerHeadLayer;
-import com.jetug.power_armor_mod.common.minecraft.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.minecraft.item.PowerArmorItem;
-import com.jetug.power_armor_mod.common.util.enums.BodyPart;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import com.jetug.power_armor_mod.common.data.enums.*;
+import com.jetug.power_armor_mod.common.data.json.EquipmentAttachment;
+import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
+
+import com.jetug.power_armor_mod.client.render.layers.*;
+import com.jetug.power_armor_mod.common.foundation.entity.*;
+
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.resources.*;
+import org.apache.logging.log4j.util.TriConsumer;
+import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.renderers.geo.*;
+
+import static com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu.*;
 
 public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
@@ -28,7 +31,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     }
 
     private void initLayers(){
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < SIZE; i++)
             addLayer(new ArmorPartLayer(this, BodyPart.getById(i)));
         addLayer(new PlayerHeadLayer(this));
     }
@@ -36,100 +39,64 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        try{
-            updateArmor(entity);
-            super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        } catch (Exception e) {
-            throw e;
-            //LOGGER.log(Level.ERROR, e);
+        for (var part : entity.equipment)
+            updateModel(entity, part);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    private void updateModel(PowerArmorEntity entity, BodyPart part){
+        if(entity.isEquipmentVisible(part)) {
+            var item = entity.getEquipmentItem(part);
+            forAllAttachments(item.getSettings(), this::addModelPart);
+        }
+        else {
+            var frameSettings = ClientConfig.modResourceManager.getFrameSettings(entity.frameId);
+            var attachments =  frameSettings.getAttachments(part);
+            if (attachments == null) return;
+            for (var bone : attachments.bones) returnToDefault(bone);
         }
     }
 
-    private void updateArmor(PowerArmorEntity entity){
-        for (var part : entity.parts) {
-            var itemStack = entity.getItem(part);
-            if (!itemStack.isEmpty() && PowerArmorItem.hasArmor(itemStack)) {
-                updateModel(part, itemStack, true);
-                //attachBones(itemStack);
-            }
-            else{
-                updateModel(part, itemStack, false);
-                //detachBones(part);
-            }
+    private void forAllAttachments(EquipmentSettings settings, TriConsumer<EquipmentAttachment, GeoBone, GeoBone> action) {
+        if(settings == null || settings.attachments == null) return;
+
+        for (var equipmentAttachment : settings.attachments) {
+            var frameBone = getFrameBone(equipmentAttachment.frame);
+            var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
+            if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
+
+            action.accept(equipmentAttachment, frameBone, armorBone);
         }
     }
 
-//    private void attachBones(ItemStack slot){
-//        updateModel(slot, true);
-//    }
-//
-//    private void detachBones(ItemStack slot){
-//        updateModel(slot, false);
-//    }
-
-    private void updateModel(BodyPart part, ItemStack slot, Boolean isAttaching){
-        //var item = (PowerArmorItem)slot.getItem();
-        //var settings = item.armorPartSettings;
-        var settings = ClientConfig.resourceManager.getPartSettings(part);
-        if(settings == null) return;
-
-        var attachments = settings.attachments;
-
-        if(attachments == null && attachments.length == 0) return;
-
-
-        for (Attachment attachment : attachments) {
-
-            var frameBone = getFrameBone(attachment.frame);
-            var armorBone = getArmorBone(settings.getModel(), attachment.armor);
-
-            if (frameBone == null || armorBone == null) continue;
-
-            if(isAttaching)
-                addModelPart(attachment, frameBone, armorBone);
-            else {
-                removeModelPart(attachment, frameBone, armorBone);
-            }
+    private void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
+        switch (equipmentAttachment.mode) {
+            case ADD -> addBone(frameBone, armorBone);
+            case REPLACE -> replaceBone(frameBone, armorBone);
         }
     }
 
-    private static void addModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        if(attachment.mode == null) return;
-        switch (attachment.mode) {
-            case ADD -> {
-                if (!frameBone.childBones.contains(armorBone)) {
-                    armorBone.parent = frameBone;
-                    frameBone.childBones.add(armorBone);
-                }
-            }
-            case REPLACE -> {
-                var parentBone = frameBone.parent;
-                if(!parentBone.childBones.contains(armorBone)){
-                    parentBone.childBones.remove(frameBone);
-                    parentBone.childBones.add(armorBone);
-                    armorBone.parent = parentBone;
-                }
-            }
-        }
+    private void returnToDefault(String boneName){
+        var bone = getFrameBone(boneName);
+        if(bone == null) return;
+        var parentBone = getFrameBone(bone.parent.name);
+        if(parentBone == null) return;
+
+        parentBone.childBones.remove(bone);
+        parentBone.childBones.add(getFrameBone(boneName));
     }
 
-    private static void removeModelPart(Attachment attachment, GeoBone frameBone, GeoBone armorBone) {
-        if(attachment.mode == null) return;
+    private static void addBone(GeoBone frameBone, GeoBone armorBone) {
+        if (frameBone.childBones.contains(armorBone)) return;
+        armorBone.parent = frameBone;
+        frameBone.childBones.add(armorBone);
+    }
 
-        switch (attachment.mode) {
-            case ADD -> {
-                frameBone.childBones.remove(armorBone);
-            }
-            case REPLACE -> {
-                var parentBone = frameBone.parent;
-                parentBone.childBones.remove(armorBone);
-
-                if(!parentBone.childBones.contains(frameBone)){
-                    parentBone.childBones.add(frameBone);
-                    frameBone.parent = parentBone;
-                }
-            }
-        }
+    private static void replaceBone(GeoBone frameBone, GeoBone armorBone) {
+        frameBone.parent.childBones.remove(frameBone);
+        if (frameBone.parent.childBones.contains(armorBone)) return;
+        frameBone.parent.childBones.add(armorBone);
+        armorBone.parent = frameBone.parent;
     }
 
     private GeoBone getFrameBone(String name){
@@ -139,43 +106,4 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
     }
-
-//    private void handleModel(ItemStack slot, Boolean isAttaching){
-//        var item = (PowerArmorItem)slot.getItem();
-//        var attachments = item.armorPartSettings.attachments;
-//
-//        for (Attachment attachment : attachments) {
-//
-//            var model = item.armorPartSettings.getModel();
-//
-//            var frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(attachment.frame);
-//            var armorBone = armorModel.getModel(model).getBone(attachment.armor).orElse(null);
-//
-//            if(frameBone != null && armorBone != null) {
-//                if (isAttaching) {
-//                    if(!frameBone.childBones.contains(armorBone)) {
-//                        armorBone.parent = frameBone;
-//                        frameBone.childBones.add(armorBone);
-//                    }
-//                }
-//                else frameBone.childBones.remove(armorBone);
-//            }
-//        }
-//
-//        slot.getAttachments().forEach(tuple ->{
-//            ResourceLocation model = ResourceHelper.getModel(slot.getArmorPart(), slot.getType());
-//            GeoBone frameBone = (GeoBone)powerArmorModel.getAnimationProcessor().getBone(tuple.getA());
-//            GeoBone armorBone = armorModel.getModel(model).getBone(tuple.getB()).orElse(null);
-//
-//            if(frameBone != null && armorBone != null) {
-//                if (isAttaching) {
-//                    if(!frameBone.childBones.contains(armorBone)) {
-//                        armorBone.parent = frameBone;
-//                        frameBone.childBones.add(armorBone);
-//                    }
-//                }
-//                else frameBone.childBones.remove(armorBone);
-//            }
-//        });
-//    }
 }
