@@ -53,26 +53,19 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        updateModel(entity);
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    }
-
-    private void updateModel(PowerArmorEntity entity){
-        for (var part : entity.equipment) {
+        for (var part : entity.equipment)
             updateModel(entity, part);
-        }
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     @SuppressWarnings("ConstantConditions")
     private void updateModel(PowerArmorEntity entity, BodyPart part){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
-            var settings = item.getPartSettings();
-
-            forAllAttachments(settings, this::addModelPart);
+            forAllAttachments(item.getPartSettings(), this::handleModelPart);
         }
         else {
-            var frameSettings = ClientConfig.resourceManager.getFrameSettings("power_armor_frame");
+            var frameSettings = ClientConfig.resourceManager.getFrameSettings(entity.frameId);
             var attachments =  frameSettings.getAttachments(part);
             if (attachments == null) return;
             for (var bone : attachments.bones){
@@ -103,7 +96,7 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         }
     }
 
-    private void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
+    private void handleModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
         switch (equipmentAttachment.mode) {
             case ADD -> {
                 if (!frameBone.childBones.contains(armorBone)) {
@@ -112,11 +105,10 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
                 }
             }
             case REPLACE -> {
-                var parentBone = frameBone.parent;
-                parentBone.childBones.remove(frameBone);
-                if(!parentBone.childBones.contains(armorBone)){
-                    parentBone.childBones.add(armorBone);
-                    armorBone.parent = parentBone;
+                frameBone.parent.childBones.remove(frameBone);
+                if(!frameBone.parent.childBones.contains(armorBone)){
+                    frameBone.parent.childBones.add(armorBone);
+                    armorBone.parent = frameBone.parent;
                 }
             }
         }

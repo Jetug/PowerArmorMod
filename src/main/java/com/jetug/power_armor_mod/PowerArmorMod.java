@@ -8,11 +8,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
+import static com.jetug.power_armor_mod.common.data.constants.Global.MOD_EVENT_BUS;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(Global.MOD_ID)
 public class PowerArmorMod {
-    public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
     public PowerArmorMod() {
         GeckoLib.initialize();

@@ -4,7 +4,7 @@ import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.hud.HeatRenderer;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.LongClickController;
-import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
+import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.client.input.DoubleClickController;

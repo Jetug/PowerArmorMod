@@ -68,12 +68,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private boolean isPunching = false;
     private DashDirection dashDirection;
 
-    public PowerArmorEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
+    public PowerArmorEntity(EntityType<? extends PowerArmorBase> type, Level worldIn) {
         super(type, worldIn);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return LivingEntity.createLivingAttributes()
+        return PowerArmorBase.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)

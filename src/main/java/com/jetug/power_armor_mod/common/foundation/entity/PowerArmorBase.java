@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
+import com.jetug.power_armor_mod.common.events.*;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
@@ -12,12 +13,15 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.*;
 import net.minecraft.world.item.*;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.*;
 import java.util.*;
 
 import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
 import static com.jetug.power_armor_mod.common.data.constants.NBT.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.util.helpers.ContainerUtils.copyContainer;
+import static com.jetug.power_armor_mod.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.power_armor_mod.common.util.helpers.InventoryHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 
@@ -25,6 +29,8 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     protected static final int MAX_ATTACK_CHARGE = 60;
     public static final int COOLING = 5;
     public static final int P_SIZE = 14;
+
+    public final String frameId = "power_armor_frame";
 
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
@@ -91,11 +97,19 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         heat = compound.getInt(HEAT);
     }
 
+    private Container previousContainer;
+
     @Override
     public void containerChanged(@NotNull Container container) {
+        if (previousContainer == null || !isContainersEqual(previousContainer, container)) {
+            containerRealyChanged(container);
+            previousContainer = copyContainer(container);
+        }
+    }
+
+    public void containerRealyChanged(Container container){
         updateParams();
-//        if(isServerSide)
-//            doClientAction(new InventorySyncAction(inventory), get);
+        MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
     public void addHeat(int value){
