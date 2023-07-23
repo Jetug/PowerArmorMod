@@ -10,6 +10,8 @@ import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -21,7 +23,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.*;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -93,16 +97,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void tick() {
         super.tick();
 
-        if(attackCharge < 0){
-            var i = attackCharge;
-        }
-
-
         if(isServerSide && isDashing) {
             pushEntitiesAround();
         }
 
-        syncDataWithClient();
+//        syncDataWithClient();
         applyEffects();
 
         speedometer.tick();
@@ -335,17 +334,128 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         setDeltaMovement(getDeltaMovement().add(vector));
     }
 
+    public void punch(){
+        punch(() -> {
+
+            var player = getPlayerPassenger();
+            player.getEyePosition();
+
+
+        });
+    }
+
+    public static Entity getViewTarget(Player player) {
+        var minecraft = Minecraft.getInstance();
+        var cameraEntity = minecraft.getCameraEntity();
+
+        if (cameraEntity == null || minecraft.level == null) return null;
+
+        minecraft.getProfiler().push("pick");
+        minecraft.crosshairPickEntity = null;
+        double pickRange = minecraft.gameMode.getPickRange();
+
+        var vec3 = cameraEntity.getEyePosition(1);
+        boolean flag = false;
+        double d1 = pickRange;
+
+        if (minecraft.gameMode.hasFarPickRange()) {
+            d1 = 6.0D;
+            pickRange = d1;
+        } else if (pickRange > 3.0D) flag = true;
+
+        d1 *= d1;
+        if (minecraft.hitResult != null)
+            d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
+
+        var vec31 = cameraEntity.getViewVector(1.0F);
+        var vec32 = vec3.add(vec31.x * pickRange, vec31.y * pickRange, vec31.z * pickRange);
+        var aabb = cameraEntity.getBoundingBox().expandTowards(vec31.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+
+        var entityHitResult = ProjectileUtil.getEntityHitResult(
+                cameraEntity, vec3, vec32, aabb, (p_172770_) ->
+                !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
+
+        if (entityHitResult != null) {
+            var target = entityHitResult.getEntity();
+            var vec33 = entityHitResult.getLocation();
+            var distance = vec3.distanceToSqr(vec33);
+
+            return target;
+        }
+
+        return null;
+    }
+
+    public void getViewTarget1(float pPartialTicks) {
+        var minecraft = Minecraft.getInstance();
+        var cameraEntity = Minecraft.getInstance().getCameraEntity();
+
+        if (cameraEntity == null || minecraft.level == null) return;
+
+        minecraft.getProfiler().push("pick");
+        minecraft.crosshairPickEntity = null;
+        double pickRange = minecraft.gameMode.getPickRange();
+        //minecraft.hitResult = cameraEntity.pick(pickRange, pPartialTicks, false);
+
+        var vec3 = cameraEntity.getEyePosition(pPartialTicks);
+        boolean flag = false;
+        double d1 = pickRange;
+
+        if (minecraft.gameMode.hasFarPickRange()) {
+            d1 = 6.0D;
+            pickRange = d1;
+        } else if (pickRange > 3.0D) flag = true;
+
+        d1 *= d1;
+        if (minecraft.hitResult != null)
+            d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
+
+        var vec31 = cameraEntity.getViewVector(1.0F);
+        var vec32 = vec3.add(vec31.x * pickRange, vec31.y * pickRange, vec31.z * pickRange);
+        var aabb = cameraEntity.getBoundingBox().expandTowards(vec31.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+
+        var entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, vec3, vec32, aabb, (p_172770_) ->
+                !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
+
+        if (entityHitResult != null) {
+            var entity1 = entityHitResult.getEntity();
+            var vec33 = entityHitResult.getLocation();
+            var d2 = vec3.distanceToSqr(vec33);
+
+            if (flag && d2 > 9.0D) {
+                minecraft.hitResult = BlockHitResult.miss(vec33, Direction.getNearest(vec31.x, vec31.y, vec31.z), new BlockPos(vec33));
+            } else if (d2 < d1 || minecraft.hitResult == null) {
+                minecraft.hitResult = entityHitResult;
+                if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrame) {
+                    minecraft.crosshairPickEntity = entity1;
+                }
+            }
+        }
+
+        minecraft.getProfiler().pop();
+
+    }
+
     public void punchTarget(Entity target){
         if(!hasPlayerPassenger()) return;
 
-        doHeatAction(PUNCH_HEAT, () -> {
-            var vector= getPlayerPassenger().getViewVector(1.0F);
-            var charge = getAttackChargeInPercent();
-            var force = getPercentOf(MAX_PUNCH_FORCE, charge);
+        punch(() -> {
+            var vector = getPlayerPassenger().getViewVector(1.0F);
+            var force = getPunchForce();
+            EntityUtils.push(target, vector.multiply(force, force, force));
+        });
+    }
 
-            target.push(vector.x * force, vector.y * force, vector.z * force);
+    private float getPunchForce(){
+        var charge = getAttackChargeInPercent();
+        return getPercentOf(MAX_PUNCH_FORCE, charge);
+    }
+
+    private void punch(Runnable runnable){
+        doHeatAction(PUNCH_HEAT, () -> {
             isPunching = true;
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
+            runnable.run();
         });
     }
 

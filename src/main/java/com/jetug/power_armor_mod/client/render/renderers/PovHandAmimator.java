@@ -30,18 +30,18 @@ public class PovHandAmimator implements IAnimatable {
     @SuppressWarnings("ConstantConditions")
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
         if(!isWearingPowerArmor()) return PlayState.STOP;
+
         var controller = event.getController();
-        var pa = getPlayerPowerArmor();
+        var armor = getPlayerPowerArmor();
         controller.animationSpeed = 1;
 
-
-        if(pa.isPunching()){
+        if(armor.isPunching()){
             setAnimation(controller,"punch", PLAY_ONCE);
         }
-        else if(pa.isMaxCharge()){
+        else if(armor.isMaxCharge()){
             setAnimation(controller,"punch_max_charge", LOOP);
         }
-        else if(pa.isChargingAttack()){
+        else if(armor.isChargingAttack()){
             controller.animationSpeed = 0.3;
             setAnimation(controller,"punch_charge", LOOP);
         }
@@ -49,7 +49,7 @@ public class PovHandAmimator implements IAnimatable {
             controller.animationSpeed = 2;
             setAnimation(controller,"hit", LOOP);
         }
-        else if(pa.isWalking()){
+        else if(armor.isWalking()){
             setAnimation(controller,"walk", LOOP);
         }
         else {

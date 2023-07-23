@@ -1,7 +1,5 @@
 package com.jetug.power_armor_mod.common.util.helpers.timer;
 
-import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
-
 import java.util.ArrayList;
 
 public class TickTimer {
@@ -23,7 +21,7 @@ public class TickTimer {
         tasks.add(task);
     }
 
-    public void addCooldownTimer(int duration, SimpleAction predicate){
+    public void addCooldownTimer(int duration, Runnable predicate){
         tasks.add(new PlayOnceTimerTask(duration, predicate));
     }
 

@@ -46,7 +46,7 @@ public final class SetupEvents {
 
         MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), ArmorStationGui::new);
         event.enqueueWork(GuiRegistry::register);
-        ClientConfig.resourceManager.loadConfigs();
+        ClientConfig.modResourceManager.loadConfigs();
         registerClickListeners();
         setupGui(event);
         registerHandRenderer();

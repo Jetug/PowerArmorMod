@@ -4,9 +4,9 @@ import com.jetug.power_armor_mod.common.events.*;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
-import com.jetug.power_armor_mod.common.util.interfaces.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
+
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -226,9 +226,9 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         deserializeInventory(inventory, tags);
     }
 
-    protected void doHeatAction(int heat, SimpleAction action){
+    protected void doHeatAction(int heat, Runnable action){
         if(!canDoAction(heat)) return;
-        action.execute();
+        action.run();
         addHeat(heat);
     }
 
@@ -243,10 +243,9 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             inventoryBuff.removeListener(this);
             int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
             for (int j = 0; j < i; ++j) {
-                ItemStack itemstack = inventoryBuff.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    this.inventory.setItem(j, itemstack.copy());
-                }
+                var itemStack = inventoryBuff.getItem(j);
+                if (!itemStack.isEmpty())
+                    this.inventory.setItem(j, itemStack.copy());
             }
         }
         this.inventory.addListener(this);
@@ -285,9 +284,8 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         }
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem)
                 setSpeed(getSpeed() * armorItem.speed);
-            }
         }
     }
 
@@ -296,8 +294,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         totalToughness = 0;
 
         for (var part : armor){
-            var itemStack = inventory.getItem(part.ordinal());
-            if (itemStack.getItem() instanceof PowerArmorItem armorItem){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem){
                 totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
                 totalToughness += armorItem.getMaterial().getToughness();
             }

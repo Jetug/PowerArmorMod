@@ -21,10 +21,6 @@ public class PlayerExtension {
     }
 
     public static PowerArmorEntity getPlayerPowerArmor(){
-//        if(getLocalPlayer().getVehicle() instanceof PowerArmorEntity)
-//            return (PowerArmorEntity) getLocalPlayer().getVehicle();
-//        else return null;
-
         return getPlayerPowerArmor(getLocalPlayer());
     }
 

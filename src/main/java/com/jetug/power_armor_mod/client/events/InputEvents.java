@@ -13,6 +13,7 @@ import com.jetug.power_armor_mod.common.input.InputKey;
 import com.jetug.power_armor_mod.common.input.KeyAction;
 
 import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
+import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity.getViewTarget;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 
@@ -38,8 +39,14 @@ public class InputEvents {
     @SubscribeEvent()
     public static void onMouseKeyInput(InputEvent.MouseInputEvent event) {
         switch (event.getAction()) {
-            case GLFW.GLFW_PRESS -> {}
-            case GLFW.GLFW_RELEASE -> handleInput(event.getButton(), KeyAction.RELEASE);
+            case GLFW.GLFW_PRESS -> {
+
+            }
+            case GLFW.GLFW_RELEASE -> {
+                handleInput(event.getButton(), KeyAction.RELEASE);
+                var t = getViewTarget(getLocalPlayer());
+                var tt = t;
+            }
         }
 
         //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getButton()), KeyAction.RELEASE,  getLocalPlayer());

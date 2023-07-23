@@ -8,11 +8,11 @@ public abstract class ModelSettingsBase {
     public String model;
     public String texture;
 
-    public ResourceLocation getModel(){
+    public ResourceLocation getModelLocation(){
         return new ResourceLocation(Global.MOD_ID, model);
     }
 
-    public ResourceLocation getTexture(){
+    public ResourceLocation getTextureLocation(){
         return new ResourceLocation(Global.MOD_ID, texture);
     }
 }

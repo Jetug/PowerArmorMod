@@ -7,7 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientConfig {
-    public static final ModResourceManager resourceManager = new ModResourceManager();
+    public static final ModResourceManager modResourceManager = new ModResourceManager();
 
     @NotNull public static final Options OPTIONS = Minecraft.getInstance().options;
 

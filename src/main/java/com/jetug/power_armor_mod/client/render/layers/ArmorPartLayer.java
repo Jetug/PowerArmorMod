@@ -27,9 +27,9 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.isEquipmentVisible(bodyPart) && !entity.isInvisible()) {
             var item = entity.getEquipmentItem(bodyPart);
-            if (item.getPartSettings() == null) return;
+            if (item.getSettings() == null) return;
 
-            var texture =  item.getPartSettings().getTexture();
+            var texture =  item.getSettings().getTextureLocation();
 
             render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
         }

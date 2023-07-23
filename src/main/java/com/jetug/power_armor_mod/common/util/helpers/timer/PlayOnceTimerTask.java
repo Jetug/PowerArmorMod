@@ -1,14 +1,12 @@
 package com.jetug.power_armor_mod.common.util.helpers.timer;
 
-import com.jetug.power_armor_mod.common.util.interfaces.SimpleAction;
-
 public class PlayOnceTimerTask implements TimerTask {
-    private final SimpleAction predicate;
+    private final Runnable predicate;
     private final int initTicks;
     private int ticks;
     private boolean isCompleted = false;
 
-    public PlayOnceTimerTask(int ticks, SimpleAction predicate) {
+    public PlayOnceTimerTask(int ticks, Runnable predicate) {
         this.predicate = predicate;
         this.initTicks = ticks;
         this.ticks = ticks;
@@ -27,7 +25,7 @@ public class PlayOnceTimerTask implements TimerTask {
     @Override
     public void tick() {
         if (ticks == 0) {
-            predicate.execute();
+            predicate.run();
             isCompleted = true;
         }
         ticks -= 1;
