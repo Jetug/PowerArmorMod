@@ -11,11 +11,12 @@ import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntit
 import static com.jetug.power_armor_mod.common.input.KeyAction.*;
 import static com.jetug.power_armor_mod.common.input.InputKey.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
+import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
     public static void onKeyInput(InputKey key, KeyAction action, Player player) {
-        if (!isWearingPowerArmor(player) || key == null) return;
+        if (/*!isWearingPowerArmor(player) ||*/ key == null) return;
 
         if((action == PRESS || action == REPEAT) && key == JUMP)
             getPlayerPowerArmor(player).jump();
@@ -39,7 +40,10 @@ public class CommonInputHandler {
         if(key == USE || key == ATTACK)
             getPlayerPowerArmor(player).resetAttackCharge();
         if(key == ATTACK){
-
+            getTargetedEntity(player, 5).ifPresent((e) ->{
+                Global.LOGGER.log(Level.ERROR, "side " + side + " entity " + e);
+                System.out.println(e);
+            });
         }
 
         var s = side;
@@ -62,6 +66,8 @@ public class CommonInputHandler {
     }
 
     public static void onLongPress(InputKey key, Player player){
+        if (!isWearingPowerArmor(player)) return;
+
         if(key == USE){
             getPlayerPowerArmor(player).addAttackCharge();
         }

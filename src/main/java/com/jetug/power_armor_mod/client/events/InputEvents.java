@@ -16,6 +16,7 @@ import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
 import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity.getViewTarget;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
+import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
@@ -44,8 +45,11 @@ public class InputEvents {
             }
             case GLFW.GLFW_RELEASE -> {
                 handleInput(event.getButton(), KeyAction.RELEASE);
-                var t = getViewTarget(getLocalPlayer());
-                var tt = t;
+//                getTargetedEntity(getLocalPlayer(), 5).ifPresent((e) ->{
+//                    System.out.println(e);
+//                });
+//                var t = getViewTarget(getLocalPlayer());
+//                var tt = t;
             }
         }
 

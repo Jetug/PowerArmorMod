@@ -4,6 +4,7 @@ import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -26,14 +27,17 @@ public class MixinProjectileUtil {
     private static void getEntityHitResult(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
                                                       AABB box, Predicate<Entity> filter, double pickRange,
                                                       CallbackInfoReturnable<EntityHitResult> info){
-        var player = Minecraft.getInstance().player;
+        var player = cameraEntity instanceof Player ? cameraEntity :  Minecraft.getInstance().player;
         assert player != null;
 
         if(isWearingPowerArmor(player))
         {
             Predicate<Entity> newFilter = (levelEntity) ->{
-                var isNotPowerArmorEntity = !(levelEntity instanceof PowerArmorEntity powerArmor && player.getVehicle() == powerArmor);
-                var isNotPowerArmorPartEntity = !(levelEntity instanceof PowerArmorPartEntity powerArmorPart && player.getVehicle() == powerArmorPart.parentMob);
+                var isNotPowerArmorEntity =
+                        !(levelEntity instanceof PowerArmorEntity powerArmor && player.getVehicle() == powerArmor);
+                var isNotPowerArmorPartEntity =
+                        !(levelEntity instanceof PowerArmorPartEntity powerArmorPart
+                        && player.getVehicle() == powerArmorPart.parentMob);
                 return filter.test(levelEntity) && isNotPowerArmorEntity && isNotPowerArmorPartEntity;
             };
 
@@ -41,13 +45,15 @@ public class MixinProjectileUtil {
         }
     }
 
-    private static EntityHitResult originalMethod(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector, AABB box, Predicate<Entity> filter, double pickRange, CallbackInfoReturnable<EntityHitResult> info) {
+    private static EntityHitResult originalMethod(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
+                                                  AABB box, Predicate<Entity> filter,
+                                                  double pickRange, CallbackInfoReturnable<EntityHitResult> info) {
         Entity entity = null;
         Vec3 vec3 = null;
         var level = cameraEntity.level;
         var _pickRange = pickRange;
 
-        for (Entity levelEntity : level.getEntities(cameraEntity, box, filter)) {
+        for (var levelEntity : level.getEntities(cameraEntity, box, filter)) {
             AABB aabb = levelEntity.getBoundingBox().inflate(levelEntity.getPickRadius());
             Optional<Vec3> optional = aabb.clip(eyePosition, pickVector);
 

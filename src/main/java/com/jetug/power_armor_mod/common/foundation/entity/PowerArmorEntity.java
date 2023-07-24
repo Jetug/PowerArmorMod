@@ -336,11 +336,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     public void punch(){
         punch(() -> {
-
             var player = getPlayerPassenger();
             player.getEyePosition();
-
-
         });
     }
 
@@ -379,7 +376,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             var target = entityHitResult.getEntity();
             var vec33 = entityHitResult.getLocation();
             var distance = vec3.distanceToSqr(vec33);
-
             return target;
         }
 

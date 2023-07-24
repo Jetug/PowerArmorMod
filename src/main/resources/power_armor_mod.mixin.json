@@ -6,7 +6,6 @@
     "ClientPacketListenerMixin",
     "CreativeInventoryScreenMixin",
     "InventoryScreenMixin",
-    "MixinProjectileUtil",
     "PlayerRenderMixin"
   ],
   "injectors": {
@@ -16,6 +15,7 @@
   "minVersion": "0.8",
   "mixins": [
     "LivingEntityMixin",
+    "MixinProjectileUtil",
     "PlayerMixin"
   ]
 }
