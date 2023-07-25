@@ -21,7 +21,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.2.1'
+version = '1.2.2'
 group = 'com.jetug.armorpunk'
 archivesBaseName = 'armorpunk'
 
@@ -129,14 +129,14 @@ jar {
         attributes([
                 "Specification-Title"     : "power_armor_mod",
                 "Specification-Vendor"    : "power_armor_modsareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "power_armor_modsareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-                "TweakOrder": 0,
-                "MixinConfigs" : "power_armor_mod.mixin.json"
+                "TweakClass"              : "org.spongepowered.asm.launch.MixinTweaker",
+                "TweakOrder"              : 0,
+                "MixinConfigs"            : "power_armor_mod.mixin.json"
         ])
     }
 }

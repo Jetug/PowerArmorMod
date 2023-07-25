@@ -32,7 +32,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof AbstractClientPlayer clientPlayer ) {
+        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
 
 
             var test = entity.getControllingPassenger();
@@ -63,10 +63,9 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
     }
 
     @Nullable
-    private ResourceLocation getHeadLayerRL(AbstractClientPlayer clientPlayer, PowerArmorEntity entity) {
+    private ResourceLocation getHeadLayerRL(Player clientPlayer, PowerArmorEntity entity) {
         var tag = clientPlayer.getUUID().toString();
         var textureManager = Minecraft.getInstance().getTextureManager();
-
 
         if (playerTextures.containsKey(tag)) {
             return playerTextures.get(tag);

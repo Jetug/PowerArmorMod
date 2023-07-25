@@ -47,6 +47,7 @@ import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
+import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
@@ -336,110 +337,25 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     public void punch(){
         punch(() -> {
-            var player = getPlayerPassenger();
-            player.getEyePosition();
-        });
-    }
+            var optional = getTargetedEntity(getPlayerPassenger(), 5);
 
-    public static Entity getViewTarget(Player player) {
-        var minecraft = Minecraft.getInstance();
-        var cameraEntity = minecraft.getCameraEntity();
-
-        if (cameraEntity == null || minecraft.level == null) return null;
-
-        minecraft.getProfiler().push("pick");
-        minecraft.crosshairPickEntity = null;
-        double pickRange = minecraft.gameMode.getPickRange();
-
-        var vec3 = cameraEntity.getEyePosition(1);
-        boolean flag = false;
-        double d1 = pickRange;
-
-        if (minecraft.gameMode.hasFarPickRange()) {
-            d1 = 6.0D;
-            pickRange = d1;
-        } else if (pickRange > 3.0D) flag = true;
-
-        d1 *= d1;
-        if (minecraft.hitResult != null)
-            d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
-
-        var vec31 = cameraEntity.getViewVector(1.0F);
-        var vec32 = vec3.add(vec31.x * pickRange, vec31.y * pickRange, vec31.z * pickRange);
-        var aabb = cameraEntity.getBoundingBox().expandTowards(vec31.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-
-        var entityHitResult = ProjectileUtil.getEntityHitResult(
-                cameraEntity, vec3, vec32, aabb, (p_172770_) ->
-                !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
-
-        if (entityHitResult != null) {
-            var target = entityHitResult.getEntity();
-            var vec33 = entityHitResult.getLocation();
-            var distance = vec3.distanceToSqr(vec33);
-            return target;
-        }
-
-        return null;
-    }
-
-    public void getViewTarget1(float pPartialTicks) {
-        var minecraft = Minecraft.getInstance();
-        var cameraEntity = Minecraft.getInstance().getCameraEntity();
-
-        if (cameraEntity == null || minecraft.level == null) return;
-
-        minecraft.getProfiler().push("pick");
-        minecraft.crosshairPickEntity = null;
-        double pickRange = minecraft.gameMode.getPickRange();
-        //minecraft.hitResult = cameraEntity.pick(pickRange, pPartialTicks, false);
-
-        var vec3 = cameraEntity.getEyePosition(pPartialTicks);
-        boolean flag = false;
-        double d1 = pickRange;
-
-        if (minecraft.gameMode.hasFarPickRange()) {
-            d1 = 6.0D;
-            pickRange = d1;
-        } else if (pickRange > 3.0D) flag = true;
-
-        d1 *= d1;
-        if (minecraft.hitResult != null)
-            d1 = minecraft.hitResult.getLocation().distanceToSqr(vec3);
-
-        var vec31 = cameraEntity.getViewVector(1.0F);
-        var vec32 = vec3.add(vec31.x * pickRange, vec31.y * pickRange, vec31.z * pickRange);
-        var aabb = cameraEntity.getBoundingBox().expandTowards(vec31.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-
-        var entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, vec3, vec32, aabb, (p_172770_) ->
-                !p_172770_.isSpectator() && p_172770_.isPickable(), d1);
-
-        if (entityHitResult != null) {
-            var entity1 = entityHitResult.getEntity();
-            var vec33 = entityHitResult.getLocation();
-            var d2 = vec3.distanceToSqr(vec33);
-
-            if (flag && d2 > 9.0D) {
-                minecraft.hitResult = BlockHitResult.miss(vec33, Direction.getNearest(vec31.x, vec31.y, vec31.z), new BlockPos(vec33));
-            } else if (d2 < d1 || minecraft.hitResult == null) {
-                minecraft.hitResult = entityHitResult;
-                if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrame) {
-                    minecraft.crosshairPickEntity = entity1;
-                }
+            if(optional.isPresent()){
+                punchTarget(optional.get());
             }
-        }
-
-        minecraft.getProfiler().pop();
-
+            else{
+                breakBlocks();
+            }
+        });
     }
 
-    public void punchTarget(Entity target){
-        if(!hasPlayerPassenger()) return;
+    private void punchTarget(Entity target){
+        var vector = getPlayerPassenger().getViewVector(1.0F);
+        var force = getPunchForce();
+        EntityUtils.push(target, vector.multiply(force, force, force));
+    }
 
-        punch(() -> {
-            var vector = getPlayerPassenger().getViewVector(1.0F);
-            var force = getPunchForce();
-            EntityUtils.push(target, vector.multiply(force, force, force));
-        });
+    private void breakBlocks(){
+
     }
 
     private float getPunchForce(){
@@ -448,6 +364,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     private void punch(Runnable runnable){
+        if(!hasPlayerPassenger()) return;
+
         doHeatAction(PUNCH_HEAT, () -> {
             isPunching = true;
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);

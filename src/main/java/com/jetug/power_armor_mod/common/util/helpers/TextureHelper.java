@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.world.entity.player.Player;
 import oshi.util.tuples.Pair;
 
 
@@ -29,6 +30,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
+import static com.jetug.power_armor_mod.common.util.helpers.texture.PlayerSkins.getSkin;
 import static com.mojang.authlib.minecraft.MinecraftProfileTexture.*;
 import static org.apache.logging.log4j.Level.*;
 
@@ -37,13 +39,34 @@ public class TextureHelper {
     public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
     @Nullable
-    public static BufferedImage getPlayerHeadImage(AbstractClientPlayer clientPlayer) {
-        var playerSkin = getPlayerSkinImage(clientPlayer);
-        //var playerSkin = resourceToBufferedImage(getPlayerSkinLocation(clientPlayer));
+    public static BufferedImage getPlayerHeadImage(Player clientPlayer) {
+        try {
+            var playerSkin = getPlayerSkinImage(clientPlayer);
+            //var playerSkin = resourceToBufferedImage(getPlayerSkinLocation(clientPlayer));
+            //print(playerSkin);
 
-        if(playerSkin == null) return null;
-        cropImage(playerSkin, 64, 16);
-        return playerSkin;
+            if (playerSkin == null) return null;
+            cropImage(playerSkin, 64, 16);
+            return playerSkin;
+        }
+        catch (Exception e){
+            var skin = getSkin(clientPlayer);
+            var playerSkin = resourceToBufferedImage(skin);
+            if (playerSkin == null) return null;
+
+            cropImage(playerSkin, 64, 16);
+            return playerSkin;
+        }
+    }
+
+    private static void print(BufferedImage image){
+
+        File outputFile = new File("C:/Users/Jetug/Desktop/test/output.png"); // Путь к файлу и его расширение
+        try {
+            ImageIO.write(image, "png", outputFile);
+        } catch (IOException e) {
+
+        }
     }
 
     public static ResourceLocation getPlayerSkinLocation(AbstractClientPlayer player) {
@@ -84,9 +107,9 @@ public class TextureHelper {
 //    }
 
     @Nullable
-    private static BufferedImage getPlayerSkinImage(AbstractClientPlayer clientPlayer) {
+    private static BufferedImage getPlayerSkinImage(Player clientPlayer) {
         var skin = skinRequest(clientPlayer.getUUID());
-        return Objects.requireNonNullElse(skin, resourceToBufferedImage(clientPlayer.getSkinTextureLocation()));
+        return Objects.requireNonNullElse(skin, resourceToBufferedImage(getSkin(clientPlayer) /*clientPlayer.getSkinTextureLocation()*/));
     }
 
     @Nullable
@@ -131,7 +154,7 @@ public class TextureHelper {
     }
 
     @Nullable
-    public static AbstractTexture getHeadLayerTexture(AbstractClientPlayer clientPlayer, int width, int height) {
+    public static AbstractTexture getHeadLayerTexture(Player clientPlayer, int width, int height) {
         var playerHead = getPlayerHeadImage(clientPlayer);
         if (playerHead == null) return null;
         playerHead = extendImage(playerHead, width, height);

@@ -7,6 +7,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
+import javax.annotation.Nullable;
+
 import static com.jetug.power_armor_mod.client.ClientConfig.*;
 import static com.jetug.power_armor_mod.common.network.PacketSender.*;
 
@@ -24,6 +26,7 @@ public class PlayerExtension {
         return getPlayerPowerArmor(getLocalPlayer());
     }
 
+    @Nullable
     public static PowerArmorEntity getPlayerPowerArmor(Player player){
         if(player.getVehicle() instanceof PowerArmorEntity)
             return (PowerArmorEntity) player.getVehicle();

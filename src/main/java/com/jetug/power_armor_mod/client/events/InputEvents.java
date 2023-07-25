@@ -13,7 +13,6 @@ import com.jetug.power_armor_mod.common.input.InputKey;
 import com.jetug.power_armor_mod.common.input.KeyAction;
 
 import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
-import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity.getViewTarget;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;

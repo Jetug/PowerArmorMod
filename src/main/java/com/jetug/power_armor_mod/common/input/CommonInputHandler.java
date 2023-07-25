@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Level;
 
 import java.util.logging.Logger;
 
-import static com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity.getViewTarget;
 import static com.jetug.power_armor_mod.common.input.KeyAction.*;
 import static com.jetug.power_armor_mod.common.input.InputKey.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
@@ -16,7 +15,7 @@ import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntit
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
     public static void onKeyInput(InputKey key, KeyAction action, Player player) {
-        if (/*!isWearingPowerArmor(player) ||*/ key == null) return;
+        if (!isWearingPowerArmor(player) || key == null) return;
 
         if((action == PRESS || action == REPEAT) && key == JUMP)
             getPlayerPowerArmor(player).jump();
@@ -35,18 +34,8 @@ public class CommonInputHandler {
     }
 
     public static void onRelease(InputKey key, Player player){
-        var side = player.level.isClientSide;
-
-        if(key == USE || key == ATTACK)
-            getPlayerPowerArmor(player).resetAttackCharge();
-        if(key == ATTACK){
-            getTargetedEntity(player, 5).ifPresent((e) ->{
-                Global.LOGGER.log(Level.ERROR, "side " + side + " entity " + e);
-                System.out.println(e);
-            });
-        }
-
-        var s = side;
+        if (!isWearingPowerArmor(player)) return;
+        if(key == USE || key == ATTACK) getPlayerPowerArmor(player).resetAttackCharge();
     }
 
     public static void onDoubleClick(InputKey key, Player player){

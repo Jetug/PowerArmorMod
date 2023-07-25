@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.mixin;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +9,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -24,27 +24,24 @@ public class MixinProjectileUtil {
     private static final String getEntityHitResult = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;";
 
     @Inject(at = @At(value = "HEAD"), method = getEntityHitResult, cancellable = true)
-    private static void getEntityHitResult(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
-                                                      AABB box, Predicate<Entity> filter, double pickRange,
-                                                      CallbackInfoReturnable<EntityHitResult> info){
-        var player = cameraEntity instanceof Player ? cameraEntity :  Minecraft.getInstance().player;
-        assert player != null;
+    private static void getEntityHitResult(Entity entity, Vec3 eyePosition, Vec3 pickVector, AABB box,
+                                           Predicate<Entity> filter, double pickRange,
+                                           CallbackInfoReturnable<EntityHitResult> info){
+
+        var player = entity instanceof Player ? entity :  Minecraft.getInstance().player;
 
         if(isWearingPowerArmor(player))
         {
             Predicate<Entity> newFilter = (levelEntity) ->{
-                var isNotPowerArmorEntity =
-                        !(levelEntity instanceof PowerArmorEntity powerArmor && player.getVehicle() == powerArmor);
-                var isNotPowerArmorPartEntity =
-                        !(levelEntity instanceof PowerArmorPartEntity powerArmorPart
-                        && player.getVehicle() == powerArmorPart.parentMob);
-                return filter.test(levelEntity) && isNotPowerArmorEntity && isNotPowerArmorPartEntity;
+                var isNotFrameEntity = !(levelEntity instanceof PowerArmorEntity powerArmor && player.getVehicle() == powerArmor);
+                return filter.test(levelEntity) && isNotFrameEntity;
             };
 
-            info.setReturnValue(originalMethod(cameraEntity, eyePosition, pickVector, box, newFilter, pickRange, info));
+            info.setReturnValue(originalMethod(entity, eyePosition, pickVector, box, newFilter, pickRange, info));
         }
     }
 
+    @Unique
     private static EntityHitResult originalMethod(Entity cameraEntity, Vec3 eyePosition, Vec3 pickVector,
                                                   AABB box, Predicate<Entity> filter,
                                                   double pickRange, CallbackInfoReturnable<EntityHitResult> info) {
