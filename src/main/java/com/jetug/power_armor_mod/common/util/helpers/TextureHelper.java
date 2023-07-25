@@ -60,8 +60,7 @@ public class TextureHelper {
     }
 
     private static void print(BufferedImage image){
-
-        File outputFile = new File("C:/Users/Jetug/Desktop/test/output.png"); // Путь к файлу и его расширение
+        var outputFile = new File("C:/Users/Jetug/Desktop/test/output.png"); // Путь к файлу и его расширение
         try {
             ImageIO.write(image, "png", outputFile);
         } catch (IOException e) {

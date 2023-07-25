@@ -11,18 +11,33 @@ import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
 
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.example.client.DefaultBipedBoneIdents;
+import software.bernie.example.entity.ExtendedRendererEntity;
+import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.renderers.geo.*;
 
+import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu.*;
+import static net.minecraft.world.entity.EquipmentSlot.*;
 
-public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
+public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
     private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
+
+    protected ItemStack mainHandItem, offHandItem;
+
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -42,6 +57,49 @@ public class PowerArmorRenderer extends GeoEntityRenderer<PowerArmorEntity> {
         for (var part : entity.equipment)
             updateModel(entity, part);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    @Override
+    public void renderEarly(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
+                            VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
+        super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
+
+        this.mainHandItem = animatable.getItem(MAINHAND);
+        this.offHandItem  = animatable.getItem(OFFHAND);
+    }
+
+    @Nullable
+    @Override
+    protected ItemStack getHeldItemForBone(String boneName, PowerArmorEntity animatable) {
+        if(!animatable.hasPlayerPassenger()) return null;
+
+        return switch (boneName) {
+            case LEFT_HAND -> mainHandItem;
+            case RIGHT_HAND-> offHandItem;
+            default -> null;
+        };
+    }
+
+    @Override
+    protected ItemTransforms.TransformType getCameraTransformForItemAtBone(ItemStack stack, String boneName) {
+        return switch (boneName) {
+            case LEFT_HAND, RIGHT_HAND -> ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
+            default -> ItemTransforms.TransformType.NONE;
+        };
+    }
+
+    @Override
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, PowerArmorEntity currentEntity, IBone bone) {
+        stack.translate(0, 0, -0.09);
+
+        if (!(item.getItem() instanceof ShieldItem)) return;
+        if (item == this.mainHandItem) {
+            stack.translate(0, 0.125, 0.1);
+            stack.mulPose(Vector3f.YP.rotationDegrees(180));
+        }
+        else if (item == this.offHandItem) {
+            stack.translate(0, 0.125, -0.1);
+        }
     }
 
     private void updateModel(PowerArmorEntity entity, BodyPart part){

@@ -321,6 +321,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return null;
     }
 
+    public ItemStack getItem(EquipmentSlot slot){
+        return hasPlayerPassenger() ? getPlayerPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
+    }
+
     public void jump(){
         playerJumpScale = 1.0F;
     }

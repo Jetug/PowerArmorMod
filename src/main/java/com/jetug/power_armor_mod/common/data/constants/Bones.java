@@ -7,4 +7,6 @@ public class Bones {
     public static final String RIGHT_ARM_BONE_NAME = "right_arm" ;
     public static final String LEFT_LEG_BONE_NAME  = "left_leg" ;
     public static final String RIGHT_LEG_BONE_NAME = "right_leg" ;
+    public static final String LEFT_HAND  = "left_hand" ;
+    public static final String RIGHT_HAND = "right_hand" ;
 }
