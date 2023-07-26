@@ -94,10 +94,10 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
 
         if (!(item.getItem() instanceof ShieldItem)) return;
         if (item == this.mainHandItem) {
-            stack.translate(0, 0.125, -0.1);
+            stack.translate(0, 0.125, -0.09);
         }
         else if (item == this.offHandItem) {
-            stack.translate(0, 0.125, 0.1);
+            stack.translate(0, 0.125, 0.37);
             stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
     }
