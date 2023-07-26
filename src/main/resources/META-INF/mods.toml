@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[40,)"
-license="All rights reserved"
+license="GNU General Public License v3.0"
 [[mods]]
 modId="power_armor_mod"
 version="${file.jarVersion}"

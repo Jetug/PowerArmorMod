@@ -7,6 +7,7 @@ import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
 
+import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -81,6 +82,17 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         syncDataWithClient();
         syncDataWithServer();
         subHeat(COOLING);
+    }
+
+    @Override
+    protected void tickEffects() {
+        removeEffects();
+    }
+
+    public void removeEffects() {
+        for (var effectInstance : this.getActiveEffects()) {
+            removeEffect(effectInstance.getEffect());
+        }
     }
 
     @Override

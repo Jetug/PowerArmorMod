@@ -74,8 +74,8 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         if(!animatable.hasPlayerPassenger()) return null;
 
         return switch (boneName) {
-            case LEFT_HAND -> mainHandItem;
-            case RIGHT_HAND-> offHandItem;
+            case LEFT_HAND -> offHandItem;
+            case RIGHT_HAND-> mainHandItem;
             default -> null;
         };
     }
@@ -94,11 +94,11 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
 
         if (!(item.getItem() instanceof ShieldItem)) return;
         if (item == this.mainHandItem) {
-            stack.translate(0, 0.125, 0.1);
-            stack.mulPose(Vector3f.YP.rotationDegrees(180));
+            stack.translate(0, 0.125, -0.1);
         }
         else if (item == this.offHandItem) {
-            stack.translate(0, 0.125, -0.1);
+            stack.translate(0, 0.125, 0.1);
+            stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
     }
 
