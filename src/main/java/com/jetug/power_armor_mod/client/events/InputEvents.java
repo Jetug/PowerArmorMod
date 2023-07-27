@@ -3,6 +3,7 @@ package com.jetug.power_armor_mod.client.events;
 import com.jetug.power_armor_mod.common.input.*;
 import com.jetug.power_armor_mod.common.network.actions.InputAction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.BucketItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -12,10 +13,9 @@ import org.lwjgl.glfw.GLFW;
 import com.jetug.power_armor_mod.common.input.InputKey;
 import com.jetug.power_armor_mod.common.input.KeyAction;
 
+import static com.jetug.power_armor_mod.client.ClientConfig.OPTIONS;
 import static com.jetug.power_armor_mod.client.ClientConfig.getLocalPlayer;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
-import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
@@ -23,6 +23,8 @@ public class InputEvents {
     @SubscribeEvent()
     public static void onKeyInput(InputEvent.KeyInputEvent event)
     {
+        if (isNotInGame()) return;
+
         KeyAction action;
         if(event.getAction() == GLFW.GLFW_PRESS)
             action = KeyAction.PRESS;
@@ -35,14 +37,18 @@ public class InputEvents {
         //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getKey()), action, getLocalPlayer());
     }
 
+
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onMouseKeyInput(InputEvent.MouseInputEvent event) {
+        //if (isNotInGame()) return;
+
         switch (event.getAction()) {
             case GLFW.GLFW_PRESS -> {
 
             }
             case GLFW.GLFW_RELEASE -> {
+                if(event.getButton() != OPTIONS.keyUse.getKey().getValue() && isNotInGame()) return;
                 handleInput(event.getButton(), KeyAction.RELEASE);
 //                getTargetedEntity(getLocalPlayer(), 5).ifPresent((e) ->{
 //                    System.out.println(e);
@@ -56,11 +62,12 @@ public class InputEvents {
     }
 
     public static void onDoubleClick(InputEvent.KeyInputEvent event){
+        if (isNotInGame()) return;
         handleInput(event.getKey(), KeyAction.DOUBLE_CLICK);
     }
 
     public static void onLongClick(int key, int ticks){
-        if(Minecraft.getInstance().isPaused()) return;
+        if (isNotInGame()) return;
         //CommonInputHandler.onKeyInput(InputKey.getByKey(key), KeyAction.LONG_PRESS,  getLocalPlayer());
         handleInput(key, KeyAction.LONG_PRESS);
     }
@@ -73,5 +80,9 @@ public class InputEvents {
 
         doServerAction(new InputAction(inputKey, action), -1);
         CommonInputHandler.onKeyInput(inputKey, action, getLocalPlayer());
+    }
+
+    public static boolean isNotInGame(){
+        return Minecraft.getInstance().screen != null;
     }
 }

@@ -204,6 +204,10 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return inventory.getItem(part.ordinal());
     }
 
+    public boolean hasEquipment(BodyPart part){
+        return !inventory.getItem(part.ordinal()).isEmpty();
+    }
+
     public int getArmorDurability(BodyPart bodyPart) {
         var itemStack = inventory.getItem(bodyPart.getId());
         if(itemStack.isEmpty()) return 0;

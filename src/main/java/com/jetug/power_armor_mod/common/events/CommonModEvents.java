@@ -32,7 +32,15 @@ public class CommonModEvents {
         PacketHandler.register();
     }
 
-
+//    @SubscribeEvent
+//    public static void onPlayerInteract(PlayerInteractEvent.LeftClickBlock event) {
+//        // Обработка события, когда игрок бьет по блоку левой кнопкой мыши
+//        // Получение информации о событии
+//        // BlockState blockState = event.getWorld().getBlockState(event.getPos());
+//        // BlockPos blockPos = event.getPos();
+//
+//        // Ваш код для обработки события бьющего по блоку
+//    }
 
 //    @SubscribeEvent
 //    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {

@@ -57,8 +57,8 @@ public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuPr
 //
 //    private static boolean hasRecipe(ArmorStationBlockEntity entity) {
 //        var hasItemInWaterSlot = PotionUtils.getPotion(entity.itemHandler.getStackInSlot(0)) == Potions.WATER;
-//        var hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ItemRegistry.RAW_CITRINE.get();
-//        var hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ItemRegistry.GEM_CUTTER_TOOL.get();
+//        var hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getPlayerItem() == ItemRegistry.RAW_CITRINE.get();
+//        var hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getPlayerItem() == ItemRegistry.GEM_CUTTER_TOOL.get();
 //
 //        return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
 //    }

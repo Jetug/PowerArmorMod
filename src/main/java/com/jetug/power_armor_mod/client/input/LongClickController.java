@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static com.jetug.power_armor_mod.client.events.InputEvents.isNotInGame;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class LongClickController {
@@ -35,11 +36,18 @@ public class LongClickController {
 //        if(lastKey == null) return;
 //        ticks++;
 
-        keys.forEach((key, t) ->{
+
+        for (var key : keys.keySet()) {
             var ticks = keys.get(key) + 1;
             keys.put(key, ticks);
+
+//            if (isNotInGame()) {
+//                onRelease(key);
+//                break;
+//            } else repeatListener.accept(key, ticks);
+
             repeatListener.accept(key, ticks);
-        });
+        }
     }
 
     private void onMouseInput(final InputEvent.MouseInputEvent event){

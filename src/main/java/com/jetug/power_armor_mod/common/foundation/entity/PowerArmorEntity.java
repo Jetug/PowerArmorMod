@@ -11,10 +11,10 @@ import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,12 +23,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.*;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +40,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
@@ -202,7 +202,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        var height = getPlayerPassenger().isShiftKeyDown() ?  1.5f : 0.9f;
+        var height = getPlayerPassenger().isShiftKeyDown() ?  1.5f : 1.2f;
         var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - height;
         entity.setPos(getX(), posY, getZ());
 
@@ -321,7 +321,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return null;
     }
 
-    public ItemStack getItem(EquipmentSlot slot){
+    public ItemStack getPlayerItem(EquipmentSlot slot){
         return hasPlayerPassenger() ? getPlayerPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
     }
 
@@ -339,15 +339,33 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         setDeltaMovement(getDeltaMovement().add(vector));
     }
 
+    protected static BlockHitResult getPlayerPOVHitResult(Level pLevel, Player pPlayer, ClipContext.Fluid pFluidMode) {
+        float f = pPlayer.getXRot();
+        float f1 = pPlayer.getYRot();
+        Vec3 vec3 = pPlayer.getEyePosition();
+        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
+        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
+        float f6 = f3 * f4;
+        float f7 = f2 * f4;
+        double d0 = pPlayer.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue();;
+        Vec3 vec31 = vec3.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
+        return pLevel.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, pFluidMode, pPlayer));
+    }
+
     public void punch(){
         punch(() -> {
             var optional = getTargetedEntity(getPlayerPassenger(), 5);
+
 
             if(optional.isPresent()){
                 punchTarget(optional.get());
             }
             else{
-                breakBlocks();
+                var pick = getPlayerPOVHitResult(level, getPlayerPassenger(), ClipContext.Fluid.NONE);
+                punchBlock(pick.getBlockPos());
+                Global.LOGGER.error("client: " + level.isClientSide + "pick: " + pick.getType());
             }
         });
     }
@@ -356,15 +374,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         var vector = getPlayerPassenger().getViewVector(1.0F);
         var force = getPunchForce();
         EntityUtils.push(target, vector.multiply(force, force, force));
-    }
-
-    private void breakBlocks(){
-
-    }
-
-    private float getPunchForce(){
-        var charge = getAttackChargeInPercent();
-        return getPercentOf(MAX_PUNCH_FORCE, charge);
     }
 
     private void punch(Runnable runnable){
@@ -377,37 +386,52 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         });
     }
 
-    private void _dash(DashDirection direction){
-        if (!(getControllingPassenger() instanceof Player player))
-            return;
-
-        isDashing = true;
-        dashDirection = direction;
-        timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
-
-        push(direction, player);
+    private void punchBlock(BlockPos blockPos){
+        var force = getPunchForce();
     }
 
-    private void push(DashDirection direction, Player player) {
+    private float getPunchForce(){
+        var charge = getAttackChargeInPercent();
+        return getPercentOf(MAX_PUNCH_FORCE, charge);
+    }
+
+    private void applyToPlayer(Consumer<Player> consumer){
+        if(!hasPlayerPassenger()) return;
+        consumer.accept(getPlayerPassenger());
+    }
+
+    private void _dash(DashDirection direction){
+        applyToPlayer((player) ->{
+            isDashing = true;
+            dashDirection = direction;
+            timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
+            var force = 4f;
+
+            if (hasEquipment(BACK) && hasEquipment(ENGINE))
+                push(direction, player, force);
+        });
+    }
+
+    private void push(DashDirection direction, Player player, float force) {
         float viewYRot = player.getViewYRot(1);
-        float x = sin(viewYRot * ROTATION) * 3;
-        float z = cos(viewYRot * ROTATION) * 3;
+        float x = sin(viewYRot * ROTATION) * force;
+        float z = cos(viewYRot * ROTATION) * force;
         var vector = Vec3.ZERO;
 
         switch (direction) {
             case FORWARD -> vector = new Vec3(-x, 0, z);
             case BACK    -> vector = new Vec3(x, 0, -z);
-            case RIGHT   -> vector = rotateVector(viewYRot, 90);
-            case LEFT    -> vector = rotateVector(viewYRot, -90);
+            case RIGHT   -> vector = rotateVector(viewYRot, 90, force);
+            case LEFT    -> vector = rotateVector(viewYRot, -90, force);
             case UP      -> vector = new Vec3(0, 1, 0);
         }
 
         push(vector);
     }
 
-    private Vec3 rotateVector(float viewYRot, int angle){
+    private Vec3 rotateVector(float viewYRot, int angle, float force){
         float rot = (viewYRot + angle) * ROTATION;
-        return new Vec3(-sin(rot), 0, cos(rot));
+        return new Vec3(-sin(rot) * force, 0, cos(rot) * force);
     }
 
     private float getDamageAfterAbsorb(float damage){

@@ -12,31 +12,29 @@ import com.jetug.power_armor_mod.common.foundation.entity.*;
 
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.*;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.example.entity.ExtendedRendererEntity;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.*;
-import software.bernie.geckolib3.renderers.geo.*;
 
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
-import static com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu.*;
+import static com.jetug.power_armor_mod.common.data.enums.BodyPart.BACK;
 import static net.minecraft.world.entity.EquipmentSlot.*;
 
 public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
     private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
 
-    protected ItemStack mainHandItem, offHandItem;
+    protected ItemStack mainHandItem, offHandItem, backItem;
 
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
@@ -46,7 +44,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     private void initLayers(){
-        for (int i = 0; i < SIZE; i++)
+        for (int i = 0; i < BodyPart.values().length; i++)
             addLayer(new ArmorPartLayer(this, BodyPart.getById(i)));
         addLayer(new PlayerHeadLayer(this));
     }
@@ -64,8 +62,9 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
                             VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
 
-        this.mainHandItem = animatable.getItem(MAINHAND);
-        this.offHandItem  = animatable.getItem(OFFHAND);
+        mainHandItem = animatable.getPlayerItem(MAINHAND);
+        offHandItem  = animatable.getPlayerItem(OFFHAND);
+        backItem = animatable.getEquipment(BACK);
     }
 
     @Nullable
@@ -101,6 +100,18 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
             stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
     }
+
+//    @Override
+//    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorModel) {
+//        return switch (name) {
+//            case "back_slot" -> powerArmorModel.getBone("");
+//        };
+//    }
+//
+//    @Override
+//    protected boolean isArmorBone(GeoBone bone) {
+//        return bone.getName().startsWith("jetpack");
+//    }
 
     private void updateModel(PowerArmorEntity entity, BodyPart part){
         if(entity.isEquipmentVisible(part)) {

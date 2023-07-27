@@ -11,6 +11,7 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
+import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.resourceToBufferedImage;
 
 @SuppressWarnings("ConstantConditions")
 public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
@@ -22,15 +23,14 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity,
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn,
+                       int packedLightIn, PowerArmorEntity entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.isEquipmentVisible(bodyPart) && !entity.isInvisible()) {
             var item = entity.getEquipmentItem(bodyPart);
             if (item.getSettings() == null) return;
-
-            var texture =  item.getSettings().getTextureLocation();
-
+            var texture = item.getSettings().getTextureLocation();
             render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
         }
     }

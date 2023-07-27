@@ -32,25 +32,22 @@ public class CustomHandler {
         out.println(entity);
     }
 
-    @SubscribeEvent
-    public static void onBlockBreak(BlockEvent.BreakEvent event) {
-        var world = event.getWorld();
-        BlockPos pos = event.getPos();
-        BlockState state = event.getState();
-
-        Direction direction = event.getPlayer().getDirection();
-        BlockPos centerPos = pos.offset(direction.getNormal());
-
-        // Копаем блоки 3 на 3
-        for (int xOffset = -1; xOffset <= 1; xOffset++) {
-            for (int yOffset = -1; yOffset <= 1; yOffset++) {
-                BlockPos targetPos = centerPos.offset(direction.getStepX() * xOffset, yOffset, direction.getStepZ() * xOffset);
-                BlockState targetState = world.getBlockState(targetPos);
-
-                world.destroyBlock(targetPos, true);
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+//        var world = event.getWorld();
+//        BlockPos pos = event.getPos();
+//
+//        Direction direction = event.getPlayer().getDirection();
+//        BlockPos centerPos = pos.offset(direction.getNormal());
+//
+//        // Копаем блоки 3 на 3
+//        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+//            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+//                BlockPos targetPos = centerPos.offset(direction.getStepX() * xOffset, yOffset, direction.getStepZ() * xOffset);
+//                world.destroyBlock(targetPos, true);
+//            }
+//        }
+//    }
 
     public static BlockPos getBlockLookingAt() {
         Minecraft minecraft = Minecraft.getInstance();

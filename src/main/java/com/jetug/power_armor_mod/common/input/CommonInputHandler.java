@@ -35,6 +35,7 @@ public class CommonInputHandler {
 
     public static void onRelease(InputKey key, Player player){
         if (!isWearingPowerArmor(player)) return;
+        if(key == ATTACK) getPlayerPowerArmor(player).punch();
         if(key == USE || key == ATTACK) getPlayerPowerArmor(player).resetAttackCharge();
     }
 
@@ -56,8 +57,8 @@ public class CommonInputHandler {
 
     public static void onLongPress(InputKey key, Player player){
         if (!isWearingPowerArmor(player)) return;
-
-        if(key == USE){
+        var bool = key == USE;
+        if(bool){
             getPlayerPowerArmor(player).addAttackCharge();
         }
     }
