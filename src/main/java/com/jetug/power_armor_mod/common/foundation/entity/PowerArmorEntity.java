@@ -364,7 +364,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             }
             else{
                 var pick = getPlayerPOVHitResult(level, getPlayerPassenger(), ClipContext.Fluid.NONE);
-                punchBlock(pick.getBlockPos());
+                if(pick.getType() == HitResult.Type.BLOCK)
+                    punchBlock(pick.getBlockPos());
                 Global.LOGGER.error("client: " + level.isClientSide + "pick: " + pick.getType());
             }
         });
@@ -376,6 +377,28 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         EntityUtils.push(target, vector.multiply(force, force, force));
     }
 
+    private void punchBlock(BlockPos blockPos){
+        var force = getPunchForce();
+        var player = getPlayerPassenger();
+
+        if(force == MAX_PUNCH_FORCE)
+            dig(blockPos, player);
+    }
+
+
+    private void dig(BlockPos pos, Player player){
+        var direction = player.getDirection();
+        var centerPos = pos.offset(direction.getNormal());
+
+        // Копаем блоки 3 на 3
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+                BlockPos targetPos = centerPos.offset(direction.getStepX() * xOffset, yOffset, direction.getStepZ() * xOffset);
+                player.level.destroyBlock(targetPos, true);
+            }
+        }
+    }
+
     private void punch(Runnable runnable){
         if(!hasPlayerPassenger()) return;
 
@@ -384,10 +407,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
             runnable.run();
         });
-    }
-
-    private void punchBlock(BlockPos blockPos){
-        var force = getPunchForce();
     }
 
     private float getPunchForce(){

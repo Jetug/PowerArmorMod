@@ -48,6 +48,19 @@ public class CustomHandler {
 //            }
 //        }
 //    }
+//
+//    private void dig(BlockPos pos, Player player){
+//        var direction = player.getDirection();
+//        var centerPos = pos.offset(direction.getNormal());
+//
+//        // Копаем блоки 3 на 3
+//        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+//            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+//                BlockPos targetPos = centerPos.offset(direction.getStepX() * xOffset, yOffset, direction.getStepZ() * xOffset);
+//                player.level.destroyBlock(targetPos, true);
+//            }
+//        }
+//    }
 
     public static BlockPos getBlockLookingAt() {
         Minecraft minecraft = Minecraft.getInstance();
