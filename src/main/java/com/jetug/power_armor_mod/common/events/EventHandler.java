@@ -36,7 +36,7 @@ public class EventHandler {
         var target = event.getTarget();
 
 //        if(isWearingPowerArmor(player))
-//            getPlayerPowerArmor(player).punch();
+//            getPlayerPowerArmor(player).powerPunch();
     }
 
 //    @SubscribeEvent

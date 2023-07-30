@@ -36,6 +36,7 @@ public class PovHandAmimator implements IAnimatable {
         controller.animationSpeed = 1;
 
         if(armor.isPunching()){
+            controller.animationSpeed = 2;
             setAnimation(controller,"punch", PLAY_ONCE);
         }
         else if(armor.isMaxCharge()){
@@ -46,7 +47,7 @@ public class PovHandAmimator implements IAnimatable {
             setAnimation(controller,"punch_charge", LOOP);
         }
         else if(player.swinging){
-            controller.animationSpeed = 2;
+            controller.animationSpeed = 3;
             setAnimation(controller,"hit", LOOP);
         }
         else if(armor.isWalking()){

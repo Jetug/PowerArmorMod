@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.client.resources;
 
 import com.google.gson.*;
+import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
 import com.jetug.power_armor_mod.common.data.json.FrameSettings;
 import com.jetug.power_armor_mod.common.data.json.ModelSettingsBase;
@@ -10,16 +11,18 @@ import javax.annotation.*;
 import java.io.*;
 import java.util.*;
 
+import static com.jetug.power_armor_mod.client.resources.ClassGenerator.generateConstants;
 import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.*;
+import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getResourceName;
 
 public class ModResourceManager {
     private static final String CONFIG_DIR = "configs";
     private static final String EQUIPMENT_DIR = CONFIG_DIR + "/equipment";
     private static final String FRAME_DIR = CONFIG_DIR + "/frame";
+    private static final String ANIMATION_DIR = "animations";
 
     private final Map<String, EquipmentSettings> equipmentSettings = new HashMap<>();
     private final Map<String, FrameSettings> frameSettings = new HashMap<>();
-
 
     @Nullable
     public EquipmentSettings getEquipmentSettings(String itemId){
@@ -34,6 +37,7 @@ public class ModResourceManager {
     public void loadConfigs(){
         loadEquipment();
         loadFrame();
+        loadAnimations();
     }
 
     private void loadEquipment() {
@@ -49,6 +53,18 @@ public class ModResourceManager {
             var settings = getSettings(config, FrameSettings.class);
             if(settings != null)
                 frameSettings.put(settings.name, settings);
+        }
+    }
+
+    private void loadAnimations() {
+        for (ResourceLocation animation : getJsonResources(ANIMATION_DIR)) {
+            try {
+                var readIn = getBufferedReader(animation);
+                var settings = new Gson().fromJson(readIn, JsonObject.class);
+                var set = settings.getAsJsonObject("animations").keySet();
+                Global.LOGGER.error(set);
+                generateConstants(getResourceName(animation), set);
+            } catch (IOException ignored) {}
         }
     }
 
@@ -96,6 +112,7 @@ public class ModResourceManager {
             return null;
         }
     }
+
     private BufferedReader getBufferedReader(ResourceLocation resourceLocation) throws IOException {
         return getBufferedReader(Minecraft.getInstance().getResourceManager().getResource(resourceLocation).getInputStream());
     }

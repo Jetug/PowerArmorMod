@@ -29,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.*;
@@ -354,8 +355,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return pLevel.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, pFluidMode, pPlayer));
     }
 
-    public void punch(){
-        punch(() -> {
+    public void powerPunch(){
+        powerPunch(() -> {
             var optional = getTargetedEntity(getPlayerPassenger(), 5);
 
 
@@ -399,14 +400,16 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
-    private void punch(Runnable runnable){
-        if(!hasPlayerPassenger()) return;
+    private void powerPunch(Runnable runnable){
+        if(!hasPlayerPassenger() || attackCharge == 0) return;
 
         doHeatAction(PUNCH_HEAT, () -> {
             isPunching = true;
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
             runnable.run();
         });
+
+        resetAttackCharge();
     }
 
     private float getPunchForce(){
@@ -506,7 +509,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //    }
 
     private void pushEntitiesAround(){
-        for(Entity entity : getEntitiesOfClass(3, 1,3)) {
+        for(Entity entity : getEntitiesOfClass(2, 1,2)) {
             if (entity == this || entity == getControllingPassenger())
                 continue;
             double push = 0.5;
@@ -522,10 +525,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        var armController = new AnimationController<>(this, "arm_controller", 0, this::animateArms);
-        var legController = new AnimationController<>(this, "leg_controller", 0, this::animateLegs);
-        data.addAnimationController(armController);
-        data.addAnimationController(legController);
+        data.addAnimationController(new AnimationController<>(this, "arm_controller", 0, this::animateArms));
+        data.addAnimationController(new AnimationController<>(this, "leg_controller", 0, this::animateLegs));
     }
 
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
@@ -535,7 +536,21 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         var player = getPlayerPassenger();
 
         if (player != null) {
-            if (player.attackAnim > 0) {
+            if(isPunching){
+                controller.animationSpeed = 2;
+                setAnimation(controller, "power_punch", HOLD_ON_LAST_FRAME);
+                return PlayState.CONTINUE;
+            }
+            else if(isMaxCharge()){
+                setAnimation(controller, "power_punch_charge_loop", LOOP);
+                return PlayState.CONTINUE;
+            }
+            else if(isChargingAttack()){
+                setAnimation(controller, "power_punch_charge", PLAY_ONCE);
+                controller.animationSpeed = 0.7;
+                return PlayState.CONTINUE;
+            }
+            else if (player.attackAnim > 0) {
                 controller.animationSpeed = 2.0D;
                 setAnimation(controller, "hit", PLAY_ONCE);
                 return PlayState.CONTINUE;
