@@ -148,3 +148,57 @@ jar.finalizedBy('reobfJar')
 //tasks.withType(JavaCompile).configureEach {
 //    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 //}
+
+tasks.register('generateCode') {
+    doLast {
+        def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
+        def animationsTag = "animations"
+        File directory = new File(directoryPath)
+        File[] files = directory.listFiles()
+
+        if (files) {
+            files.each { file ->
+                if (file.isFile() && file.name.endsWith(".json")) {
+                    def className = generateClassName(file.name)
+                    def jsonSlurper = new groovy.json.JsonSlurper()
+                    def json = jsonSlurper.parse(file)
+                    generateClassFile(className, json[animationsTag] as Map)
+                    println "Generated code has been written to $className"
+                }
+            }
+        } else {
+            println "No JSON files found in the specified directory."
+        }
+    }
+}
+
+static String generateClassName(String fileName) {
+    def className = fileName.replaceAll(/(\.[^.]+)$/, "").tokenize('_.')
+    def capitalizedWords = className.collect { it.capitalize() }
+    return capitalizedWords.join()
+}
+
+static void generateClassFile(String className, Map json) {
+    def generatedDir = "src/main/java/com/jetug/power_armor_mod/generated/"
+    def packageName = "com.jetug.power_armor_mod.generated"
+    String constantsSection = generateConstantsSection(json)
+    String generatedCode = """ package ${packageName};
+
+public class ${className} {\n${constantsSection}}"""
+    new File("${generatedDir}${className}.java").text = generatedCode
+}
+
+static String generateConstantsSection(Map json) {
+    StringBuilder constantsSection = new StringBuilder()
+
+    json.each { key, value ->
+        constantsSection.append("    public static final String ${key.toUpperCase().replaceAll("\\s+|\\.", "_")} = \"${key}\";\n")
+    }
+
+    return constantsSection.toString()
+}
+
+compileJava {
+    finalizedBy generateCode
+}
+
