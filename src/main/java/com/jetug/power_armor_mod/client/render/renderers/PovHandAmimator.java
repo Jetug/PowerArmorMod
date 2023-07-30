@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
+import com.jetug.generated.HandAnimation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -9,6 +10,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import static com.jetug.generated.HandAnimation.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
@@ -37,24 +39,24 @@ public class PovHandAmimator implements IAnimatable {
 
         if(armor.isPunching()){
             controller.animationSpeed = 2;
-            setAnimation(controller,"punch", PLAY_ONCE);
+            setAnimation(controller, PUNCH, PLAY_ONCE);
         }
         else if(armor.isMaxCharge()){
-            setAnimation(controller,"punch_max_charge", LOOP);
+            setAnimation(controller,PUNCH_MAX_CHARGE, LOOP);
         }
         else if(armor.isChargingAttack()){
             controller.animationSpeed = 0.3;
-            setAnimation(controller,"punch_charge", LOOP);
+            setAnimation(controller,PUNCH_CHARGE, LOOP);
         }
         else if(player.swinging){
             controller.animationSpeed = 3;
-            setAnimation(controller,"hit", LOOP);
+            setAnimation(controller,HIT, LOOP);
         }
         else if(armor.isWalking()){
-            setAnimation(controller,"walk", LOOP);
+            setAnimation(controller,WALK, LOOP);
         }
         else {
-            setAnimation(controller,"idle", LOOP);
+            setAnimation(controller,IDLE, LOOP);
         }
         return PlayState.CONTINUE;
     }

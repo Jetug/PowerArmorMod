@@ -4278,6 +4278,79 @@
 				}
 			}
 		},
+		"sneak_end": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"model": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, -3, 0]
+					}
+				},
+				"body": {
+					"rotation": {
+						"vector": [-7.5, 0, 0]
+					}
+				},
+				"body_top": {
+					"rotation": {
+						"vector": [15, 0, 0]
+					}
+				},
+				"right_leg": {
+					"rotation": {
+						"vector": [12.19919, -0.24156, 12.74139]
+					}
+				},
+				"right_leg_piston": {
+					"rotation": {
+						"vector": [7.5, 0, 0]
+					}
+				},
+				"right_leg_piston_head": {
+					"position": {
+						"vector": [0, -1.15, 0]
+					}
+				},
+				"right_lower_leg": {
+					"rotation": {
+						"vector": [42.5, 0, 0]
+					}
+				},
+				"right_shoe": {
+					"rotation": {
+						"vector": [-22.42287, -1.91134, -4.62111]
+					}
+				},
+				"left_leg": {
+					"rotation": {
+						"vector": [-47.21383, -3.82631, -6.92234]
+					}
+				},
+				"left_leg_piston": {
+					"rotation": {
+						"vector": [15.5, 0, 0]
+					}
+				},
+				"left_leg_piston_head": {
+					"position": {
+						"vector": [0, -1, 0]
+					}
+				},
+				"left_lower_leg": {
+					"rotation": {
+						"vector": [57.5, 0, 0]
+					}
+				},
+				"left_shoe": {
+					"rotation": {
+						"vector": [-9.91615, 1.29876, 7.38733]
+					}
+				}
+			}
+		},
 		"stop_sneak": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,

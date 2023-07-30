@@ -1,5 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
+import com.jetug.generated.PowerArmorAnimation;
+import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -29,11 +31,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.*;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.jetug.generated.PowerArmorAnimation.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
@@ -50,6 +51,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 import static net.minecraft.util.Mth.*;
+import static net.minecraft.world.InteractionHand.MAIN_HAND;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
@@ -91,8 +93,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //    @Override
 //    public EntityDimensions getDimensions(Pose pPose) {
 //        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
-//    }
 
+//    }
 
 
     @Override
@@ -108,6 +110,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
         speedometer.tick();
         timer.tick();
+    }
+
+    @Override
+    public void addAttackCharge() {
+        if(!hasPlayerPassenger() || !getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty()) return;
+        super.addAttackCharge();
     }
 
     @Override
@@ -198,13 +206,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        var height = getPlayerPassenger().isShiftKeyDown() ?  1.5f : 1.2f;
-        var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - height;
+        var yOffset = getPlayerPassenger().isShiftKeyDown() ?  1.2f : 1.0f;
+        var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - yOffset;
         entity.setPos(getX(), posY, getZ());
 
         if (entity instanceof LivingEntity livingEntity)
@@ -215,7 +222,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void travel(@NotNull Vec3 travelVector) {
         if (!isAlive()) return;
         if (isVehicle() && hasPlayerPassenger())
-            travelWithPlayerPassenger(travelVector);
+            travelWithPlayer(travelVector);
         else {
             this.flyingSpeed = 0.02F;
             super.travel(travelVector);
@@ -304,6 +311,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
     }
 
+    public boolean isPunching() {
+        return isPunching;
+    }
+
     public Boolean isWalking(){
         if (!hasPlayerPassenger())
             return false;
@@ -331,9 +342,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     public void dash(DashDirection direction) {
-//        if(isClientSide)
-//            doServerAction(new DashAction(direction), getId());
-        doHeatAction(DASH_HEAT, () -> _dash(direction));
+        doHeatAction(DASH_HEAT, () -> applyToPlayer((player) -> {
+            dashDirection = direction;
+            isDashing = true;
+            timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
+
+            if (hasJetpack() && hasEquipment(ENGINE))
+                push(direction, player, getJetpack().force);
+        }));
     }
 
     public void push(Vec3 vector){
@@ -372,6 +388,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         });
     }
 
+    private boolean hasJetpack(){
+        return hasEquipment(BACK) && getEquipment(BACK).getItem() instanceof JetpackItem;
+    }
+
+    private JetpackItem getJetpack(){
+        return (JetpackItem) getEquipment(BACK).getItem();
+    }
+
     private void punchTarget(Entity target){
         var vector = getPlayerPassenger().getViewVector(1.0F);
         var force = getPunchForce();
@@ -391,7 +415,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         var direction = player.getDirection();
         var centerPos = pos.offset(direction.getNormal());
 
-        // Копаем блоки 3 на 3
         for (int xOffset = -1; xOffset <= 1; xOffset++) {
             for (int yOffset = -1; yOffset <= 1; yOffset++) {
                 BlockPos targetPos = centerPos.offset(direction.getStepX() * xOffset, yOffset, direction.getStepZ() * xOffset);
@@ -422,18 +445,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         consumer.accept(getPlayerPassenger());
     }
 
-    private void _dash(DashDirection direction){
-        applyToPlayer((player) ->{
-            isDashing = true;
-            dashDirection = direction;
-            timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
-            var force = 4f;
-
-            if (hasEquipment(BACK) && hasEquipment(ENGINE))
-                push(direction, player, force);
-        });
-    }
-
     private void push(DashDirection direction, Player player, float force) {
         float viewYRot = player.getViewYRot(1);
         float x = sin(viewYRot * ROTATION) * force;
@@ -445,7 +456,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             case BACK    -> vector = new Vec3(x, 0, -z);
             case RIGHT   -> vector = rotateVector(viewYRot, 90, force);
             case LEFT    -> vector = rotateVector(viewYRot, -90, force);
-            case UP      -> vector = new Vec3(0, 1, 0);
+            case UP      -> vector = new Vec3(0, force / 2, 0);
         }
 
         push(vector);
@@ -487,7 +498,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private void addEffect(Player player, MobEffect effect, int amplifier){
         player.addEffect(new MobEffectInstance(effect, PowerArmorEntity.EFFECT_DURATION, amplifier, false, false));
     }
-
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {
 //        pushEntitiesAround();
@@ -506,6 +516,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //            playBlockFallSound();
 //            return true;
 //        }
+
 //    }
 
     private void pushEntitiesAround(){
@@ -538,30 +549,31 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         if (player != null) {
             if(isPunching){
                 controller.animationSpeed = 2;
-                setAnimation(controller, "power_punch", HOLD_ON_LAST_FRAME);
+                var s = PowerArmorAnimation.DASH_BACK;
+                setAnimation(controller, POWER_PUNCH, HOLD_ON_LAST_FRAME);
                 return PlayState.CONTINUE;
             }
             else if(isMaxCharge()){
-                setAnimation(controller, "power_punch_charge_loop", LOOP);
+                setAnimation(controller, POWER_PUNCH_CHARGE_LOOP, LOOP);
                 return PlayState.CONTINUE;
             }
             else if(isChargingAttack()){
-                setAnimation(controller, "power_punch_charge", PLAY_ONCE);
+                setAnimation(controller, POWER_PUNCH_CHARGE, PLAY_ONCE);
                 controller.animationSpeed = 0.7;
                 return PlayState.CONTINUE;
             }
             else if (player.attackAnim > 0) {
                 controller.animationSpeed = 2.0D;
-                setAnimation(controller, "hit", PLAY_ONCE);
+                setAnimation(controller, HIT, PLAY_ONCE);
                 return PlayState.CONTINUE;
             } else if (isDashing) {
                 return animateDash(controller);
             } else if (hurtTime > 0) {
-                setAnimation(controller, "hurt", PLAY_ONCE);
+                setAnimation(controller, HURT, PLAY_ONCE);
                 return PlayState.CONTINUE;
             }
             else if (isWalking()) {
-                setAnimation(controller, "walk_arms", LOOP);
+                setAnimation(controller, WALK_ARMS, LOOP);
                 controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 return PlayState.CONTINUE;
             }
@@ -574,32 +586,24 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
         AnimationController<E> controller = event.getController();
         controller.animationSpeed = 1.0D;
-        if (getPlayerPassenger() == null) return PlayState.STOP;
-
-        var move = getDeltaMovement();
-
+        if (!hasPlayerPassenger()) return PlayState.STOP;
         var player = getPlayerPassenger();
-        var pa = getPlayerPowerArmor(player);
+        var frame = getPlayerPowerArmor(player);
 
         if(!isDashing) {
-            if (pa.isWalking()) {
+            if (frame.isWalking()) {
                 if (player.isShiftKeyDown()){
-                    setAnimation(controller, "sneak_walk", LOOP);
+                    setAnimation(controller, SNEAK_WALK, LOOP);
                 }
                 else {
-                    setAnimation(controller, "walk_legs", LOOP);
+                    setAnimation(controller, WALK_LEGS, LOOP);
                     controller.animationSpeed = speedometer.getSpeed() * 4.0D;
                 }
                 return PlayState.CONTINUE;
             }
             else {
                 if (player.isShiftKeyDown()) {
-                    controller.setAnimation(new AnimationBuilder()
-                            //.addAnimation("sneak", PLAY_ONCE)
-                            .addAnimation("sneak_end", LOOP));
-
-//                    setAnimation(controller, "sneak", PLAY_ONCE);
-//                    setAnimation(controller, "sneak_end", LOOP);
+                    setAnimation(controller, SNEAK_END, LOOP);
                     return PlayState.CONTINUE;
                 }
             }
@@ -609,17 +613,16 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     private <E extends IAnimatable> PlayState animateDash(AnimationController<E> controller) {
         switch (dashDirection) {
-            case FORWARD -> setAnimation(controller, "dash_forward", HOLD_ON_LAST_FRAME);
-            case BACK   -> setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
-            case RIGHT -> setAnimation(controller, "dash_right", HOLD_ON_LAST_FRAME);
-            case LEFT -> setAnimation(controller, "dash_left", HOLD_ON_LAST_FRAME);
-            case UP  -> setAnimation(controller, "dash_back", HOLD_ON_LAST_FRAME);
+            case FORWARD -> setAnimation(controller, DASH_FORWARD, HOLD_ON_LAST_FRAME);
+            case BACK   -> setAnimation(controller, DASH_BACK, HOLD_ON_LAST_FRAME);
+            case RIGHT -> setAnimation(controller, DASH_RIGHT, HOLD_ON_LAST_FRAME);
+            case LEFT -> setAnimation(controller, DASH_LEFT, HOLD_ON_LAST_FRAME);
+            case UP  -> setAnimation(controller, DASH_BACK, HOLD_ON_LAST_FRAME);
         }
         return PlayState.CONTINUE;
     }
 
-
-    private void travelWithPlayerPassenger(Vec3 travelVector) {
+    private void travelWithPlayer(Vec3 travelVector) {
         var player = getPlayerPassenger();
         setRotationMatchingPassenger(player);
 
@@ -628,12 +631,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
         this.flyingSpeed = getSpeed() * 0.1F;
 
-        if (isControlledByLocalInstance()) {
-            //this.setSpeed((float)getAttributeValue(Attributes.MOVEMENT_SPEED));
+        if (isControlledByLocalInstance())
             super.travel(new Vec3(player.xxa, travelVector.y, player.zza));
-        } else {
-            setDeltaMovement(Vec3.ZERO);
-        }
+        else setDeltaMovement(Vec3.ZERO);
 
         if (onGround) {
             playerJumpScale = 0.0F;
@@ -644,7 +644,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private void makeJump(Player player) {
         var jump = getCustomJump() * playerJumpScale * getBlockJumpFactor();
         setDeltaMovement(getDeltaMovement().x, jump, getDeltaMovement().z);
-        isJumping = true;
+        isJumping  = true;
         hasImpulse = true;
 
         if (player.zza > 0.0F) {
@@ -664,9 +664,5 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         this.setYRot(livingEntity.getYRot());
         this.setXRot(livingEntity.getXRot() * 0.5F);
         this.setRot(getYRot(), getXRot());
-    }
-
-    public boolean isPunching() {
-        return isPunching;
     }
 }

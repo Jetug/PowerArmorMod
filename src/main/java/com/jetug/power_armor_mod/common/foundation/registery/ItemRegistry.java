@@ -63,7 +63,7 @@ public class ItemRegistry {
             new EngineItem(150, 3, 1.5f));
 
     public static final RegistryObject<Item> JETPACK = ITEMS.register("jetpack", () ->
-            new JetpackItem( 3, 1.5f));
+            new JetpackItem( 3, 1.5f, 4));
 
     public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
             new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
