@@ -37,7 +37,7 @@ public class ModResourceManager {
     public void loadConfigs(){
         loadEquipment();
         loadFrame();
-        loadAnimations();
+        //loadAnimations();
     }
 
     private void loadEquipment() {

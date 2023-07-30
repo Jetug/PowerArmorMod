@@ -32,7 +32,7 @@ import static net.minecraft.world.entity.EquipmentSlot.*;
 
 public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
-    private final ArmorModel<PowerArmorEntity> armorModel = new ArmorModel<>();
+    private final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
 
     protected ItemStack mainHandItem, offHandItem, backItem;
 
