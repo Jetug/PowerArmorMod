@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.2.3-1.18.2'
+version = '1.2.4-1.18.2'
 group = 'com.jetug.armorpunk'
 archivesBaseName = 'armorpunk'
 
@@ -190,7 +190,7 @@ static void generateClassFile(String className, Map json) {
 static String generateConstantsSection(Map json) {
     def constantsSection = new StringBuilder()
     def constant = "    public static final String"
-    
+
     json.each { key, value ->
         constantsSection.append("${constant} ${key.toUpperCase().replaceAll("\\s+|\\.", "_")} = \"${key}\";\n")
     }
