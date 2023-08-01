@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.generated.PowerArmorAnimation;
+import com.jetug.generated.animations.PowerArmorFrameAnimation;
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.jetug.generated.PowerArmorAnimation.*;
+import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
@@ -549,7 +549,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         if (player != null) {
             if(isPunching){
                 controller.animationSpeed = 2;
-                var s = PowerArmorAnimation.DASH_BACK;
                 setAnimation(controller, POWER_PUNCH, HOLD_ON_LAST_FRAME);
                 return PlayState.CONTINUE;
             }
@@ -617,7 +616,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             case BACK   -> setAnimation(controller, DASH_BACK, HOLD_ON_LAST_FRAME);
             case RIGHT -> setAnimation(controller, DASH_RIGHT, HOLD_ON_LAST_FRAME);
             case LEFT -> setAnimation(controller, DASH_LEFT, HOLD_ON_LAST_FRAME);
-            case UP  -> setAnimation(controller, DASH_BACK, HOLD_ON_LAST_FRAME);
+            case UP  -> setAnimation(controller, DASH_UP, HOLD_ON_LAST_FRAME);
         }
         return PlayState.CONTINUE;
     }

@@ -19,7 +19,7 @@ public class Resources {
     public static final ResourceLocation PLAYER_INVENTORY_BOTTOM_TABS = resourceLocation("textures/gui/player_inventory_tabs_bottom.png");
 
     //Animations
-    public static final ResourceLocation POWER_ARMOR_ANIMATION_LOCATION = resourceLocation("animations/power_armor.animation.json");
+    public static final ResourceLocation FRAME_ANIMATION_LOCATION = resourceLocation("animations/power_armor_frame.animation.json");
     public static final ResourceLocation HAND_ANIMATION_LOCATION        = resourceLocation("animations/hand.animation.json");
 
     //Models

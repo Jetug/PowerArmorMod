@@ -29,7 +29,7 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
 
     @Override
     public ResourceLocation getAnimationFileLocation(Type object) {
-        return POWER_ARMOR_ANIMATION_LOCATION;
+        return FRAME_ANIMATION_LOCATION;
     }
 
     @Override

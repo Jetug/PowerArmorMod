@@ -151,12 +151,48 @@ jar.finalizedBy('reobfJar')
 //    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 //}
 
-tasks.register('generateCode') {
+tasks.register('generateResources') {
+    doFirst {
+        def sourceDir = "src/main/resources/assets/power_armor_mod/textures"
+
+        generateResourceFile("Textures", sourceDir)
+    }
+}
+
+void generateResourceFile(String className, String directoryPath) {
+    def packageName = "com.jetug.generated.resources"
+    def generatedDir = "src/main/java/com/jetug/generated/resources/"
+    def directory = new File(generatedDir)
+
+    def constantsSection = generateResourceConstants(directoryPath)
+    def generatedCode = "package ${packageName};\n\npublic class ${className} {\n${constantsSection}}"
+
+    if (!directory.exists()) directory.mkdirs()
+    new File("${generatedDir}${className}.java").text = generatedCode
+}
+
+String generateResourceConstants(String directoryPath) {
+    def directory = new File(directoryPath)
+    def files = fileTree(directory)
+
+    def constantsSection = new StringBuilder()
+    def constant = "    public static final String"
+
+    if (files) {
+        files.each { file ->
+            constantsSection.append("${constant} ${getConstantName(getClassName(file.name))} = \"${file.path}\";\n")
+        }
+    }
+
+    return constantsSection.toString()
+}
+
+tasks.register('generateAnimations') {
     doFirst {
         def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
         def animationsTag = "animations"
         def directory = new File(directoryPath)
-        def files = directory.listFiles()
+        def files = fileTree(directory)
 
         if (files) {
             files.each { file ->
@@ -177,8 +213,8 @@ static String getClassName(String fileName) {
 }
 
 static void generateClassFile(String className, Map json) {
-    def generatedDir = "src/main/java/com/jetug/generated/"
-    def packageName = "com.jetug.generated"
+    def generatedDir = "src/main/java/com/jetug/generated/animations/"
+    def packageName = "com.jetug.generated.animations"
     def constantsSection = generateConstantsSection(json)
     def generatedCode = "package ${packageName};\n\npublic class ${className} {\n${constantsSection}}"
     def dir = new File(generatedDir)
@@ -192,13 +228,18 @@ static String generateConstantsSection(Map json) {
     def constant = "    public static final String"
 
     json.each { key, value ->
-        constantsSection.append("${constant} ${key.toUpperCase().replaceAll("\\s+|\\.", "_")} = \"${key}\";\n")
+        constantsSection.append("${constant} ${getConstantName(key)} = \"${key}\";\n")
     }
 
     return constantsSection.toString()
 }
 
+static getConstantName(String name){
+    return name.toUpperCase().replaceAll("\\s+|\\.", "_")
+}
+
 compileJava {
-    finalizedBy generateCode
+    finalizedBy generateAnimations
+//    finalizedBy generateResources
 }
 

@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.generated.HandAnimation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -10,7 +9,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import static com.jetug.generated.HandAnimation.*;
+import static com.jetug.generated.animations.HandAnimation.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
