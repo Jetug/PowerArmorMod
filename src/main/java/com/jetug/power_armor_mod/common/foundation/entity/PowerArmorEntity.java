@@ -2,6 +2,8 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.generated.animations.PowerArmorFrameAnimation;
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
+import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
+import com.jetug.power_armor_mod.common.foundation.registery.ModParticles;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -14,6 +16,8 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -41,6 +45,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
@@ -50,6 +55,7 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
+import static net.minecraft.core.particles.ParticleTypes.FLAME;
 import static net.minecraft.util.Mth.*;
 import static net.minecraft.world.InteractionHand.MAIN_HAND;
 import static org.apache.logging.log4j.Level.*;
@@ -105,12 +111,38 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             pushEntitiesAround();
         }
 
+        if (this.level.isClientSide()) {
+            double x = this.getX() + (this.random.nextDouble()) * (double) this.getBbWidth() * 0.5D;
+            double z = this.getZ() + (this.random.nextDouble()) * (double) this.getBbWidth() * 0.5D;
+//            this.level.addParticle(ModParticles.JET.get(), true, x, this.getY(), z, 0, 0, 0);
+//            showJetpackParticles();
+        }
 //        syncDataWithClient();
         applyEffects();
 
         speedometer.tick();
         timer.tick();
     }
+//
+//    private void showJetpackParticles() {
+//        var minecraft = Minecraft.getInstance();
+//        ParticleOptions particle = ParticleTypes.FLAME;
+//        Random rand = new Random();
+//        float random = (rand.nextFloat() - 0.5F) * 0.1F;
+//        double[] sneakBonus = minecraft.player.isCrouching() ? new double[]{-0.30, -0.10} : new double[]{0, 0};
+//        var playerPos = new Pos3D(minecraft.player).translate(0, 1.5, 0);
+//        var vLeft = new Pos3D(-0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+//        var vRight = new Pos3D(0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+//        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+//        var v = playerPos.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+//        v = playerPos.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+//        v = playerPos.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+//
+//        //minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
+//    }
 
     @Override
     public void addAttackCharge() {
@@ -313,6 +345,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     public boolean isPunching() {
         return isPunching;
+    }
+
+    public boolean isDashing() {
+        return isDashing;
     }
 
     public Boolean isWalking(){
@@ -547,7 +583,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         var player = getPlayerPassenger();
 
         if (player != null) {
-            if(isPunching){
+            if (isDashing) {
+                return animateDash(controller);
+            }
+            else if(isPunching){
                 controller.animationSpeed = 2;
                 setAnimation(controller, POWER_PUNCH, HOLD_ON_LAST_FRAME);
                 return PlayState.CONTINUE;
@@ -565,8 +604,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 controller.animationSpeed = 2.0D;
                 setAnimation(controller, HIT, PLAY_ONCE);
                 return PlayState.CONTINUE;
-            } else if (isDashing) {
-                return animateDash(controller);
             } else if (hurtTime > 0) {
                 setAnimation(controller, HURT, PLAY_ONCE);
                 return PlayState.CONTINUE;
@@ -583,8 +620,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState animateLegs(AnimationEvent<E> event) {
-        AnimationController<E> controller = event.getController();
+        var controller = event.getController();
         controller.animationSpeed = 1.0D;
+
         if (!hasPlayerPassenger()) return PlayState.STOP;
         var player = getPlayerPassenger();
         var frame = getPlayerPowerArmor(player);
@@ -600,11 +638,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
                 }
                 return PlayState.CONTINUE;
             }
-            else {
-                if (player.isShiftKeyDown()) {
-                    setAnimation(controller, SNEAK_END, LOOP);
-                    return PlayState.CONTINUE;
-                }
+            else if (player.isShiftKeyDown()) {
+                setAnimation(controller, SNEAK_END, LOOP);
+                return PlayState.CONTINUE;
             }
         }
         return PlayState.STOP;

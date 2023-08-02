@@ -27,5 +27,6 @@ public class PowerArmorMod {
         EntityTypeRegistry.register(MOD_EVENT_BUS);
         ModMenuTypes.register(MOD_EVENT_BUS);
         ItemRegistry.register(MOD_EVENT_BUS);
+        ModParticles.register(MOD_EVENT_BUS);
     }
 }

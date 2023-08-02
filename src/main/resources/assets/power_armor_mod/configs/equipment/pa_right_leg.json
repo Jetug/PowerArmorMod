@@ -1,7 +1,7 @@
 {
   "part": "right_leg",
   "model": "geo/armor/armor_right_leg.geo.json",
-  "texture": "textures/entities/armor_right_leg.png",
+  "texture": "textures/entity/armor_right_leg.png",
 
   "attachments": [
     {

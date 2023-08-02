@@ -151,27 +151,46 @@ jar.finalizedBy('reobfJar')
 //    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 //}
 
-tasks.register('generateResources') {
-    doFirst {
-        def sourceDir = "src/main/resources/assets/power_armor_mod/textures"
+void genAnimations(){
+    def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
+    def animationsTag = "animations"
+    def directory = new File(directoryPath)
+    def files = fileTree(directory)
 
-        generateResourceFile("Textures", sourceDir)
+    if (files) {
+        files.each { file ->
+            if (file.isFile() && file.name.endsWith(".json")) {
+                def className = getClassName(file.name)
+                def json = new JsonSlurper().parse(file)
+                generateClassFile(className, json[animationsTag] as Map)
+            }
+        }
     }
 }
 
-void generateResourceFile(String className, String directoryPath) {
+void genTextures(){
+    def sourceDir = "src/main/resources/assets/power_armor_mod/textures"
+    generateResourceFile("Textures", sourceDir, true)
+}
+
+void genModels(){
+    def sourceDir = "src/main/resources/assets/power_armor_mod/geo"
+    generateResourceFile("Models", sourceDir)
+}
+
+void generateResourceFile(String className, String directoryPath, boolean uni = false) {
     def packageName = "com.jetug.generated.resources"
     def generatedDir = "src/main/java/com/jetug/generated/resources/"
     def directory = new File(generatedDir)
 
-    def constantsSection = generateResourceConstants(directoryPath)
+    def constantsSection = generateResourceConstants(directoryPath, uni)
     def generatedCode = "package ${packageName};\n\npublic class ${className} {\n${constantsSection}}"
 
     if (!directory.exists()) directory.mkdirs()
     new File("${generatedDir}${className}.java").text = generatedCode
 }
 
-String generateResourceConstants(String directoryPath) {
+String generateResourceConstants(String directoryPath, boolean uni) {
     def directory = new File(directoryPath)
     def files = fileTree(directory)
 
@@ -180,30 +199,25 @@ String generateResourceConstants(String directoryPath) {
 
     if (files) {
         files.each { file ->
-            constantsSection.append("${constant} ${getConstantName(getClassName(file.name))} = \"${file.path}\";\n")
+            def name = getConstantName(getNameWithoutExt(file.name))
+
+            if(file.parentFile.path != directory.path && uni)
+                name = "${file.parentFile.name.toUpperCase()}_${name}"
+
+            def text = file.path
+            def sequence = "power_armor_mod"
+
+            def relativePath = text.substring(text.indexOf(sequence) + sequence.length()).replace("\\", "/")
+
+            constantsSection.append("${constant} ${name} = \"${relativePath}\";\n")
         }
     }
 
     return constantsSection.toString()
 }
 
-tasks.register('generateAnimations') {
-    doFirst {
-        def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
-        def animationsTag = "animations"
-        def directory = new File(directoryPath)
-        def files = fileTree(directory)
-
-        if (files) {
-            files.each { file ->
-                if (file.isFile() && file.name.endsWith(".json")) {
-                    def className = getClassName(file.name)
-                    def json = new JsonSlurper().parse(file)
-                    generateClassFile(className, json[animationsTag] as Map)
-                }
-            }
-        }
-    }
+static String getNameWithoutExt(String fileName){
+    return fileName.replaceAll("\\..*", "")
 }
 
 static String getClassName(String fileName) {
@@ -238,8 +252,15 @@ static getConstantName(String name){
     return name.toUpperCase().replaceAll("\\s+|\\.", "_")
 }
 
+tasks.register('generateAnimations') {
+    doFirst {
+        genAnimations()
+        genTextures()
+        genModels()
+    }
+}
+
 compileJava {
     finalizedBy generateAnimations
-//    finalizedBy generateResources
 }
 

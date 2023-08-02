@@ -1,7 +1,7 @@
 {
 	"part": "engine",
 	"model": "geo/equipment/engine.geo.json",
-	"texture": "textures/entities/engine.png",
+	"texture": "textures/entity/engine.png",
 
 	"attachments": [
 		{

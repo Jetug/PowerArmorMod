@@ -7,7 +7,6 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
 public class FramePartModel extends AnimatedGeoModel<FramePartItem> {
-
     @Override
     public ResourceLocation getModelLocation(FramePartItem object) {
         return switch (object.bodyPart) {

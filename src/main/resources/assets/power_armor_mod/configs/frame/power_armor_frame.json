@@ -1,7 +1,7 @@
 {
   "part": "frame",
   "model": "power_armor_frame.geo.json",
-  "texture": "textures/entities/power_armor_frame.png",
+  "texture": "textures/entity/power_armor_frame.png",
 
   "attachments":[
     {

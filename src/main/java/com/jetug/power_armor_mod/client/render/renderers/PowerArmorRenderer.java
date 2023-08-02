@@ -10,13 +10,17 @@ import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
 import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
 
+import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -25,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.example.client.DefaultBipedBoneIdents;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.*;
+
+import java.util.Random;
 
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.BACK;
@@ -35,7 +41,6 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     private final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
 
     protected ItemStack mainHandItem, offHandItem, backItem;
-
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -52,16 +57,44 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
+        showJetpackParticles(entity, getFrameBone("left_jet2_frame"));
+
         for (var part : entity.equipment)
             updateModel(entity, part);
+
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
+        if(bone == null) return;
+
+        var minecraft = Minecraft.getInstance();
+        var particle = ParticleTypes.FLAME;
+        var rand = new Random();
+        var random = (rand.nextFloat() - 0.5F) * 0.1F;
+        var pos = bone.getWorldPosition();
+
+        var playerPos = new Pos3D(pos.x,  pos.y, pos.z).translate(0, 0, 0);
+        var vLeft = new Pos3D(-0.1, 0, -0.30).rotate(entity.yBodyRot, 0);
+        var vRight = new Pos3D(0.1, 0, -0.30).rotate(entity.yBodyRot, 0);
+        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, 0, -0.30).rotate(entity.yBodyRot, 0);
+
+        var v = playerPos.translate(vLeft).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+         v = playerPos.translate(vRight).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+         v = playerPos.translate(vCenter).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+       //minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
     }
 
     @Override
     public void renderEarly(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
                             VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
-
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
         backItem = animatable.getEquipment(BACK);

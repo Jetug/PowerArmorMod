@@ -1,7 +1,7 @@
 {
 	"part": "back",
 	"model": "geo/equipment/jetpack.geo.json",
-	"texture": "textures/entities/jetpack.png",
+	"texture": "textures/entity/jetpack.png",
 
 	"attachments": [
 		{

@@ -1,7 +1,7 @@
 {
   "part": "right_arm",
   "model": "geo/armor/armor_right_arm.geo.json",
-  "texture": "textures/entities/armor_right_arm.png",
+  "texture": "textures/entity/armor_right_arm.png",
 
   "attachments": [
     {

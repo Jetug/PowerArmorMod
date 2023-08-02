@@ -5,8 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 public class Resources {
     //Textures
     public static final ResourceLocation ARMOR_INVENTORY_TEXTURE      = resourceLocation("textures/gui/armor_inventory.png");
-    public static final ResourceLocation FRAME_TEXTURE_LOCATION       = resourceLocation("textures/entities/power_armor_frame.png");
-    public static final ResourceLocation INVISIBLE_TEXTURE            = resourceLocation("textures/entities/power_armor_invisible.png");
+    public static final ResourceLocation FRAME_TEXTURE_LOCATION       = resourceLocation("textures/entity/power_armor_frame.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HEAD        = resourceLocation("textures/gui/empty_armor_slot_head.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_BODY        = resourceLocation("textures/gui/empty_armor_slot_body.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_LEFT_ARM    = resourceLocation("textures/gui/empty_armor_slot_left_arm.png");
@@ -20,7 +19,7 @@ public class Resources {
 
     //Animations
     public static final ResourceLocation FRAME_ANIMATION_LOCATION = resourceLocation("animations/power_armor_frame.animation.json");
-    public static final ResourceLocation HAND_ANIMATION_LOCATION        = resourceLocation("animations/hand.animation.json");
+    public static final ResourceLocation HAND_ANIMATION_LOCATION  = resourceLocation("animations/hand.animation.json");
 
     //Models
     public static final ResourceLocation FRAME_MODEL_LOCATION  = resourceLocation("geo/frame/power_armor_frame.geo.json");
