@@ -1,6 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.generated.animations.PowerArmorFrameAnimation;
+import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
 import com.jetug.power_armor_mod.common.foundation.registery.ModParticles;
@@ -14,6 +15,7 @@ import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleOptions;
@@ -36,19 +38,28 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.example.registry.SoundRegistry;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.ParticleKeyFrameEvent;
+import software.bernie.geckolib3.core.event.SoundKeyframeEvent;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.keyframe.BoneAnimationQueue;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
+import static com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer.*;
+import static com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer.armorModel;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
@@ -120,29 +131,31 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //        syncDataWithClient();
         applyEffects();
 
+        //showJetpackParticles();
+
         speedometer.tick();
         timer.tick();
     }
-//
-//    private void showJetpackParticles() {
-//        var minecraft = Minecraft.getInstance();
-//        ParticleOptions particle = ParticleTypes.FLAME;
-//        Random rand = new Random();
-//        float random = (rand.nextFloat() - 0.5F) * 0.1F;
-//        double[] sneakBonus = minecraft.player.isCrouching() ? new double[]{-0.30, -0.10} : new double[]{0, 0};
-//        var playerPos = new Pos3D(minecraft.player).translate(0, 1.5, 0);
-//        var vLeft = new Pos3D(-0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-//        var vRight = new Pos3D(0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-//        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-//        var v = playerPos.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-//        v = playerPos.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-//        v = playerPos.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-//        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-//
-//        //minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
-//    }
+
+    private void showJetpackParticles() {
+        var minecraft = Minecraft.getInstance();
+        ParticleOptions particle = ParticleTypes.FLAME;
+        Random rand = new Random();
+        float random = (rand.nextFloat() - 0.5F) * 0.1F;
+        double[] sneakBonus = minecraft.player.isCrouching() ? new double[]{-0.30, -0.10} : new double[]{0, 0};
+        var playerPos = new Pos3D(minecraft.player).translate(0, 1.5, 0);
+        var vLeft = new Pos3D(-0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+        var vRight = new Pos3D(0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
+        var v = playerPos.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+        v = playerPos.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+        v = playerPos.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+        //minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
+    }
 
     @Override
     public void addAttackCharge() {
@@ -572,8 +585,45 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "arm_controller", 0, this::animateArms));
+        var armsController = new AnimationController<>(this, "arm_controller", 0, this::animateArms);
+        armsController.registerSoundListener(this::soundListener);
+        armsController.registerParticleListener(this::particleListener);
+        data.addAnimationController(armsController);
         data.addAnimationController(new AnimationController<>(this, "leg_controller", 0, this::animateLegs));
+    }
+
+    private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
+        if(bone == null || !entity.hasPlayerPassenger()) return;
+
+        var loc = locations;
+        loc.clone();
+
+        var minecraft = Minecraft.getInstance();
+        var particle = ParticleTypes.FLAME;
+        var rand = new Random();
+        var random = (rand.nextFloat() - 0.5F) * 0.1F;
+
+        var pos = locations.get(this);
+        var bPos = new Vec3(bone.getPivotX() / 18, bone.getPivotY() / 18, bone.getPivotZ() / 18);
+
+        var playerPos = new Pos3D(pos);
+                //.rotate(bone.getRotationX(), bone.getRotationY(), bone.getRotationZ())
+                //.translate(bPos);
+
+        var vLeft   = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
+        var vRight  = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
+        var vCenter = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
+
+        var v = playerPos.translate(vLeft).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+        v = playerPos.translate(vRight).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+        v = playerPos.translate(vCenter).translate(new Pos3D(entity.getDeltaMovement()));
+        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
+
+        //minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
     }
 
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
@@ -655,6 +705,27 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             case UP  -> setAnimation(controller, DASH_UP, HOLD_ON_LAST_FRAME);
         }
         return PlayState.CONTINUE;
+    }
+
+    private <ENTITY extends IAnimatable> void particleListener(ParticleKeyFrameEvent<ENTITY> event) {
+
+        HashMap<String, BoneAnimationQueue> map = event.getController().getBoneAnimationQueues();
+
+        var bone = (GeoBone)map.get("left_jet2_frame").bone();// powerArmorModel.getAnimationProcessor().getBone("left_jet2_frame");
+        showJetpackParticles(this, bone);
+    }
+
+    private <ENTITY extends IAnimatable> void soundListener(SoundKeyframeEvent<ENTITY> event) {
+        var t = event.sound;
+        t.getBytes();
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+
+            this.playSound(SoundEvents.BELL_BLOCK, 0.4F, 1.0F);
+
+//
+//            player.playSound(SoundRegistry.JACK_MUSIC.get(), 1, 1);
+        }
     }
 
     private void travelWithPlayer(Vec3 travelVector) {

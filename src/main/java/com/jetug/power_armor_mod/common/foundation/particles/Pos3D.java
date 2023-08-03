@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.particles;
 
+import com.mojang.math.Vector3d;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,10 @@ public class Pos3D extends Vec3 {
     }
 
     public Pos3D(Vec3 vec) {
+        this(vec.x, vec.y, vec.z);
+    }
+
+    public Pos3D(Vector3d vec) {
         this(vec.x, vec.y, vec.z);
     }
 
@@ -129,6 +134,10 @@ public class Pos3D extends Vec3 {
      * @return translated Pos3D
      */
     public Pos3D translate(Vec3 pos) {
+        return translate(pos.x, pos.y, pos.z);
+    }
+
+    public Pos3D translate(Vector3d pos) {
         return translate(pos.x, pos.y, pos.z);
     }
 

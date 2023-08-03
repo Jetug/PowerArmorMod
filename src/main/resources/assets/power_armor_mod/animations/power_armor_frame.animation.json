@@ -86,6 +86,91 @@
 				}
 			}
 		},
+		"idle2": {
+			"loop": true,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"right_lower_arm": {
+					"rotation": {
+						"vector": [52.5, 0, 0]
+					}
+				},
+				"right_fingers": {
+					"rotation": {
+						"vector": [0, 15, 0]
+					}
+				},
+				"right_fingers_tip": {
+					"rotation": {
+						"vector": [0, -30, 0]
+					}
+				},
+				"right_thumb": {
+					"rotation": {
+						"vector": [0, -15, 0]
+					}
+				},
+				"right_thumb_tip": {
+					"rotation": {
+						"vector": [0, 20, 0]
+					}
+				},
+				"left_lower_arm": {
+					"rotation": {
+						"vector": [52.5, 0, 0]
+					}
+				},
+				"right_arm_piston": {
+					"rotation": {
+						"vector": [-2.5, 0, 0]
+					}
+				},
+				"right_arm_piston_head": {
+					"position": {
+						"vector": [0, 4, 0]
+					}
+				},
+				"left_arm_piston": {
+					"rotation": {
+						"vector": [-2.5, 0, 0]
+					}
+				},
+				"left_arm_piston_head3": {
+					"position": {
+						"vector": [0, 4, 0]
+					}
+				},
+				"left_fingers": {
+					"rotation": {
+						"vector": [0, -15, 0]
+					}
+				},
+				"left_fingers_tip": {
+					"rotation": {
+						"vector": [0, 30, 0]
+					}
+				},
+				"left_thumb": {
+					"rotation": {
+						"vector": [0, 15, 0]
+					}
+				},
+				"left_thumb_tip": {
+					"rotation": {
+						"vector": [0, -30, 0]
+					}
+				},
+				"left_arm": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
 		"power_punch_charge": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 1,
@@ -3681,7 +3766,7 @@
 							"vector": [-22.5, 0, 0]
 						},
 						"0.25": {
-							"vector": [-40, 0, 0]
+							"vector": [-27.5, 0, 0]
 						}
 					}
 				},
@@ -3694,7 +3779,7 @@
 							"vector": [-22.5, 0, 0]
 						},
 						"0.25": {
-							"vector": [-40, 0, 0]
+							"vector": [-27.5, 0, 0]
 						}
 					}
 				},
@@ -3744,10 +3829,10 @@
 							"vector": [0, 0, 0]
 						},
 						"0.1667": {
-							"vector": [17.5, 0, 0]
+							"vector": [20, 0, 0]
 						},
 						"0.25": {
-							"vector": [40, 0, 0]
+							"vector": [30, 0, 0]
 						}
 					}
 				},
@@ -3757,10 +3842,10 @@
 							"vector": [0, 0, 0]
 						},
 						"0.1667": {
-							"vector": [17.5, 0, 0]
+							"vector": [20, 0, 0]
 						},
 						"0.25": {
-							"vector": [40, 0, 0]
+							"vector": [30, 0, 0]
 						}
 					}
 				}
@@ -4059,6 +4144,11 @@
 							"vector": [-47.5, 0, 0]
 						}
 					}
+				}
+			},
+			"sound_effects": {
+				"0.1667": {
+					"effect": "dash"
 				}
 			},
 			"particle_effects": {

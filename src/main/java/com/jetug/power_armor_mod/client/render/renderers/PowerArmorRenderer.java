@@ -1,46 +1,42 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.client.ClientConfig;
+import com.jetug.power_armor_mod.client.*;
 import com.jetug.power_armor_mod.client.model.*;
-import com.jetug.power_armor_mod.client.model.PowerArmorModel;
-import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.data.json.EquipmentAttachment;
-import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
-
 import com.jetug.power_armor_mod.client.render.layers.*;
+import com.jetug.power_armor_mod.common.data.enums.*;
+import com.jetug.power_armor_mod.common.data.json.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
-
-import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
+import com.jetug.power_armor_mod.common.foundation.particles.*;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.*;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.resources.*;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
-import org.apache.logging.log4j.util.TriConsumer;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.geckolib3.core.processor.IBone;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.item.*;
+import org.apache.logging.log4j.util.*;
+import org.jetbrains.annotations.*;
+import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import java.util.*;
 
-import java.util.Random;
-
-import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.LEFT_HAND;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.RIGHT_HAND;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.BACK;
-import static net.minecraft.world.entity.EquipmentSlot.*;
+import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
+import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
 public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
-    private final PowerArmorModel<PowerArmorEntity> powerArmorModel;
-    private final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
+    public static PowerArmorModel<PowerArmorEntity> powerArmorModel;
+    public static final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
 
     protected ItemStack mainHandItem, offHandItem, backItem;
+
+    public static HashMap<Entity, Vector3d> locations = new HashMap<>();
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -57,39 +53,61 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        showJetpackParticles(entity, getFrameBone("left_jet2_frame"));
 
         for (var part : entity.equipment)
             updateModel(entity, part);
 
+
+        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
+
+        if(bone != null)
+            locations.put(entity, bone.getWorldPosition());
+
+        //showJetpackParticles(entity, getFrameBone("right_jet_locator"));
+
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+
+        //showJetpackParticles(entity, (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator"));
     }
 
     private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
-        if(bone == null) return;
+        if(bone == null || !entity.hasPlayerPassenger()) return;
 
         var minecraft = Minecraft.getInstance();
         var particle = ParticleTypes.FLAME;
         var rand = new Random();
         var random = (rand.nextFloat() - 0.5F) * 0.1F;
-        var pos = bone.getWorldPosition();
 
-        var playerPos = new Pos3D(pos.x,  pos.y, pos.z).translate(0, 0, 0);
-        var vLeft = new Pos3D(-0.1, 0, -0.30).rotate(entity.yBodyRot, 0);
-        var vRight = new Pos3D(0.1, 0, -0.30).rotate(entity.yBodyRot, 0);
-        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, 0, -0.30).rotate(entity.yBodyRot, 0);
+        var pos3D = new Pos3D(bone.getWorldPosition())
+                .rotate(bone.getRotationX(), bone.getRotationY(), bone.getRotationZ())
+                .translate(0, 0, 0);
 
-        var v = playerPos.translate(vLeft).translate(new Pos3D(entity.getDeltaMovement()));
+        var vLeft  = new Pos3D(0, 0, 0);
+        var vRight = new Pos3D(0, 0, 0);
+        var vCenter = new Pos3D(0,0,0);
+
+        var v = pos3D.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
         minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
 
-         v = playerPos.translate(vRight).translate(new Pos3D(entity.getDeltaMovement()));
+        v = pos3D.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
         minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
 
-         v = playerPos.translate(vCenter).translate(new Pos3D(entity.getDeltaMovement()));
+        v = pos3D.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
         minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-       //minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
     }
+
+    @Override
+    public void renderLate(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
+        super.renderLate(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
+    }
+
+    @Override
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
+                                  float red, float green, float blue, float alpha) {
+        super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+
 
     @Override
     public void renderEarly(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
@@ -172,6 +190,9 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     private void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
+//        if(Objects.equals(frameBone.name, "left_upper_arm_frame"))
+//            showJetpackParticles(frameBone);
+
         switch (equipmentAttachment.mode) {
             case ADD -> addBone(frameBone, armorBone);
             case REPLACE -> replaceBone(frameBone, armorBone);
@@ -201,10 +222,12 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         armorBone.parent = frameBone.parent;
     }
 
+    @Nullable
     private GeoBone getFrameBone(String name){
         return (GeoBone)powerArmorModel.getAnimationProcessor().getBone(name);
     }
 
+    @Nullable
     private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
     }
