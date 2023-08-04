@@ -8,8 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
+import static com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer.HAND_MODEL;
+
 public class HandRenderer extends GeoItemRenderer<HandItem> {
-    public static final HandModel HAND_MODEL = new HandModel();
 
     public HandRenderer() {
         super(HAND_MODEL);

@@ -1,11 +1,9 @@
 package com.jetug.power_armor_mod;
 
-import com.jetug.power_armor_mod.common.foundation.registery.*;
 import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
-import net.minecraftforge.eventbus.api.IEventBus;
+import com.jetug.power_armor_mod.common.foundation.registery.*;
+import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
 import static com.jetug.power_armor_mod.common.data.constants.Global.MOD_EVENT_BUS;

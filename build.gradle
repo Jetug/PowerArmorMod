@@ -147,9 +147,9 @@ jar.finalizedBy('reobfJar')
 //    }
 //}
 //
-//tasks.withType(JavaCompile).configureEach {
-//    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-//}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
 
 void genAnimations(){
     def directoryPath = "src/main/resources/assets/power_armor_mod/animations"

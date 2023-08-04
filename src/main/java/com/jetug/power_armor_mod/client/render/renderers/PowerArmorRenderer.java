@@ -211,7 +211,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
 
     private static void addBone(GeoBone frameBone, GeoBone armorBone) {
         if (frameBone.childBones.contains(armorBone)) return;
-        armorBone.parent = frameBone;
+        //armorBone.parent = frameBone;
         frameBone.childBones.add(armorBone);
     }
 
@@ -219,7 +219,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         frameBone.parent.childBones.remove(frameBone);
         if (frameBone.parent.childBones.contains(armorBone)) return;
         frameBone.parent.childBones.add(armorBone);
-        armorBone.parent = frameBone.parent;
+        //armorBone.parent = frameBone.parent;
     }
 
     @Nullable

@@ -1,10 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.generated.animations.PowerArmorFrameAnimation;
-import com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer;
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
-import com.jetug.power_armor_mod.common.foundation.registery.ModParticles;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -38,9 +35,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.example.registry.SoundRegistry;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.ParticleKeyFrameEvent;
@@ -59,14 +54,12 @@ import java.util.function.Consumer;
 
 import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
 import static com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer.*;
-import static com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer.armorModel;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
+import static com.jetug.power_armor_mod.common.util.helpers.timer.PovUtils.getBlockHitResult;
 import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
-import static net.minecraft.core.particles.ParticleTypes.FLAME;
 import static net.minecraft.util.Mth.*;
 import static net.minecraft.world.InteractionHand.MAIN_HAND;
 import static org.apache.logging.log4j.Level.*;
@@ -391,48 +384,25 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     public void dash(DashDirection direction) {
+        if (!hasJetpack() || !hasEquipment(ENGINE)) return;
+
         doHeatAction(DASH_HEAT, () -> applyToPlayer((player) -> {
             dashDirection = direction;
             isDashing = true;
             timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
-
-            if (hasJetpack() && hasEquipment(ENGINE))
-                push(direction, player, getJetpack().force);
+                dashInDirection(direction, getJetpack().force);
         }));
-    }
-
-    public void push(Vec3 vector){
-        setDeltaMovement(getDeltaMovement().add(vector));
-    }
-
-    protected static BlockHitResult getPlayerPOVHitResult(Level pLevel, Player pPlayer, ClipContext.Fluid pFluidMode) {
-        float f = pPlayer.getXRot();
-        float f1 = pPlayer.getYRot();
-        Vec3 vec3 = pPlayer.getEyePosition();
-        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
-        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        double d0 = pPlayer.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue();;
-        Vec3 vec31 = vec3.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
-        return pLevel.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, pFluidMode, pPlayer));
     }
 
     public void powerPunch(){
         powerPunch(() -> {
             var optional = getTargetedEntity(getPlayerPassenger(), 5);
-
-
             if(optional.isPresent()){
-                punchTarget(optional.get());
+                powerPunchTarget(optional.get());
             }
             else{
-                var pick = getPlayerPOVHitResult(level, getPlayerPassenger(), ClipContext.Fluid.NONE);
-                if(pick.getType() == HitResult.Type.BLOCK)
-                    punchBlock(pick.getBlockPos());
-                Global.LOGGER.error("client: " + level.isClientSide + "pick: " + pick.getType());
+                var pick = getBlockHitResult(level, getPlayerPassenger(), ClipContext.Fluid.NONE);
+                if(pick.getType() == HitResult.Type.BLOCK) powerPunchBlock(pick.getBlockPos());
             }
         });
     }
@@ -445,13 +415,13 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         return (JetpackItem) getEquipment(BACK).getItem();
     }
 
-    private void punchTarget(Entity target){
+    private void powerPunchTarget(Entity target){
         var vector = getPlayerPassenger().getViewVector(1.0F);
         var force = getPunchForce();
         EntityUtils.push(target, vector.multiply(force, force, force));
     }
 
-    private void punchBlock(BlockPos blockPos){
+    private void powerPunchBlock(BlockPos blockPos){
         var force = getPunchForce();
         var player = getPlayerPassenger();
 
@@ -494,8 +464,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         consumer.accept(getPlayerPassenger());
     }
 
-    private void push(DashDirection direction, Player player, float force) {
-        float viewYRot = player.getViewYRot(1);
+    private void dashInDirection(DashDirection direction, float force) {
+        if(!hasPlayerPassenger()) return;
+        float viewYRot = getPlayerPassenger().getViewYRot(1);
         float x = sin(viewYRot * ROTATION) * force;
         float z = cos(viewYRot * ROTATION) * force;
         var vector = Vec3.ZERO;
@@ -508,7 +479,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             case UP      -> vector = new Vec3(0, force / 2, 0);
         }
 
-        push(vector);
+        setDeltaMovement(getDeltaMovement().add(vector));
     }
 
     private Vec3 rotateVector(float viewYRot, int angle, float force){
@@ -675,10 +646,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
         if (!hasPlayerPassenger()) return PlayState.STOP;
         var player = getPlayerPassenger();
-        var frame = getPlayerPowerArmor(player);
 
         if(!isDashing) {
-            if (frame.isWalking()) {
+            if (this.isWalking()) {
                 if (player.isShiftKeyDown()){
                     setAnimation(controller, SNEAK_WALK, LOOP);
                 }

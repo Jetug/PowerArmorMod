@@ -50,7 +50,8 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
                        int packedLight) {
 
         var animationEvent = new AnimationEvent<>(animatable, 0, 0,
-                Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(new EntityModelData()));
+                Minecraft.getInstance().getFrameTime(), false,
+                Collections.singletonList(new EntityModelData()));
         setCurrentModelRenderCycle(EModelRenderCycle.INITIAL);
         model.setCustomAnimations(animatable, getInstanceId(animatable), animationEvent);
 
