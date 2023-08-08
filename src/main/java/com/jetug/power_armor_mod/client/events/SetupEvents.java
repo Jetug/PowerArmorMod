@@ -33,6 +33,7 @@ public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     private static final LongClickController LONG_CLICK_CONTROLLER = new LongClickController();
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(POWER_ARMOR.get(), PowerArmorRenderer::new);

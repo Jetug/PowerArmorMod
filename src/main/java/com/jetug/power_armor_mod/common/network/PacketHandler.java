@@ -30,17 +30,16 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++, GenericPacket.class	   , GenericPacket::write	 , GenericPacket::read	 , GenericPacket::handle	);
 	}
 
+	public static void sendToServer(Object msg) {
+		HANDLER.sendToServer(msg);
+	}
+
 	public static void sendTo(Object msg, ServerPlayer player) {
 		if(!(player instanceof FakePlayer)) {
 			HANDLER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 
-	public static void sendToServer(Object msg) {
-		HANDLER.sendToServer(msg);
-	}
-
-	/**Server side.*/
 	public static void sendToAllPlayers(Object msg) {
 		var server = ServerLifecycleHooks.getCurrentServer();
 		List<ServerPlayer> list = server.getPlayerList().getPlayers();

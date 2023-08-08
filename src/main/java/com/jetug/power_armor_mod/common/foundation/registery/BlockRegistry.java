@@ -1,18 +1,15 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.block.ArmorStationBlock;
+import com.jetug.power_armor_mod.common.foundation.*;
+import com.jetug.power_armor_mod.common.foundation.block.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
@@ -27,6 +24,11 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> ARMOR_STATION = registerBlock("armor_station",
             () -> new ArmorStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
+            ModCreativeModeTab.MY_TAB);
+
+
+    public static final RegistryObject<Block> CASTING_TABLE = registerBlock("casting_table",
+            () -> new CastingTable(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
             ModCreativeModeTab.MY_TAB);
 
 //}
