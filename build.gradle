@@ -13,6 +13,9 @@ buildscript {
         classpath 'org.parchmentmc:librarian:1.+'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
+    ext {
+        modid = "power_armor_mod"
+    }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 plugins {
@@ -178,13 +181,38 @@ void genModels(){
     generateResourceFile("Models", sourceDir)
 }
 
+void genResourceUtilsFile() {
+    def packageName = "com.jetug.generated"
+    def generatedDir = "src/main/java/com/jetug/generated/"
+    def directory = new File(generatedDir)
+
+    def generatedCode = """package ${packageName};
+
+import net.minecraft.resources.ResourceLocation;
+
+public class ResourceUtils {
+      public static ResourceLocation resourceLocation(String location){
+        return new ResourceLocation("power_armor_mod", location);
+    }
+}
+"""
+
+    if (!directory.exists()) directory.mkdirs()
+    new File("${generatedDir}ResourceUtils.java").text = generatedCode
+}
+
 void generateResourceFile(String className, String directoryPath, boolean uni = false) {
     def packageName = "com.jetug.generated.resources"
     def generatedDir = "src/main/java/com/jetug/generated/resources/"
     def directory = new File(generatedDir)
 
     def constantsSection = generateResourceConstants(directoryPath, uni)
-    def generatedCode = "package ${packageName};\n\npublic class ${className} {\n${constantsSection}}"
+
+    def generatedCode = """package ${packageName};\n
+import net.minecraft.resources.ResourceLocation;
+import static com.jetug.generated.ResourceUtils.*;\n
+public class ${className} {\n${constantsSection}}
+"""
 
     if (!directory.exists()) directory.mkdirs()
     new File("${generatedDir}${className}.java").text = generatedCode
@@ -195,7 +223,7 @@ String generateResourceConstants(String directoryPath, boolean uni) {
     def files = fileTree(directory)
 
     def constantsSection = new StringBuilder()
-    def constant = "    public static final String"
+    def constant = "    public static final ResourceLocation"
 
     if (files) {
         files.each { file ->
@@ -209,7 +237,7 @@ String generateResourceConstants(String directoryPath, boolean uni) {
 
             def relativePath = text.substring(text.indexOf(sequence) + sequence.length()).replace("\\", "/")
 
-            constantsSection.append("${constant} ${name} = \"${relativePath}\";\n")
+            constantsSection.append("${constant} ${name} = resourceLocation(\"${relativePath}\");\n")
         }
     }
 
@@ -254,6 +282,7 @@ static getConstantName(String name){
 
 tasks.register('generateAnimations') {
     doFirst {
+        genResourceUtilsFile()
         genAnimations()
         genTextures()
         genModels()
