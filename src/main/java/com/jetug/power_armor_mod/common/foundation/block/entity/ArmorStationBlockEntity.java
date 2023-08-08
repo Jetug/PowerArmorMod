@@ -2,20 +2,13 @@ package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.*;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.*;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.*;
 
-import javax.swing.*;
-
-import static com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu.*;
+import static com.jetug.power_armor_mod.common.foundation.screen.menu.CastingTableMenu.*;
 
 public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuProvider*/ {
     public ArmorStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -32,7 +25,7 @@ public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuPr
 //    @Nullable
 //    @Override
 //    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-//        return new ArmorStationMenu(pContainerId, pInventory, this);
+//        return new CastingTableMenu(pContainerId, pInventory, this);
 //    }
 
     public  void openGui(Player player){

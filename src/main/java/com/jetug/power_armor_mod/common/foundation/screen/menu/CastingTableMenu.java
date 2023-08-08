@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.screen.menu;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
-import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
+import com.jetug.power_armor_mod.common.foundation.block.entity.CastingTableBlockEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 
-public class ArmorStationMenu extends AbstractContainerMenu {
+public class CastingTableMenu extends AbstractContainerMenu {
     private static final int HOTBAR_SLOT_COUNT = 9;
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
     private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
@@ -39,18 +39,18 @@ public class ArmorStationMenu extends AbstractContainerMenu {
     private static final int INVENTORY_ROW_SIZE = 9;
     public  static final int TE_INVENTORY_SLOT_COUNT = 5;
 
-    public final ArmorStationBlockEntity blockEntity;
+    public final CastingTableBlockEntity blockEntity;
     private final Level level;
     private int i = 0;
 
-    public ArmorStationMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+    public CastingTableMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
         this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
     }
 
-    public ArmorStationMenu(int pContainerId, Inventory inv, BlockEntity entity) {
+    public CastingTableMenu(int pContainerId, Inventory inv, BlockEntity entity) {
         super(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), pContainerId);
         checkContainerSize(inv, TE_INVENTORY_SLOT_COUNT);
-        blockEntity = ((ArmorStationBlockEntity) entity);
+        blockEntity = ((CastingTableBlockEntity) entity);
         this.level = inv.player.level;
 
         addPlayerInventory(inv);

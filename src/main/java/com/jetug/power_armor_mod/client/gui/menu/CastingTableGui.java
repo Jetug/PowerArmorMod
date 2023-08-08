@@ -8,15 +8,16 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import static com.jetug.generated.resources.Textures.GUI_CASTING_TABLE;
 import static com.mojang.blaze3d.systems.RenderSystem.*;
 
-public class ArmorStationGui extends AbstractContainerScreen<ArmorStationMenu> {
-    private final ArmorStationMenu menu;
+public class CastingTableGui extends AbstractContainerScreen<CastingTableMenu> {
+    private final CastingTableMenu menu;
 
-    public ArmorStationGui(ArmorStationMenu menu, Inventory pPlayerInventory, Component pTitle) {
+    public CastingTableGui(CastingTableMenu menu, Inventory pPlayerInventory, Component pTitle) {
         super(menu, pPlayerInventory, pTitle);
         this.menu = menu;
-        this.imageHeight = 187;
+        this.imageHeight = 166;
     }
 
     @Override
@@ -30,17 +31,10 @@ public class ArmorStationGui extends AbstractContainerScreen<ArmorStationMenu> {
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         setShader(GameRenderer::getPositionTexShader);
         setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        setShaderTexture(0, Resources.ARMOR_STATION_GUI);
+        setShaderTexture(0, GUI_CASTING_TABLE);
 
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
-
-        //setShaderTexture(0, Resources.ARMOR_STATION_GUI);
-        if(menu.blockEntity.frame != null)
-            blit(pPoseStack, x + 160, y + 5, 178, 0, 6, 6);
-        else{
-            blit(pPoseStack, x + 160, y + 5, 178, 6, 6, 6);
-        }
     }
 }

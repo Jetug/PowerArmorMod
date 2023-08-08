@@ -8,7 +8,7 @@ import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.client.input.DoubleClickController;
-import com.jetug.power_armor_mod.client.gui.menu.ArmorStationGui;
+import com.jetug.power_armor_mod.client.gui.menu.CastingTableGui;
 import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -45,7 +45,7 @@ public final class SetupEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
 
-        MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), ArmorStationGui::new);
+        MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), CastingTableGui::new);
         event.enqueueWork(GuiRegistry::register);
         ClientConfig.modResourceManager.loadConfigs();
         registerClickListeners();
