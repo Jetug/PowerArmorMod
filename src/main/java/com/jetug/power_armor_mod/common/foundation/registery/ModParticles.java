@@ -22,13 +22,8 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> JET = PARTICLES.register("jet",
             () -> new SimpleParticleType(true));
 
-
-    public static final RegistryObject<SimpleParticleType> PISTOL = PARTICLES.register("pistol",
-            () -> new SimpleParticleType(true));
-
     @SubscribeEvent
     public static void registry(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particleEngine.register(PISTOL.get(), JetParticle.Factory::new);
         Minecraft.getInstance().particleEngine.register(JET.get(), JetParticle.Factory::new);
     }
 
