@@ -1,131 +1,150 @@
 package com.jetug.power_armor_mod.common.foundation.screen.menu;
 
-import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
-import com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry;
-import com.jetug.power_armor_mod.common.foundation.block.entity.CastingTableBlockEntity;
-import com.jetug.power_armor_mod.common.foundation.registery.ModMenuTypes;
-import com.jetug.power_armor_mod.common.util.Pos2D;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 
-import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
-import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
+import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.CASTING_TABLE_STATION_MENU;
 
 public class CastingTableMenu extends AbstractContainerMenu {
-    private static final int HOTBAR_SLOT_COUNT = 9;
-    private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
-    private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
-    private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
-    private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
-    private static final int VANILLA_FIRST_SLOT_INDEX = 0;
-    private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-    private static final int SLOT_SIZE = 18;
-    private static final int INVENTORY_POS_X = 8;
-    private static final int INVENTORY_POS_Y = 105;
-    private static final int HOTBAR_POS_Y = 163;
-    private static final int HOTBAR_POS_X = INVENTORY_POS_X;
-    private static final int INVENTORY_ROW_SIZE = 9;
-    public  static final int TE_INVENTORY_SLOT_COUNT = 5;
+    public static final int INGREDIENT_SLOT = 0;
+    public static final int FUEL_SLOT = 1;
+    public static final int RESULT_SLOT = 2;
+    public static final int SLOT_COUNT = 3;
+    public static final int DATA_COUNT = 4;
+    private static final int INV_SLOT_START = 3;
+    private static final int INV_SLOT_END = 30;
+    private static final int USE_ROW_SLOT_START = 30;
+    private static final int USE_ROW_SLOT_END = 39;
+    private final Container container;
+    private final ContainerData data;
+    protected final Level level;
+    private final RecipeType<? extends AbstractCookingRecipe> recipeType = RecipeType.BLASTING;
 
-    public final CastingTableBlockEntity blockEntity;
-    private final Level level;
-    private int i = 0;
-
-    public CastingTableMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
+    public CastingTableMenu(int pContainerId, Inventory pPlayerInventory) {
+        this(pContainerId, pPlayerInventory, new SimpleContainer(3), new SimpleContainerData(4));
     }
 
-    public CastingTableMenu(int pContainerId, Inventory inv, BlockEntity entity) {
-        super(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), pContainerId);
-        checkContainerSize(inv, TE_INVENTORY_SLOT_COUNT);
-        blockEntity = ((CastingTableBlockEntity) entity);
-        this.level = inv.player.level;
-
-        addPlayerInventory(inv);
-        addPlayerHotbar(inv);
-
-        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            createSlot(handler, BODY_ARMOR, FRAME_BODY_SLOT_POS     );
-            createSlot(handler, LEFT_ARM_ARMOR, FRAME_LEFT_ARM_SLOT_POS );
-            createSlot(handler, RIGHT_ARM_ARMOR, FRAME_RIGHT_ARM_SLOT_POS);
-            createSlot(handler, LEFT_LEG_ARMOR, FRAME_LEFT_LEG_SLOT_POS );
-            createSlot(handler, RIGHT_LEG_ARMOR, FRAME_RIGHT_LEG_SLOT_POS);
-        });
-    }
-
-    @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-        var sourceSlot = slots.get(index);
-        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;
-        var sourceStack = sourceSlot.getItem();
-        var copyOfSourceStack = sourceStack.copy();
-
-        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX,
-                    TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;
-            }
-        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX,
-                    VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;
-            }
-        } else {
-            System.out.println("Invalid slotIndex:" + index);
-            return ItemStack.EMPTY;
-        }
-        if (sourceStack.getCount() == 0) {
-            sourceSlot.set(ItemStack.EMPTY);
-        } else {
-            sourceSlot.setChanged();
-        }
-        sourceSlot.onTake(playerIn, sourceStack);
-        return copyOfSourceStack;
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, BlockRegistry.ARMOR_STATION.get());
-    }
-
-    private void createSlot(IItemHandler handler, BodyPart bodyPart, Pos2D pos){
-        this.addSlot(new SlotItemHandler( handler, i++, pos.x, pos.y){
+    public CastingTableMenu(int pContainerId, Inventory pPlayerInventory, Container pContainer, ContainerData pData) {
+        super(CASTING_TABLE_STATION_MENU.get(), pContainerId);
+        checkContainerSize(pContainer, 3);
+        checkContainerDataCount(pData, 4);
+        this.container = pContainer;
+        this.data = pData;
+        this.level = pPlayerInventory.player.level;
+        this.addSlot(new Slot(pContainer, 0, 56, 17));
+        this.addSlot(new Slot(pContainer, 1, 56, 53){
             @Override
-            public boolean mayPlace(@NotNull ItemStack stack) {
-                return super.mayPlace(stack)
-                        && stack.getItem() instanceof EquipmentBase item
-                        && item.part == bodyPart;
+            public boolean mayPlace(ItemStack pStack) {
+                return isFuel(pStack);
             }
-        } );
-    }
+        });
+        this.addSlot(new FurnaceResultSlot(pPlayerInventory.player, pContainer, 2, 116, 35));
 
-    private void addPlayerInventory(Inventory playerInventory) {
-        for (int row = 0; row < 3; ++row) {
-            for (int slot = 0; slot < INVENTORY_ROW_SIZE; ++slot) {
-                this.addSlot(new Slot(playerInventory,
-                        slot + row * INVENTORY_ROW_SIZE + INVENTORY_ROW_SIZE,
-                        INVENTORY_POS_X + slot * SLOT_SIZE,
-                        INVENTORY_POS_Y + row * SLOT_SIZE));
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
+
+        for(int k = 0; k < 9; ++k) {
+            this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
+        }
+
+        this.addDataSlots(pData);
     }
 
-    private void addPlayerHotbar(Inventory playerInventory) {
-        for (int slot = 0; slot < 9; ++slot) {
-            this.addSlot(new Slot(playerInventory, slot, HOTBAR_POS_X + slot * SLOT_SIZE, HOTBAR_POS_Y));
+    public boolean stillValid(Player pPlayer) {
+        return this.container.stillValid(pPlayer);
+    }
+
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(pIndex);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            if (pIndex == 2) {
+                if (!this.moveItemStackTo(itemstack1, 3, 39, true)) {
+                    return ItemStack.EMPTY;
+                }
+
+                slot.onQuickCraft(itemstack1, itemstack);
+            } else if (pIndex != 1 && pIndex != 0) {
+                if (this.canSmelt(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (this.isFuel(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (pIndex >= 3 && pIndex < 30) {
+                    if (!this.moveItemStackTo(itemstack1, 30, 39, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (pIndex >= 30 && pIndex < 39 && !this.moveItemStackTo(itemstack1, 3, 30, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 3, 39, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(pPlayer, itemstack1);
         }
+
+        return itemstack;
+    }
+
+    protected boolean canSmelt(ItemStack pStack) {
+        return this.level.getRecipeManager()
+                .getRecipeFor((RecipeType<AbstractCookingRecipe>)this.recipeType,
+                        new SimpleContainer(pStack),
+                        this.level).isPresent();
+    }
+
+    protected boolean isFuel(ItemStack pStack) {
+        return net.minecraftforge.common.ForgeHooks.getBurnTime(pStack, this.recipeType) > 0;
+    }
+
+    public int getBurnProgress() {
+        int i = this.data.get(2);
+        int j = this.data.get(3);
+        return j != 0 && i != 0 ? i * 24 / j : 0;
+    }
+
+    public int getLitProgress() {
+        int i = this.data.get(1);
+        if (i == 0) {
+            i = 200;
+        }
+
+        return this.data.get(0) * 13 / i;
+    }
+
+    public boolean isLit() {
+        return this.data.get(0) > 0;
+    }
+
+    public boolean shouldMoveToInventory(int pSlotIndex) {
+        return pSlotIndex != 1;
     }
 }

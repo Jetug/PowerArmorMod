@@ -1,32 +1,19 @@
 package com.jetug.power_armor_mod.client.gui.menu;
 
 import com.jetug.power_armor_mod.common.data.constants.*;
-import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.foundation.entity.*;
 import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
-import com.jetug.power_armor_mod.common.util.*;
-import com.mojang.blaze3d.systems.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.*;
 import net.minecraft.world.entity.player.*;
 
-import java.awt.*;
-
-import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
-import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
-import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
-import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.mojang.blaze3d.systems.RenderSystem.*;
-import static net.minecraft.world.item.Items.CHEST;
-import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
-public class ArmorStationGui2 extends AbstractContainerScreen<ArmorStationMenu2> {
+public class ArmorStationGui extends AbstractContainerScreen<ArmorStationMenu2> {
     private final ArmorStationMenu2 menu;
 
-    public ArmorStationGui2(ArmorStationMenu2 menu, Inventory pPlayerInventory, Component pTitle) {
+    public ArmorStationGui(ArmorStationMenu2 menu, Inventory pPlayerInventory, Component pTitle) {
         super(menu, pPlayerInventory, pTitle);
         this.menu = menu;
         this.imageHeight = 187;

@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ModParticles {
+public class ParticleRegistry {
     private static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister
             .create(ForgeRegistries.PARTICLE_TYPES, Global.MOD_ID);
 

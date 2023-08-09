@@ -1,18 +1,17 @@
 package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.registery.BlockEntitieRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import static com.jetug.power_armor_mod.common.foundation.screen.menu.CastingTableMenu.*;
-
 public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuProvider*/ {
     public ArmorStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(BlockEntitieRegistry.ARMOR_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState, TE_INVENTORY_SLOT_COUNT);
+        super(BlockEntityRegistry.ARMOR_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState,
+                8);
     }
 
     public PowerArmorEntity frame;
@@ -28,7 +27,7 @@ public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuPr
 //        return new CastingTableMenu(pContainerId, pInventory, this);
 //    }
 
-    public  void openGui(Player player){
+    public void openGui(Player player){
         if(frame != null) frame.openStationGUI(player);
     }
 

@@ -26,9 +26,12 @@ public class BlockRegistry {
             () -> new ArmorStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
             ModCreativeModeTab.MY_TAB);
 
-
     public static final RegistryObject<Block> CASTING_TABLE = registerBlock("casting_table",
             () -> new CastingTable(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
+            ModCreativeModeTab.MY_TAB);
+
+    public static final RegistryObject<Block> GEM_CUTTING_STATION = registerBlock("gem_cutting_station",
+            () -> new GemCuttingStationBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()),
             ModCreativeModeTab.MY_TAB);
 
 

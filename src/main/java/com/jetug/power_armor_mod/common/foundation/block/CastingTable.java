@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.block;
 
+import com.jetug.power_armor_mod.common.foundation.block.entity.CastingTableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -9,12 +10,11 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractFurnaceBlock;
-import net.minecraft.world.level.block.FurnaceBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -27,7 +27,7 @@ public class CastingTable extends AbstractFurnaceBlock {
     }
 
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FurnaceBlockEntity(pPos, pState);
+        return new CastingTableBlockEntity(pPos, pState);
     }
 
     @Nullable
@@ -42,11 +42,10 @@ public class CastingTable extends AbstractFurnaceBlock {
      */
     protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if (blockentity instanceof FurnaceBlockEntity) {
+        if (blockentity instanceof CastingTableBlockEntity) {
             pPlayer.openMenu((MenuProvider)blockentity);
             pPlayer.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
-
     }
 
     /**

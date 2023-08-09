@@ -2,7 +2,6 @@ package com.jetug.power_armor_mod;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.foundation.registery.*;
-import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.fml.common.Mod;
 import software.bernie.geckolib3.GeckoLib;
 
@@ -20,11 +19,10 @@ public class PowerArmorMod {
 
     private void register() {
         ContainerRegistry.register(MOD_EVENT_BUS);
-        BlockEntitieRegistry.register(MOD_EVENT_BUS);
+        BlockEntityRegistry.register(MOD_EVENT_BUS);
         BlockRegistry.register(MOD_EVENT_BUS);
         EntityTypeRegistry.register(MOD_EVENT_BUS);
-        ModMenuTypes.register(MOD_EVENT_BUS);
         ItemRegistry.register(MOD_EVENT_BUS);
-        ModParticles.register(MOD_EVENT_BUS);
+        ParticleRegistry.register(MOD_EVENT_BUS);
     }
 }
