@@ -1,4 +1,4 @@
-package com.jetug.power_armor_mod.common.foundation.container.menu;
+package com.jetug.power_armor_mod.common.foundation.container.menu.base;
 
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.foundation.container.slot.EquipmentSlot;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
-import static java.lang.System.*;
+import static java.lang.System.out;
 
 public class MenuBase extends AbstractContainerMenu {
     private static final int SLOT_SIZE = 18;
@@ -26,16 +26,14 @@ public class MenuBase extends AbstractContainerMenu {
     private final HashMap<BodyPart, Integer> slotsMap = new HashMap<>();
     private Integer slotId = 0;
 
-    protected final Entity entity;
     protected final int inventoryPosY;
     protected final int hotbarPosY;
     protected final Container container;
     protected int size;
 
-    public MenuBase(MenuType<?> pMenuType, int containerId, Container container, Inventory playerInventory,
-                    Entity entity, int size, int inventoryPosY) {
+    public MenuBase(MenuType<?> pMenuType, int containerId, Container container,
+                    Inventory playerInventory, int size, int inventoryPosY) {
         super(pMenuType, containerId);
-        this.entity = entity;
         this.container = container;
         this.container.startOpen(playerInventory.player);
         this.inventoryPosY = inventoryPosY;
@@ -47,7 +45,7 @@ public class MenuBase extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return this.container.stillValid(playerIn) && this.entity.isAlive() && this.entity.distanceTo(playerIn) < 8.0F;
+        return this.container.stillValid(playerIn);
     }
 
     @Override

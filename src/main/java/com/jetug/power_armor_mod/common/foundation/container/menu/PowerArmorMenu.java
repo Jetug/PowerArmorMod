@@ -1,5 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.container.menu;
 
+import com.jetug.power_armor_mod.common.foundation.container.menu.base.EntityMenu;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import net.minecraft.world.Container;
@@ -9,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import static com.jetug.power_armor_mod.common.data.constants.Gui.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 
-public class PowerArmorMenu extends MenuBase {
+public class PowerArmorMenu extends EntityMenu {
     public static final int SIZE = 7;
     private static final int INVENTORY_POS_Y = 84;
 

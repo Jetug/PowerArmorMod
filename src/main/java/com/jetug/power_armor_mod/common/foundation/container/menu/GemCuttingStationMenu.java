@@ -2,6 +2,8 @@ package com.jetug.power_armor_mod.common.foundation.container.menu;
 
 import com.jetug.power_armor_mod.client.ClientData;
 import com.jetug.power_armor_mod.common.foundation.block.entity.GemCuttingStationBlockEntity;
+import com.jetug.power_armor_mod.common.foundation.container.menu.base.BlockEntityMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.base.EntityMenu;
 import com.jetug.power_armor_mod.common.foundation.item.CastItem;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +12,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,9 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.BlockRegistry.GEM_CUTTING_STATION;
 import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.GEM_CUTTING_STATION_MENU;
-import static net.minecraft.nbt.NbtUtils.writeBlockPos;
 
-public class GemCuttingStationMenu extends AbstractContainerMenu {
+public class GemCuttingStationMenu extends BlockEntityMenu {
     private static final int INVENTORY_POS_Y = 84;
     public static final int SIZE = 4;
 
@@ -36,7 +36,7 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     private static final int TE_INVENTORY_SLOT_COUNT = 4;
 
-    private final GemCuttingStationBlockEntity blockEntity;
+    //private final GemCuttingStationBlockEntity blockEntity;
     private final Level level;
 
     public ContainerData getData() {
@@ -54,15 +54,13 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
     }
 
     public GemCuttingStationMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData pData) {
-        //super(ContainerRegistry.ARMOR_CONTAINER.get(), pContainerId, new SimpleContainer(SIZE), inv, entity, SIZE, INVENTORY_POS_Y);
+        super(ContainerRegistry.GEM_CUTTING_STATION_MENU.get(),
+                pContainerId, new SimpleContainer(SIZE), inv, entity,
+                SIZE, INVENTORY_POS_Y, GEM_CUTTING_STATION.get());
 
-        super(GEM_CUTTING_STATION_MENU.get(), pContainerId);
         checkContainerSize(inv, SIZE);
-        blockEntity = ((GemCuttingStationBlockEntity) entity);
         this.level = inv.player.level;
         this.data = pData;
-        addPlayerInventory(inv);
-        addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
             var i = 0;
@@ -73,7 +71,7 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
                     return isFuel(stack);
                 }
             });
-            this.addSlot(new SlotItemHandler(handler, i++, 103, 34){
+            this.addSlot(new SlotItemHandler(handler, i++, 116, 35){
                 @Override
                 public boolean mayPlace(@NotNull ItemStack stack) {
                     return false;
@@ -88,44 +86,38 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
         });
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-        Slot sourceSlot = slots.get(index);
-        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
-        ItemStack sourceStack = sourceSlot.getItem();
-        ItemStack copyOfSourceStack = sourceStack.copy();
-
-        // Check if the slot clicked is one of the vanilla container slots
-        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + TE_INVENTORY_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;  // EMPTY_ITEM
-            }
-        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
-            // This is a TE slot so merge the stack into the players inventory
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;
-            }
-        } else {
-            System.out.println("Invalid slotIndex:" + index);
-            return ItemStack.EMPTY;
-        }
-        // If stack size == 0 (the entire stack was moved) set slot contents to null
-        if (sourceStack.getCount() == 0) {
-            sourceSlot.set(ItemStack.EMPTY);
-        } else {
-            sourceSlot.setChanged();
-        }
-        sourceSlot.onTake(playerIn, sourceStack);
-        return copyOfSourceStack;
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, GEM_CUTTING_STATION.get());
-    }
+//    @Override
+//    public ItemStack quickMoveStack(Player playerIn, int index) {
+//        Slot sourceSlot = slots.get(index);
+//        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
+//        ItemStack sourceStack = sourceSlot.getItem();
+//        ItemStack copyOfSourceStack = sourceStack.copy();
+//
+//        // Check if the slot clicked is one of the vanilla container slots
+//        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+//            // This is a vanilla container slot so merge the stack into the tile inventory
+//            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
+//                    + TE_INVENTORY_SLOT_COUNT, false)) {
+//                return ItemStack.EMPTY;  // EMPTY_ITEM
+//            }
+//        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+//            // This is a TE slot so merge the stack into the players inventory
+//            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+//                return ItemStack.EMPTY;
+//            }
+//        } else {
+//            System.out.println("Invalid slotIndex:" + index);
+//            return ItemStack.EMPTY;
+//        }
+//        // If stack size == 0 (the entire stack was moved) set slot contents to null
+//        if (sourceStack.getCount() == 0) {
+//            sourceSlot.set(ItemStack.EMPTY);
+//        } else {
+//            sourceSlot.setChanged();
+//        }
+//        sourceSlot.onTake(playerIn, sourceStack);
+//        return copyOfSourceStack;
+//    }
 
 //    protected boolean canSmelt(ItemStack pStack) {
 //        return this.level.getRecipeManager()
@@ -157,17 +149,15 @@ public class GemCuttingStationMenu extends AbstractContainerMenu {
         return this.getData().get(0) > 0;
     }
 
-    private void addPlayerInventory(Inventory playerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
-            }
-        }
-    }
-
-    private void addPlayerHotbar(Inventory playerInventory) {
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
-    }
+//    private void addPlayerInventory(Inventory playerInventory) {
+//        for (int i = 0; i < 3; ++i)
+//            for (int l = 0; l < 9; ++l)
+//                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
+//    }
+//
+//    private void addPlayerHotbar(Inventory playerInventory) {
+//        for (int i = 0; i < 9; ++i) {
+//            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+//        }
+//    }
 }
