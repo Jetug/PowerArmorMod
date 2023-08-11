@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.client.gui.menu;
+package com.jetug.power_armor_mod.common.foundation.container.screen;
 
 import com.jetug.power_armor_mod.common.data.constants.*;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
+import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.renderer.*;

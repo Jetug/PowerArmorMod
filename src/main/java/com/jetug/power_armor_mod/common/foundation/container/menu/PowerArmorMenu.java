@@ -1,10 +1,7 @@
-package com.jetug.power_armor_mod.common.foundation.screen.menu;
+package com.jetug.power_armor_mod.common.foundation.container.menu;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
-import com.jetug.power_armor_mod.common.foundation.screen.slot.EquipmentSlot;
-import com.jetug.power_armor_mod.common.util.Pos2D;
-import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

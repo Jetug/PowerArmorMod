@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
 
-import static com.jetug.power_armor_mod.client.gui.menu.PowerArmorGui.TABS_WIDTH;
+import static com.jetug.power_armor_mod.common.foundation.container.screen.PowerArmorGui.TABS_WIDTH;
 import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.data.constants.Gui.TAB_HEIGHT;

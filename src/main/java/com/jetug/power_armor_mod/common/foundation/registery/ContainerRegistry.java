@@ -1,9 +1,9 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.CastingTableMenu;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.GemCuttingStationMenu;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu2;
+import com.jetug.power_armor_mod.common.foundation.container.menu.CastingTableMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.GemCuttingStationMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

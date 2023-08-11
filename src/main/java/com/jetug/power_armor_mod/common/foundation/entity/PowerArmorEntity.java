@@ -2,12 +2,12 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.ArmorStationMenu2;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.PowerArmorMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu2;
+import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
-import com.jetug.power_armor_mod.common.foundation.item.PowerArmorItem;
+import com.jetug.power_armor_mod.common.foundation.item.FrameArmorItem;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
 import net.minecraft.client.CameraType;
@@ -19,7 +19,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -301,7 +300,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.info("damageArmorItem" + isClientSide);
         var itemStack = inventory.getItem(bodyPart.getId());
 
-        if(itemStack.getItem() instanceof PowerArmorItem armorItem)
+        if(itemStack.getItem() instanceof FrameArmorItem armorItem)
             armorItem.damageArmor(itemStack, (int) damage);
     }
 

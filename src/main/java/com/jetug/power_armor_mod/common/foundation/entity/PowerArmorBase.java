@@ -1,13 +1,12 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.events.*;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
+import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
 
-import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -300,7 +299,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         }
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem)
+            if (inventory.getItem(part.ordinal()).getItem() instanceof FrameArmorItem armorItem)
                 setSpeed(getSpeed() * armorItem.speed);
         }
     }
@@ -310,7 +309,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         totalToughness = 0;
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof PowerArmorItem armorItem){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof FrameArmorItem armorItem){
                 totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
                 totalToughness += armorItem.getMaterial().getToughness();
             }

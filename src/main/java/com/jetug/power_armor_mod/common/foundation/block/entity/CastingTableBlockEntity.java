@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.common.foundation.block.entity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jetug.power_armor_mod.common.foundation.block.CastingTable;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.CastingTableMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.CastingTableMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.SharedConstants;
@@ -37,6 +37,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
@@ -71,7 +72,7 @@ public class CastingTableBlockEntity extends BaseContainerBlockEntity implements
     int cookingProgress;
     int cookingTotalTime;
 
-    protected final ContainerData dataAccess = new ContainerData() {
+    public final ContainerData dataAccess = new ContainerData() {
         public int get(int p_58431_) {
             switch(p_58431_) {
                 case 0:
@@ -116,97 +117,7 @@ public class CastingTableBlockEntity extends BaseContainerBlockEntity implements
         this.recipeType = RecipeType.BLASTING;
     }
 
-    /**@deprecated Forge: get burn times by calling ForgeHooks#getBurnTime(ItemStack)*/ @Deprecated
-    public static Map<Item, Integer> getFuel() {
-        Map<Item, Integer> map = Maps.newLinkedHashMap();
-        add(map, Items.LAVA_BUCKET, 20000);
-        add(map, Blocks.COAL_BLOCK, 16000);
-        add(map, Items.BLAZE_ROD, 2400);
-        add(map, Items.COAL, 1600);
-        add(map, Items.CHARCOAL, 1600);
-        add(map, ItemTags.LOGS, 300);
-        add(map, ItemTags.PLANKS, 300);
-        add(map, ItemTags.WOODEN_STAIRS, 300);
-        add(map, ItemTags.WOODEN_SLABS, 150);
-        add(map, ItemTags.WOODEN_TRAPDOORS, 300);
-        add(map, ItemTags.WOODEN_PRESSURE_PLATES, 300);
-        add(map, Blocks.OAK_FENCE, 300);
-        add(map, Blocks.BIRCH_FENCE, 300);
-        add(map, Blocks.SPRUCE_FENCE, 300);
-        add(map, Blocks.JUNGLE_FENCE, 300);
-        add(map, Blocks.DARK_OAK_FENCE, 300);
-        add(map, Blocks.ACACIA_FENCE, 300);
-        add(map, Blocks.OAK_FENCE_GATE, 300);
-        add(map, Blocks.BIRCH_FENCE_GATE, 300);
-        add(map, Blocks.SPRUCE_FENCE_GATE, 300);
-        add(map, Blocks.JUNGLE_FENCE_GATE, 300);
-        add(map, Blocks.DARK_OAK_FENCE_GATE, 300);
-        add(map, Blocks.ACACIA_FENCE_GATE, 300);
-        add(map, Blocks.NOTE_BLOCK, 300);
-        add(map, Blocks.BOOKSHELF, 300);
-        add(map, Blocks.LECTERN, 300);
-        add(map, Blocks.JUKEBOX, 300);
-        add(map, Blocks.CHEST, 300);
-        add(map, Blocks.TRAPPED_CHEST, 300);
-        add(map, Blocks.CRAFTING_TABLE, 300);
-        add(map, Blocks.DAYLIGHT_DETECTOR, 300);
-        add(map, ItemTags.BANNERS, 300);
-        add(map, Items.BOW, 300);
-        add(map, Items.FISHING_ROD, 300);
-        add(map, Blocks.LADDER, 300);
-        add(map, ItemTags.SIGNS, 200);
-        add(map, Items.WOODEN_SHOVEL, 200);
-        add(map, Items.WOODEN_SWORD, 200);
-        add(map, Items.WOODEN_HOE, 200);
-        add(map, Items.WOODEN_AXE, 200);
-        add(map, Items.WOODEN_PICKAXE, 200);
-        add(map, ItemTags.WOODEN_DOORS, 200);
-        add(map, ItemTags.BOATS, 1200);
-        add(map, ItemTags.WOOL, 100);
-        add(map, ItemTags.WOODEN_BUTTONS, 100);
-        add(map, Items.STICK, 100);
-        add(map, ItemTags.SAPLINGS, 100);
-        add(map, Items.BOWL, 100);
-        add(map, ItemTags.CARPETS, 67);
-        add(map, Blocks.DRIED_KELP_BLOCK, 4001);
-        add(map, Items.CROSSBOW, 300);
-        add(map, Blocks.BAMBOO, 50);
-        add(map, Blocks.DEAD_BUSH, 100);
-        add(map, Blocks.SCAFFOLDING, 400);
-        add(map, Blocks.LOOM, 300);
-        add(map, Blocks.BARREL, 300);
-        add(map, Blocks.CARTOGRAPHY_TABLE, 300);
-        add(map, Blocks.FLETCHING_TABLE, 300);
-        add(map, Blocks.SMITHING_TABLE, 300);
-        add(map, Blocks.COMPOSTER, 300);
-        add(map, Blocks.AZALEA, 100);
-        add(map, Blocks.FLOWERING_AZALEA, 100);
-        return map;
-    }
-
-    private static boolean isNeverAFurnaceFuel(Item pItem) {
-        return pItem.builtInRegistryHolder().is(ItemTags.NON_FLAMMABLE_WOOD);
-    }
-
-    private static void add(Map<Item, Integer> pMap, TagKey<Item> pItemTag, int pBurnTime) {
-        for(Holder<Item> holder : Registry.ITEM.getTagOrEmpty(pItemTag)) {
-            if (!isNeverAFurnaceFuel(holder.value())) {
-                pMap.put(holder.value(), pBurnTime);
-            }
-        }
-
-    }
-
-    private static void add(Map<Item, Integer> pMap, ItemLike pItem, int pBurnTime) {
-        Item item = pItem.asItem();
-        if (isNeverAFurnaceFuel(item)) {
-            if (SharedConstants.IS_RUNNING_IN_IDE) {
-                throw Util.pauseInIde(new IllegalStateException("A developer tried to explicitly make fire resistant item " + item.getName((ItemStack)null).getString() + " a furnace fuel. That will not work!"));
-            }
-        } else {
-            pMap.put(item, pBurnTime);
-        }
-    }
+    /**Forge: get burn times by calling ForgeHooks#getBurnTime(ItemStack)*/
 
     private boolean isLit() {
         return this.litTime > 0;

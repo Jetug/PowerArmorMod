@@ -24,6 +24,16 @@ public enum BodyPart{
         return values[id];
     }
 
+    public int getArmorPartId(){
+        return switch (this){
+            case HELMET -> 0;
+            case BODY_ARMOR -> 1;
+            case LEFT_ARM_ARMOR, RIGHT_ARM_ARMOR -> 2;
+            case LEFT_LEG_ARMOR , RIGHT_LEG_ARMOR -> 3;
+            default -> throw new IllegalStateException("Unexpected value: " + this);
+        };
+    }
+
     public boolean isArmorItem(){
         return this.ordinal() < 6;
     }

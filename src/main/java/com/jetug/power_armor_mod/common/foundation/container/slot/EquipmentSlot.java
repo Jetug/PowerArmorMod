@@ -1,12 +1,10 @@
-package com.jetug.power_armor_mod.common.foundation.screen.slot;
+package com.jetug.power_armor_mod.common.foundation.container.slot;
 
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class EquipmentSlot extends Slot {
     private final BodyPart bodyPart;

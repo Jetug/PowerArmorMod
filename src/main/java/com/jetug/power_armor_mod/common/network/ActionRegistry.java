@@ -1,9 +1,6 @@
 package com.jetug.power_armor_mod.common.network;
 
-import com.jetug.power_armor_mod.common.network.actions.Action;
-import com.jetug.power_armor_mod.common.network.actions.DashAction;
-import com.jetug.power_armor_mod.common.network.actions.InputAction;
-import com.jetug.power_armor_mod.common.network.actions.InventorySyncAction;
+import com.jetug.power_armor_mod.common.network.actions.*;
 
 import java.util.*;
 
@@ -17,6 +14,7 @@ public class ActionRegistry {
         addAction(new DashAction());
         addAction(new InventorySyncAction());
         addAction(new InputAction());
+        addAction(new CastingStatusAction());
     }
 
     public static Action getAction(int id){

@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.common.foundation.screen;
+package com.jetug.power_armor_mod.common.foundation.container.screen;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.jetug.power_armor_mod.common.foundation.screen.menu.GemCuttingStationMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.GemCuttingStationMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -10,9 +10,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import static com.jetug.generated.resources.Textures.GUI_CASTING_TABLE;
+
 public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingStationMenu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Global.MOD_ID, "textures/gui/gem_cutting_station_gui.png");
+    private static final ResourceLocation TEXTURE = GUI_CASTING_TABLE;
 
     public GemCuttingStationScreen(GemCuttingStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -20,13 +21,26 @@ public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingS
 
     @Override
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        RenderSystem.setShaderTexture(0, TEXTURE);
+//        int x = (width - imageWidth) / 2;
+//        int y = (height - imageHeight) / 2;
+//
+//        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
+        int i = this.leftPos;
+        int j = this.topPos;
+        this.blit(pPoseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        if (this.menu.isLit()) {
+            int k = this.menu.getLitProgress();
+            this.blit(pPoseStack, i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
+        }
 
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        int l = this.menu.getBurnProgress();
+        this.blit(pPoseStack, i + 79, j + 34, 176, 14, l + 1, 16);
     }
 
     @Override

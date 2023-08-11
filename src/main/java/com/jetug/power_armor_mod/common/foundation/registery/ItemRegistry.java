@@ -20,41 +20,41 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorFrameItem::new);
 
-    public static final RegistryObject<Item> PA_HELMET = ITEMS.register("pa_helmet", () ->
-            new PowerArmorItem(IRON, BodyPart.HELMET, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_HELMET = ITEMS.register("pa_helmet", () ->
+            new FrameArmorItem(IRON, BodyPart.HELMET, 0.9f));
 
-    public static final RegistryObject<Item> PA_BODY = ITEMS.register("pa_body", () ->
-            new PowerArmorItem(IRON, BodyPart.BODY_ARMOR, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_BODY = ITEMS.register("pa_body", () ->
+            new FrameArmorItem(IRON, BodyPart.BODY_ARMOR, 0.9f));
 
-    public static final RegistryObject<Item> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
-            new PowerArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
+            new FrameArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR, 0.9f));
 
-    public static final RegistryObject<Item> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
-            new PowerArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
+            new FrameArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR, 0.9f));
 
-    public static final RegistryObject<Item> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
-            new PowerArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
+            new FrameArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR, 0.9f));
 
-    public static final RegistryObject<Item> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
-            new PowerArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 0.9f));
+    public static final RegistryObject<FrameArmorItem> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
+            new FrameArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 0.9f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_HELMET = ITEMS.register("armor_light_helmet", () ->
-            new PowerArmorItem(IRON, BodyPart.HELMET));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_HELMET = ITEMS.register("armor_light_helmet", () ->
+            new FrameArmorItem(IRON, BodyPart.HELMET, 1f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_BODY = ITEMS.register("armor_light_body", () ->
-            new PowerArmorItem(IRON, BodyPart.BODY_ARMOR));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_BODY = ITEMS.register("armor_light_body", () ->
+            new FrameArmorItem(IRON, BodyPart.BODY_ARMOR, 1f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_RIGHT_ARM = ITEMS.register("armor_light_right_arm", () ->
-            new PowerArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_RIGHT_ARM = ITEMS.register("armor_light_right_arm", () ->
+            new FrameArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR, 1f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_LEFT_ARM = ITEMS.register("armor_light_left_arm", () ->
-            new PowerArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_LEFT_ARM = ITEMS.register("armor_light_left_arm", () ->
+            new FrameArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR, 1f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_RIGHT_LEG = ITEMS.register("armor_light_right_leg", () ->
-            new PowerArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_RIGHT_LEG = ITEMS.register("armor_light_right_leg", () ->
+            new FrameArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR, 1f));
 
-    public static final RegistryObject<Item> ARMOR_LIGHT_LEFT_LEG = ITEMS.register("armor_light_left_leg", () ->
-            new PowerArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR));
+    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_LEFT_LEG = ITEMS.register("armor_light_left_leg", () ->
+            new FrameArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 1f));
 
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", () ->
             new EngineItem(100, 6, 1f));
@@ -83,23 +83,26 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FRAME_LEFT_LEG = ITEMS.register("frame_left_leg", () ->
             new FramePartItem(BodyPart.LEFT_LEG_FRAME));
 
+    
+
     public static final RegistryObject<Item> CAST_HELMET = ITEMS.register("cast_helmet", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_HELMET.get()));
 
     public static final RegistryObject<Item> CAST_BODY = ITEMS.register("cast_body", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_BODY.get()));
 
     public static final RegistryObject<Item> CAST_RIGHT_ARM = ITEMS.register("cast_right_arm", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_RIGHT_ARM.get()));
 
     public static final RegistryObject<Item> CAST_LEFT_ARM = ITEMS.register("cast_left_arm", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_LEFT_ARM.get()));
 
     public static final RegistryObject<Item> CAST_RIGHT_LEG = ITEMS.register("cast_right_leg", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_RIGHT_LEG.get()));
 
     public static final RegistryObject<Item> CAST_LEFT_LEG = ITEMS.register("cast_left_leg", () ->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+            new CastItem(PA_LEFT_LEG.get()));
+
 
     //tutor
 //    public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -26,7 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import static com.jetug.power_armor_mod.common.foundation.registery.BlockEntityRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY;
 
 public class GemCuttingStationBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public GemCuttingStationBlock(Properties properties) {
         super(properties);
@@ -58,7 +60,7 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING);
+        pBuilder.add(FACING, LIT);
     }
 
     /* BLOCK ENTITY */
@@ -103,7 +105,7 @@ public class GemCuttingStationBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, GEM_CUTTING_STATION_BLOCK_ENTITY.get(),
-                GemCuttingStationBlockEntity::tick);
+        return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, GEM_CUTTING_STATION_BLOCK_ENTITY.get(),
+                GemCuttingStationBlockEntity::serverTick);
     }
 }

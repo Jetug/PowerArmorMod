@@ -1,7 +1,7 @@
-package com.jetug.power_armor_mod.common.foundation.screen.menu;
+package com.jetug.power_armor_mod.common.foundation.container.menu;
 
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
-import com.jetug.power_armor_mod.common.foundation.screen.slot.EquipmentSlot;
+import com.jetug.power_armor_mod.common.foundation.container.slot.EquipmentSlot;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,8 @@ public class MenuBase extends AbstractContainerMenu {
     protected final Container container;
     protected int size;
 
-    public MenuBase(MenuType<?> pMenuType, int containerId, Container container, Inventory playerInventory, Entity entity, int size, int inventoryPosY) {
+    public MenuBase(MenuType<?> pMenuType, int containerId, Container container, Inventory playerInventory,
+                    Entity entity, int size, int inventoryPosY) {
         super(pMenuType, containerId);
         this.entity = entity;
         this.container = container;

@@ -1,6 +1,6 @@
-package com.jetug.power_armor_mod.client.gui.menu;
+package com.jetug.power_armor_mod.common.foundation.container.screen;
 
-import com.jetug.power_armor_mod.common.foundation.screen.menu.*;
+import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.data.constants.Global;

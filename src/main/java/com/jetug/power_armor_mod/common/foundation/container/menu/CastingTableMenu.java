@@ -1,5 +1,6 @@
-package com.jetug.power_armor_mod.common.foundation.screen.menu;
+package com.jetug.power_armor_mod.common.foundation.container.menu;
 
+import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,10 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 
 import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.CASTING_TABLE_STATION_MENU;
 
