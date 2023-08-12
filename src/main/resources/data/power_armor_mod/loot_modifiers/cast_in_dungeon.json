@@ -1,5 +1,5 @@
 {
-  "type": "power_armor_mod:relic_gen",
+  "type": "power_armor_mod:loot_gen",
   "conditions": [
     {
       "condition": "minecraft:alternative",
@@ -24,11 +24,58 @@
     },
     {
       "condition": "random_chance",
-      "chance": 1.0
+      "chance": 0.5
     }
   ],
-  "entry": {
-    "type": "minecraft:item",
-    "name": "power_armor_mod:cast_helmet"
-  }
+
+  "entries": [
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_helmet"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_body"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_left_arm"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_right_arm"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_left_leg"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_right_leg"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_helmet"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_body"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_left_arm"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_right_arm"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_left_leg"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "power_armor_mod:cast_light_right_leg"
+    }
+  ]
 }

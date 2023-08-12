@@ -104,15 +104,24 @@ public class ItemRegistry {
             new CastItem(PA_LEFT_LEG.get()));
 
 
-    //tutor
-//    public static final RegistryObject<Item> CITRINE = ITEMS.register("citrine",
-//            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
-//
-//    public static final RegistryObject<Item> RAW_CITRINE = ITEMS.register("raw_citrine",
-//            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
-//
-//    public static final RegistryObject<Item> GEM_CUTTER_TOOL = ITEMS.register("gem_cutter_tool",
-//            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).durability(32)));
+    public static final RegistryObject<Item> CAST_LIGHT_HELMET = ITEMS.register("cast_light_helmet", () ->
+            new CastItem(ARMOR_LIGHT_HELMET.get()));
+
+    public static final RegistryObject<Item> CAST_LIGHT_BODY = ITEMS.register("cast_light_body", () ->
+            new CastItem(ARMOR_LIGHT_BODY.get()));
+
+    public static final RegistryObject<Item> CAST_LIGHT_RIGHT_ARM = ITEMS.register("cast_light_right_arm", () ->
+            new CastItem(ARMOR_LIGHT_RIGHT_ARM.get()));
+
+    public static final RegistryObject<Item> CAST_LIGHT_LEFT_ARM = ITEMS.register("cast_light_left_arm", () ->
+            new CastItem(ARMOR_LIGHT_LEFT_ARM.get()));
+
+    public static final RegistryObject<Item> CAST_LIGHT_RIGHT_LEG = ITEMS.register("cast_light_right_leg", () ->
+            new CastItem(ARMOR_LIGHT_RIGHT_LEG.get()));
+
+        public static final RegistryObject<Item> CAST_LIGHT_LEFT_LEG = ITEMS.register("cast_light_left_leg", () ->
+            new CastItem(ARMOR_LIGHT_LEFT_LEG.get()));
+
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
