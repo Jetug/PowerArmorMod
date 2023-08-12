@@ -119,13 +119,6 @@ public class GemCuttingStationMenu extends BlockEntityMenu {
 //        return copyOfSourceStack;
 //    }
 
-//    protected boolean canSmelt(ItemStack pStack) {
-//        return this.level.getRecipeManager()
-//                .getRecipeFor((RecipeType<AbstractCookingRecipe>)this.recipeType,
-//                        new SimpleContainer(pStack),
-//                        this.level).isPresent();
-//    }
-//
     protected boolean isFuel(ItemStack pStack) {
         return net.minecraftforge.common.ForgeHooks.getBurnTime(pStack, RecipeType.BLASTING) > 0;
     }

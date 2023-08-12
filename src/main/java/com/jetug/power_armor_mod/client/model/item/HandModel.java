@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.client.model.item;
 
-import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

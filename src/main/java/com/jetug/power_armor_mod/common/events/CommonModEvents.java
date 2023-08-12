@@ -2,7 +2,6 @@ package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.foundation.block.entity.ArmorStationBlockEntity;
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.loot.CastModifier;
 import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.data.constants.Global;

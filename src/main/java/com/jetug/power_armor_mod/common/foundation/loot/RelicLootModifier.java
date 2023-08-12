@@ -40,6 +40,8 @@ public class RelicLootModifier extends LootModifier {
         entry.expand(context, generator -> generator.createItemStack(LootItemFunction.decorate(
                 LootItemFunctions.compose(this.functions), generatedLoot::add, context), context));
 
+
+
         return generatedLoot;
     }
 
