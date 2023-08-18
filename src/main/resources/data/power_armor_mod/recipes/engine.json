@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "IFI",
+    " I "
+  ],
+  "key": {
+    "S": {
+      "item": "smooth_stone_slab"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "power_armor_mod:engine"
+  }
+}

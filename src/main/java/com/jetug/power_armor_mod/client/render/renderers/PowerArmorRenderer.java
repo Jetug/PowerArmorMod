@@ -22,6 +22,8 @@ import org.apache.logging.log4j.util.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.util.RenderUtils;
+
 import java.util.*;
 
 import static com.jetug.power_armor_mod.common.data.constants.Bones.LEFT_HAND;
@@ -34,6 +36,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     public static PowerArmorModel<PowerArmorEntity> powerArmorModel;
     public static final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
 
+    private int currentTick = -1;
     protected ItemStack mainHandItem, offHandItem, backItem;
 
     public static HashMap<Entity, Vector3d> locations = new HashMap<>();
@@ -51,50 +54,69 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
+    public void render(GeoModel model, PowerArmorEntity animatable,
+                       float partialTick, RenderType type, PoseStack poseStack,
+                       MultiBufferSource bufferSource, VertexConsumer buffer,
+                       int packedLight, int packedOverlay,
+                       float red, float green, float blue, float alpha) {
 
-        for (var part : entity.equipment)
-            updateModel(entity, part);
+        for (var part : animatable.equipment)
+            updateModel(animatable, part);
 
 
-        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
+//        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
+//        if(bone != null)
+//            locations.put(animatable, bone.getWorldPosition());
 
-        if(bone != null)
-            locations.put(entity, bone.getWorldPosition());
+        var loc = "left_jet_locator";
 
-        //showJetpackParticles(entity, getFrameBone("right_jet_locator"));
+//        if(animatable.hasPlayerPassenger()){
+//            returnToDefault(loc);
+//        }
+//        else{
+//            var fBone = getFrameBone(loc);
+//            if (fBone != null){
+//                fBone.parent.childBones.remove(loc);
+//            }
+//        }
 
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
-        //showJetpackParticles(entity, (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator"));
+        if (currentTick < 0 || currentTick != animatable.tickCount) {
+            this.currentTick = animatable.tickCount;
+//            if (animatable.hasPlayerPassenger()) {
+//
+//                var time = Minecraft.getInstance().getFrameTime();
+//                animatable.getCommandSenderWorld().addParticle(ParticleTypes.PORTAL,
+//                        animatable.getPosition(time).x,
+//                        animatable.getPosition(time).y + 1,
+//                        animatable.getPosition(time).z,
+//                        (animatable.getRandom().nextDouble() - 0.5D), -animatable.getRandom().nextDouble(),
+//                        (animatable.getRandom().nextDouble() - 0.5D));
+//            }
+        }
+        super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
-        if(bone == null || !entity.hasPlayerPassenger()) return;
+//    @Override
+//    public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
+//                       MultiBufferSource bufferSource, int packedLight) {
+//
+//        for (var part : entity.equipment)
+//            updateModel(entity, part);
+//
+//
+//        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
+//
+//        if(bone != null)
+//            locations.put(entity, bone.getWorldPosition());
+//
+//        //showJetpackParticles(entity, getFrameBone("right_jet_locator"));
+//
+//        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+//
+//        //showJetpackParticles(entity, (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator"));
+//    }
 
-        var minecraft = Minecraft.getInstance();
-        var particle = ParticleTypes.FLAME;
-        var rand = new Random();
-        var random = (rand.nextFloat() - 0.5F) * 0.1F;
 
-        var pos3D = new Pos3D(bone.getWorldPosition())
-                .rotate(bone.getRotationX(), bone.getRotationY(), bone.getRotationZ())
-                .translate(0, 0, 0);
-
-        var vLeft  = new Pos3D(0, 0, 0);
-        var vRight = new Pos3D(0, 0, 0);
-        var vCenter = new Pos3D(0,0,0);
-
-        var v = pos3D.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = pos3D.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = pos3D.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-    }
 
     @Override
     public void renderLate(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
@@ -105,9 +127,53 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+
+        if ((Objects.equals(bone.name, "left_jet_locator") ||
+                Objects.equals(bone.name, "right_jet_locator"))
+                && animatable.isDashing()) {
+            showJetpackParticles(getWorldPos(bone, poseStack));
+        }
     }
 
+    private Vector3d getWorldPos(GeoBone bone, PoseStack poseStack){
+        poseStack.pushPose();
+        RenderUtils.translateMatrixToBone(poseStack, bone);
+        RenderUtils.translateToPivotPoint(poseStack, bone);
 
+        boolean rotOverride = bone.rotMat != null;
+
+        if (rotOverride) {
+            poseStack.last().pose().multiply(bone.rotMat);
+            poseStack.last().normal().mul(new Matrix3f(bone.rotMat));
+        }
+        else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+
+        RenderUtils.scaleMatrixForBone(poseStack, bone);
+
+        var poseState = poseStack.last().pose().copy();
+        var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.dispatchedMat);
+        localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
+        var worldState = localMatrix.copy();
+        worldState.translate(new Vector3f(this.animatable.position()));
+        var vec = new Vector4f(0, 0, 0, 1);
+        vec.transform(worldState);
+        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+        poseStack.popPose();
+
+        return new Vector3d(vec.x(), vec.y(), vec.z());
+    }
+
+    private void showJetpackParticles(Vector3d worldPos) {
+        var minecraft = Minecraft.getInstance();
+        var particle = ParticleTypes.SMOKE;
+        var rand = new Random();
+        var random = (rand.nextFloat() - 0.5F) * 0.1F;
+        var pos3D = new Pos3D(worldPos);
+        var vec = pos3D.translate(0, 0, 0).translate(new Pos3D(minecraft.player.getDeltaMovement()));
+        for(var i = 0; i < 3; i++){
+            minecraft.level.addParticle(particle, vec.x, vec.y, vec.z, random, -0.2D, random);
+        }
+    }
 
     @Override
     public void renderEarly(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
@@ -223,7 +289,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     @Nullable
-    private GeoBone getFrameBone(String name){
+    public static GeoBone getFrameBone(String name){
         return (GeoBone)powerArmorModel.getAnimationProcessor().getBone(name);
     }
 

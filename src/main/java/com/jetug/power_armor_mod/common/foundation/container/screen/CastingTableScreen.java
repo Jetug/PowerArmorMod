@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.container.screen;
 
-import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.jetug.power_armor_mod.common.foundation.container.menu.GemCuttingStationMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.CastingTableMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,10 +11,10 @@ import net.minecraft.world.entity.player.Inventory;
 
 import static com.jetug.generated.resources.Textures.GUI_CASTING_TABLE;
 
-public class GemCuttingStationScreen extends AbstractContainerScreen<GemCuttingStationMenu> {
+public class CastingTableScreen extends AbstractContainerScreen<CastingTableMenu> {
     private static final ResourceLocation TEXTURE = GUI_CASTING_TABLE;
 
-    public GemCuttingStationScreen(GemCuttingStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public CastingTableScreen(CastingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 

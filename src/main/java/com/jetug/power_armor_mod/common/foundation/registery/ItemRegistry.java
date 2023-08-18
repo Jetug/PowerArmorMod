@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.item.Item;
@@ -57,16 +56,19 @@ public class ItemRegistry {
             new FrameArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 1f));
 
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", () ->
-            new EngineItem(100, 6, 1f));
+            new EngineItem(1000, 6, 1f));
 
     public static final RegistryObject<Item> ENGINE_MEDIUM = ITEMS.register("engine_medium", () ->
-            new EngineItem(150, 3, 1.5f));
+            new EngineItem(1500, 3, 1.5f));
+
+    public static final RegistryObject<Item> ENGINE_CREATIVE = ITEMS.register("engine_creative", () ->
+            new EngineItem(10000000, 0, 1.5f));
 
     public static final RegistryObject<Item> JETPACK = ITEMS.register("jetpack", () ->
-            new JetpackItem( 3, 1.5f, 4));
+            new JetpackItem( 450, 1.5f, 4));
 
-    public static final RegistryObject<HandItem> HAND = ITEMS.register("hand", () ->
-            new HandItem(new Item.Properties().tab(ModCreativeModeTab.MY_TAB)));
+    public static final RegistryObject<Item> POWER_KNUCKLE = ITEMS.register("power_knuckle", () ->
+            new PowerKnuckle(100, 5));
 
     public static final RegistryObject<Item> FRAME_BODY = ITEMS.register("frame_body", () ->
             new FramePartItem(BodyPart.BODY_FRAME));
@@ -82,8 +84,6 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> FRAME_LEFT_LEG = ITEMS.register("frame_left_leg", () ->
             new FramePartItem(BodyPart.LEFT_LEG_FRAME));
-
-    
 
     public static final RegistryObject<Item> CAST_HELMET = ITEMS.register("cast_helmet", () ->
             new CastItem(PA_HELMET.get()));

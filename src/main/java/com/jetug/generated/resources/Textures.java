@@ -5,6 +5,7 @@ import static com.jetug.generated.ResourceUtils.*;
 
 public class Textures {
     public static final ResourceLocation BLOCK_ARMOR_STATION = resourceLocation("/textures/block/armor_station.png");
+    public static final ResourceLocation BLOCK_CASTING_TABLE = resourceLocation("/textures/block/casting_table.png");
     public static final ResourceLocation ENTITY_ARMOR_BODY = resourceLocation("/textures/entity/armor_body.png");
     public static final ResourceLocation ENTITY_ARMOR_HEAD = resourceLocation("/textures/entity/armor_head.png");
     public static final ResourceLocation ENTITY_ARMOR_LEFT_ARM = resourceLocation("/textures/entity/armor_left_arm.png");
@@ -39,6 +40,7 @@ public class Textures {
     public static final ResourceLocation ITEM_CAST_RIGHT_LEG = resourceLocation("/textures/item/cast_right_leg.png");
     public static final ResourceLocation ITEM_ENGINE = resourceLocation("/textures/item/engine.png");
     public static final ResourceLocation ITEM_ENGINE_MEDIUM = resourceLocation("/textures/item/engine_medium.png");
+    public static final ResourceLocation ITEM_JETPACK = resourceLocation("/textures/item/jetpack.png");
     public static final ResourceLocation ITEM_PA_BODY = resourceLocation("/textures/item/pa_body.png");
     public static final ResourceLocation ITEM_PA_FRAME = resourceLocation("/textures/item/pa_frame.png");
     public static final ResourceLocation ITEM_PA_GUI_BUTTON = resourceLocation("/textures/item/pa_gui_button.png");
@@ -47,5 +49,6 @@ public class Textures {
     public static final ResourceLocation ITEM_PA_LEFT_LEG = resourceLocation("/textures/item/pa_left_leg.png");
     public static final ResourceLocation ITEM_PA_RIGHT_ARM = resourceLocation("/textures/item/pa_right_arm.png");
     public static final ResourceLocation ITEM_PA_RIGHT_LEG = resourceLocation("/textures/item/pa_right_leg.png");
+    public static final ResourceLocation ITEM_POWER_KNUCKLE = resourceLocation("/textures/item/power_knuckle.png");
     public static final ResourceLocation PARTICLE_JET = resourceLocation("/textures/particle/jet.png");
 }

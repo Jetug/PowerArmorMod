@@ -30,15 +30,14 @@
   "item.power_armor_mod.cast_light_right_leg": "Light right leg armor casting mold",
 
   "item.power_armor_mod.pa_frame": "Armor frame",
-  "item.power_armor_mod.engine": "Engine",
-  "item.power_armor_mod.engine_medium": "Engine",
+  "item.power_armor_mod.engine": "Weak engine",
+  "item.power_armor_mod.engine_medium": "Medium engine",
   "item.power_armor_mod.jetpack": "Jetpack",
-  "item.power_armor_mod.": "",
 
+  "block.power_armor_mod.casting_table": "Casting table",
 
-  "block.power_armor_mod.test_block": "XXX",
-  "entity.power_armor_mod.power_armor": "Power Armor",
-  "itemGroup.xxx": "XXX",
+  "entity.power_armor_mod.power_armor": "Armor",
+  "itemGroup.xxx": "Armorpunk",
 
   "key.categories.armor": "Armor controls",
   "key.dash": "Dash",

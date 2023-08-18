@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.container.screen.ArmorStationGui;
+import com.jetug.power_armor_mod.common.foundation.container.screen.ArmorStationScreen;
 import com.jetug.power_armor_mod.common.foundation.container.screen.PowerArmorGui;
 import net.minecraft.client.gui.screens.MenuScreens;
 
@@ -9,7 +9,7 @@ import static com.jetug.power_armor_mod.common.foundation.registery.ContainerReg
 public class GuiRegistry {
     public static void register() {
         MenuScreens.register(ARMOR_CONTAINER.get(), PowerArmorGui::new);
-        MenuScreens.register(ARMOR_STATION_MENU.get(), ArmorStationGui::new);
+        MenuScreens.register(ARMOR_STATION_MENU.get(), ArmorStationScreen::new);
         //MenuScreens.register(CASTING_TABLE_STATION_MENU.get(), CastingTableGui::new);
     }
 }

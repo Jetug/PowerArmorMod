@@ -30,11 +30,16 @@ public class Gui {
     public static final Pos2D RIGHT_LEG_SLOT_POS   = new Pos2D(77, 62);
     public static final Pos2D ENGINE_SLOT_POS      = new Pos2D(98, 26);
 
-    public static final Pos2D FRAME_BODY_SLOT_POS        = new Pos2D(9 , 43);
-    public static final Pos2D FRAME_LEFT_ARM_SLOT_POS    = new Pos2D(9, 16);
-    public static final Pos2D FRAME_RIGHT_ARM_SLOT_POS   = new Pos2D(37 , 16);
-    public static final Pos2D FRAME_LEFT_LEG_SLOT_POS    = new Pos2D(9, 72);
-    public static final Pos2D FRAME_RIGHT_LEG_SLOT_POS   = new Pos2D(37 , 72);
+    public static final Pos2D FRAME_BODY_SLOT_POS        = new Pos2D(8 , 17);
+    public static final Pos2D FRAME_LEFT_ARM_SLOT_POS    = new Pos2D(80, 35);
+    public static final Pos2D FRAME_RIGHT_ARM_SLOT_POS   = new Pos2D(8 , 35);
+    public static final Pos2D FRAME_LEFT_LEG_SLOT_POS    = new Pos2D(80, 71);
+    public static final Pos2D FRAME_RIGHT_LEG_SLOT_POS   = new Pos2D(8 , 71);
+    public static final Pos2D LEFT_HAND_SLOT_POS         = new Pos2D(80, 53);
+    public static final Pos2D RIGHT_HAND_SLOT_POS        = new Pos2D(8 , 53);
+    public static final Pos2D BACK_SLOT_POS              = new Pos2D(152, 17);
+    public static final Pos2D ENGINE_SLOT_POS2           = new Pos2D(152, 35);
+    public static final Pos2D COOLING_SLOT_POS           = new Pos2D(152, 71);
 
     public static final Rectangle HEAD_ICON_OFFSET        = createStandardIcon(19, 0);
     public static final Rectangle BODY_ICON_OFFSET        = createStandardIcon(19, 17);

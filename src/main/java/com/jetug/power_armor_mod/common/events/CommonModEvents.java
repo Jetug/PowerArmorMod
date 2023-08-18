@@ -19,6 +19,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import javax.annotation.Nonnull;
 
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonModEvents {
     @SubscribeEvent
@@ -30,16 +32,6 @@ public class CommonModEvents {
     public static void setup(final FMLCommonSetupEvent event) {
         PacketHandler.register();
     }
-
-//    @SubscribeEvent
-//    public static void onPlayerInteract(PlayerInteractEvent.LeftClickBlock event) {
-//        // Обработка события, когда игрок бьет по блоку левой кнопкой мыши
-//        // Получение информации о событии
-//        // BlockState blockState = event.getWorld().getBlockState(event.getPos());
-//        // BlockPos blockPos = event.getPos();
-//
-//        // Ваш код для обработки события бьющего по блоку
-//    }
 
 //    @SubscribeEvent
 //    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {

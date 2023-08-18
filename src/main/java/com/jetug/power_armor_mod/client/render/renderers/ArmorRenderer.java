@@ -47,34 +47,6 @@ public class ArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     @Override
     public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet");
-        showJetpackParticles(entity, bone);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    }
-
-    private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
-        if(bone == null || !entity.hasPlayerPassenger()) return;
-
-        var minecraft = Minecraft.getInstance();
-        var particle = ParticleTypes.FLAME;
-        var rand = new Random();
-        var random = (rand.nextFloat() - 0.5F) * 0.1F;
-
-        var pos3D = new Pos3D(bone.getWorldPosition())
-                .rotate(bone.getRotationX(), bone.getRotationY(), bone.getRotationZ())
-                .translate(0, 0, 0);
-
-        var vLeft  = new Pos3D(0, 0, 0);
-        var vRight = new Pos3D(0, 0, 0);
-        var vCenter = new Pos3D(0,0,0);
-
-        var v = pos3D.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = pos3D.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = pos3D.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
     }
 }

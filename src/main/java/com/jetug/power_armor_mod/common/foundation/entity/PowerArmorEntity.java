@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
 import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
-import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu2;
+import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu;
 import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
@@ -10,6 +10,8 @@ import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.FrameArmorItem;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.helpers.*;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -45,6 +47,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib3.util.RenderUtils;
+
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +114,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     public void tick() {
         super.tick();
 
-        if(isServerSide && isDashing) {
+        if(isServerSide && isDashing && dashDirection != DashDirection.UP) {
             pushEntitiesAround();
         }
 
@@ -122,6 +126,32 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         }
 //        syncDataWithClient();
         applyEffects();
+
+
+//        if (isClientSide && hasPlayerPassenger()) {
+//            var time = Minecraft.getInstance().getFrameTime();
+//            var pos = getPosition(time);
+//            var bone = getFrameBone("left_jet_locator");
+//
+//            Matrix4f poseState = poseStack.last().pose().copy();
+//            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.dispatchedMat);
+//
+//            bone.setModelSpaceXform(RenderUtils.invertAndMultiplyMatrices(poseState, this.renderEarlyMat));
+//            localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
+//            bone.setLocalSpaceXform(localMatrix);
+//
+//            Matrix4f worldState = localMatrix.copy();
+//
+//            worldState.translate(new Vector3f(this.position()));
+//            bone.setWorldSpaceXform(worldState);
+//
+//            getCommandSenderWorld().addParticle(ParticleTypes.PORTAL,
+//                    pos.x,
+//                    pos.y + 1,
+//                    pos.z,
+//                    (getRandom().nextDouble() - 0.5D), -getRandom().nextDouble(),
+//                    (getRandom().nextDouble() - 0.5D));
+//        }
 
         //showJetpackParticles();
 
@@ -151,7 +181,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     public void addAttackCharge() {
-        if(!hasPlayerPassenger() || !getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty()) return;
+        var handIsNotEmpty = !getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty();
+        if(!hasPlayerPassenger() || handIsNotEmpty || !hasPowerKnuckle()) return;
         super.addAttackCharge();
     }
 
@@ -181,11 +212,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     @Override
     public boolean causeFallDamage(float height, float multiplier, DamageSource damageSource) {
-        if (height > 1) this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
-        if (height > 4) pushEntitiesAround();
+        //if (height > 1) this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
+        if (height > 4 && hasPlayerPassenger() && !getPlayerPassenger().isShiftKeyDown())
+            pushEntitiesAround();
 
         int damage = this.calculateFallDamage(height, multiplier);
-        if (damage <= 0)
+        if (height <= 10 || damage <= 0)
             return false;
 
         this.hurt(damageSource, damage);
@@ -337,7 +369,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new ArmorStationMenu2(id, inventory, menu, PowerArmorEntity.this);
+                    return new ArmorStationMenu(id, inventory, menu, PowerArmorEntity.this);
                 }
 
                 @Override
@@ -382,10 +414,15 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         playerJumpScale = 1.0F;
     }
 
+    private int getDashHeat(){
+        return hasJetpack() ? getJetpack().heat : 0;
+    }
+
+
     public void dash(DashDirection direction) {
         if (!hasJetpack() || !hasEquipment(ENGINE)) return;
 
-        doHeatAction(DASH_HEAT, () -> applyToPlayer((player) -> {
+        doHeatAction(getDashHeat(), () -> applyToPlayer((player) -> {
             dashDirection = direction;
             isDashing = true;
             timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
@@ -394,10 +431,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     public void powerPunch(){
+        if(!hasPowerKnuckle()) return;
+
         powerPunch(() -> {
+            if(!getPlayerPassenger().isShiftKeyDown())
+                dash(DashDirection.FORWARD);
             var optional = getTargetedEntity(getPlayerPassenger(), 5);
-            if(optional.isPresent()){
-                powerPunchTarget(optional.get());
+            if(optional.isPresent() && optional.get() instanceof LivingEntity livingEntity){
+                powerPunchTarget(livingEntity);
             }
             else{
                 var pick = getBlockHitResult(level, getPlayerPassenger(), ClipContext.Fluid.NONE);
@@ -406,17 +447,11 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         });
     }
 
-    private boolean hasJetpack(){
-        return hasEquipment(BACK) && getEquipment(BACK).getItem() instanceof JetpackItem;
-    }
-
-    private JetpackItem getJetpack(){
-        return (JetpackItem) getEquipment(BACK).getItem();
-    }
-
-    private void powerPunchTarget(Entity target){
+    private void powerPunchTarget(LivingEntity target){
         var vector = getPlayerPassenger().getViewVector(1.0F);
         var force = getPunchForce();
+
+        //target.knockback(force, vector.x, vector.z);
         EntityUtils.push(target, vector.multiply(force, force, force));
     }
 
@@ -444,7 +479,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private void powerPunch(Runnable runnable){
         if(!hasPlayerPassenger() || attackCharge == 0) return;
 
-        doHeatAction(PUNCH_HEAT, () -> {
+        doHeatAction(getPowerKnuckle().heat, () -> {
             isPunching = true;
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
             runnable.run();
@@ -539,18 +574,19 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //    }
 
     private void pushEntitiesAround(){
-        for(Entity entity : getEntitiesOfClass(2, 1,2)) {
+        for(LivingEntity entity : getEntitiesInRange(2, 1,2)) {
             if (entity == this || entity == getControllingPassenger())
                 continue;
-            double push = 0.5;
-            Vec3 direction = VectorHelper.getDirection(position(), entity.position());
-            entity.push(direction.x * push, 0.5, direction.z * push);
+            //var push = 0.5;
+            var direction = VectorHelper.getDirection(position(), entity.position());
+            entity.knockback(1, direction.x, direction.z);
+            //entity.push(direction.x * push, 0.5, direction.z * push);
             entity.hurt(DamageSource.ANVIL, 10);
         }
     }
 
-    private List<Entity> getEntitiesOfClass(double x, double y, double z) {
-        return this.level.getEntitiesOfClass(Entity.class, new AABB(position(), position()).inflate(x, y, z));
+    private List<LivingEntity> getEntitiesInRange(double x, double y, double z) {
+        return this.level.getEntitiesOfClass(LivingEntity.class, new AABB(position(), position()).inflate(x, y, z));
     }
 
     @Override
@@ -560,40 +596,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         armsController.registerParticleListener(this::particleListener);
         data.addAnimationController(armsController);
         data.addAnimationController(new AnimationController<>(this, "leg_controller", 0, this::animateLegs));
-    }
-
-    private void showJetpackParticles(PowerArmorEntity entity, GeoBone bone) {
-        if(bone == null || !entity.hasPlayerPassenger()) return;
-
-        var loc = locations;
-        loc.clone();
-
-        var minecraft = Minecraft.getInstance();
-        var particle = ParticleTypes.FLAME;
-        var rand = new Random();
-        var random = (rand.nextFloat() - 0.5F) * 0.1F;
-
-        var pos = locations.get(this);
-        var bPos = new Vec3(bone.getPivotX() / 18, bone.getPivotY() / 18, bone.getPivotZ() / 18);
-
-        var playerPos = new Pos3D(pos);
-                //.rotate(bone.getRotationX(), bone.getRotationY(), bone.getRotationZ())
-                //.translate(bPos);
-
-        var vLeft   = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
-        var vRight  = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
-        var vCenter = new Pos3D(0, 0, 0).rotate(minecraft.player.yBodyRot, 0);
-
-        var v = playerPos.translate(vLeft).translate(new Pos3D(entity.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = playerPos.translate(vRight).translate(new Pos3D(entity.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        v = playerPos.translate(vCenter).translate(new Pos3D(entity.getDeltaMovement()));
-        minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        //minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
     }
 
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
@@ -678,10 +680,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
     private <ENTITY extends IAnimatable> void particleListener(ParticleKeyFrameEvent<ENTITY> event) {
 
-        HashMap<String, BoneAnimationQueue> map = event.getController().getBoneAnimationQueues();
-
-        var bone = (GeoBone)map.get("left_jet2_frame").bone();// powerArmorModel.getAnimationProcessor().getBone("left_jet2_frame");
-        showJetpackParticles(this, bone);
+//        HashMap<String, BoneAnimationQueue> map = event.getController().getBoneAnimationQueues();
+//
+//        var bone = (GeoBone)map.get("left_jet2_frame").bone();// powerArmorModel.getAnimationProcessor().getBone("left_jet2_frame");
+//        showJetpackParticles(this, bone);
     }
 
     private <ENTITY extends IAnimatable> void soundListener(SoundKeyframeEvent<ENTITY> event) {

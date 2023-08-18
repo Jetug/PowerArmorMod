@@ -12,11 +12,13 @@ public enum BodyPart{
     @SerializedName("engine"         ) ENGINE         ,
     @SerializedName("back"           ) BACK           ,
     @SerializedName("cooling"        ) COOLING        ,
-    @SerializedName("body_frame"     ) BODY_FRAME     ,
+    @SerializedName("body_frame"     ) BODY_FRAME     , //10
     @SerializedName("left_arm_frame" ) LEFT_ARM_FRAME ,
     @SerializedName("right_arm_frame") RIGHT_ARM_FRAME,
     @SerializedName("left_leg_frame" ) LEFT_LEG_FRAME ,
-    @SerializedName("right_leg_frame") RIGHT_LEG_FRAME; //14
+    @SerializedName("right_leg_frame") RIGHT_LEG_FRAME,
+    @SerializedName("left_hand"      ) LEFT_HAND,
+    @SerializedName("right_hand"     ) RIGHT_HAND; //16
 
     private static final BodyPart[] values = BodyPart.values();
 

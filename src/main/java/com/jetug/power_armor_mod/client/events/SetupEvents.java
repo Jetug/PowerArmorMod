@@ -2,14 +2,13 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
 import com.jetug.power_armor_mod.client.gui.hud.HeatRenderer;
-import com.jetug.power_armor_mod.common.foundation.container.screen.CastingTableGui;
+import com.jetug.power_armor_mod.common.foundation.container.screen.*;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.LongClickController;
 import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.jetug.power_armor_mod.client.render.renderers.RenderNothing;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.client.input.DoubleClickController;
-import com.jetug.power_armor_mod.common.foundation.container.screen.GemCuttingStationScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,8 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.*;
 
 import static com.jetug.power_armor_mod.client.KeyBindings.*;
 import static com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer.*;
-import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.CASTING_TABLE_STATION_MENU;
-import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.GEM_CUTTING_STATION_MENU;
+import static com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry.CASTING_TABLE_MENU;
 import static com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry.*;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -47,9 +45,8 @@ public final class SetupEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
 
-        //MenuScreens.register(ModMenuTypes.GEM_CUTTING_STATION_MENU.get(), CastingTableGui::new);
-        MenuScreens.register(GEM_CUTTING_STATION_MENU.get(), GemCuttingStationScreen::new);
-        MenuScreens.register(CASTING_TABLE_STATION_MENU.get(), CastingTableGui::new);
+        //MenuScreens.register(ModMenuTypes.CASTING_TABLE_MENU.get(), CastingTableGui::new);
+        MenuScreens.register(CASTING_TABLE_MENU.get(), CastingTableScreen::new);
 
         event.enqueueWork(GuiRegistry::register);
         ClientConfig.modResourceManager.loadConfigs();

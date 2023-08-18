@@ -1,12 +1,18 @@
 package com.jetug.power_armor_mod.client.model;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
+
+import java.util.Random;
 
 import static com.jetug.power_armor_mod.common.data.constants.Bones.HEAD_BONE_NAME;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
@@ -36,6 +42,9 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
     public void setCustomAnimations(Type animatable, int instanceId, AnimationEvent animationEvent) {
         super.setCustomAnimations(animatable, instanceId, animationEvent);
         setupHeadAnimation(animationEvent);
+
+//        var bone = this.getAnimationProcessor().getBone("left_jet_locator");
+//        showJetpackParticles(animatable, (GeoBone) bone);
     }
 
     private void setupHeadAnimation(AnimationEvent customPredicate){

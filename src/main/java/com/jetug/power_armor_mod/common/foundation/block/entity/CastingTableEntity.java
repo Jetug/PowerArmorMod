@@ -1,8 +1,8 @@
 package com.jetug.power_armor_mod.common.foundation.block.entity;
 
 import com.google.common.collect.Lists;
-import com.jetug.power_armor_mod.common.foundation.block.CastingTable;
-import com.jetug.power_armor_mod.common.foundation.container.menu.GemCuttingStationMenu;
+import com.jetug.power_armor_mod.common.foundation.block.CastingTableBlock;
+import com.jetug.power_armor_mod.common.foundation.container.menu.CastingTableMenu;
 import com.jetug.power_armor_mod.common.foundation.item.CastItem;
 import com.jetug.power_armor_mod.common.network.PacketSender;
 import com.jetug.power_armor_mod.common.network.actions.CastingStatusAction;
@@ -14,6 +14,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,9 +48,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.jetug.power_armor_mod.common.foundation.registery.BlockEntityRegistry.GEM_CUTTING_STATION_BLOCK_ENTITY;
+import static com.jetug.power_armor_mod.common.foundation.registery.BlockEntityRegistry.CASTING_TABLE_BLOCK_ENTITY;
 
-public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity implements MenuProvider, RecipeHolder, WorldlyContainer{
+public class CastingTableEntity extends BaseContainerBlockEntity implements MenuProvider, RecipeHolder, WorldlyContainer{
     public static final int COOKING_TOTAL_TIME = 100;
     public int SIZE = 4;
     private final ItemStackHandler itemHandler = new ItemStackHandler(SIZE) {
@@ -69,13 +70,13 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
         public int get(int p_58431_) {
             switch(p_58431_) {
                 case 0:
-                    return GemCuttingStationBlockEntity.this.litTime;
+                    return CastingTableEntity.this.litTime;
                 case 1:
-                    return GemCuttingStationBlockEntity.this.litDuration;
+                    return CastingTableEntity.this.litDuration;
                 case 2:
-                    return GemCuttingStationBlockEntity.this.cookingProgress;
+                    return CastingTableEntity.this.cookingProgress;
                 case 3:
-                    return GemCuttingStationBlockEntity.this.cookingTotalTime;
+                    return CastingTableEntity.this.cookingTotalTime;
                 default:
                     return 0;
             }
@@ -84,16 +85,16 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
         public void set(int p_58433_, int p_58434_) {
             switch(p_58433_) {
                 case 0:
-                    GemCuttingStationBlockEntity.this.litTime = p_58434_;
+                    CastingTableEntity.this.litTime = p_58434_;
                     break;
                 case 1:
-                    GemCuttingStationBlockEntity.this.litDuration = p_58434_;
+                    CastingTableEntity.this.litDuration = p_58434_;
                     break;
                 case 2:
-                    GemCuttingStationBlockEntity.this.cookingProgress = p_58434_;
+                    CastingTableEntity.this.cookingProgress = p_58434_;
                     break;
                 case 3:
-                    GemCuttingStationBlockEntity.this.cookingTotalTime = p_58434_;
+                    CastingTableEntity.this.cookingTotalTime = p_58434_;
             }
 
         }
@@ -105,24 +106,24 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    public GemCuttingStationBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(GEM_CUTTING_STATION_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
+    public CastingTableEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(CASTING_TABLE_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
     }
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Gem Cutting Station");
+        return new TranslatableComponent("container.casting_table");
     }
 
     @Override
     protected Component getDefaultName() {
-        return new TextComponent("Gem Cutting Station");
+        return new TranslatableComponent("container.casting_table");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new GemCuttingStationMenu(pContainerId, pInventory, this, dataAccess);
+        return new CastingTableMenu(pContainerId, pInventory, this, dataAccess);
     }
 
     @Override
@@ -198,7 +199,7 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
     }
 
 
-//    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, GemCuttingStationBlockEntity pBlockEntity) {
+//    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, CastingTableEntity pBlockEntity) {
 ////        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
 ////            craftItem(pBlockEntity);
 ////        }
@@ -356,7 +357,7 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
 
         if (flag != isLit()) {
             flag1 = true;
-            pState = pState.setValue(CastingTable.LIT, Boolean.valueOf(isLit()));
+            pState = pState.setValue(CastingTableBlock.LIT, Boolean.valueOf(isLit()));
             pLevel.setBlock(pPos, pState, 3);
         }
 
@@ -367,7 +368,7 @@ public class GemCuttingStationBlockEntity extends BaseContainerBlockEntity imple
         PacketSender.doClientAction(new CastingStatusAction(dataAccess, getBlockPos()));
     }
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, GemCuttingStationBlockEntity pBlockEntity) {
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, CastingTableEntity pBlockEntity) {
         pBlockEntity.tick(pLevel, pPos, pState);
 
 //        var itemstack = pBlockEntity.items.get(1);

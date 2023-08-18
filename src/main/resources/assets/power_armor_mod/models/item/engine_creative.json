@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "power_armor_mod:item/jetpack"
+    "layer0": "power_armor_mod:item/engine"
   }
 }

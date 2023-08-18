@@ -28,7 +28,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
     protected static final int MAX_ATTACK_CHARGE = 60;
     public static final int COOLING = 5;
-    public static final int P_SIZE = 14;
+    public static final int P_SIZE = values().length;
 
     public final String frameId = "power_armor_frame";
 
@@ -38,7 +38,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     protected float totalDefense;
     protected float totalToughness;
     protected int maxHeat = 1000;
-    protected int heat = 50;
+    protected int heat = 0;
     protected int attackCharge = 0;
     protected SimpleContainer inventory;
 
@@ -51,22 +51,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             RIGHT_LEG_ARMOR,
     };
 
-    public final BodyPart[] equipment = new BodyPart[]{
-            HELMET,
-            BODY_ARMOR,
-            LEFT_ARM_ARMOR,
-            RIGHT_ARM_ARMOR,
-            LEFT_LEG_ARMOR,
-            RIGHT_LEG_ARMOR,
-            BODY_FRAME,
-            LEFT_ARM_FRAME,
-            RIGHT_ARM_FRAME,
-            LEFT_LEG_FRAME,
-            RIGHT_LEG_FRAME,
-            ENGINE,
-            BACK,
-            BodyPart.COOLING
-    };
+    public final BodyPart[] equipment = BodyPart.values();
 
     public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -81,6 +66,12 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         syncDataWithClient();
         syncDataWithServer();
         subHeat(COOLING);
+        if(isInLava()){
+            addHeat(20);
+        }
+        if (isInWaterOrRain()){
+            subHeat(5);
+        }
     }
 
     @Override
@@ -123,16 +114,20 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
+    public int getHeatCapacity(){
+        return hasEquipment(ENGINE) ? ((EngineItem)getEquipment(ENGINE).getItem()).overheat : 0;
+    }
+
     public void addHeat(int value){
         if(value <= 0) return;
 
-        if(heat + value <= maxHeat)
+        if(heat + value <= getHeatCapacity())
             heat += value;
-        else heat = maxHeat;
+        else heat = getHeatCapacity();
     }
 
     public void subHeat(int value){
-        if(value <= 0) return;
+        if(value <= 0 || heat == 0) return;
 
         if(heat - value >= 0)
             heat -= value;
@@ -140,7 +135,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     }
 
     public int getHeatInPercent(){
-        return getInPercents(heat, maxHeat);
+        return getInPercents(heat, getHeatCapacity());
     }
 
     public int getAttackChargeInPercent(){
@@ -148,7 +143,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
     }
 
     public boolean isChargingAttack(){
-        return attackCharge > 0;
+        return attackCharge > 5;
     }
 
     public boolean isMaxCharge(){
@@ -207,6 +202,22 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return !inventory.getItem(part.ordinal()).isEmpty();
     }
 
+    public boolean hasPowerKnuckle(){
+        return (getEquipment(RIGHT_HAND).getItem() instanceof PowerKnuckle);
+    }
+
+    public PowerKnuckle getPowerKnuckle(){
+        return (PowerKnuckle) getEquipment(RIGHT_HAND).getItem();
+    }
+
+    public boolean hasJetpack(){
+        return getEquipment(BACK).getItem() instanceof JetpackItem;
+    }
+
+    public JetpackItem getJetpack(){
+        return (JetpackItem) getEquipment(BACK).getItem();
+    }
+
     public int getArmorDurability(BodyPart bodyPart) {
         var itemStack = inventory.getItem(bodyPart.getId());
         if(itemStack.isEmpty()) return 0;
@@ -241,16 +252,6 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         deserializeInventory(inventory, tags);
     }
 
-    protected void doHeatAction(int heat, Runnable action){
-        if(!canDoAction(heat)) return;
-        action.run();
-        addHeat(heat);
-    }
-
-    protected boolean canDoAction(int heat){
-        return heat + this.heat <= maxHeat;
-    }
-
     protected void initInventory(){
         SimpleContainer inventoryBuff = this.inventory;
         this.inventory = new SimpleContainer(P_SIZE);
@@ -264,6 +265,16 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
             }
         }
         this.inventory.addListener(this);
+    }
+
+    protected void doHeatAction(int heat, Runnable action){
+        if(!canDoAction(heat)) return;
+        action.run();
+        addHeat(heat);
+    }
+
+    protected boolean canDoAction(int heat){
+        return heat + this.heat <= getHeatCapacity();
     }
 
     protected void syncDataWithClient() {

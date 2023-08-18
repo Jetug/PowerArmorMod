@@ -1,9 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu2;
-import com.jetug.power_armor_mod.common.foundation.container.menu.CastingTableMenu;
-import com.jetug.power_armor_mod.common.foundation.container.menu.GemCuttingStationMenu;
-import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
+import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -21,14 +18,11 @@ public class ContainerRegistry {
     public static final RegistryObject<MenuType<PowerArmorMenu>> ARMOR_CONTAINER
             = CONTAINERS.register("power_armor", () -> new MenuType<>(PowerArmorMenu::new));
 
-    public static final RegistryObject<MenuType<ArmorStationMenu2>> ARMOR_STATION_MENU
-            = CONTAINERS.register("armor_station", () -> new MenuType<>(ArmorStationMenu2::new));
+    public static final RegistryObject<MenuType<ArmorStationMenu>> ARMOR_STATION_MENU
+            = CONTAINERS.register("armor_station", () -> new MenuType<>(ArmorStationMenu::new));
 
-    public static final RegistryObject<MenuType<CastingTableMenu>> CASTING_TABLE_STATION_MENU =
-            CONTAINERS.register("casting_table_menu", () -> new MenuType<>(CastingTableMenu::new));
-
-    public static final RegistryObject<MenuType<GemCuttingStationMenu>> GEM_CUTTING_STATION_MENU =
-            registerMenuType(GemCuttingStationMenu::new, "gem_cutting_station_menu");
+    public static final RegistryObject<MenuType<CastingTableMenu>> CASTING_TABLE_MENU =
+            registerMenuType(CastingTableMenu::new, "casting_table_menu");
 
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {

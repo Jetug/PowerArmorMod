@@ -2,6 +2,7 @@ package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.*;

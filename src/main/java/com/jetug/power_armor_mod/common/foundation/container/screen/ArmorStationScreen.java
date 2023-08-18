@@ -10,13 +10,19 @@ import net.minecraft.world.entity.player.*;
 
 import static com.mojang.blaze3d.systems.RenderSystem.*;
 
-public class ArmorStationGui extends AbstractContainerScreen<ArmorStationMenu2> {
-    private final ArmorStationMenu2 menu;
+public class ArmorStationScreen extends AbstractContainerScreen<ArmorStationMenu> {
+    private final ArmorStationMenu menu;
 
-    public ArmorStationGui(ArmorStationMenu2 menu, Inventory pPlayerInventory, Component pTitle) {
+    public ArmorStationScreen(ArmorStationMenu menu, Inventory pPlayerInventory, Component pTitle) {
         super(menu, pPlayerInventory, pTitle);
         this.menu = menu;
         this.imageHeight = 187;
+        this.inventoryLabelY = imageHeight - 94;
+    }
+
+    @Override
+    public Component getTitle() {
+        return super.getTitle();
     }
 
     @Override
