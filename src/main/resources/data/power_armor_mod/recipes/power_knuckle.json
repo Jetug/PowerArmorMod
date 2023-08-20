@@ -1,25 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CBC",
-    "IFI"
+    "III",
+    "PCP",
+    "RIR"
   ],
   "key": {
-    "B": {
-      "item": "minecraft:water_bucket"
-    },
     "C": {
       "item": "minecraft:copper_block"
     },
     "I": {
       "item": "minecraft:iron_block"
     },
-    "F": {
-      "item": "minecraft:furnace"
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "minecraft:redstone"
     }
   },
   "result": {
-    "item": "power_armor_mod:engine"
+    "item": "power_armor_mod:power_knuckle"
   }
 }

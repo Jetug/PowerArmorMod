@@ -70,6 +70,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> POWER_KNUCKLE = ITEMS.register("power_knuckle", () ->
             new PowerKnuckle(100, 5));
 
+    public static final RegistryObject<Item> FIREPROOF_COATING = ITEMS.register("fireproof_coating", () ->
+            new CoatingItem());
+
     public static final RegistryObject<Item> FRAME_BODY = ITEMS.register("frame_body", () ->
             new FramePartItem(BodyPart.BODY_FRAME));
 

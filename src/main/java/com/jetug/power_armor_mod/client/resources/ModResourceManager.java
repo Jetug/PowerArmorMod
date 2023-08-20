@@ -16,10 +16,9 @@ import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getResourceName;
 
 public class ModResourceManager {
-    private static final String CONFIG_DIR = "configs";
-    private static final String EQUIPMENT_DIR = CONFIG_DIR + "/equipment";
-    private static final String FRAME_DIR = CONFIG_DIR + "/frame";
-    private static final String ANIMATION_DIR = "animations";
+    private static final String CONFIG_DIR = "config/model/";
+    private static final String EQUIPMENT_DIR = CONFIG_DIR + "equipment";
+    private static final String FRAME_DIR = CONFIG_DIR + "frame";
 
     private final Map<String, EquipmentSettings> equipmentSettings = new HashMap<>();
     private final Map<String, FrameSettings> frameSettings = new HashMap<>();
@@ -55,19 +54,6 @@ public class ModResourceManager {
                 frameSettings.put(settings.name, settings);
         }
     }
-
-    private void loadAnimations() {
-        for (ResourceLocation animation : getJsonResources(ANIMATION_DIR)) {
-            try {
-                var readIn = getBufferedReader(animation);
-                var settings = new Gson().fromJson(readIn, JsonObject.class);
-                var set = settings.getAsJsonObject("animations").keySet();
-                Global.LOGGER.error(set);
-                generateConstants(getResourceName(animation), set);
-            } catch (IOException ignored) {}
-        }
-    }
-
 
     private static Collection<ResourceLocation> getJsonResources(String path){
         return Minecraft.getInstance().getResourceManager()

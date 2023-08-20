@@ -237,6 +237,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         }
         else {
             var frameSettings = ClientConfig.modResourceManager.getFrameSettings(entity.frameId);
+            if (frameSettings == null) return;
             var attachments =  frameSettings.getAttachments(part);
             if (attachments == null) return;
             for (var bone : attachments.bones) returnToDefault(bone);

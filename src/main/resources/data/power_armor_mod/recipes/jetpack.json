@@ -1,14 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CBC",
-    "IFI"
+    "FIF",
+    "CRC",
+    "I I"
   ],
   "key": {
-    "B": {
-      "item": "minecraft:water_bucket"
-    },
     "C": {
       "item": "minecraft:copper_block"
     },
@@ -16,10 +13,13 @@
       "item": "minecraft:iron_block"
     },
     "F": {
-      "item": "minecraft:furnace"
+      "item": "minecraft:blast_furnace"
+    },
+    "R": {
+      "item": "minecraft:redstone"
     }
   },
   "result": {
-    "item": "power_armor_mod:engine"
+    "item": "power_armor_mod:jetpack"
   }
 }
