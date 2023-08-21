@@ -15,17 +15,14 @@ import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 import static software.bernie.geckolib3.util.GeckoLibUtil.*;
 
-public class PovHandAmimator implements IAnimatable {
+public class HandEntity implements IAnimatable {
     public AnimationFactory factory = createFactory(this);
-    public Minecraft minecraft;
     public LocalPlayer player;
 
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
-
-        minecraft = Minecraft.getInstance();
-        player = minecraft.player;
+        player = Minecraft.getInstance().player;
     }
 
     @SuppressWarnings("ConstantConditions")

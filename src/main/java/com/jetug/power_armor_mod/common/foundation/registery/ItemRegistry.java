@@ -73,6 +73,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FIREPROOF_COATING = ITEMS.register("fireproof_coating", () ->
             new CoatingItem());
 
+    public static final RegistryObject<Item> DRILL = ITEMS.register("drill", () ->
+            new DrillItem());
+
     public static final RegistryObject<Item> FRAME_BODY = ITEMS.register("frame_body", () ->
             new FramePartItem(BodyPart.BODY_FRAME));
 

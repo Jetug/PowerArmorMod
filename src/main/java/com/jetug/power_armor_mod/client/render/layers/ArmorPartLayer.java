@@ -35,7 +35,8 @@ public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
         }
     }
 
-    private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float partialTicks, ResourceLocation texture) {
+    private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
+                        PowerArmorEntity entity, float partialTicks, ResourceLocation texture) {
         int overlay = OverlayTexture.NO_OVERLAY;
         RenderType cameo = RenderType.armorCutoutNoCull(texture);
         matrixStackIn.pushPose();

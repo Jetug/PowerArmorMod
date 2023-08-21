@@ -151,7 +151,7 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-void genAnimations(){
+void genAnimationNames(){
     def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
     def animationsTag = "animations"
     def directory = new File(directoryPath)
@@ -166,6 +166,11 @@ void genAnimations(){
             }
         }
     }
+}
+
+void genAnimations(){
+    def sourceDir = "src/main/resources/assets/power_armor_mod/animations"
+    generateResourceFile("Animations", sourceDir)
 }
 
 void genTextures(){
@@ -233,6 +238,7 @@ String generateResourceConstants(String directoryPath, boolean uni) {
             def sequence = "power_armor_mod"
 
             def relativePath = text.substring(text.indexOf(sequence) + sequence.length()).replace("\\", "/")
+            relativePath = relativePath.startsWith("/") ? relativePath.substring(1) : text
 
             constantsSection.append("${constant} ${name} = resourceLocation(\"${relativePath}\");\n")
         }
@@ -280,6 +286,7 @@ static getConstantName(String name){
 tasks.register('generateAnimations') {
     doFirst {
         genResourceUtilsFile()
+        genAnimationNames()
         genAnimations()
         genTextures()
         genModels()

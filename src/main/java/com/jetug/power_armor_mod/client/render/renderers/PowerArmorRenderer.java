@@ -26,8 +26,8 @@ import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.*;
 
-import static com.jetug.power_armor_mod.common.data.constants.Bones.LEFT_HAND;
-import static com.jetug.power_armor_mod.common.data.constants.Bones.RIGHT_HAND;
+import static com.jetug.power_armor_mod.client.render.utils.ParticleUtils.showJetpackParticles;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.BACK;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
@@ -35,11 +35,7 @@ import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     public static PowerArmorModel<PowerArmorEntity> powerArmorModel;
     public static final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
-
-    private int currentTick = -1;
-    protected ItemStack mainHandItem, offHandItem, backItem;
-
-    public static HashMap<Entity, Vector3d> locations = new HashMap<>();
+    protected ItemStack mainHandItem, offHandItem;
 
     public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PowerArmorModel<>());
@@ -63,60 +59,8 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         for (var part : animatable.equipment)
             updateModel(animatable, part);
 
-
-//        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
-//        if(bone != null)
-//            locations.put(animatable, bone.getWorldPosition());
-
-        var loc = "left_jet_locator";
-
-//        if(animatable.hasPlayerPassenger()){
-//            returnToDefault(loc);
-//        }
-//        else{
-//            var fBone = getFrameBone(loc);
-//            if (fBone != null){
-//                fBone.parent.childBones.remove(loc);
-//            }
-//        }
-
-        if (currentTick < 0 || currentTick != animatable.tickCount) {
-            this.currentTick = animatable.tickCount;
-//            if (animatable.hasPlayerPassenger()) {
-//
-//                var time = Minecraft.getInstance().getFrameTime();
-//                animatable.getCommandSenderWorld().addParticle(ParticleTypes.PORTAL,
-//                        animatable.getPosition(time).x,
-//                        animatable.getPosition(time).y + 1,
-//                        animatable.getPosition(time).z,
-//                        (animatable.getRandom().nextDouble() - 0.5D), -animatable.getRandom().nextDouble(),
-//                        (animatable.getRandom().nextDouble() - 0.5D));
-//            }
-        }
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
-//    @Override
-//    public void render(PowerArmorEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
-//                       MultiBufferSource bufferSource, int packedLight) {
-//
-//        for (var part : entity.equipment)
-//            updateModel(entity, part);
-//
-//
-//        var bone = (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator");
-//
-//        if(bone != null)
-//            locations.put(entity, bone.getWorldPosition());
-//
-//        //showJetpackParticles(entity, getFrameBone("right_jet_locator"));
-//
-//        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-//
-//        //showJetpackParticles(entity, (GeoBone)modelProvider.getAnimationProcessor().getBone("left_jet_locator"));
-//    }
-
-
 
     @Override
     public void renderLate(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
@@ -128,50 +72,10 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
                                   float red, float green, float blue, float alpha) {
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if ((Objects.equals(bone.name, "left_jet_locator") ||
-                Objects.equals(bone.name, "right_jet_locator"))
+        if ((Objects.equals(bone.name, LEFT_JET_LOCATOR) ||
+                Objects.equals(bone.name, RIGHT_JET_LOCATOR))
                 && animatable.isDashing()) {
             showJetpackParticles(getWorldPos(bone, poseStack));
-        }
-    }
-
-    private Vector3d getWorldPos(GeoBone bone, PoseStack poseStack){
-        poseStack.pushPose();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-
-        boolean rotOverride = bone.rotMat != null;
-
-        if (rotOverride) {
-            poseStack.last().pose().multiply(bone.rotMat);
-            poseStack.last().normal().mul(new Matrix3f(bone.rotMat));
-        }
-        else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
-
-        var poseState = poseStack.last().pose().copy();
-        var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.dispatchedMat);
-        localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
-        var worldState = localMatrix.copy();
-        worldState.translate(new Vector3f(this.animatable.position()));
-        var vec = new Vector4f(0, 0, 0, 1);
-        vec.transform(worldState);
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
-        poseStack.popPose();
-
-        return new Vector3d(vec.x(), vec.y(), vec.z());
-    }
-
-    private void showJetpackParticles(Vector3d worldPos) {
-        var minecraft = Minecraft.getInstance();
-        var particle = ParticleTypes.SMOKE;
-        var rand = new Random();
-        var random = (rand.nextFloat() - 0.5F) * 0.1F;
-        var pos3D = new Pos3D(worldPos);
-        var vec = pos3D.translate(0, 0, 0).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        for(var i = 0; i < 3; i++){
-            minecraft.level.addParticle(particle, vec.x, vec.y, vec.z, random, -0.2D, random);
         }
     }
 
@@ -181,7 +85,6 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
-        backItem = animatable.getEquipment(BACK);
     }
 
     @Nullable

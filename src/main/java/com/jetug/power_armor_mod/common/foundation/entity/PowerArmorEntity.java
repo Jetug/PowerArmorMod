@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
-import com.jetug.power_armor_mod.common.foundation.item.JetpackItem;
+import com.jetug.power_armor_mod.common.foundation.item.DrillItem;
 import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
 import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMenu;
 import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
@@ -9,9 +9,8 @@ import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
 import com.jetug.power_armor_mod.common.foundation.item.FrameArmorItem;
 import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
 import com.jetug.power_armor_mod.common.util.helpers.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -42,21 +41,16 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.ParticleKeyFrameEvent;
 import software.bernie.geckolib3.core.event.SoundKeyframeEvent;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.keyframe.BoneAnimationQueue;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
-import static com.jetug.power_armor_mod.client.render.renderers.PowerArmorRenderer.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
@@ -179,11 +173,15 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         //minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
     }
 
+
     @Override
     public void addAttackCharge() {
-        var handIsNotEmpty = !getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty();
-        if(!hasPlayerPassenger() || handIsNotEmpty || !hasPowerKnuckle()) return;
-        super.addAttackCharge();
+        if (hasPlayerPassenger() && hasPowerKnuckle() && (playerHandIsEmpty() || isDrillItemInHand()))
+            super.addAttackCharge();
+    }
+
+    private boolean hasFireResistance(){
+        return getEquipment(BODY_FRAME).getItem() == ItemRegistry.FIREPROOF_COATING.get();
     }
 
     @Override
@@ -191,9 +189,6 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
 
         float finalDamage = getDamageAfterAbsorb(damage);
-
-        if (hasPlayerPassenger())
-            getPlayerPassenger().hurt(damageSource, finalDamage);
 
         if(isServerSide){
             damageArmorItem(HELMET, damageSource , damage);
@@ -207,6 +202,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             }
         }
 
+        if (hasPlayerPassenger() && !(damageSource.isFire() && hasFireResistance())) {
+            getPlayerPassenger().hurt(damageSource, finalDamage);
+        }
+
         return true;
     }
 
@@ -217,10 +216,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             pushEntitiesAround();
 
         int damage = this.calculateFallDamage(height, multiplier);
-        if (height <= 10 || damage <= 0)
+        if (damage <= 0)
             return false;
 
-        this.hurt(damageSource, damage);
+        if(height >= 20 )
+            this.hurt(damageSource, damage);
+
         this.playBlockFallSound();
         return true;
     }
@@ -531,6 +532,14 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         player.startRiding(this);
     }
 
+    private boolean isDrillItemInHand() {
+        return getPlayerPassenger().getItemInHand(MAIN_HAND).getItem() instanceof DrillItem;
+    }
+
+    private boolean playerHandIsEmpty() {
+        return getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty();
+    }
+
     private boolean isJumping() {
         return this.isJumping;
     }
@@ -569,8 +578,8 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 //            animateHurt();
 //            playBlockFallSound();
 //            return true;
-//        }
 
+//        }
 //    }
 
     private void pushEntitiesAround(){
@@ -599,7 +608,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState animateArms(AnimationEvent<E> event) {
-        AnimationController<E> controller = event.getController();
+        var controller = event.getController();
         controller.animationSpeed = 1.0D;
 
         var player = getPlayerPassenger();

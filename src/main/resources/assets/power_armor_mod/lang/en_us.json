@@ -32,6 +32,7 @@
   "item.power_armor_mod.pa_frame": "Armor frame",
   "item.power_armor_mod.engine": "Weak engine",
   "item.power_armor_mod.engine_medium": "Medium engine",
+  "item.power_armor_mod.engine_creative": "Creative engine",
   "item.power_armor_mod.jetpack": "Jetpack",
 
   "block.power_armor_mod.casting_table": "Casting table",

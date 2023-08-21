@@ -1,0 +1,119 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"drill_use": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"drill_head": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		},
+		"punch_charge": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"override_previous_animation": true,
+			"bones": {
+				"model": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20.07031, 4.69776, -1.71394]
+						},
+						"0.5": {
+							"vector": [-0.10329, -3.6983, 40.53113]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 5, 8]
+						}
+					}
+				}
+			}
+		},
+		"punch_max_charge": {
+			"loop": true,
+			"animation_length": 0.58333,
+			"override_previous_animation": true,
+			"bones": {
+				"model": {
+					"rotation": {
+						"0.0": {
+							"vector": [-0.00449, -4.4578, 40.57314]
+						},
+						"0.0833": {
+							"vector": [0.92836, -3.26246, 40.46306]
+						},
+						"0.1667": {
+							"vector": [-0.86441, -3.04813, 40.57592]
+						},
+						"0.25": {
+							"vector": [-0.75449, -4.45782, 40.4631]
+						},
+						"0.3333": {
+							"vector": [0.7545, -4.34782, 40.5759]
+						},
+						"0.4167": {
+							"vector": [0.8644, -3.26246, 40.46306]
+						},
+						"0.5": {
+							"vector": [-0.9284, -3.0481, 40.5759]
+						},
+						"0.5833": {
+							"vector": [-0.00449, -4.45782, 40.57314]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 5, 8]
+						},
+						"0.5": {
+							"vector": [0, 5, 8]
+						}
+					}
+				}
+			}
+		},
+		"punch": {
+			"loop": true,
+			"animation_length": 0.41667,
+			"override_previous_animation": true,
+			"bones": {
+				"model": {
+					"rotation": {
+						"0.0": {
+							"vector": [-0.10329, -3.6983, 40.53113]
+						},
+						"0.125": {
+							"vector": [-2.21188, -6.81329, 35.73582]
+						},
+						"0.25": {
+							"vector": [1.52186, -1.79694, 30.45321]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 5, 8]
+						},
+						"0.25": {
+							"vector": [0.04, 4.58, -1.92],
+							"easing": "linear"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
