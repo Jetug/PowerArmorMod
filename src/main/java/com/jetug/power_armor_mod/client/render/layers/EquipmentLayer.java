@@ -11,13 +11,12 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
-import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.resourceToBufferedImage;
 
 @SuppressWarnings("ConstantConditions")
-public class ArmorPartLayer extends GeoLayerRenderer<PowerArmorEntity> {
+public class EquipmentLayer extends GeoLayerRenderer<PowerArmorEntity> {
     public BodyPart bodyPart;
 
-    public ArmorPartLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
+    public EquipmentLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
         this.bodyPart = bodyPart;
     }

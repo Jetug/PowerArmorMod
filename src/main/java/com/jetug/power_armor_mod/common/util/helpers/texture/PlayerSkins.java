@@ -16,9 +16,7 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 public class PlayerSkins {
 
-    private static Minecraft minecraft = Minecraft.getInstance();
-
-    private static HashMap<String, GameProfile> players = new HashMap<>();
+    private static final HashMap<String, GameProfile> players = new HashMap<>();
 
     /**
      * Gets the resource location of the skin of provided player UUID and name.
@@ -77,26 +75,4 @@ public class PlayerSkins {
             return profile;
         }
     }
-
-    /**
-     * Returns if the skin is slim
-     *
-     * @param uuid the UUID of the player
-     * @return if the skin is slim
-     */
-    public static boolean isSlim(UUID uuid) {
-        PlayerInfo networkplayerinfo = Minecraft.getInstance().getConnection().getPlayerInfo(uuid);
-        return networkplayerinfo == null ? (uuid.hashCode() & 1) == 1 : networkplayerinfo.getModelName().equals("slim");
-    }
-
-    /**
-     * Returns if the skin is slim
-     *
-     * @param player the player
-     * @return if the skin is slim
-     */
-    public static boolean isSlim(Player player) {
-        return isSlim(player.getUUID());
-    }
-
 }

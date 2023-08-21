@@ -6,29 +6,22 @@ import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.json.*;
 import com.jetug.power_armor_mod.common.foundation.entity.*;
-import com.jetug.power_armor_mod.common.foundation.particles.*;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.*;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.core.particles.*;
 import net.minecraft.resources.*;
-import net.minecraft.world.entity.*;
 import net.minecraft.world.item.*;
 import org.apache.logging.log4j.util.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
-import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.*;
 
 import static com.jetug.power_armor_mod.client.render.utils.ParticleUtils.showJetpackParticles;
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
-import static com.jetug.power_armor_mod.common.data.enums.BodyPart.BACK;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
@@ -45,7 +38,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
 
     private void initLayers(){
         for (int i = 0; i < BodyPart.values().length; i++)
-            addLayer(new ArmorPartLayer(this, BodyPart.getById(i)));
+            addLayer(new EquipmentLayer(this, BodyPart.getById(i)));
         addLayer(new PlayerHeadLayer(this));
     }
 

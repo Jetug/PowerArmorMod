@@ -2,13 +2,14 @@ package com.jetug.power_armor_mod.client.render.layers;
 
 import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.data.constants.Global;
+import com.jetug.power_armor_mod.common.util.helpers.texture.PlayerSkins;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
@@ -24,17 +25,22 @@ import static java.lang.System.out;
 public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
     private final IGeoRenderer<PowerArmorEntity> entityRenderer;
     private static final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
+    private final TextureManager textureManager;
+    private final int textureWidth;
+    private final int textureHeight;
 
     public PlayerHeadLayer(IGeoRenderer<PowerArmorEntity> entityRenderer) {
         super(entityRenderer);
         this.entityRenderer = entityRenderer;
+        this.textureManager =  Minecraft.getInstance().getTextureManager();
+        var size = getTextureSize(entityRenderer.getTextureLocation(null));
+        textureWidth = size.getA();
+        textureHeight = size.getB();
     }
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, PowerArmorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
-
-
             var test = entity.getControllingPassenger();
             out.println(test);
 
@@ -65,19 +71,31 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
     @Nullable
     private ResourceLocation getHeadLayerRL(Player clientPlayer, PowerArmorEntity entity) {
         var tag = clientPlayer.getUUID().toString();
-        var textureManager = Minecraft.getInstance().getTextureManager();
 
-        if (playerTextures.containsKey(tag)) {
-            return playerTextures.get(tag);
-        } else {
-            var size = getTextureSize(entityRenderer.getTextureLocation(entity));
-            var dynamicTexture = getHeadLayerTexture(clientPlayer, size.getA(), size.getB());
-            if (dynamicTexture == null) return null;
-            var headTextureLocation = new ResourceLocation(Global.MOD_ID, tag);
+        if (!playerTextures.containsKey(tag)) {
+            var texture = getDefaultResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
+            if(texture == null) return null;
+            var resource = createResource(tag, texture);
+            playerTextures.put(tag, resource);
 
-            textureManager.register(headTextureLocation, dynamicTexture);
-            playerTextures.put(tag, headTextureLocation);
-            return headTextureLocation;
+            downloadPlayerHeadTexture( clientPlayer, entity);
         }
+        return playerTextures.get(tag);
+    }
+
+    private void downloadPlayerHeadTexture(Player clientPlayer, PowerArmorEntity entity){
+        new Thread(() -> {
+            var tag = clientPlayer.getUUID().toString();
+            var texture = getResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
+            if(texture == null) return;
+            var resource = createResource(tag, texture);
+            playerTextures.put(tag, resource);
+        }).start();
+    }
+
+    private ResourceLocation createResource(String playerUUID, AbstractTexture abstractTexture){
+        var headTextureLocation = new ResourceLocation(Global.MOD_ID, playerUUID);
+        textureManager.register(headTextureLocation, abstractTexture);
+        return headTextureLocation;
     }
 }

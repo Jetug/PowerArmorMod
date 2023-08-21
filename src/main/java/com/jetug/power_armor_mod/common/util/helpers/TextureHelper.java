@@ -2,18 +2,12 @@ package com.jetug.power_armor_mod.common.util.helpers;
 
 import com.google.gson.JsonParser;
 import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.entity.player.Player;
 import oshi.util.tuples.Pair;
 
@@ -31,7 +25,6 @@ import java.util.UUID;
 
 import static com.jetug.power_armor_mod.common.util.helpers.BufferedImageHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.texture.PlayerSkins.getSkin;
-import static com.mojang.authlib.minecraft.MinecraftProfileTexture.*;
 import static org.apache.logging.log4j.Level.*;
 
 
@@ -42,9 +35,6 @@ public class TextureHelper {
     public static BufferedImage getPlayerHeadImage(Player clientPlayer) {
         try {
             var playerSkin = getPlayerSkinImage(clientPlayer);
-            //var playerSkin = resourceToBufferedImage(getPlayerSkinLocation(clientPlayer));
-            //print(playerSkin);
-
             if (playerSkin == null) return null;
             cropImage(playerSkin, 64, 16);
             return playerSkin;
@@ -57,6 +47,24 @@ public class TextureHelper {
             cropImage(playerSkin, 64, 16);
             return playerSkin;
         }
+    }
+
+    @Nullable
+    public static AbstractTexture getDefaultResizedHeadTexture(Player clientPlayer, int width, int height) {
+        var playerHead = getDefaultPlayerHeadImage(clientPlayer);
+        if (playerHead == null) return null;
+        playerHead = extendImage(playerHead, width, height);
+        return new DynamicTexture(getNativeImage(playerHead));
+    }
+
+    @Nullable
+    public static BufferedImage getDefaultPlayerHeadImage(Player clientPlayer) {
+        var skin = getSkin(clientPlayer);
+        var playerSkin = resourceToBufferedImage(skin);
+        if (playerSkin == null) return null;
+
+        cropImage(playerSkin, 64, 16);
+        return playerSkin;
     }
 
     private static void print(BufferedImage image){
@@ -152,7 +160,7 @@ public class TextureHelper {
     }
 
     @Nullable
-    public static AbstractTexture getHeadLayerTexture(Player clientPlayer, int width, int height) {
+    public static AbstractTexture getResizedHeadTexture(Player clientPlayer, int width, int height) {
         var playerHead = getPlayerHeadImage(clientPlayer);
         if (playerHead == null) return null;
         playerHead = extendImage(playerHead, width, height);
