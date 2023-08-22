@@ -180,7 +180,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             super.addAttackCharge();
     }
 
-    private boolean hasFireResistance(){
+    public boolean hasFireProtection(){
         return getEquipment(BODY_FRAME).getItem() == ItemRegistry.FIREPROOF_COATING.get();
     }
 
@@ -202,7 +202,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             }
         }
 
-        if (hasPlayerPassenger() && !(damageSource.isFire() && hasFireResistance())) {
+        if (hasPlayerPassenger() && !(damageSource.isFire() && hasFireProtection())) {
             getPlayerPassenger().hurt(damageSource, finalDamage);
         }
 
@@ -555,6 +555,10 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             addEffect(player, MobEffects.DIG_SPEED         , 1);
             addEffect(player, MobEffects.DAMAGE_BOOST      , 1);
             addEffect(player, MobEffects.DAMAGE_RESISTANCE , 1);
+            if(hasFireProtection()) {
+                addEffect(player, MobEffects.FIRE_RESISTANCE, 1);
+                player.clearFire();
+            }
         }
     }
 

@@ -84,13 +84,14 @@ public class PlayerHeadLayer extends GeoLayerRenderer<PowerArmorEntity> {
     }
 
     private void downloadPlayerHeadTexture(Player clientPlayer, PowerArmorEntity entity){
-        new Thread(() -> {
+       var thread = new Thread(() -> {
             var tag = clientPlayer.getUUID().toString();
             var texture = getResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
             if(texture == null) return;
             var resource = createResource(tag, texture);
             playerTextures.put(tag, resource);
-        }).start();
+        });
+       thread.start();
     }
 
     private ResourceLocation createResource(String playerUUID, AbstractTexture abstractTexture){

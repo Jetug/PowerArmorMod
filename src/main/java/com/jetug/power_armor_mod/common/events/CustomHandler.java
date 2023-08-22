@@ -1,24 +1,10 @@
 package com.jetug.power_armor_mod.common.events;
 
 import com.jetug.power_armor_mod.common.data.constants.Global;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
-import com.mojang.math.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -53,6 +39,15 @@ public class CustomHandler {
     public static void onPlayerInteract(RightClickBlock event) {
         if(cancelInteraction(event.getPlayer()))
             event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerHurt(LivingHurtEvent event) {
+        if(event.getEntity() instanceof Player player
+                && isWearingPowerArmor(player)
+                && getPlayerPowerArmor(player).hasFireProtection()){
+            event.setCanceled(true);
+        }
     }
 
     private static boolean cancelInteraction(Player player){
