@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.common.foundation;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;

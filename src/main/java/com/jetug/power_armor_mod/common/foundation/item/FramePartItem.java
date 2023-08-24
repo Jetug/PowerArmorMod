@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
-public class FramePartItem extends EquipmentBase implements IAnimatable {
+public class FramePartItem extends ChassisEquipment implements IAnimatable {
     public AnimationFactory factory = createFactory(this);
     public final BodyPart bodyPart;
     public FramePartRenderer renderer;

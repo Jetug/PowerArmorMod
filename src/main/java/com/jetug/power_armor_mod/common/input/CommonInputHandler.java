@@ -10,10 +10,10 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.*
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
     public static void onKeyInput(InputKey key, KeyAction action, Player player) {
-        if (!isWearingPowerArmor(player) || key == null) return;
+        if (!isWearingChassis(player) || key == null) return;
 
         if((action == PRESS || action == REPEAT) && key == JUMP)
-            getPlayerPowerArmor(player).jump();
+            getPlayerChassis(player).jump();
 
         switch (action) {
             case PRESS -> onPress(key, player);
@@ -29,13 +29,13 @@ public class CommonInputHandler {
     }
 
     public static void onRelease(InputKey key, Player player){
-        if (!isWearingPowerArmor(player)) return;
-        if(key == ATTACK) getPlayerPowerArmor(player).powerPunch();
-        if(key == USE) getPlayerPowerArmor(player).resetAttackCharge();
+        if (!isWearingChassis(player)) return;
+        if(key == ATTACK) getPlayerChassis(player).powerPunch();
+        if(key == USE) getPlayerChassis(player).resetAttackCharge();
     }
 
     public static void onDoubleClick(InputKey key, Player player){
-        if (!isWearingPowerArmor(player)) return;
+        if (!isWearingChassis(player)) return;
 
         DashDirection direction = switch (key){
             case UP    -> DashDirection.FORWARD;
@@ -47,14 +47,14 @@ public class CommonInputHandler {
         };
 
         if(direction == null) return;
-        getPlayerPowerArmor(player).dash(direction);
+        getPlayerChassis(player).dash(direction);
     }
 
     public static void onLongPress(InputKey key, Player player){
-        if (!isWearingPowerArmor(player)) return;
+        if (!isWearingChassis(player)) return;
         var bool = key == USE;
         if(bool){
-            getPlayerPowerArmor(player).addAttackCharge();
+            getPlayerChassis(player).addAttackCharge();
         }
     }
 }

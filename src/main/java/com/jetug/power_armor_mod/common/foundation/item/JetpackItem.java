@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 
-public class JetpackItem extends EquipmentBase {
+public class JetpackItem extends ChassisEquipment {
     public final int heat;
     public final float speed;
     public final float force;

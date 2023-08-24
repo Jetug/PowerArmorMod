@@ -27,10 +27,10 @@ public class HandEntity implements IAnimatable {
 
     @SuppressWarnings("ConstantConditions")
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
-        if(!isWearingPowerArmor()) return PlayState.STOP;
+        if(!isWearingChassis()) return PlayState.STOP;
 
         var controller = event.getController();
-        var armor = getPlayerPowerArmor();
+        var armor = getPlayerChassis();
         controller.animationSpeed = 1;
 
         if(armor.isPunching()){

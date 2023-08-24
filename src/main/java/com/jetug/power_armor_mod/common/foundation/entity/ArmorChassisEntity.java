@@ -6,8 +6,8 @@ import com.jetug.power_armor_mod.common.foundation.container.menu.ArmorStationMe
 import com.jetug.power_armor_mod.common.foundation.container.menu.PowerArmorMenu;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
-import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
-import com.jetug.power_armor_mod.common.foundation.item.FrameArmorItem;
+import com.jetug.power_armor_mod.common.foundation.item.ChassisEquipment;
+import com.jetug.power_armor_mod.common.foundation.item.ChassisArmor;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
 import com.jetug.power_armor_mod.common.util.helpers.*;
@@ -15,7 +15,6 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -50,28 +49,25 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import static com.jetug.generated.animations.PowerArmorFrameAnimation.*;
+import static com.jetug.generated.animations.ArmorChassisAnimation.*;
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 import static com.jetug.power_armor_mod.common.data.enums.BodyPart.*;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
-import static com.jetug.power_armor_mod.common.util.helpers.timer.PovUtils.getBlockHitResult;
-import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
+import static com.jetug.power_armor_mod.common.util.helpers.timer.PovUtils.*;
+import static net.minecraft.client.renderer.debug.DebugRenderer.*;
 import static net.minecraft.util.Mth.*;
-import static net.minecraft.world.InteractionHand.MAIN_HAND;
+import static net.minecraft.world.InteractionHand.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
+public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
-    public static final int DASH_HEAT = 100;
-    public static final int PUNCH_HEAT = 100;
     public static final int MAX_PUNCH_FORCE = 20;
     public static final int DASH_DURATION = 10;
     public static final int PUNCH_DURATION = 10;
 
-    private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     public final Speedometer speedometer = new Speedometer(this);
 
     protected boolean isJumping;
@@ -83,12 +79,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     private boolean isPunching = false;
     private DashDirection dashDirection;
 
-    public PowerArmorEntity(EntityType<? extends PowerArmorBase> type, Level worldIn) {
+    public ArmorChassisEntity(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return PowerArmorBase.createLivingAttributes()
+        return ArmorChassisBase.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
@@ -189,6 +185,9 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.log(INFO, "HURT isClientSide: " + level.isClientSide);
 
         float finalDamage = getDamageAfterAbsorb(damage);
+
+        if(damageSource == DamageSource.CACTUS)
+            return false;
 
         if(isServerSide){
             damageArmorItem(HELMET, damageSource , damage);
@@ -333,15 +332,15 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
         Global.LOGGER.info("damageArmorItem" + isClientSide);
         var itemStack = inventory.getItem(bodyPart.getId());
 
-        if(itemStack.getItem() instanceof FrameArmorItem armorItem)
+        if(itemStack.getItem() instanceof ChassisArmor armorItem)
             armorItem.damageArmor(itemStack, (int) damage);
     }
 
     @Nullable
-    public EquipmentBase getEquipmentItem(BodyPart part) {
+    public ChassisEquipment getEquipmentItem(BodyPart part) {
         var stack = getEquipment(part);
         if(!stack.isEmpty())
-            return (EquipmentBase) stack.getItem();
+            return (ChassisEquipment) stack.getItem();
         return null;
     }
 
@@ -352,12 +351,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new PowerArmorMenu(id, inventory, menu, PowerArmorEntity.this);
+                    return new PowerArmorMenu(id, inventory, menu, ArmorChassisEntity.this);
                 }
 
                 @Override
                 public Component getDisplayName() {
-                    return PowerArmorEntity.this.getDisplayName();
+                    return ArmorChassisEntity.this.getDisplayName();
                 }
             });
         }
@@ -370,12 +369,12 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new ArmorStationMenu(id, inventory, menu, PowerArmorEntity.this);
+                    return new ArmorStationMenu(id, inventory, menu, ArmorChassisEntity.this);
                 }
 
                 @Override
                 public Component getDisplayName() {
-                    return PowerArmorEntity.this.getDisplayName();
+                    return ArmorChassisEntity.this.getDisplayName();
                 }
             });
         }
@@ -563,7 +562,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
     }
 
     private void addEffect(Player player, MobEffect effect, int amplifier){
-        player.addEffect(new MobEffectInstance(effect, PowerArmorEntity.EFFECT_DURATION, amplifier, false, false));
+        player.addEffect(new MobEffectInstance(effect, ArmorChassisEntity.EFFECT_DURATION, amplifier, false, false));
     }
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {
@@ -695,7 +694,7 @@ public class PowerArmorEntity extends PowerArmorBase implements IAnimatable {
 
 //        HashMap<String, BoneAnimationQueue> map = event.getController().getBoneAnimationQueues();
 //
-//        var bone = (GeoBone)map.get("left_jet2_frame").bone();// powerArmorModel.getAnimationProcessor().getBone("left_jet2_frame");
+//        var bone = (GeoBone)map.get("left_jet2_frame").bone();// armorChassisModel.getAnimationProcessor().getBone("left_jet2_frame");
 //        showJetpackParticles(this, bone);
     }
 

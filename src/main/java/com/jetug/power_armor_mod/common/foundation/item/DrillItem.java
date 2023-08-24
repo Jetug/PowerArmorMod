@@ -2,7 +2,7 @@ package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.client.render.renderers.item.DrillRenderer;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import net.minecraft.client.Minecraft;
+import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -10,8 +10,8 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 import static com.jetug.generated.animations.DrillAnimation.*;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerPowerArmor;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerChassis;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 import static com.jetug.power_armor_mod.common.util.helpers.AnimationHelper.setAnimation;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.PLAY_ONCE;
@@ -34,8 +34,8 @@ public class DrillItem extends AnimatableItem{
     private <T extends IAnimatable> PlayState animate(AnimationEvent<T> event) {
         var controller = event.getController();
 
-        if (isWearingPowerArmor()) {
-            var armor = getPlayerPowerArmor();
+        if (PlayerExtension.isWearingChassis()) {
+            var armor = PlayerExtension.getPlayerChassis();
             controller.animationSpeed = 1;
 
             if (armor.isPunching()) {

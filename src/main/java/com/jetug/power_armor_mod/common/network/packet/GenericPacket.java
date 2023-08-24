@@ -8,7 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 
 @SuppressWarnings("ALL")
 public class GenericPacket {

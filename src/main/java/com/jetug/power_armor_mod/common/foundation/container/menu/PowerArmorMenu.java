@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.container.menu;
 
 import com.jetug.power_armor_mod.common.foundation.container.menu.base.EntityMenu;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.ContainerRegistry;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -28,7 +28,7 @@ public class PowerArmorMenu extends EntityMenu {
         this(i, new SimpleContainer(SIZE), playerInventory, null);
     }
 
-    public PowerArmorMenu(int containerId, Container container, Inventory playerInventory, PowerArmorEntity entity) {
+    public PowerArmorMenu(int containerId, Container container, Inventory playerInventory, ArmorChassisEntity entity) {
         super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
         createSlot(HELMET, HEAD_SLOT_POS     );
         createSlot(BODY_ARMOR, BODY_SLOT_POS     );

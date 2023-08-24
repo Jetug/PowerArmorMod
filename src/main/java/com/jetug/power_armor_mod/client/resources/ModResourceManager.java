@@ -18,7 +18,7 @@ import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getRe
 public class ModResourceManager {
     private static final String CONFIG_DIR = "config/model/";
     private static final String EQUIPMENT_DIR = CONFIG_DIR + "equipment";
-    private static final String FRAME_DIR = CONFIG_DIR + "frame";
+    private static final String FRAME_DIR = CONFIG_DIR + "chassis";
 
     private final Map<String, EquipmentSettings> equipmentSettings = new HashMap<>();
     private final Map<String, FrameSettings> frameSettings = new HashMap<>();

@@ -9,8 +9,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.EventPriority;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerPowerArmor;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerChassis;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 import static java.lang.System.out;
 import static net.minecraftforge.event.entity.player.PlayerInteractEvent.*;
 
@@ -44,14 +44,14 @@ public class CustomHandler {
     @SubscribeEvent
     public static void onPlayerHurt(LivingHurtEvent event) {
         if(event.getEntity() instanceof Player player
-                && isWearingPowerArmor(player)
-                && getPlayerPowerArmor(player).hasFireProtection()){
+                && isWearingChassis(player)
+                && getPlayerChassis(player).hasFireProtection()){
             event.setCanceled(true);
         }
     }
 
     private static boolean cancelInteraction(Player player){
-        return isWearingPowerArmor(player) && getPlayerPowerArmor(player).isChargingAttack();
+        return isWearingChassis(player) && getPlayerChassis(player).isChargingAttack();
     }
 
 //    @SubscribeEvent

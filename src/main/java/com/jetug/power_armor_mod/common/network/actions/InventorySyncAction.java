@@ -46,13 +46,13 @@ public class InventorySyncAction extends Action<InventorySyncAction>{
     @Override
     public void doServerAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
         var player = context.get().getSender();
-        if(isWearingPowerArmor(player))
-            getPlayerPowerArmor(player).setInventory(message.inventory);
+        if(isWearingChassis(player))
+            getPlayerChassis(player).setInventory(message.inventory);
     }
 
     @Override
     public void doClientAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
-        if(isWearingPowerArmor())
-            getPlayerPowerArmor().setInventory(message.inventory);
+        if(isWearingChassis())
+            getPlayerChassis().setInventory(message.inventory);
     }
 }

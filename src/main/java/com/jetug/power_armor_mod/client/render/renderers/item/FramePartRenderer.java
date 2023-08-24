@@ -1,9 +1,7 @@
 package com.jetug.power_armor_mod.client.render.renderers.item;
 
 import com.jetug.power_armor_mod.client.model.item.FramePartModel;
-import com.jetug.power_armor_mod.client.model.item.HandModel;
 import com.jetug.power_armor_mod.common.foundation.item.FramePartItem;
-import com.jetug.power_armor_mod.common.foundation.item.HandItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;

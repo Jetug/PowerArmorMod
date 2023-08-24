@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.block.entity;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.*;
@@ -14,7 +14,7 @@ public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuPr
                 8);
     }
 
-    public PowerArmorEntity frame;
+    public ArmorChassisEntity frame;
 
 //    @Override
 //    public Component getDisplayName() {
@@ -34,7 +34,7 @@ public class ArmorStationBlockEntity extends BlockEntityBase /*implements MenuPr
     public static void tick(Level level, BlockPos pos, BlockState state, ArmorStationBlockEntity blockEntity) {
 //        if(hasRecipe(blockEntity) && hasNotReachedStackLimit(blockEntity)) craftItem(blockEntity);
         var aabb = new AABB(pos).inflate(1);
-        var entities = level.getEntitiesOfClass(PowerArmorEntity.class, aabb);
+        var entities = level.getEntitiesOfClass(ArmorChassisEntity.class, aabb);
         blockEntity.frame = entities.isEmpty()? null : entities.get(0);
     }
 

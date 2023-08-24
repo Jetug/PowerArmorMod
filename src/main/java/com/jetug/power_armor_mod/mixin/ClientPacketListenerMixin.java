@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin implements ClientGamePacketListener {
@@ -50,7 +50,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
                             this.minecraft.player.setYRot(entity.getYRot());
                             this.minecraft.player.setYHeadRot(entity.getYRot());
                         }
-                        if(!(entity instanceof PowerArmorEntity))
+                        if(!(entity instanceof ArmorChassisEntity))
                             this.minecraft.gui.setOverlayMessage(new TranslatableComponent("mount.onboard", this.minecraft.options.keyShift.getTranslatedKeyMessage()), false);
                     }
                 }

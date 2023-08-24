@@ -1,8 +1,11 @@
 package com.jetug.power_armor_mod.common.foundation.entity;
 
+import com.jetug.power_armor_mod.client.ClientConfig;
+import com.jetug.power_armor_mod.common.data.json.FrameSettings;
 import com.jetug.power_armor_mod.common.events.*;
 import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
+import com.jetug.power_armor_mod.common.util.helpers.ResourceHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -15,6 +18,8 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.*;
+
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.jetug.power_armor_mod.common.network.data.ArmorData.*;
@@ -25,22 +30,23 @@ import static com.jetug.power_armor_mod.common.util.helpers.ContainerUtils.isCon
 import static com.jetug.power_armor_mod.common.util.helpers.InventoryHelper.*;
 import static com.jetug.power_armor_mod.common.util.helpers.MathHelper.*;
 
-public class PowerArmorBase extends EmptyLivingEntity implements ContainerListener {
+public class ArmorChassisBase extends EmptyLivingEntity implements ContainerListener {
     protected static final int MAX_ATTACK_CHARGE = 60;
     public static final int COOLING = 5;
     public static final int P_SIZE = values().length;
 
-    public final String frameId = "power_armor_frame";
-
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
+
     protected float totalDefense;
     protected float totalToughness;
-    protected int maxHeat = 1000;
     protected int heat = 0;
     protected int attackCharge = 0;
     protected SimpleContainer inventory;
+
+    private String chassisId = null;
+    private FrameSettings settings = null;
 
     public final BodyPart[] armor = new BodyPart[]{
             HELMET,
@@ -53,11 +59,12 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
 
     public final BodyPart[] equipment = BodyPart.values();
 
-    public PowerArmorBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
+    public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         noCulling = true;
         initInventory();
         updateParams();
+        //getType().getRegistryName()
     }
 
     @Override
@@ -109,8 +116,22 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         }
     }
 
+    @Nullable
+    public FrameSettings getSettings(){
+        if(settings == null)
+            settings = ClientConfig.modResourceManager.getFrameSettings(getRegistryName());
+        return settings;
+    }
+
+    public String getRegistryName(){
+        if(chassisId == null)
+            chassisId = ResourceHelper.getResourceName(getType().getRegistryName());
+        return chassisId;
+    }
+
     public void containerRealyChanged(Container container){
         updateParams();
+        serializedInventory = serializeInventory(inventory);
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
@@ -224,9 +245,11 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
 
+    private ListTag serializedInventory = null;
+
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
-        data.inventory = serializeInventory(inventory);
+        data.inventory = serializedInventory;//serializeInventory(inventory);
         data.heat = heat;
         //data.attackCharge = attackCharge;
 
@@ -310,7 +333,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         }
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof FrameArmorItem armorItem)
+            if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem)
                 setSpeed(getSpeed() * armorItem.speed);
         }
     }
@@ -320,7 +343,7 @@ public class PowerArmorBase extends EmptyLivingEntity implements ContainerListen
         totalToughness = 0;
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof FrameArmorItem armorItem){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem){
                 totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
                 totalToughness += armorItem.getMaterial().getToughness();
             }

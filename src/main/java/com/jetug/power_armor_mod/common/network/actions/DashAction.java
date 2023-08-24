@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.network.actions;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.data.enums.DashDirection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -32,6 +32,6 @@ public class DashAction extends Action<DashAction>{
     @Override
     public void doServerAction(DashAction message, Supplier<NetworkEvent.Context> context, int entityId) {
         var player = context.get().getSender();
-        ((PowerArmorEntity)player.level.getEntity(entityId)).dash(message.direction);
+        ((ArmorChassisEntity)player.level.getEntity(entityId)).dash(message.direction);
     }
 }

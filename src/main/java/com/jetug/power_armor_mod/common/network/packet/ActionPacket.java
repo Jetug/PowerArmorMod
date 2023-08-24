@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -30,8 +30,8 @@ public class ActionPacket{
 
     public static void handle(ActionPacket message, Supplier<NetworkEvent.Context> context) {
         var player = context.get().getSender();
-        if (player == null || !isWearingPowerArmor(player)) return;
-        var armor = (PowerArmorEntity)player.getVehicle();
+        if (player == null || !isWearingChassis(player)) return;
+        var armor = (ArmorChassisEntity)player.getVehicle();
 
         switch (message.action){
             case DISMOUNT -> player.stopRiding();

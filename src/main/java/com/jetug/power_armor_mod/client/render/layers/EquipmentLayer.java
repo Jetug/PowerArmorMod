@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -10,20 +10,20 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
-
 @SuppressWarnings("ConstantConditions")
-public class EquipmentLayer extends GeoLayerRenderer<PowerArmorEntity> {
+public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
+    private final IGeoRenderer<ArmorChassisEntity> entityRenderer;
     public BodyPart bodyPart;
 
-    public EquipmentLayer(IGeoRenderer<PowerArmorEntity> entityRenderer, BodyPart bodyPart) {
+    public EquipmentLayer(IGeoRenderer<ArmorChassisEntity> entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
+        this.entityRenderer = entityRenderer;
         this.bodyPart = bodyPart;
     }
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn,
-                       int packedLightIn, PowerArmorEntity entity,
+                       int packedLightIn, ArmorChassisEntity entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.isEquipmentVisible(bodyPart) && !entity.isInvisible()) {
@@ -35,13 +35,14 @@ public class EquipmentLayer extends GeoLayerRenderer<PowerArmorEntity> {
     }
 
     private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                        PowerArmorEntity entity, float partialTicks, ResourceLocation texture) {
+                        ArmorChassisEntity entity, float partialTicks, ResourceLocation texture) {
         int overlay = OverlayTexture.NO_OVERLAY;
         RenderType cameo = RenderType.armorCutoutNoCull(texture);
         matrixStackIn.pushPose();
         matrixStackIn.scale(1.0f, 1.0f, 1.0f);
         matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-        this.getRenderer().render(this.getEntityModel().getModel(FRAME_MODEL_LOCATION), entity, partialTicks, cameo, matrixStackIn,
+        var model = entityRenderer.getGeoModelProvider().getModelLocation(entity);
+        this.getRenderer().render(this.getEntityModel().getModel(model), entity, partialTicks, cameo, matrixStackIn,
                 bufferIn, bufferIn.getBuffer(cameo), packedLightIn, overlay, 1f, 1f, 1f, 1f);
         matrixStackIn.popPose();
     }

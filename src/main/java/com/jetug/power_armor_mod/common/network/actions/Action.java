@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 import static net.minecraftforge.network.NetworkEvent.*;
 
 public abstract class Action<T extends Action<T>> {

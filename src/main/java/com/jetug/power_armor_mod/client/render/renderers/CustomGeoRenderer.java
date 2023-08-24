@@ -44,8 +44,7 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
         return model.getTextureLocation(animatable);
     }
 
-    public void render(T animatable,
-                       PoseStack poseStack,
+    public void render(T animatable, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource,
                        int packedLight) {
 

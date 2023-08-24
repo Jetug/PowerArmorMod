@@ -10,18 +10,18 @@ import javax.annotation.Nullable;
 
 import static com.jetug.power_armor_mod.client.ClientConfig.*;
 
-public class EquipmentBase extends Item {
+public class ChassisEquipment extends Item {
     private String name = null;
     private EquipmentSettings settings = null;
 
     public final BodyPart part;
 
-    public EquipmentBase(Properties pProperties, BodyPart part) {
+    public ChassisEquipment(Properties pProperties, BodyPart part) {
         super(pProperties);
         this.part = part;
     }
 
-    public EquipmentBase(BodyPart part) {
+    public ChassisEquipment(BodyPart part) {
         super(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).stacksTo(1));
         this.part = part;
     }

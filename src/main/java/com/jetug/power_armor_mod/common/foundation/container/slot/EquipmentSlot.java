@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.container.slot;
 
 import com.jetug.power_armor_mod.common.data.enums.*;
-import com.jetug.power_armor_mod.common.foundation.item.EquipmentBase;
+import com.jetug.power_armor_mod.common.foundation.item.ChassisEquipment;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ public class EquipmentSlot extends Slot {
     @Override
     public boolean mayPlace(ItemStack stack) {
         return super.mayPlace(stack)
-                && stack.getItem() instanceof EquipmentBase item
+                && stack.getItem() instanceof ChassisEquipment item
                 && item.part == bodyPart;
     }
 }

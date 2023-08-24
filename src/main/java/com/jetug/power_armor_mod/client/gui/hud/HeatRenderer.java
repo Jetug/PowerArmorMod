@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.client.gui.hud;
 
 import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
-import com.jetug.power_armor_mod.common.util.helpers.MathHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -19,7 +18,7 @@ public class HeatRenderer implements IIngameOverlay
 
     @Override
     public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int width, int height) {
-        if (!isWearingPowerArmor()) return;
+        if (!isWearingChassis()) return;
 
         RenderSystem.setShaderTexture(0, ICONS_LOCATION);
         RenderSystem.enableBlend();
@@ -34,7 +33,7 @@ public class HeatRenderer implements IIngameOverlay
         gui.blit(poseStack, x, y, 0, 0, 9, BAR_HEIGHT);
 
         RenderSystem.setShaderTexture(0, ICONS_LOCATION);
-        var armor = PlayerExtension.getPlayerPowerArmor();
+        var armor = PlayerExtension.getPlayerChassis();
         int heat = armor.getHeatInPercent() / 2;
 
         var offset = 50 - heat + 1;

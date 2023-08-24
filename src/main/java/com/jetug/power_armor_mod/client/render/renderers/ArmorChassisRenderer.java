@@ -1,6 +1,5 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.client.*;
 import com.jetug.power_armor_mod.client.model.*;
 import com.jetug.power_armor_mod.client.render.layers.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -17,22 +16,26 @@ import org.apache.logging.log4j.util.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.provider.GeoModelProvider;
 
 import java.util.*;
 
+import static com.jetug.power_armor_mod.client.render.utils.GeoUtils.*;
+import static com.jetug.power_armor_mod.client.render.utils.GeoUtils.getModel;
 import static com.jetug.power_armor_mod.client.render.utils.ParticleUtils.showJetpackParticles;
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
-public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
-    public static PowerArmorModel<PowerArmorEntity> powerArmorModel;
-    public static final PowerArmorModel<PowerArmorEntity> armorModel = new PowerArmorModel<>();
+public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
+    public static ArmorChassisModel<ArmorChassisEntity> armorChassisModel;
+    public static final ArmorChassisModel<ArmorChassisEntity> armorModel = new ArmorChassisModel<>();
     protected ItemStack mainHandItem, offHandItem;
 
-    public PowerArmorRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new PowerArmorModel<>());
-        powerArmorModel = (PowerArmorModel<PowerArmorEntity>)getGeoModelProvider();
+    public ArmorChassisRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new ArmorChassisModel<>());
+        armorChassisModel = (ArmorChassisModel<ArmorChassisEntity>)getGeoModelProvider();
         initLayers();
     }
 
@@ -43,21 +46,16 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void render(GeoModel model, PowerArmorEntity animatable,
+    public void render(GeoModel model, ArmorChassisEntity animatable,
                        float partialTick, RenderType type, PoseStack poseStack,
                        MultiBufferSource bufferSource, VertexConsumer buffer,
                        int packedLight, int packedOverlay,
                        float red, float green, float blue, float alpha) {
 
         for (var part : animatable.equipment)
-            updateModel(animatable, part);
+            handleAttachment(animatable, part);
 
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    public void renderLate(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
-        super.renderLate(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     @Override
-    public void renderEarly(PowerArmorEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
+    public void renderEarly(ArmorChassisEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
                             VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
@@ -82,7 +80,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
 
     @Nullable
     @Override
-    protected ItemStack getHeldItemForBone(String boneName, PowerArmorEntity animatable) {
+    protected ItemStack getHeldItemForBone(String boneName, ArmorChassisEntity animatable) {
         if(!animatable.hasPlayerPassenger()) return null;
 
         return switch (boneName) {
@@ -101,7 +99,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
     }
 
     @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, PowerArmorEntity currentEntity, IBone bone) {
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, ArmorChassisEntity currentEntity, IBone bone) {
         stack.translate(0, 0, -0.09);
 
         if (!(item.getItem() instanceof ShieldItem)) return;
@@ -114,29 +112,18 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         }
     }
 
-//    @Override
-//    protected ModelPart getArmorPartForBone(String name, HumanoidModel<?> armorModel) {
-//        return switch (name) {
-//            case "back_slot" -> powerArmorModel.getBone("");
-//        };
-//    }
-//
-//    @Override
-//    protected boolean isArmorBone(GeoBone bone) {
-//        return bone.getName().startsWith("jetpack");
-//    }
-
-    private void updateModel(PowerArmorEntity entity, BodyPart part){
+    private void handleAttachment(ArmorChassisEntity entity, BodyPart part){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
             forAllAttachments(item.getSettings(), this::addModelPart);
         }
         else {
-            var frameSettings = ClientConfig.modResourceManager.getFrameSettings(entity.frameId);
+            var frameSettings = entity.getSettings();
             if (frameSettings == null) return;
             var attachments =  frameSettings.getAttachments(part);
             if (attachments == null) return;
-            for (var bone : attachments.bones) returnToDefault(bone);
+            for (var bone : attachments.bones)
+                returnToDefault(armorChassisModel, bone);
         }
     }
 
@@ -144,7 +131,7 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         if(settings == null || settings.attachments == null) return;
 
         for (var equipmentAttachment : settings.attachments) {
-            var frameBone = getFrameBone(equipmentAttachment.frame);
+            var frameBone = getFrameBone(armorChassisModel, equipmentAttachment.frame);
             var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
             if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
 
@@ -152,46 +139,10 @@ public class PowerArmorRenderer extends ModGeoRenderer<PowerArmorEntity> {
         }
     }
 
-    private void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
-//        if(Objects.equals(frameBone.name, "left_upper_arm_frame"))
-//            showJetpackParticles(frameBone);
-
+    public void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
         switch (equipmentAttachment.mode) {
             case ADD -> addBone(frameBone, armorBone);
             case REPLACE -> replaceBone(frameBone, armorBone);
         }
-    }
-
-    private void returnToDefault(String boneName){
-        var bone = getFrameBone(boneName);
-        if(bone == null) return;
-        var parentBone = getFrameBone(bone.parent.name);
-        if(parentBone == null) return;
-
-        parentBone.childBones.remove(bone);
-        parentBone.childBones.add(getFrameBone(boneName));
-    }
-
-    private static void addBone(GeoBone frameBone, GeoBone armorBone) {
-        if (frameBone.childBones.contains(armorBone)) return;
-        //armorBone.parent = frameBone;
-        frameBone.childBones.add(armorBone);
-    }
-
-    private static void replaceBone(GeoBone frameBone, GeoBone armorBone) {
-        frameBone.parent.childBones.remove(frameBone);
-        if (frameBone.parent.childBones.contains(armorBone)) return;
-        frameBone.parent.childBones.add(armorBone);
-        //armorBone.parent = frameBone.parent;
-    }
-
-    @Nullable
-    public static GeoBone getFrameBone(String name){
-        return (GeoBone)powerArmorModel.getAnimationProcessor().getBone(name);
-    }
-
-    @Nullable
-    private GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
-        return armorModel.getModel(resourceLocation).getBone(name).orElse(null);
     }
 }

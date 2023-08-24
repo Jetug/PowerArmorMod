@@ -17,43 +17,43 @@ public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorFrameItem::new);
+    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorChassiSItem::new);
 
-    public static final RegistryObject<FrameArmorItem> PA_HELMET = ITEMS.register("pa_helmet", () ->
-            new FrameArmorItem(IRON, BodyPart.HELMET, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_HELMET = ITEMS.register("pa_helmet", () ->
+            new ChassisArmor(IRON, BodyPart.HELMET, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> PA_BODY = ITEMS.register("pa_body", () ->
-            new FrameArmorItem(IRON, BodyPart.BODY_ARMOR, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_BODY = ITEMS.register("pa_body", () ->
+            new ChassisArmor(IRON, BodyPart.BODY_ARMOR, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
-            new FrameArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_RIGHT_ARM = ITEMS.register("pa_right_arm", () ->
+            new ChassisArmor(IRON, BodyPart.RIGHT_ARM_ARMOR, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
-            new FrameArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_LEFT_ARM = ITEMS.register("pa_left_arm", () ->
+            new ChassisArmor(IRON, BodyPart.LEFT_ARM_ARMOR, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
-            new FrameArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_RIGHT_LEG = ITEMS.register("pa_right_leg", () ->
+            new ChassisArmor(IRON, BodyPart.RIGHT_LEG_ARMOR, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
-            new FrameArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 0.9f));
+    public static final RegistryObject<ChassisArmor> PA_LEFT_LEG = ITEMS.register("pa_left_leg", () ->
+            new ChassisArmor(IRON, BodyPart.LEFT_LEG_ARMOR, 0.9f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_HELMET = ITEMS.register("armor_light_helmet", () ->
-            new FrameArmorItem(IRON, BodyPart.HELMET, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_HELMET = ITEMS.register("armor_light_helmet", () ->
+            new ChassisArmor(IRON, BodyPart.HELMET, 1f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_BODY = ITEMS.register("armor_light_body", () ->
-            new FrameArmorItem(IRON, BodyPart.BODY_ARMOR, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_BODY = ITEMS.register("armor_light_body", () ->
+            new ChassisArmor(IRON, BodyPart.BODY_ARMOR, 1f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_RIGHT_ARM = ITEMS.register("armor_light_right_arm", () ->
-            new FrameArmorItem(IRON, BodyPart.RIGHT_ARM_ARMOR, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_RIGHT_ARM = ITEMS.register("armor_light_right_arm", () ->
+            new ChassisArmor(IRON, BodyPart.RIGHT_ARM_ARMOR, 1f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_LEFT_ARM = ITEMS.register("armor_light_left_arm", () ->
-            new FrameArmorItem(IRON, BodyPart.LEFT_ARM_ARMOR, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_LEFT_ARM = ITEMS.register("armor_light_left_arm", () ->
+            new ChassisArmor(IRON, BodyPart.LEFT_ARM_ARMOR, 1f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_RIGHT_LEG = ITEMS.register("armor_light_right_leg", () ->
-            new FrameArmorItem(IRON, BodyPart.RIGHT_LEG_ARMOR, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_RIGHT_LEG = ITEMS.register("armor_light_right_leg", () ->
+            new ChassisArmor(IRON, BodyPart.RIGHT_LEG_ARMOR, 1f));
 
-    public static final RegistryObject<FrameArmorItem> ARMOR_LIGHT_LEFT_LEG = ITEMS.register("armor_light_left_leg", () ->
-            new FrameArmorItem(IRON, BodyPart.LEFT_LEG_ARMOR, 1f));
+    public static final RegistryObject<ChassisArmor> ARMOR_LIGHT_LEFT_LEG = ITEMS.register("armor_light_left_leg", () ->
+            new ChassisArmor(IRON, BodyPart.LEFT_LEG_ARMOR, 1f));
 
     public static final RegistryObject<Item> ENGINE = ITEMS.register("engine", () ->
             new EngineItem(1000, 6, 1f));

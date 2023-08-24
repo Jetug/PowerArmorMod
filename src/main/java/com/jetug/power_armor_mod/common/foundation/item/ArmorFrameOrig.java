@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +39,7 @@ public class ArmorFrameOrig extends Item {
         ItemStack trueStack = playerIn.getItemInHand(hand);
         if (!playerIn.level.isClientSide
                 && hand == InteractionHand.MAIN_HAND
-                && target instanceof PowerArmorEntity
+                && target instanceof ArmorChassisEntity
                 && (trueStack.getTag() == null
                 || trueStack.getTag().getCompound(ENTITY_TAG).isEmpty())) {
             CompoundTag newTag = new CompoundTag();
@@ -74,7 +74,7 @@ public class ArmorFrameOrig extends Item {
             if (type != null) {
                 Entity entity = type.create(world);
 
-                if (entity instanceof PowerArmorEntity dragon) {
+                if (entity instanceof ArmorChassisEntity dragon) {
                     dragon.load(stack.getTag().getCompound(ENTITY_TAG));
                 }
 

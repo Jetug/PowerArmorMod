@@ -9,8 +9,8 @@ import net.minecraft.world.inventory.ContainerData;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerPowerArmor;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerChassis;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 import static net.minecraft.nbt.NbtUtils.readBlockPos;
 import static net.minecraft.nbt.NbtUtils.writeBlockPos;
 import static net.minecraftforge.network.NetworkEvent.Context;

@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.common.foundation.registery;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorPartEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.*;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -15,13 +14,13 @@ import net.minecraftforge.registries.RegistryObject;
 public class EntityTypeRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Global.MOD_ID);
 
-    public static final RegistryObject<EntityType<PowerArmorEntity>> POWER_ARMOR =
-            registerEntity("power_armor", EntityType.Builder
-                    .of(PowerArmorEntity::new, MobCategory.MISC)
+    public static final RegistryObject<EntityType<ArmorChassisEntity>> POWER_ARMOR =
+            registerEntity("armor_chassis", EntityType.Builder
+                    .of(ArmorChassisEntity::new, MobCategory.MISC)
                     .sized(1.0f, 2.3f));
 
-    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_PART =
-            registerEntity("power_armor_part", EntityType.Builder.of(PowerArmorPartEntity::new, MobCategory.MISC));
+//    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_PART =
+//            registerEntity("power_armor_part", EntityType.Builder.of(PowerArmorPartEntity::new, MobCategory.MISC));
 
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String entityName, EntityType.Builder<T> builder) {

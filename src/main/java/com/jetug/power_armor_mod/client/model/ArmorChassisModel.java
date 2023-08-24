@@ -1,31 +1,27 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
-import com.jetug.power_armor_mod.common.foundation.particles.Pos3D;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleTypes;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import java.util.Random;
-
-import static com.jetug.power_armor_mod.common.data.constants.Bones.HEAD_BONE_NAME;
+import static com.jetug.generated.resources.Models.*;
+import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
-public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extends AnimatedGeoModel<Type>
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class ArmorChassisModel<Type extends ArmorChassisEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {
-    public PowerArmorModel(){
+    public ArmorChassisModel(){
         super();
     }
 
     @Override
     public ResourceLocation getModelLocation(Type object) {
-        return FRAME_MODEL_LOCATION;
+        return ARMOR_CHASSIS;
     }
 
     @Override
@@ -42,15 +38,10 @@ public class PowerArmorModel<Type extends PowerArmorEntity & IAnimatable> extend
     public void setCustomAnimations(Type animatable, int instanceId, AnimationEvent animationEvent) {
         super.setCustomAnimations(animatable, instanceId, animationEvent);
         setupHeadAnimation(animationEvent);
-
-//        var bone = this.getAnimationProcessor().getBone("left_jet_locator");
-//        showJetpackParticles(animatable, (GeoBone) bone);
     }
 
     private void setupHeadAnimation(AnimationEvent customPredicate){
         IBone head = this.getAnimationProcessor().getBone(HEAD_BONE_NAME);
-        //GeoBone bone = this.registerBone().getModelLocation(FRAME_MODEL_LOCATION)..getBone("head").get();
-
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
         head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));

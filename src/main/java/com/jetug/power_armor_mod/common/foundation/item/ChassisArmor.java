@@ -6,11 +6,11 @@ import com.jetug.power_armor_mod.common.data.enums.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 
-public class FrameArmorItem extends DamageableItem {
+public class ChassisArmor extends DamageableItem {
     private final PowerArmorMaterial material;
     public final float speed;
 
-    public FrameArmorItem(PowerArmorMaterial material, BodyPart part, float speed) {
+    public ChassisArmor(PowerArmorMaterial material, BodyPart part, float speed) {
         super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB), part);
         this.material = material;
         this.speed = speed;

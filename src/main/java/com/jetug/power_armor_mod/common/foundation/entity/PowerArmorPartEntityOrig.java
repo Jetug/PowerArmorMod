@@ -2,7 +2,6 @@ package com.jetug.power_armor_mod.common.foundation.entity;
 
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.network.packet.InteractPacket;
-import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.jetug.power_armor_mod.common.util.interfaces.ArmorPartsEvents;
 import net.minecraft.core.BlockPos;
@@ -19,17 +18,15 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 
-import static org.apache.logging.log4j.Level.INFO;
 
-
-public class PowerArmorPartEntityOrig extends PartEntity<PowerArmorEntity> {
+public class PowerArmorPartEntityOrig extends PartEntity<ArmorChassisEntity> {
     public final EntityDimensions size;
-    public final PowerArmorEntity parentMob;
+    public final ArmorChassisEntity parentMob;
     public final BodyPart bodyPart;
 
     private ArmorPartsEvents events = null;
 
-    public PowerArmorPartEntityOrig(PowerArmorEntity parent, BodyPart bodyPart, float xz, float y) {
+    public PowerArmorPartEntityOrig(ArmorChassisEntity parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
         this.size = EntityDimensions.scalable(xz, y);
         this.refreshDimensions();

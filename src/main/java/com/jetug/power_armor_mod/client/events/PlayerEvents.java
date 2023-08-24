@@ -1,8 +1,7 @@
 package com.jetug.power_armor_mod.client.events;
 
-import com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer;
+import com.jetug.power_armor_mod.client.render.renderers.*;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.*;
@@ -15,7 +14,7 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (isWearingPowerArmor(event.getPlayer())) {
+        if (isWearingChassis(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
@@ -23,7 +22,7 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRenderHand(RenderArmEvent event) {
-        if (!isWearingPowerArmor()) return;
+        if (!isWearingChassis()) return;
 
         var poseStack = new PoseStack();
         poseStack.translate(0.5, -0.5, -0.6);

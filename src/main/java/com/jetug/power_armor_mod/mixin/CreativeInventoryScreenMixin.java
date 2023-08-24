@@ -23,6 +23,7 @@
 package com.jetug.power_armor_mod.mixin;
 
 import com.jetug.power_armor_mod.common.data.enums.ActionType;
+import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -47,7 +48,7 @@ import static com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry
 import static com.jetug.power_armor_mod.common.network.PacketSender.doServerAction;
 import static com.jetug.power_armor_mod.common.data.constants.Gui.TAB_HEIGHT;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
-import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingPowerArmor;
+import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.isWearingChassis;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -62,7 +63,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!isWearingPowerArmor()) return;
+        if(!PlayerExtension.isWearingChassis()) return;
         var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
             doServerAction(ActionType.OPEN_GUI);
@@ -71,7 +72,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
-        if(!isWearingPowerArmor()) return;
+        if(!PlayerExtension.isWearingChassis()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -84,7 +85,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        if(!isWearingPowerArmor()) return;
+        if(!PlayerExtension.isWearingChassis()) return;
         Lighting.setupFor3DItems();
         this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), getRight() - 30 - 16, getBottom() + 4);
         Lighting.setupForFlatItems();

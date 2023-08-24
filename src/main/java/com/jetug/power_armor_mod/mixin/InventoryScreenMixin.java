@@ -62,7 +62,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!isWearingPowerArmor()) return;
+        if(!isWearingChassis()) return;
 
         var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
@@ -72,7 +72,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        if(!isWearingPowerArmor()) return;
+        if(!isWearingChassis()) return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -82,7 +82,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        if(!isWearingPowerArmor()) return;
+        if(!isWearingChassis()) return;
 
         Lighting.setupFor3DItems();
         itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,

@@ -1,14 +1,12 @@
 package com.jetug.power_armor_mod.common.foundation.item;
 
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.entity.PowerArmorEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
 import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,13 +14,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 
-public class ArmorFrameItem extends Item {
+public class ArmorChassiSItem extends Item {
 
-    public ArmorFrameItem() {
+    public ArmorChassiSItem() {
         super((new Item.Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
     }
 
@@ -62,7 +58,7 @@ public class ArmorFrameItem extends Item {
     private static void summonNewEntity(UseOnContext context) {
         var stack = context.getItemInHand();
         var world = context.getLevel();
-        var entity = new PowerArmorEntity(EntityTypeRegistry.POWER_ARMOR.get(), world);
+        var entity = new ArmorChassisEntity(EntityTypeRegistry.POWER_ARMOR.get(), world);
         //entity.setPos(context.getClickLocation());
         moveEntityToClickedBlock(entity, context);
 

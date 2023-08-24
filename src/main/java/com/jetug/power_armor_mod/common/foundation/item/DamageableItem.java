@@ -4,7 +4,7 @@ import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class DamageableItem extends EquipmentBase{
+public abstract class DamageableItem extends ChassisEquipment {
     private static final String DAMAGE_KEY = "Damage";
 
     public DamageableItem(Properties pProperties, BodyPart part) {
