@@ -7,8 +7,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
-import static com.jetug.power_armor_mod.client.render.renderers.CustomHandRenderer.HAND_MODEL;
-
 public class DrillRenderer extends GeoItemRenderer<DrillItem> {
 
     public DrillRenderer() {

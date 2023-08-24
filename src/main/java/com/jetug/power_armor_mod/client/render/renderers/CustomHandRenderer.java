@@ -13,11 +13,12 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 
 import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.getPlayerChassis;
 
+@SuppressWarnings("unchecked")
 public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
     public static final String RIGHT_HAND_BONE = "right_lower_arm";
     private static CustomHandRenderer handRenderer;
     private static HandEntity handAmimator;
-    public static final HandModel HAND_MODEL = new HandModel();
+    private static final HandModel HAND_MODEL = new HandModel();
 
     static {
         AnimationController.addModelFetcher(animatable -> animatable instanceof HandEntity ? HAND_MODEL: null);

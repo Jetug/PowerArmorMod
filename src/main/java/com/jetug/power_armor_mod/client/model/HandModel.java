@@ -12,18 +12,24 @@ import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 public class HandModel extends AnimatedGeoModel {
     @Override
     public ResourceLocation getModelLocation(Object object) {
-        var chassis = PlayerExtension.getPlayerChassis();
-        var name = chassis.getRegistryName();
-        return new ResourceLocation(Global.MOD_ID, "geo/hand/" + name + "_hand.geo.json");
+        return getResourceLocation("geo/hand/", "_hand.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureLocation(Object object) {
-        return ENTITY_ARMOR_CHASSIS;
+        return getResourceLocation("textures/hand/", "_hand.png");
     }
 
     @Override
     public ResourceLocation getAnimationFileLocation(Object animatable) {
-        return HAND_ANIMATION_LOCATION;
+        return getResourceLocation("animations/hand/", "_hand.animation.json");
+    }
+
+    private ResourceLocation getResourceLocation(String path, String extension){
+        var chassis = PlayerExtension.getPlayerChassis();
+        var name = chassis.getRegistryName();
+        var resourceLocation = chassis.getType().getRegistryName();
+
+        return new ResourceLocation(resourceLocation.getNamespace(), path + name + extension);
     }
 }
