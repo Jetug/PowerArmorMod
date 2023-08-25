@@ -338,7 +338,7 @@
 					"parent": "left_jet2_frame",
 					"pivot": [6, 28, 9.5],
 					"cubes": [
-						{"origin": [6, 28, 9.5], "size": [0, 0, 0], "uv": [2, 2]}
+						{"origin": [6, 28, 9.5], "size": [0, 0, 0], "uv": [60, 38]}
 					]
 				},
 				{
@@ -356,7 +356,7 @@
 					"parent": "right_jet2_frame",
 					"pivot": [-6, 28, 9.5],
 					"cubes": [
-						{"origin": [-6, 28, 9.5], "size": [0, 0, 0], "uv": [2, 2], "mirror": true}
+						{"origin": [-6, 28, 9.5], "size": [0, 0, 0], "uv": [60, 38], "mirror": true}
 					]
 				},
 				{

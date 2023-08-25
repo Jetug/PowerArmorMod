@@ -50,7 +50,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
 
         if (animatable.isInvisible()) return;
         for (var part : animatable.equipment)
-            handleAttachment(armorChassisModel ,animatable, part);
+            renderEquipment(armorChassisModel ,animatable, part, false);
 
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
                 packedLight, packedOverlay, red, green, blue, alpha);
@@ -110,25 +110,21 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
         }
     }
 
-    public static void handleAttachment(AnimatedGeoModel provider, ArmorChassisEntity entity, BodyPart part){
+    public static void renderEquipment(AnimatedGeoModel provider, ArmorChassisEntity entity, BodyPart part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
-            addModelPart(provider, item.getSettings());
+            addModelPart(provider, item.getSettings(), isPov);
         }
         else {
-            var frameSettings = entity.getSettings();
-            if (frameSettings == null) return;
-            var attachments =  frameSettings.getAttachments(part);
-            if (attachments == null) return;
-            for (var bone : attachments.bones)
-                returnToDefault(provider, bone);
+            removeModelPart(provider, entity.getSettings(), part);
         }
     }
 
-    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings) {
-        if(settings == null || settings.attachments == null) return;
+    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings, boolean isPov) {
+        if(settings == null) return;
+        var attachments = isPov ? settings.pov : settings.attachments;
 
-        for (var equipmentAttachment : settings.attachments) {
+        for (var equipmentAttachment : attachments) {
             var frameBone = getFrameBone(provider, equipmentAttachment.frame);
             var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
             if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
@@ -140,4 +136,12 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
         }
     }
 
+    public static void removeModelPart(AnimatedGeoModel provider, FrameSettings settings,
+                                       BodyPart part){
+        if (settings == null) return;
+        var attachments =  settings.getAttachments(part);
+        if (attachments == null) return;
+        for (var bone : attachments.bones)
+            returnToDefault(provider, bone);
+    }
 }

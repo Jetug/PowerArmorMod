@@ -13,28 +13,36 @@
 			"bones": [
 				{
 					"name": "right_shoulder_armor",
-					"pivot": [-10.6875, 30.6875, -0.0625],
+					"pivot": [-18.6875, 51.6875, -0.0625],
 					"cubes": [
-						{"origin": [-4.25, 5, -4], "size": [7, 7, 8], "uv": [213, 259], "mirror": true},
-						{"origin": [-3.25, 12, -3], "size": [6, 1, 6], "uv": [221, 211], "mirror": true},
-						{"origin": [-3.25, 5, -5], "size": [6, 6, 10], "uv": [236, 250], "mirror": true},
-						{"origin": [-5.25, 5, -3], "size": [1, 6, 6], "uv": [228, 242], "mirror": true}
+						{"origin": [-12.25, 26, -4], "size": [7, 7, 8], "uv": [240, 237], "mirror": true},
+						{"origin": [-11.25, 33, -3], "size": [6, 1, 6], "uv": [221, 211], "mirror": true},
+						{"origin": [-11.25, 26, -5], "size": [6, 6, 10], "uv": [213, 220], "mirror": true},
+						{"origin": [-13.25, 26, -3], "size": [1, 6, 6], "uv": [218, 239], "mirror": true}
 					]
 				},
 				{
 					"name": "right_upper_arm_armor",
-					"pivot": [6.9875, 34.375, -22.4375],
+					"pivot": [-1.0125, 57.375, -22.4375],
 					"cubes": [
-						{"origin": [-3.5, 0.25, -2.25], "size": [6, 4, 0], "uv": [214, 211], "mirror": true},
-						{"origin": [-3.5, 0.25, -2.75], "size": [6, 5, 5.5], "uv": [236, 227], "mirror": true}
+						{"origin": [-11.5, 23.25, -2.25], "size": [6, 4, 0], "uv": [214, 211], "mirror": true},
+						{"origin": [-11.5, 21.25, -2.75], "size": [6, 5, 5.5], "uv": [248, 226], "mirror": true}
 					]
 				},
 				{
 					"name": "right_forearm_armor",
-					"pivot": [-8.51396, 20.62222, -0.05528],
+					"pivot": [-8.5, 21.075, 0.575],
 					"cubes": [
-						{"origin": [-2.5, 1.7, -3.85], "size": [4, 1, 6], "uv": [210, 249], "mirror": true},
-						{"origin": [-3.5, -3.05, -7], "size": [6, 6, 10], "inflate": 0.2, "uv": [238, 210], "mirror": true}
+						{"origin": [-10.5, 22.7, -3.85], "size": [4, 1, 6], "uv": [227, 237], "mirror": true},
+						{"origin": [-11.5, 17.95, -7], "size": [6, 6, 10], "inflate": 0.2, "uv": [238, 210], "mirror": true}
+					]
+				},
+				{
+					"name": "pov_right_forearm_armor",
+					"pivot": [-16.26396, 40.62222, -1.05528],
+					"cubes": [
+						{"origin": [-2.75, 1.7, -0.6], "size": [5, 1, 8], "uv": [222, 252], "mirror": true},
+						{"origin": [-3.25, -3.05, -2], "size": [6, 6, 10], "inflate": 0.2, "uv": [238, 210], "mirror": true}
 					]
 				}
 			]

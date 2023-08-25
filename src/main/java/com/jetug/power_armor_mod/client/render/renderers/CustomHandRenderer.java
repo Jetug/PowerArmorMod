@@ -37,7 +37,7 @@ public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
     public void render(IAnimatable animatable, ArmorChassisEntity chassisEntity, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource, int packedLight) {
         super.render(animatable, chassisEntity, poseStack, bufferSource, packedLight);
-        handleAttachment(handModel, chassisEntity, BodyPart.RIGHT_ARM_ARMOR);
+        renderEquipment(handModel, chassisEntity, BodyPart.RIGHT_ARM_ARMOR, true);
     }
 
     public static void registerHandRenderer(){
