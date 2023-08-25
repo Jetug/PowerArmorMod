@@ -1,12 +1,8 @@
 package com.jetug.power_armor_mod.client.model;
 
-import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-
-import static com.jetug.generated.resources.Textures.*;
-import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
 @SuppressWarnings("rawtypes")
 public class HandModel extends AnimatedGeoModel {

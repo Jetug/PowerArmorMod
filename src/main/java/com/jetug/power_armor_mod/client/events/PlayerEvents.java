@@ -29,6 +29,7 @@ public class PlayerEvents {
 
         CustomHandRenderer.getHandRenderer().render(
                 CustomHandRenderer.getHandAmimator(),
+                getPlayerChassis(),
                 poseStack,
                 event.getMultiBufferSource(),
                 event.getPackedLight());

@@ -19,5 +19,12 @@
       "frame": "right_forearm_frame",
       "armor": "right_forearm_armor"
     }
+  ],
+  "pov": [
+    {
+      "mode": "replace",
+      "frame": "right_forearm_frame",
+      "armor": "pov_right_forearm_armor"
+    }
   ]
 }

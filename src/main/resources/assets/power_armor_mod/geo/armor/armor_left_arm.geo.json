@@ -23,7 +23,6 @@
 				},
 				{
 					"name": "left_upper_arm_armor",
-					"parent": "left_shoulder_armor",
 					"pivot": [6.9875, 34.375, -22.4375],
 					"cubes": [
 						{"origin": [5.5, 21.25, -2.25], "size": [6, 4, 0], "uv": [153, 211]},

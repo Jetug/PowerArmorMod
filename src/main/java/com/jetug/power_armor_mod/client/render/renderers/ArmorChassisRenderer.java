@@ -10,19 +10,15 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.resources.*;
 import net.minecraft.world.item.*;
-import org.apache.logging.log4j.util.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.GeoModelProvider;
 
 import java.util.*;
 
 import static com.jetug.power_armor_mod.client.render.utils.GeoUtils.*;
-import static com.jetug.power_armor_mod.client.render.utils.GeoUtils.getModel;
 import static com.jetug.power_armor_mod.client.render.utils.ParticleUtils.showJetpackParticles;
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -52,19 +48,21 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
                        int packedLight, int packedOverlay,
                        float red, float green, float blue, float alpha) {
 
+        if (animatable.isInvisible()) return;
         for (var part : animatable.equipment)
-            handleAttachment(animatable, part);
+            handleAttachment(armorChassisModel ,animatable, part);
 
-        super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
+                packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
+                                  int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if ((Objects.equals(bone.name, LEFT_JET_LOCATOR) ||
-                Objects.equals(bone.name, RIGHT_JET_LOCATOR))
+        if ((Objects.equals(bone.name, LEFT_JET_LOCATOR) || Objects.equals(bone.name, RIGHT_JET_LOCATOR))
                 && animatable.isDashing()) {
             showJetpackParticles(getWorldPos(bone, poseStack));
         }
@@ -112,10 +110,10 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
         }
     }
 
-    private void handleAttachment(ArmorChassisEntity entity, BodyPart part){
+    public static void handleAttachment(AnimatedGeoModel provider, ArmorChassisEntity entity, BodyPart part){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
-            forAllAttachments(item.getSettings(), this::addModelPart);
+            addModelPart(provider, item.getSettings());
         }
         else {
             var frameSettings = entity.getSettings();
@@ -123,26 +121,23 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
             var attachments =  frameSettings.getAttachments(part);
             if (attachments == null) return;
             for (var bone : attachments.bones)
-                returnToDefault(armorChassisModel, bone);
+                returnToDefault(provider, bone);
         }
     }
 
-    private void forAllAttachments(EquipmentSettings settings, TriConsumer<EquipmentAttachment, GeoBone, GeoBone> action) {
+    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings) {
         if(settings == null || settings.attachments == null) return;
 
         for (var equipmentAttachment : settings.attachments) {
-            var frameBone = getFrameBone(armorChassisModel, equipmentAttachment.frame);
+            var frameBone = getFrameBone(provider, equipmentAttachment.frame);
             var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
             if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
 
-            action.accept(equipmentAttachment, frameBone, armorBone);
+            switch (equipmentAttachment.mode) {
+                case ADD -> addBone(frameBone, armorBone);
+                case REPLACE -> replaceBone(frameBone, armorBone);
+            }
         }
     }
 
-    public void addModelPart(EquipmentAttachment equipmentAttachment, GeoBone frameBone, GeoBone armorBone) {
-        switch (equipmentAttachment.mode) {
-            case ADD -> addBone(frameBone, armorBone);
-            case REPLACE -> replaceBone(frameBone, armorBone);
-        }
-    }
 }

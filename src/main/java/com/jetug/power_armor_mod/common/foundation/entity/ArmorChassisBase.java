@@ -47,6 +47,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     private String chassisId = null;
     private FrameSettings settings = null;
+    private ListTag serializedInventory;
 
     public final BodyPart[] armor = new BodyPart[]{
             HELMET,
@@ -245,8 +246,6 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
 
-    private ListTag serializedInventory = null;
-
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
         data.inventory = serializedInventory;//serializeInventory(inventory);
@@ -288,6 +287,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
             }
         }
         this.inventory.addListener(this);
+        serializedInventory = serializeInventory(inventory);
     }
 
     protected void doHeatAction(int heat, Runnable action){

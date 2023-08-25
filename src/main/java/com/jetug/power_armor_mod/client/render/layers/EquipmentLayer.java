@@ -12,10 +12,10 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 @SuppressWarnings("ConstantConditions")
 public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
-    private final IGeoRenderer<ArmorChassisEntity> entityRenderer;
+    private final IGeoRenderer entityRenderer;
     public BodyPart bodyPart;
 
-    public EquipmentLayer(IGeoRenderer<ArmorChassisEntity> entityRenderer, BodyPart bodyPart) {
+    public EquipmentLayer(IGeoRenderer entityRenderer, BodyPart bodyPart) {
         super(entityRenderer);
         this.entityRenderer = entityRenderer;
         this.bodyPart = bodyPart;
@@ -26,7 +26,7 @@ public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
                        int packedLightIn, ArmorChassisEntity entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
-        if(entity.isEquipmentVisible(bodyPart) && !entity.isInvisible()) {
+        if(entity.isEquipmentVisible(bodyPart)) {
             var item = entity.getEquipmentItem(bodyPart);
             if (item.getSettings() == null) return;
             var texture = item.getSettings().getTextureLocation();
