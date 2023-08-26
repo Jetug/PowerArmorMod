@@ -4,6 +4,8 @@ import com.jetug.power_armor_mod.common.util.extensions.PlayerExtension;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
+import static com.jetug.power_armor_mod.client.render.utils.ResourceHelper.getResourceLocation;
+
 @SuppressWarnings("rawtypes")
 public class HandModel extends AnimatedGeoModel {
     @Override
@@ -19,13 +21,5 @@ public class HandModel extends AnimatedGeoModel {
     @Override
     public ResourceLocation getAnimationFileLocation(Object animatable) {
         return getResourceLocation("animations/hand/", "_hand.animation.json");
-    }
-
-    private ResourceLocation getResourceLocation(String path, String extension){
-        var chassis = PlayerExtension.getPlayerChassis();
-        var name = chassis.getRegistryName();
-        var resourceLocation = chassis.getType().getRegistryName();
-
-        return new ResourceLocation(resourceLocation.getNamespace(), path + name + extension);
     }
 }

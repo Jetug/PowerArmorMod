@@ -5,7 +5,7 @@ import com.jetug.power_armor_mod.common.data.json.FrameSettings;
 import com.jetug.power_armor_mod.common.events.*;
 import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
-import com.jetug.power_armor_mod.common.util.helpers.ResourceHelper;
+import com.jetug.power_armor_mod.client.render.utils.ResourceHelper;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;

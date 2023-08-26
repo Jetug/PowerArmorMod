@@ -1,7 +1,6 @@
 package com.jetug.power_armor_mod.client.resources;
 
 import com.google.gson.*;
-import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.data.json.EquipmentSettings;
 import com.jetug.power_armor_mod.common.data.json.FrameSettings;
 import com.jetug.power_armor_mod.common.data.json.ModelSettingsBase;
@@ -11,9 +10,7 @@ import javax.annotation.*;
 import java.io.*;
 import java.util.*;
 
-import static com.jetug.power_armor_mod.client.resources.ClassGenerator.generateConstants;
-import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.*;
-import static com.jetug.power_armor_mod.common.util.helpers.ResourceHelper.getResourceName;
+import static com.jetug.power_armor_mod.client.render.utils.ResourceHelper.getResourceName;
 
 public class ModResourceManager {
     private static final String CONFIG_DIR = "config/model/";
