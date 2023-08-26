@@ -48,9 +48,7 @@ public class ArmorChassiSItem extends Item {
 
         if (context.getLevel().addFreshEntity(savedEntity)) {
             clearItemTags(stack);
-
             context.getPlayer().getInventory().removeItem(stack);
-
             //stack.shrink(1);
         }
     }
@@ -58,7 +56,7 @@ public class ArmorChassiSItem extends Item {
     private static void summonNewEntity(UseOnContext context) {
         var stack = context.getItemInHand();
         var world = context.getLevel();
-        var entity = new ArmorChassisEntity(EntityTypeRegistry.POWER_ARMOR.get(), world);
+        var entity = new ArmorChassisEntity(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
         //entity.setPos(context.getClickLocation());
         moveEntityToClickedBlock(entity, context);
 

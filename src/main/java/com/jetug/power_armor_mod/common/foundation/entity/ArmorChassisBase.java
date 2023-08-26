@@ -65,7 +65,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         noCulling = true;
         initInventory();
         updateParams();
-        //getType().getRegistryName()
+        //getType().getModelId()
     }
 
     @Override
@@ -120,11 +120,11 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     @Nullable
     public FrameSettings getSettings(){
         if(settings == null)
-            settings = ClientConfig.modResourceManager.getFrameSettings(getRegistryName());
+            settings = ClientConfig.modResourceManager.getFrameSettings(getModelId());
         return settings;
     }
 
-    public String getRegistryName(){
+    public String getModelId(){
         if(chassisId == null)
             chassisId = ResourceHelper.getResourceName(getType().getRegistryName());
         return chassisId;

@@ -16,7 +16,7 @@ import static com.jetug.power_armor_mod.client.render.utils.ResourceHelper.getRe
 import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"unchecked"})
 public class ArmorChassisModel<Type extends ArmorChassisEntity & IAnimatable> extends AnimatedGeoModel<Type>
 {
     public ArmorChassisModel(){

@@ -15,7 +15,8 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.i
 public class CommonModEvents {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(EntityTypeRegistry.POWER_ARMOR.get(), ArmorChassisEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), ArmorChassisEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), ArmorChassisEntity.createAttributes().build());
     }
 
     @SubscribeEvent
