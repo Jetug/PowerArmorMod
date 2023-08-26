@@ -4,8 +4,8 @@
 		{
 			"description": {
 				"identifier": "geometry.unknown",
-				"texture_width": 128,
-				"texture_height": 128,
+				"texture_width": 300,
+				"texture_height": 300,
 				"visible_bounds_width": 4,
 				"visible_bounds_height": 2.5,
 				"visible_bounds_offset": [0, 0.75, 0]
@@ -48,9 +48,9 @@
 					"pivot": [4, 0, 0],
 					"cubes": [
 						{"origin": [6.75, 0, -4], "size": [2, 16, 8], "uv": [12, 16]},
-						{"origin": [13.75, 0, -4], "size": [2, 16, 8], "uv": [0, 0]},
 						{"origin": [8.75, 14, -4], "size": [5, 2, 8], "uv": [44, 67]},
-						{"origin": [8.75, 0, -4], "size": [5, 2, 8], "uv": [64, 37]}
+						{"origin": [8.75, 0, -4], "size": [5, 2, 8], "uv": [64, 37]},
+						{"origin": [13.75, 0, -4], "size": [2, 16, 8], "uv": [0, 0]}
 					]
 				},
 				{

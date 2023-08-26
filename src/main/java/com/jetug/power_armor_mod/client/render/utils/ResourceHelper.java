@@ -22,9 +22,9 @@ public class ResourceHelper {
 
     public static ResourceLocation getResourceLocation(ArmorChassisBase chassis, String path, String extension){
         var name = chassis.getModelId();
-        var resourceLocation = chassis.getType().getRegistryName();
+        var modId = chassis.getType().getRegistryName().getNamespace();
 
-        return new ResourceLocation(resourceLocation.getNamespace(), path + name + extension);
+        return new ResourceLocation(modId, path + name + extension);
     }
 
     public static ResourceLocation getResourceLocation(String path, String extension){

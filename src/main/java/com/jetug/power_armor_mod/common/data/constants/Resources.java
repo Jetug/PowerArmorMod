@@ -4,8 +4,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class Resources {
     //Textures
-    public static final ResourceLocation ARMOR_INVENTORY_TEXTURE      = resourceLocation("textures/gui/armor_inventory.png");
     public static final ResourceLocation FRAME_TEXTURE_LOCATION       = resourceLocation("textures/entity/armor_chassis.png");
+    public static final ResourceLocation ARMOR_INVENTORY_TEXTURE      = resourceLocation("textures/gui/armor_inventory.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HEAD        = resourceLocation("textures/gui/empty_armor_slot_head.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_BODY        = resourceLocation("textures/gui/empty_armor_slot_body.png");
     public static final ResourceLocation EMPTY_ARMOR_SLOT_LEFT_ARM    = resourceLocation("textures/gui/empty_armor_slot_left_arm.png");
