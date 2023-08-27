@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.client.events;
 
 import com.jetug.power_armor_mod.client.ClientConfig;
-import com.jetug.power_armor_mod.client.gui.hud.HeatRenderer;
+import com.jetug.power_armor_mod.client.gui.hud.*;
 import com.jetug.power_armor_mod.common.foundation.container.screen.*;
 import com.jetug.power_armor_mod.common.foundation.registery.GuiRegistry;
 import com.jetug.power_armor_mod.client.input.LongClickController;
@@ -35,8 +35,8 @@ public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
-        event.registerEntityRenderer(ARMOR_CHASSIS.get(), ArmorChassisRenderer::new);
-        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), ArmorChassisRenderer::new);
+        event.registerEntityRenderer(ARMOR_CHASSIS.get(), SteamArmorRenderer::new);
+        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), PowerArmorRenderer::new);
         //event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
     }
 

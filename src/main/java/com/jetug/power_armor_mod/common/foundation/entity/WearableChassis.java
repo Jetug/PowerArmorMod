@@ -46,7 +46,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.jetug.generated.animations.ArmorChassisAnimation.*;
@@ -61,7 +60,7 @@ import static net.minecraft.world.InteractionHand.*;
 import static org.apache.logging.log4j.Level.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 
-public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable {
+public class WearableChassis extends ArmorChassisBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
     public static final int MAX_PUNCH_FORCE = 20;
@@ -79,7 +78,7 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
     private boolean isPunching = false;
     private DashDirection dashDirection;
 
-    public ArmorChassisEntity(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
+    public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -108,67 +107,10 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
             pushEntitiesAround();
         }
 
-        if (this.level.isClientSide()) {
-            double x = this.getX() + (this.random.nextDouble()) * (double) this.getBbWidth() * 0.5D;
-            double z = this.getZ() + (this.random.nextDouble()) * (double) this.getBbWidth() * 0.5D;
-//            this.level.addParticle(ModParticles.JET.get(), true, x, this.getY(), z, 0, 0, 0);
-//            showJetpackParticles();
-        }
-//        syncDataWithClient();
         applyEffects();
-
-
-//        if (isClientSide && hasPlayerPassenger()) {
-//            var time = Minecraft.getInstance().getFrameTime();
-//            var pos = getPosition(time);
-//            var bone = getFrameBone("left_jet_locator");
-//
-//            Matrix4f poseState = poseStack.last().pose().copy();
-//            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.dispatchedMat);
-//
-//            bone.setModelSpaceXform(RenderUtils.invertAndMultiplyMatrices(poseState, this.renderEarlyMat));
-//            localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
-//            bone.setLocalSpaceXform(localMatrix);
-//
-//            Matrix4f worldState = localMatrix.copy();
-//
-//            worldState.translate(new Vector3f(this.position()));
-//            bone.setWorldSpaceXform(worldState);
-//
-//            getCommandSenderWorld().addParticle(ParticleTypes.PORTAL,
-//                    pos.x,
-//                    pos.y + 1,
-//                    pos.z,
-//                    (getRandom().nextDouble() - 0.5D), -getRandom().nextDouble(),
-//                    (getRandom().nextDouble() - 0.5D));
-//        }
-
-        //showJetpackParticles();
-
         speedometer.tick();
         timer.tick();
     }
-
-    private void showJetpackParticles() {
-        var minecraft = Minecraft.getInstance();
-        ParticleOptions particle = ParticleTypes.FLAME;
-        Random rand = new Random();
-        float random = (rand.nextFloat() - 0.5F) * 0.1F;
-        double[] sneakBonus = minecraft.player.isCrouching() ? new double[]{-0.30, -0.10} : new double[]{0, 0};
-        var playerPos = new Pos3D(minecraft.player).translate(0, 1.5, 0);
-        var vLeft = new Pos3D(-0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-        var vRight = new Pos3D(0.18, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-        var vCenter = new Pos3D((rand.nextFloat() - 0.5F) * 0.25F, -0.90 + sneakBonus[1], -0.30 + sneakBonus[0]).rotate(minecraft.player.yBodyRot, 0);
-        var v = playerPos.translate(vLeft).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-        v = playerPos.translate(vRight).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-        v = playerPos.translate(vCenter).translate(new Pos3D(minecraft.player.getDeltaMovement()));
-        minecraft.particleEngine.createParticle(particle, v.x, v.y, v.z, random, -0.2D, random);
-
-        //minecraft.level.addParticle(particle, v.x, v.y, v.z, random, -0.2D, random); // alternative method
-    }
-
 
     @Override
     public void addAttackCharge() {
@@ -252,9 +194,9 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
         Global.LOGGER.log(INFO, level.isClientSide);
-        ItemStack stack = player.getItemInHand(hand);
+        var stack = player.getItemInHand(hand);
 
-        if(isServerSide) {
+        if(isServerSide && !player.isPassenger()) {
             if (stack.getItem() == Items.STICK)
                 return giveEntityItemToPlayer(player, this, hand);
             if (player.isShiftKeyDown()) {
@@ -351,12 +293,12 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new PowerArmorMenu(id, inventory, menu, ArmorChassisEntity.this);
+                    return new PowerArmorMenu(id, inventory, menu, WearableChassis.this);
                 }
 
                 @Override
                 public Component getDisplayName() {
-                    return ArmorChassisEntity.this.getDisplayName();
+                    return WearableChassis.this.getDisplayName();
                 }
             });
         }
@@ -369,12 +311,12 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new ArmorStationMenu(id, inventory, menu, ArmorChassisEntity.this);
+                    return new ArmorStationMenu(id, inventory, menu, WearableChassis.this);
                 }
 
                 @Override
                 public Component getDisplayName() {
-                    return ArmorChassisEntity.this.getDisplayName();
+                    return WearableChassis.this.getDisplayName();
                 }
             });
         }
@@ -418,11 +360,10 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
         return hasJetpack() ? getJetpack().heat : 0;
     }
 
-
     public void dash(DashDirection direction) {
         if (!hasJetpack() || !hasEquipment(ENGINE)) return;
 
-        doHeatAction(getDashHeat(), () -> applyToPlayer((player) -> {
+        heatController.doHeatAction(getDashHeat(), () -> applyToPlayer((player) -> {
             dashDirection = direction;
             isDashing = true;
             timer.addCooldownTimer(DASH_DURATION, () -> isDashing = false);
@@ -479,7 +420,7 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
     private void powerPunch(Runnable runnable){
         if(!hasPlayerPassenger() || attackCharge == 0) return;
 
-        doHeatAction(getPowerKnuckle().heat, () -> {
+        heatController.doHeatAction(getPowerKnuckle().heat, () -> {
             isPunching = true;
             timer.addCooldownTimer(PUNCH_DURATION, () -> isPunching = false);
             runnable.run();
@@ -562,7 +503,7 @@ public class ArmorChassisEntity extends ArmorChassisBase implements IAnimatable 
     }
 
     private void addEffect(Player player, MobEffect effect, int amplifier){
-        player.addEffect(new MobEffectInstance(effect, ArmorChassisEntity.EFFECT_DURATION, amplifier, false, false));
+        player.addEffect(new MobEffectInstance(effect, WearableChassis.EFFECT_DURATION, amplifier, false, false));
     }
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {

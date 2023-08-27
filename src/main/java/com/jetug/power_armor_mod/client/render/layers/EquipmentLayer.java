@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.data.enums.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,7 +11,7 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 @SuppressWarnings("ConstantConditions")
-public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
+public class EquipmentLayer extends GeoLayerRenderer<WearableChassis> {
     private final IGeoRenderer entityRenderer;
     public BodyPart bodyPart;
 
@@ -23,7 +23,7 @@ public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn,
-                       int packedLightIn, ArmorChassisEntity entity,
+                       int packedLightIn, WearableChassis entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.isEquipmentVisible(bodyPart)) {
@@ -35,7 +35,7 @@ public class EquipmentLayer extends GeoLayerRenderer<ArmorChassisEntity> {
     }
 
     private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                        ArmorChassisEntity entity, float partialTicks, ResourceLocation texture) {
+                        WearableChassis entity, float partialTicks, ResourceLocation texture) {
         int overlay = OverlayTexture.NO_OVERLAY;
         RenderType cameo = RenderType.armorCutoutNoCull(texture);
         matrixStackIn.pushPose();

@@ -14,9 +14,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class EntityTypeRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Global.MOD_ID);
 
-    public static final RegistryObject<EntityType<ArmorChassisEntity>> ARMOR_CHASSIS =
+    public static final RegistryObject<EntityType<SteamArmorChassis>> ARMOR_CHASSIS =
             registerEntity("armor_chassis", EntityType.Builder
-                    .of(ArmorChassisEntity::new, MobCategory.MISC)
+                    .of(SteamArmorChassis::new, MobCategory.MISC)
                     .sized(1.0f, 2.3f));
 
     public static final RegistryObject<EntityType<PowerArmorFrame>> POWER_ARMOR_FRAME =

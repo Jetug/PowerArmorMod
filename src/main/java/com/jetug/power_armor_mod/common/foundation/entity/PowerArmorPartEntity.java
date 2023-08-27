@@ -23,14 +23,14 @@
 //
 //public class PowerArmorPartEntity extends Entity{
 //    public EntityDimensions size;
-//    public ArmorChassisEntity parentMob;
+//    public WearableChassis parentMob;
 //    public BodyPart bodyPart;
 //
 //    public PowerArmorPartEntity(EntityType<?> type, Level level) {
 //        super(type, level);
 //    }
 //
-//    public PowerArmorPartEntity(ArmorChassisEntity parent, BodyPart bodyPart, float xz, float y) {
+//    public PowerArmorPartEntity(WearableChassis parent, BodyPart bodyPart, float xz, float y) {
 //        this(POWER_ARMOR_PART.get(), parent.level);
 //        this.parentMob = parent;
 //        this.bodyPart = bodyPart;

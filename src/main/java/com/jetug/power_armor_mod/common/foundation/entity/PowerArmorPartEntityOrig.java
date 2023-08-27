@@ -19,14 +19,14 @@ import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 
 
-public class PowerArmorPartEntityOrig extends PartEntity<ArmorChassisEntity> {
+public class PowerArmorPartEntityOrig extends PartEntity<WearableChassis> {
     public final EntityDimensions size;
-    public final ArmorChassisEntity parentMob;
+    public final WearableChassis parentMob;
     public final BodyPart bodyPart;
 
     private ArmorPartsEvents events = null;
 
-    public PowerArmorPartEntityOrig(ArmorChassisEntity parent, BodyPart bodyPart, float xz, float y) {
+    public PowerArmorPartEntityOrig(WearableChassis parent, BodyPart bodyPart, float xz, float y) {
         super(parent);
         this.size = EntityDimensions.scalable(xz, y);
         this.refreshDimensions();

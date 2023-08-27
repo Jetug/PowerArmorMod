@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +33,7 @@ public class MixinProjectileUtil {
         if(isWearingChassis(player))
         {
             Predicate<Entity> newFilter = (levelEntity) ->{
-                var isNotFrameEntity = !(levelEntity instanceof ArmorChassisEntity powerArmor && player.getVehicle() == powerArmor);
+                var isNotFrameEntity = !(levelEntity instanceof WearableChassis powerArmor && player.getVehicle() == powerArmor);
                 return filter.test(levelEntity) && isNotFrameEntity;
             };
 

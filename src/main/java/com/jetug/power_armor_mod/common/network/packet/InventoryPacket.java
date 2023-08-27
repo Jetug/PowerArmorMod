@@ -45,7 +45,7 @@ public class InventoryPacket {
 //        var data = message.nbt;
 //        var entity = player.level.getEntity(data.entityId);
 //
-//        if(entity instanceof ArmorChassisEntity powerArmor) powerArmor.setArmorData(data);
+//        if(entity instanceof WearableChassis powerArmor) powerArmor.setArmorData(data);
 
     }
 }

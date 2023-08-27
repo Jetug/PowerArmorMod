@@ -17,7 +17,7 @@ public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorChassiSItem::new);
+    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorChassisItem::new);
 
     public static final RegistryObject<ChassisArmor> PA_HELMET = ITEMS.register("pa_helmet", () ->
             new ChassisArmor(IRON, BodyPart.HELMET, 0.9f));

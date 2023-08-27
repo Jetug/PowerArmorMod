@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.layers;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -17,18 +17,17 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-import static com.jetug.power_armor_mod.common.data.constants.Resources.*;
 import static com.jetug.power_armor_mod.common.util.helpers.TextureHelper.*;
 import static java.lang.System.out;
 
-public class PlayerHeadLayer extends GeoLayerRenderer<ArmorChassisEntity> {
-    private final IGeoRenderer<ArmorChassisEntity> entityRenderer;
+public class PlayerHeadLayer extends GeoLayerRenderer<WearableChassis> {
+    private final IGeoRenderer<WearableChassis> entityRenderer;
     private static final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
     private final TextureManager textureManager;
     private final int textureWidth;
     private final int textureHeight;
 
-    public PlayerHeadLayer(IGeoRenderer<ArmorChassisEntity> entityRenderer) {
+    public PlayerHeadLayer(IGeoRenderer<WearableChassis> entityRenderer) {
         super(entityRenderer);
         this.entityRenderer = entityRenderer;
         this.textureManager =  Minecraft.getInstance().getTextureManager();
@@ -38,7 +37,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<ArmorChassisEntity> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, ArmorChassisEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WearableChassis entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
             var test = entity.getControllingPassenger();
             out.println(test);
@@ -70,7 +69,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<ArmorChassisEntity> {
     }
 
     @Nullable
-    private ResourceLocation getHeadLayerRL(Player clientPlayer, ArmorChassisEntity entity) {
+    private ResourceLocation getHeadLayerRL(Player clientPlayer, WearableChassis entity) {
         var tag = clientPlayer.getUUID().toString();
 
         if (!playerTextures.containsKey(tag)) {
@@ -84,7 +83,7 @@ public class PlayerHeadLayer extends GeoLayerRenderer<ArmorChassisEntity> {
         return playerTextures.get(tag);
     }
 
-    private void downloadPlayerHeadTexture(Player clientPlayer, ArmorChassisEntity entity){
+    private void downloadPlayerHeadTexture(Player clientPlayer, WearableChassis entity){
        var thread = new Thread(() -> {
             var tag = clientPlayer.getUUID().toString();
             var texture = getResizedHeadTexture(clientPlayer, textureWidth, textureHeight);

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.mixin;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -50,7 +50,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
                             this.minecraft.player.setYRot(entity.getYRot());
                             this.minecraft.player.setYHeadRot(entity.getYRot());
                         }
-                        if(!(entity instanceof ArmorChassisEntity))
+                        if(!(entity instanceof WearableChassis))
                             this.minecraft.gui.setOverlayMessage(new TranslatableComponent("mount.onboard", this.minecraft.options.keyShift.getTranslatedKeyMessage()), false);
                     }
                 }

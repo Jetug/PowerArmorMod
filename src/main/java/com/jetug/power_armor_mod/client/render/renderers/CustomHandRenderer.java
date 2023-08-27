@@ -3,7 +3,7 @@ package com.jetug.power_armor_mod.client.render.renderers;
 import com.jetug.power_armor_mod.client.model.HandModel;
 import com.jetug.power_armor_mod.client.render.layers.EquipmentLayer;
 import com.jetug.power_armor_mod.common.data.enums.BodyPart;
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,7 @@ public class CustomHandRenderer extends CustomGeoRenderer<IAnimatable> {
     }
 
     @Override
-    public void render(IAnimatable animatable, ArmorChassisEntity chassisEntity, PoseStack poseStack,
+    public void render(IAnimatable animatable, WearableChassis chassisEntity, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource, int packedLight) {
         super.render(animatable, chassisEntity, poseStack, bufferSource, packedLight);
         renderEquipment(handModel, chassisEntity, BodyPart.RIGHT_ARM_ARMOR, true);

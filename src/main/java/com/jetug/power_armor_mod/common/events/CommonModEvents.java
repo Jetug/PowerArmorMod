@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.events;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
 import com.jetug.power_armor_mod.common.network.PacketHandler;
 import com.jetug.power_armor_mod.common.data.constants.Global;
@@ -15,8 +15,8 @@ import static com.jetug.power_armor_mod.common.util.extensions.PlayerExtension.i
 public class CommonModEvents {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), ArmorChassisEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), ArmorChassisEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), WearableChassis.createAttributes().build());
+        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
     }
 
     @SubscribeEvent

@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.client.render.renderers;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import software.bernie.geckolib3.util.EModelRenderCycle;
@@ -55,7 +54,7 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
         return model.getTextureLocation(animatable);
     }
 
-    public void render(T animatable, ArmorChassisEntity chassisEntity, PoseStack poseStack,
+    public void render(T animatable, WearableChassis chassisEntity, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource,
                        int packedLight) {
 
@@ -81,7 +80,7 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
 
     }
 
-    protected void renderLayer(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, ArmorChassisEntity animatable,
+    protected void renderLayer(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, WearableChassis animatable,
                                float limbSwing, float limbSwingAmount, float partialTick, float rotFloat, float netHeadYaw,
                                float headPitch, MultiBufferSource bufferSource2, GeoLayerRenderer layerRenderer) {
         layerRenderer.render(poseStack, bufferSource, packedLight, animatable, limbSwing,

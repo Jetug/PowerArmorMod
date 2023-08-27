@@ -14,8 +14,6 @@ public class HeatRenderer implements IIngameOverlay
 {
     public static final int BAR_HEIGHT = 52;
 
-
-
     @Override
     public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int width, int height) {
         if (!isWearingChassis()) return;
@@ -26,7 +24,6 @@ public class HeatRenderer implements IIngameOverlay
         var screenWidth  = minecraft.getWindow().getGuiScaledWidth();
         var screenHeight = minecraft.getWindow().getGuiScaledHeight();
 
-
         var x = screenWidth / 2 + 95;
         var y = height - BAR_HEIGHT;
 
@@ -34,7 +31,7 @@ public class HeatRenderer implements IIngameOverlay
 
         RenderSystem.setShaderTexture(0, ICONS_LOCATION);
         var armor = PlayerExtension.getPlayerChassis();
-        int heat = armor.getHeatInPercent() / 2;
+        int heat = armor.heatController.getHeatInPercent() / 2;
 
         var offset = 50 - heat + 1;
 

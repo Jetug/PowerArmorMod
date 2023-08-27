@@ -1,7 +1,7 @@
 package com.jetug.power_armor_mod.common.foundation.container.screen;
 
 import com.jetug.power_armor_mod.common.foundation.container.menu.*;
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.util.Pos2D;
 import com.jetug.power_armor_mod.common.data.constants.Global;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -117,7 +117,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
         RenderSystem.setShaderTexture(0, ARMOR_INVENTORY_TEXTURE);
         this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-        if (Global.referenceMob instanceof ArmorChassisEntity powerArmor) {
+        if (Global.referenceMob instanceof WearableChassis powerArmor) {
             renderEntity(powerArmor);
         }
 
@@ -139,7 +139,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
         return topPos + imageHeight;
     }
 
-    private void renderEntity(ArmorChassisEntity powerArmor) {
+    private void renderEntity(WearableChassis powerArmor) {
         var scale = 1F / Math.max(MIN_SCALE, powerArmor.getScale());
 
         InventoryScreen.renderEntityInInventory(

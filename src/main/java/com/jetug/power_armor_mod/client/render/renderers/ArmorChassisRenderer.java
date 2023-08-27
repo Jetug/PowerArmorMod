@@ -24,14 +24,13 @@ import static com.jetug.power_armor_mod.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
-public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
-    public static ArmorChassisModel<ArmorChassisEntity> armorChassisModel;
-    public static final ArmorChassisModel<ArmorChassisEntity> armorModel = new ArmorChassisModel<>();
+public class ArmorChassisRenderer extends ModGeoRenderer<WearableChassis> {
+    private final ArmorChassisModel<WearableChassis> armorChassisModel;
     protected ItemStack mainHandItem, offHandItem;
 
     public ArmorChassisRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ArmorChassisModel<>());
-        armorChassisModel = (ArmorChassisModel<ArmorChassisEntity>)getGeoModelProvider();
+        armorChassisModel = (ArmorChassisModel<WearableChassis>)getGeoModelProvider();
         initLayers();
     }
 
@@ -42,7 +41,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
     }
 
     @Override
-    public void render(GeoModel model, ArmorChassisEntity animatable,
+    public void render(GeoModel model, WearableChassis animatable,
                        float partialTick, RenderType type, PoseStack poseStack,
                        MultiBufferSource bufferSource, VertexConsumer buffer,
                        int packedLight, int packedOverlay,
@@ -57,19 +56,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
-                                  int packedLight, int packedOverlay,
-                                  float red, float green, float blue, float alpha) {
-        super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-
-        if ((Objects.equals(bone.name, LEFT_JET_LOCATOR) || Objects.equals(bone.name, RIGHT_JET_LOCATOR))
-                && animatable.isDashing()) {
-            showJetpackParticles(getWorldPos(bone, poseStack));
-        }
-    }
-
-    @Override
-    public void renderEarly(ArmorChassisEntity animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
+    public void renderEarly(WearableChassis animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
                             VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
@@ -78,7 +65,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
 
     @Nullable
     @Override
-    protected ItemStack getHeldItemForBone(String boneName, ArmorChassisEntity animatable) {
+    protected ItemStack getHeldItemForBone(String boneName, WearableChassis animatable) {
         if(!animatable.hasPlayerPassenger()) return null;
 
         return switch (boneName) {
@@ -97,7 +84,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
     }
 
     @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, ArmorChassisEntity currentEntity, IBone bone) {
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WearableChassis currentEntity, IBone bone) {
         stack.translate(0, 0, -0.09);
 
         if (!(item.getItem() instanceof ShieldItem)) return;
@@ -110,7 +97,7 @@ public class ArmorChassisRenderer extends ModGeoRenderer<ArmorChassisEntity> {
         }
     }
 
-    public static void renderEquipment(AnimatedGeoModel provider, ArmorChassisEntity entity, BodyPart part, boolean isPov){
+    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, BodyPart part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
             addModelPart(provider, item.getSettings(), isPov);

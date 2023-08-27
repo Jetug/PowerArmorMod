@@ -56,7 +56,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
 //        if(event.getEntity() instanceof Player player && isWearingChassis(player)){
-//            var damage = ((ArmorChassisEntity)player.getVehicle()).getPlayerDamageValue(event.getSource(), event.getAmount());
+//            var damage = ((WearableChassis)player.getVehicle()).getPlayerDamageValue(event.getSource(), event.getAmount());
 //            player.hurt(event.getSource(), damage);
 //            event.setCanceled(true);
 //        }

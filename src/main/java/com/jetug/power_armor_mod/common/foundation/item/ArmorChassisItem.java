@@ -1,8 +1,10 @@
 package com.jetug.power_armor_mod.common.foundation.item;
 
+import com.jetug.power_armor_mod.common.data.enums.BodyPart;
 import com.jetug.power_armor_mod.common.foundation.ModCreativeModeTab;
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.foundation.registery.EntityTypeRegistry;
+import com.jetug.power_armor_mod.common.foundation.registery.ItemRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
@@ -16,9 +18,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.jetug.power_armor_mod.common.foundation.EntityHelper.*;
 
-public class ArmorChassiSItem extends Item {
+public class ArmorChassisItem extends Item {
 
-    public ArmorChassiSItem() {
+    public ArmorChassisItem() {
         super((new Item.Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
     }
 
@@ -56,7 +58,8 @@ public class ArmorChassiSItem extends Item {
     private static void summonNewEntity(UseOnContext context) {
         var stack = context.getItemInHand();
         var world = context.getLevel();
-        var entity = new ArmorChassisEntity(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
+        var entity = new WearableChassis(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
+        entity.inventory.setItem(BodyPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
         //entity.setPos(context.getClickLocation());
         moveEntityToClickedBlock(entity, context);
 

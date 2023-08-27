@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.network.packet;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.network.data.ArmorData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -55,7 +55,7 @@ public class PowerArmorPacket{
         var data = message.getArmorData();
         var entity = player.level.getEntity(data.entityId);
 
-        if(entity instanceof ArmorChassisEntity powerArmor)
+        if(entity instanceof WearableChassis powerArmor)
             powerArmor.setArmorData(data);
     }
 }

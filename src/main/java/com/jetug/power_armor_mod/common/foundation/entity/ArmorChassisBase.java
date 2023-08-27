@@ -6,6 +6,7 @@ import com.jetug.power_armor_mod.common.events.*;
 import com.jetug.power_armor_mod.common.foundation.container.menu.*;
 import com.jetug.power_armor_mod.common.foundation.item.*;
 import com.jetug.power_armor_mod.client.render.utils.ResourceHelper;
+import com.jetug.power_armor_mod.common.util.helpers.HeatController;
 import com.jetug.power_armor_mod.common.util.helpers.timer.*;
 import com.jetug.power_armor_mod.common.network.data.*;
 import com.jetug.power_armor_mod.common.data.enums.*;
@@ -41,13 +42,20 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     protected float totalDefense;
     protected float totalToughness;
-    protected int heat = 0;
     protected int attackCharge = 0;
-    protected SimpleContainer inventory;
+    public SimpleContainer inventory;
+
+    public HeatController heatController = new HeatController(){
+        @Override
+        public int getHeatCapacity(){
+            return hasEquipment(ENGINE) ? ((EngineItem)getEquipment(ENGINE).getItem()).overheat : 0;
+        }
+    };
 
     private String chassisId = null;
     private FrameSettings settings = null;
     private ListTag serializedInventory;
+    private Container previousContainer;
 
     public final BodyPart[] armor = new BodyPart[]{
             HELMET,
@@ -59,6 +67,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     };
 
     public final BodyPart[] equipment = BodyPart.values();
+
 
     public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -73,12 +82,12 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
-        subHeat(COOLING);
+        heatController.subHeat(COOLING);
         if(isInLava()){
-            addHeat(20);
+            heatController.addHeat(20);
         }
         if (isInWaterOrRain()){
-            subHeat(5);
+            heatController.subHeat(5);
         }
     }
 
@@ -97,17 +106,15 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         saveInventory(compound);
-        compound.putInt(HEAT, heat);
+        compound.putInt(HEAT, heatController.getHeat());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         loadInventory(compound);
-        heat = compound.getInt(HEAT);
+        heatController.setHeat(compound.getInt(HEAT));
     }
-
-    private Container previousContainer;
 
     @Override
     public void containerChanged(@NotNull Container container) {
@@ -136,30 +143,8 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
-    public int getHeatCapacity(){
-        return hasEquipment(ENGINE) ? ((EngineItem)getEquipment(ENGINE).getItem()).overheat : 0;
-    }
 
-    public void addHeat(int value){
-        if(value <= 0) return;
-
-        if(heat + value <= getHeatCapacity())
-            heat += value;
-        else heat = getHeatCapacity();
-    }
-
-    public void subHeat(int value){
-        if(value <= 0 || heat == 0) return;
-
-        if(heat - value >= 0)
-            heat -= value;
-        else heat = 0;
-    }
-
-    public int getHeatInPercent(){
-        return getInPercents(heat, getHeatCapacity());
-    }
-
+    
     public int getAttackChargeInPercent(){
         return getInPercents(attackCharge, MAX_ATTACK_CHARGE);
     }
@@ -249,7 +234,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
         data.inventory = serializedInventory;//serializeInventory(inventory);
-        data.heat = heat;
+        data.heat = heatController.getHeat();
         //data.attackCharge = attackCharge;
 
         return data;
@@ -288,16 +273,6 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         }
         this.inventory.addListener(this);
         serializedInventory = serializeInventory(inventory);
-    }
-
-    protected void doHeatAction(int heat, Runnable action){
-        if(!canDoAction(heat)) return;
-        action.run();
-        addHeat(heat);
-    }
-
-    protected boolean canDoAction(int heat){
-        return heat + this.heat <= getHeatCapacity();
     }
 
     protected void syncDataWithClient() {

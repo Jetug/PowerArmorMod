@@ -1,6 +1,6 @@
 package com.jetug.power_armor_mod.common.util.extensions;
 
-import com.jetug.power_armor_mod.common.foundation.entity.ArmorChassisEntity;
+import com.jetug.power_armor_mod.common.foundation.entity.WearableChassis;
 import com.jetug.power_armor_mod.common.data.enums.ActionType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
@@ -19,17 +19,17 @@ public class PlayerExtension {
     }
 
     public static boolean isWearingChassis(Entity player){
-        return player != null && player.getVehicle() instanceof ArmorChassisEntity;
+        return player != null && player.getVehicle() instanceof WearableChassis;
     }
 
-    public static ArmorChassisEntity getPlayerChassis(){
+    public static WearableChassis getPlayerChassis(){
         return getPlayerChassis(getLocalPlayer());
     }
 
     @Nullable
-    public static ArmorChassisEntity getPlayerChassis(Player player){
-        if(player.getVehicle() instanceof ArmorChassisEntity)
-            return (ArmorChassisEntity) player.getVehicle();
+    public static WearableChassis getPlayerChassis(Player player){
+        if(player.getVehicle() instanceof WearableChassis)
+            return (WearableChassis) player.getVehicle();
         else return null;
     }
 

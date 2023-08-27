@@ -15,7 +15,8 @@ public class HandModel extends AnimatedGeoModel {
 
     @Override
     public ResourceLocation getTextureLocation(Object object) {
-        return getResourceLocation("textures/hand/", "_hand.png");
+        var res = getResourceLocation("textures/hand/", "_hand.png");
+        return res;
     }
 
     @Override
