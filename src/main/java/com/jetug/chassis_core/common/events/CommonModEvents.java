@@ -9,15 +9,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.isWearingChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonModEvents {
-    @SubscribeEvent
-    public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), WearableChassis.createAttributes().build());
-//        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
-    }
+//    @SubscribeEvent
+//    public static void registerAttributes(EntityAttributeCreationEvent event) {
+////        event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), WearableChassis.createAttributes().build());
+////        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
+//    }
 
     @SubscribeEvent
     public static void setup(final FMLCommonSetupEvent event) {

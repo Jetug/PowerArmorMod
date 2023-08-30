@@ -43,7 +43,7 @@ import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.chassis_core.common.network.PacketSender.*;
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.*;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static net.minecraft.world.item.Items.*;
 
 /**

@@ -17,7 +17,7 @@ public class EventHandler {
             case PLAYER:
                 break;
             case CLIENT:
-                Global.CLIENT_TIMER.tick();
+                //Global.CLIENT_TIMER.tick();
                 break;
             case SERVER:
                 break;

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @Mixin(Mob.class)
 public abstract class LivingEntityMixin {

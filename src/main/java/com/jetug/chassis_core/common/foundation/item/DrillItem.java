@@ -2,7 +2,7 @@ package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.client.render.renderers.item.DrillRenderer;
 import com.jetug.chassis_core.common.foundation.ModCreativeModeTab;
-import com.jetug.chassis_core.common.util.extensions.PlayerExtension;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -10,8 +10,8 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 import static com.jetug.generated.animations.DrillAnimation.*;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.getPlayerChassis;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.isWearingChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static com.jetug.chassis_core.common.util.helpers.AnimationHelper.setAnimation;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.LOOP;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.PLAY_ONCE;
@@ -33,24 +33,24 @@ public class DrillItem extends AnimatableItem{
 
     private <T extends IAnimatable> PlayState animate(AnimationEvent<T> event) {
         var controller = event.getController();
-
-        if (PlayerExtension.isWearingChassis()) {
-            var armor = PlayerExtension.getPlayerChassis();
-            controller.animationSpeed = 1;
-
-            if (armor.isPunching()) {
-                controller.animationSpeed = 2;
-                setAnimation(controller, PUNCH, PLAY_ONCE);
-            } else if (armor.isMaxCharge()) {
-                setAnimation(controller, PUNCH_MAX_CHARGE, LOOP);
-            } else if (armor.isChargingAttack()) {
-                controller.animationSpeed = 0.3;
-                setAnimation(controller, PUNCH_CHARGE, LOOP);
-            }
-            else {
-                setAnimation(controller, DRILL_USE, LOOP);
-            }
-        }
+//
+//        if (PlayerUtils.isWearingChassis()) {
+//            var armor = PlayerUtils.getPlayerChassis();
+//            controller.animationSpeed = 1;
+//
+//            if (armor.isPunching()) {
+//                controller.animationSpeed = 2;
+//                setAnimation(controller, PUNCH, PLAY_ONCE);
+//            } else if (armor.isMaxCharge()) {
+//                setAnimation(controller, PUNCH_MAX_CHARGE, LOOP);
+//            } else if (armor.isChargingAttack()) {
+//                controller.animationSpeed = 0.3;
+//                setAnimation(controller, PUNCH_CHARGE, LOOP);
+//            }
+//            else {
+//                setAnimation(controller, DRILL_USE, LOOP);
+//            }
+//        }
 
         return PlayState.CONTINUE;
     }

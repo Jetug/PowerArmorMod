@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends Entity {

@@ -7,7 +7,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @SuppressWarnings("ConstantConditions")
 public class ActionPacket{

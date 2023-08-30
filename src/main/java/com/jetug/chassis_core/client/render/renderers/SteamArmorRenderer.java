@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client.render.renderers;
 
+import com.jetug.chassis_core.common.foundation.entity.SteamArmorChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,7 +12,7 @@ import static com.jetug.chassis_core.client.render.utils.ParticleUtils.showJetpa
 import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_JET_LOCATOR;
 import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_JET_LOCATOR;
 
-public class SteamArmorRenderer extends ArmorChassisRenderer{
+public class SteamArmorRenderer extends ArmorChassisRenderer<SteamArmorChassis>{
     public SteamArmorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }

@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Player;
 
 import static com.jetug.chassis_core.common.input.KeyAction.*;
 import static com.jetug.chassis_core.common.input.InputKey.*;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
@@ -30,31 +30,31 @@ public class CommonInputHandler {
 
     public static void onRelease(InputKey key, Player player){
         if (!isWearingChassis(player)) return;
-        if(key == ATTACK) getPlayerChassis(player).powerPunch();
-        if(key == USE) getPlayerChassis(player).resetAttackCharge();
+//        if(key == ATTACK) getPlayerChassis(player).powerPunch();
+//        if(key == USE) getPlayerChassis(player).resetAttackCharge();
     }
 
     public static void onDoubleClick(InputKey key, Player player){
         if (!isWearingChassis(player)) return;
 
-        DashDirection direction = switch (key){
-            case UP    -> DashDirection.FORWARD;
-            case DOWN  -> DashDirection.BACK;
-            case LEFT  -> DashDirection.LEFT;
-            case RIGHT -> DashDirection.RIGHT;
-            case JUMP  -> DashDirection.UP;
-            default -> null;
-        };
-
-        if(direction == null) return;
-        getPlayerChassis(player).dash(direction);
+//        DashDirection direction = switch (key){
+//            case UP    -> DashDirection.FORWARD;
+//            case DOWN  -> DashDirection.BACK;
+//            case LEFT  -> DashDirection.LEFT;
+//            case RIGHT -> DashDirection.RIGHT;
+//            case JUMP  -> DashDirection.UP;
+//            default -> null;
+//        };
+//
+//        if(direction == null) return;
+//        getPlayerChassis(player).dash(direction);
     }
 
     public static void onLongPress(InputKey key, Player player){
-        if (!isWearingChassis(player)) return;
-        var bool = key == USE;
-        if(bool){
-            getPlayerChassis(player).addAttackCharge();
-        }
+//        if (!isWearingChassis(player)) return;
+//        var bool = key == USE;
+//        if(bool){
+//            getPlayerChassis(player).addAttackCharge();
+//        }
     }
 }

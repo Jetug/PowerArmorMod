@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.isWearingChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraftforge.network.NetworkEvent.*;
 
 public abstract class Action<T extends Action<T>> {

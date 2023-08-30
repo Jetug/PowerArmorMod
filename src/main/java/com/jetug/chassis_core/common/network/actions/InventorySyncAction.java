@@ -8,7 +8,7 @@ import net.minecraft.world.SimpleContainer;
 import java.util.function.Supplier;
 
 import static com.jetug.chassis_core.common.data.constants.NBT.ITEMS_TAG;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
 import static net.minecraftforge.network.NetworkEvent.*;
 

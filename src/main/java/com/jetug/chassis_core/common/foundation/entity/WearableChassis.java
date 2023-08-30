@@ -1,8 +1,8 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
+import com.jetug.chassis_core.common.foundation.container.menu.ChassisMenu;
 import com.jetug.chassis_core.common.foundation.item.DrillItem;
 import com.jetug.chassis_core.common.foundation.container.menu.ArmorStationMenu;
-import com.jetug.chassis_core.common.foundation.container.menu.PowerArmorMenu;
 import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
@@ -234,7 +234,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
             player.openMenu(new MenuProvider() {
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new PowerArmorMenu(id, inventory, menu, WearableChassis.this);
+                    return new ChassisMenu(id, inventory, menu, WearableChassis.this);
                 }
 
                 @Override

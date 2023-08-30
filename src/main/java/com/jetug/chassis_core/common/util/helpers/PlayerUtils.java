@@ -1,9 +1,12 @@
-package com.jetug.chassis_core.common.util.extensions;
+package com.jetug.chassis_core.common.util.helpers;
 
+import com.jetug.chassis_core.common.foundation.entity.SteamArmorChassis;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -12,7 +15,10 @@ import javax.annotation.Nullable;
 import static com.jetug.chassis_core.client.ClientConfig.*;
 import static com.jetug.chassis_core.common.network.PacketSender.*;
 
-public class PlayerExtension {
+public class PlayerUtils {
+    public static void addEffect(Player player, MobEffect effect, int amplifier){
+        player.addEffect(new MobEffectInstance(effect, WearableChassis.EFFECT_DURATION, amplifier, false, false));
+    }
 
     public static boolean isWearingChassis(){
         return isWearingChassis(getLocalPlayer());
@@ -22,9 +28,25 @@ public class PlayerExtension {
         return player != null && player.getVehicle() instanceof WearableChassis;
     }
 
+    public static boolean isWearingSteamChassis(){
+        return isWearingSteamChassis(getLocalPlayer());
+    }
+
+    public static boolean isWearingSteamChassis(Entity player){
+        return player != null && player.getVehicle() instanceof SteamArmorChassis;
+    }
+
     public static WearableChassis getPlayerChassis(){
         return getPlayerChassis(getLocalPlayer());
     }
+
+    @Nullable
+    public static SteamArmorChassis getSteamChassis(Player player){
+        if(player.getVehicle() instanceof SteamArmorChassis)
+            return (SteamArmorChassis) player.getVehicle();
+        else return null;
+    }
+
 
     @Nullable
     public static WearableChassis getPlayerChassis(Player player){

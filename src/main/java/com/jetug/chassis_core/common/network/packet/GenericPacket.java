@@ -8,7 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.isWearingChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @SuppressWarnings("ALL")
 public class GenericPacket {

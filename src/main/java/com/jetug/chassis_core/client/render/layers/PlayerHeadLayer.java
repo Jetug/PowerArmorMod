@@ -20,14 +20,14 @@ import java.util.HashMap;
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 import static java.lang.System.out;
 
-public class PlayerHeadLayer extends GeoLayerRenderer<WearableChassis> {
-    private final IGeoRenderer<WearableChassis> entityRenderer;
+public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
+    private final IGeoRenderer<T> entityRenderer;
     private static final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
     private final TextureManager textureManager;
     private final int textureWidth;
     private final int textureHeight;
 
-    public PlayerHeadLayer(IGeoRenderer<WearableChassis> entityRenderer) {
+    public PlayerHeadLayer(IGeoRenderer<T> entityRenderer) {
         super(entityRenderer);
         this.entityRenderer = entityRenderer;
         this.textureManager =  Minecraft.getInstance().getTextureManager();
@@ -37,7 +37,9 @@ public class PlayerHeadLayer extends GeoLayerRenderer<WearableChassis> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WearableChassis entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
+                       float limbSwing, float limbSwingAmount, float partialTicks,
+                       float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
             var test = entity.getControllingPassenger();
             out.println(test);

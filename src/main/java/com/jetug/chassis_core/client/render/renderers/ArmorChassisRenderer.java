@@ -7,6 +7,8 @@ import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
@@ -16,18 +18,21 @@ import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
+import java.util.*;
+
 import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
+import static com.jetug.chassis_core.client.render.utils.ParticleUtils.showJetpackParticles;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
-public class ArmorChassisRenderer extends ModGeoRenderer<WearableChassis> {
-    private final ArmorChassisModel<WearableChassis> armorChassisModel;
+public class ArmorChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
+    private final ArmorChassisModel<T> armorChassisModel;
     protected ItemStack mainHandItem, offHandItem;
 
     public ArmorChassisRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ArmorChassisModel<>());
-        armorChassisModel = (ArmorChassisModel<WearableChassis>)getGeoModelProvider();
+        armorChassisModel = (ArmorChassisModel<T>)getGeoModelProvider();
         initLayers();
     }
 
@@ -38,13 +43,13 @@ public class ArmorChassisRenderer extends ModGeoRenderer<WearableChassis> {
     }
 
     @Override
-    public void render(GeoModel model, WearableChassis animatable,
+    public void render(GeoModel model, T animatable,
                        float partialTick, RenderType type, PoseStack poseStack,
                        MultiBufferSource bufferSource, VertexConsumer buffer,
                        int packedLight, int packedOverlay,
                        float red, float green, float blue, float alpha) {
 
-        if (animatable.isInvisible()) return;
+        if (isInvisible(animatable)) return;
         for (var part : animatable.equipment)
             renderEquipment(armorChassisModel ,animatable, part, false);
 
@@ -52,8 +57,18 @@ public class ArmorChassisRenderer extends ModGeoRenderer<WearableChassis> {
                 packedLight, packedOverlay, red, green, blue, alpha);
     }
 
+
+    public boolean isInvisible(T animatable) {
+        var clientPlayer = Minecraft.getInstance().player;
+        var pov = Minecraft.getInstance().options.getCameraType();
+
+        if (animatable.hasPassenger(clientPlayer) && pov == CameraType.FIRST_PERSON)
+            return true;
+        return false;
+    }
+
     @Override
-    public void renderEarly(WearableChassis animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
+    public void renderEarly(T animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
                             VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);

@@ -56,16 +56,16 @@ public class ArmorChassisItem extends Item {
     }
 
     private static void summonNewEntity(UseOnContext context) {
-        var stack = context.getItemInHand();
-        var world = context.getLevel();
-        var entity = new WearableChassis(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
-        entity.inventory.setItem(BodyPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
-        //entity.setPos(context.getClickLocation());
-        moveEntityToClickedBlock(entity, context);
-
-        if (world.addFreshEntity(entity)) {
-            stack.shrink(1);
-        }
+//        var stack = context.getItemInHand();
+//        var world = context.getLevel();
+//        var entity = new WearableChassis(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
+//        entity.inventory.setItem(BodyPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
+//        //entity.setPos(context.getClickLocation());
+//        moveEntityToClickedBlock(entity, context);
+//
+//        if (world.addFreshEntity(entity)) {
+//            stack.shrink(1);
+//        }
     }
 
 

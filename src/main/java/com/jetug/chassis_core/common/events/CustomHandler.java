@@ -9,8 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.EventPriority;
 
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.getPlayerChassis;
-import static com.jetug.chassis_core.common.util.extensions.PlayerExtension.isWearingChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static java.lang.System.out;
 import static net.minecraftforge.event.entity.player.PlayerInteractEvent.*;
 
@@ -44,14 +43,14 @@ public class CustomHandler {
     @SubscribeEvent
     public static void onPlayerHurt(LivingHurtEvent event) {
         if(event.getEntity() instanceof Player player
-                && isWearingChassis(player)
-                && getPlayerChassis(player).hasFireProtection()){
+                && isWearingSteamChassis(player)
+                && getSteamChassis(player).hasFireProtection()){
             event.setCanceled(true);
         }
     }
 
     private static boolean cancelInteraction(Player player){
-        return isWearingChassis(player) && getPlayerChassis(player).isChargingAttack();
+        return isWearingSteamChassis(player) && getSteamChassis(player).attackChargeController.isChargingAttack();
     }
 
 //    @SubscribeEvent

@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.foundation.entity.ArmorChassisBase;
-import com.jetug.chassis_core.common.util.extensions.PlayerExtension;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,7 +28,7 @@ public class ResourceHelper {
     }
 
     public static ResourceLocation getResourceLocation(String path, String extension){
-        var chassis = PlayerExtension.getPlayerChassis();
+        var chassis = PlayerUtils.getPlayerChassis();
         return getResourceLocation(chassis, path, extension);
     }
 }

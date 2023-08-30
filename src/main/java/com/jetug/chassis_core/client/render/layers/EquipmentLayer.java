@@ -11,7 +11,7 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 @SuppressWarnings("ConstantConditions")
-public class EquipmentLayer extends GeoLayerRenderer<WearableChassis> {
+public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
     private final IGeoRenderer entityRenderer;
     public BodyPart bodyPart;
 
@@ -23,7 +23,7 @@ public class EquipmentLayer extends GeoLayerRenderer<WearableChassis> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn,
-                       int packedLightIn, WearableChassis entity,
+                       int packedLightIn, T entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(entity.isEquipmentVisible(bodyPart)) {
@@ -35,7 +35,7 @@ public class EquipmentLayer extends GeoLayerRenderer<WearableChassis> {
     }
 
     private void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,
-                        WearableChassis entity, float partialTicks, ResourceLocation texture) {
+                        T entity, float partialTicks, ResourceLocation texture) {
         int overlay = OverlayTexture.NO_OVERLAY;
         RenderType cameo = RenderType.armorCutoutNoCull(texture);
         matrixStackIn.pushPose();
