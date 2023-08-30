@@ -184,7 +184,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public Iterable<ItemStack> getPartSlots(){
         var items = new ArrayList<ItemStack>();
 
-        for(int i = 0; i < PowerArmorMenu.SIZE; i++){
+        for(int i = 0; i < ChassisMenu.SIZE; i++){
             items.add(inventory.getItem(i));
         }
 

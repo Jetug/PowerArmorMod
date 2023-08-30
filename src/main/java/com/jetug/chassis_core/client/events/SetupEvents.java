@@ -36,7 +36,7 @@ public final class SetupEvents {
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(ARMOR_CHASSIS.get(), SteamArmorRenderer::new);
-        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), PowerArmorRenderer::new);
+//        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), PowerArmorRenderer::new);
         //event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
     }
 

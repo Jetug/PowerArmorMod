@@ -23,7 +23,7 @@ import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
 import static net.minecraft.world.item.Items.*;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
-public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
+public class PowerArmorGui extends AbstractContainerScreen<ChassisMenu> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
     public static final int TABS_WIDTH = 57;
@@ -34,7 +34,7 @@ public class PowerArmorGui extends AbstractContainerScreen<PowerArmorMenu> {
     private int right;
     private int bottom;
 
-    public PowerArmorGui(PowerArmorMenu container, Inventory inventory, Component name) {
+    public PowerArmorGui(ChassisMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
 

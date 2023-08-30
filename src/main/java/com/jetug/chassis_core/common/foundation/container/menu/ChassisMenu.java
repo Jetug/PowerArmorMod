@@ -10,25 +10,15 @@ import net.minecraft.world.entity.player.Inventory;
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
 
-public class PowerArmorMenu extends EntityMenu {
+public class ChassisMenu extends EntityMenu {
     public static final int SIZE = 7;
     private static final int INVENTORY_POS_Y = 84;
 
-//    static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]
-//            {
-//                    EMPTY_ARMOR_SLOT_HEAD,
-//                    EMPTY_ARMOR_SLOT_BODY,
-//                    EMPTY_ARMOR_SLOT_LEFT_ARM,
-//                    EMPTY_ARMOR_SLOT_RIGHT_ARM,
-//                    EMPTY_ARMOR_SLOT_LEFT_LEG,
-//                    EMPTY_ARMOR_SLOT_RIGHT_LEG
-//            };
-
-    public PowerArmorMenu(int i, Inventory playerInventory) {
+    public ChassisMenu(int i, Inventory playerInventory) {
         this(i, new SimpleContainer(SIZE), playerInventory, null);
     }
 
-    public PowerArmorMenu(int containerId, Container container, Inventory playerInventory, WearableChassis entity) {
+    public ChassisMenu(int containerId, Container container, Inventory playerInventory, WearableChassis entity) {
         super(ContainerRegistry.ARMOR_CONTAINER.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
         createSlot(HELMET, HEAD_SLOT_POS     );
         createSlot(BODY_ARMOR, BODY_SLOT_POS     );
@@ -38,8 +28,4 @@ public class PowerArmorMenu extends EntityMenu {
         createSlot(RIGHT_LEG_ARMOR, LEFT_LEG_SLOT_POS );
         createSlot(ENGINE   , ENGINE_SLOT_POS   );
     }
-
-//    private void createSlot(BodyPart bodyPart, Pos2D pos){
-//        this.addSlot(new EquipmentSlot(bodyPart, container, bodyPart.getId(), pos.x, pos.y));
-//    }
 }

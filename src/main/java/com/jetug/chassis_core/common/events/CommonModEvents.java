@@ -16,7 +16,7 @@ public class CommonModEvents {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(EntityTypeRegistry.ARMOR_CHASSIS.get(), WearableChassis.createAttributes().build());
-        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
+//        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
     }
 
     @SubscribeEvent

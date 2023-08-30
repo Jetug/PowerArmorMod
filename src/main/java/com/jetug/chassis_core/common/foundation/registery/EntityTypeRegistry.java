@@ -19,10 +19,10 @@ public class EntityTypeRegistry {
                     .of(SteamArmorChassis::new, MobCategory.MISC)
                     .sized(1.0f, 2.3f));
 
-    public static final RegistryObject<EntityType<PowerArmorFrame>> POWER_ARMOR_FRAME =
-            registerEntity("power_armor_frame", EntityType.Builder
-                    .of(PowerArmorFrame::new, MobCategory.MISC)
-                    .sized(1.0f, 2.3f));
+//    public static final RegistryObject<EntityType<PowerArmorFrame>> POWER_ARMOR_FRAME =
+//            registerEntity("power_armor_frame", EntityType.Builder
+//                    .of(PowerArmorFrame::new, MobCategory.MISC)
+//                    .sized(1.0f, 2.3f));
 
 
 //    public static final RegistryObject<EntityType<PowerArmorPartEntity>> POWER_ARMOR_PART =
