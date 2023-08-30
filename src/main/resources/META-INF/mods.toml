@@ -2,7 +2,7 @@ modLoader="javafml"
 loaderVersion="[40,)"
 license="GNU General Public License v3.0"
 [[mods]]
-modId="power_armor_mod"
+modId="chassis_core"
 version="${file.jarVersion}"
 displayName="Armorpunk"
 logoFile="logo.png"
@@ -11,13 +11,13 @@ description='''
 This mod adds mechanical armor
 '''
 
-[[dependencies.power_armor_mod]] #optional
+[[dependencies.chassis_core]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
     versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.power_armor_mod]]
+[[dependencies.chassis_core]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.18.2,1.19)"

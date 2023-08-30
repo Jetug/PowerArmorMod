@@ -23,9 +23,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.5.1-alpha-1.18.2'
+version = '1.0'
 group = 'com.jetug.armorpunk'
-archivesBaseName = 'armorpunk'
+archivesBaseName = 'chassis_core'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -39,12 +39,12 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'power_armor_mod'
+            property 'forge.enabledGameTestNamespaces', 'chassis_core'
 
-            arg "-mixin.config=power_armor_mod.mixin.json"
+            arg "-mixin.config=chassis_core.mixin.json"
 
             mods {
-                power_armor_mod {
+                chassis_core {
                     source sourceSets.main
                 }
             }
@@ -54,12 +54,12 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'power_armor_mod'
+            property 'forge.enabledGameTestNamespaces', 'chassis_core'
 
-            arg "-mixin.config=power_armor_mod.mixin.json"
+            arg "-mixin.config=chassis_core.mixin.json"
 
             mods {
-                power_armor_mod {
+                chassis_core {
                     source sourceSets.main
                 }
             }
@@ -70,10 +70,10 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'power_armor_mod'
+            property 'forge.enabledGameTestNamespaces', 'chassis_core'
 
             mods {
-                power_armor_mod {
+                chassis_core {
                     source sourceSets.main
                 }
             }
@@ -84,10 +84,10 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'power_armor_mod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'chassis_core', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                power_armor_mod {
+                chassis_core {
                     source sourceSets.main
                 }
             }
@@ -112,22 +112,22 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, "power_armor_mod.mixin-refmap.json"
+    add sourceSets.main, "chassis_core.mixin-refmap.json"
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "power_armor_mod",
-                "Specification-Vendor"    : "power_armor_modsareus",
+                "Specification-Title"     : "chassis_core",
+                "Specification-Vendor"    : "chassis_coresareus",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "power_armor_modsareus",
+                "Implementation-Vendor"   : "chassis_coresareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "TweakClass"              : "org.spongepowered.asm.launch.MixinTweaker",
                 "TweakOrder"              : 0,
-                "MixinConfigs"            : "power_armor_mod.mixin.json"
+                "MixinConfigs"            : "chassis_core.mixin.json"
         ])
     }
 }
@@ -152,7 +152,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 void genAnimationNames(){
-    def directoryPath = "src/main/resources/assets/power_armor_mod/animations"
+    def directoryPath = "src/main/resources/assets/chassis_core/animations"
     def animationsTag = "animations"
     def directory = new File(directoryPath)
     def files = fileTree(directory)
@@ -169,17 +169,17 @@ void genAnimationNames(){
 }
 
 void genAnimations(){
-    def sourceDir = "src/main/resources/assets/power_armor_mod/animations"
+    def sourceDir = "src/main/resources/assets/chassis_core/animations"
     generateResourceFile("Animations", sourceDir)
 }
 
 void genTextures(){
-    def sourceDir = "src/main/resources/assets/power_armor_mod/textures"
+    def sourceDir = "src/main/resources/assets/chassis_core/textures"
     generateResourceFile("Textures", sourceDir, true)
 }
 
 void genModels(){
-    def sourceDir = "src/main/resources/assets/power_armor_mod/geo"
+    def sourceDir = "src/main/resources/assets/chassis_core/geo"
     generateResourceFile("Models", sourceDir)
 }
 
@@ -194,7 +194,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ResourceUtils {
       public static ResourceLocation resourceLocation(String location){
-        return new ResourceLocation("power_armor_mod", location);
+        return new ResourceLocation("chassis_core", location);
     }
 }
 """
@@ -235,7 +235,7 @@ String generateResourceConstants(String directoryPath, boolean uni) {
                 name = "${file.parentFile.name.toUpperCase()}_${name}"
 
             def text = file.path
-            def sequence = "power_armor_mod"
+            def sequence = "chassis_core"
 
             def relativePath = text.substring(text.indexOf(sequence) + sequence.length()).replace("\\", "/")
             relativePath = relativePath.startsWith("/") ? relativePath.substring(1) : text

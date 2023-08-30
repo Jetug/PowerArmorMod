@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "chassis_core:item/pa_right_leg"
+  }
+}

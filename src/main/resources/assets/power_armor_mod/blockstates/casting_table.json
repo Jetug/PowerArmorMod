@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "power_armor_mod:block/casting_table" },
-    "facing=east": { "model": "power_armor_mod:block/casting_table", "y": 90 },
-    "facing=south": { "model": "power_armor_mod:block/casting_table", "y": 180 },
-    "facing=west": { "model": "power_armor_mod:block/casting_table", "y": 270 }
-  }
-}

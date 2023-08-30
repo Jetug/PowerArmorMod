@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "chassis_core:block/casting_table" },
+    "facing=east": { "model": "chassis_core:block/casting_table", "y": 90 },
+    "facing=south": { "model": "chassis_core:block/casting_table", "y": 180 },
+    "facing=west": { "model": "chassis_core:block/casting_table", "y": 270 }
+  }
+}

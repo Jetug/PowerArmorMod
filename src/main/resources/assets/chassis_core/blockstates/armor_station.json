@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "chassis_core:block/armor_station" }
+  }
+}

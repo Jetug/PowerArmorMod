@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "power_armor_mod:block/armor_station"
-  }
-}

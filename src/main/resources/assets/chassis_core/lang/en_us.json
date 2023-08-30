@@ -1,0 +1,48 @@
+{
+  "item.chassis_core.test": "XXX",
+  "item.chassis_core.armor_spawn_egg": "Armor spawn egg",
+  "item.chassis_core.pa_helmet":    "Helmet",
+  "item.chassis_core.pa_body":      "Body armor",
+  "item.chassis_core.pa_left_arm":  "Left arm armor",
+  "item.chassis_core.pa_right_arm": "Right arm armor",
+  "item.chassis_core.pa_left_leg":  "Left leg armor",
+  "item.chassis_core.pa_right_leg": "Right leg armor",
+
+  "item.chassis_core.armor_light_helmet":    "Light helmet",
+  "item.chassis_core.armor_light_body":      "Light body armor",
+  "item.chassis_core.armor_light_left_arm":  "Light left arm armor",
+  "item.chassis_core.armor_light_right_arm": "Light right arm armor",
+  "item.chassis_core.armor_light_left_leg":  "Light left leg armor",
+  "item.chassis_core.armor_light_right_leg": "Light right leg armor",
+
+  "item.chassis_core.cast_helmet":    "Helmet casting mold",
+  "item.chassis_core.cast_body":      "Body armor casting mold",
+  "item.chassis_core.cast_left_arm":  "Left arm armor casting mold",
+  "item.chassis_core.cast_right_arm": "Right arm armor casting mold",
+  "item.chassis_core.cast_left_leg":  "Left leg armor casting mold",
+  "item.chassis_core.cast_right_leg": "Right leg armor casting mold",
+
+  "item.chassis_core.cast_light_helmet":    "Light helmet casting mold",
+  "item.chassis_core.cast_light_body":      "Light body armor casting mold",
+  "item.chassis_core.cast_light_left_arm":  "Light left arm armor casting mold",
+  "item.chassis_core.cast_light_right_arm": "Light right arm armor casting mold",
+  "item.chassis_core.cast_light_left_leg":  "Light left leg armor casting mold",
+  "item.chassis_core.cast_light_right_leg": "Light right leg armor casting mold",
+
+  "item.chassis_core.pa_frame": "Armor frame",
+  "item.chassis_core.engine": "Weak engine",
+  "item.chassis_core.engine_medium": "Medium engine",
+  "item.chassis_core.engine_creative": "Creative engine",
+  "item.chassis_core.jetpack": "Jetpack",
+
+  "block.chassis_core.casting_table": "Casting table",
+
+  "entity.chassis_core.power_armor": "Armor",
+  "itemGroup.xxx": "Armorpunk",
+
+  "key.categories.armor": "Armor controls",
+  "key.dash": "Dash",
+  "key.leave": "Exit armor",
+  "container.armor_station": "Armor station",
+  "container.casting_table": "Casting table"
+}

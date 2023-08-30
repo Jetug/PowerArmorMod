@@ -1,6 +1,6 @@
 {
   "replace": false,
   "entries": [
-    "power_armor_mod:cast_in_dungeon"
+    "chassis_core:cast_in_dungeon"
   ]
 }

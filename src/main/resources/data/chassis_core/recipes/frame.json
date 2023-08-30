@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chassis_core:frame_body"
+    },
+    {
+      "item": "chassis_core:frame_right_arm"
+    },
+    {
+      "item": "chassis_core:frame_left_arm"
+    },
+    {
+      "item": "chassis_core:frame_right_leg"
+    },
+    {
+      "item": "chassis_core:frame_left_leg"
+    }
+  ],
+  "result": {
+    "item": "chassis_core:pa_frame"
+  }
+}
