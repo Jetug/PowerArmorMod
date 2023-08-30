@@ -9,8 +9,14 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingCh
 import static net.minecraftforge.network.NetworkEvent.*;
 
 public abstract class Action<T extends Action<T>> {
+    private int id = -1;
+
     public int getId(){
         return ActionRegistry.getActionId(this.getClass());
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName(){
@@ -37,4 +43,6 @@ public abstract class Action<T extends Action<T>> {
     public abstract void write(FriendlyByteBuf buffer);
 
     public abstract T read(FriendlyByteBuf buffer);
+
+
 }

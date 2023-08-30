@@ -20,9 +20,9 @@ public class InputAction extends Action<InputAction>{
         this.action = action;
     }
 
-    public int getId(){
-        return 2;
-    }
+//    public int getId(){
+//        return 2;
+//    }
 
     @Override
     public void write(FriendlyByteBuf buffer) {

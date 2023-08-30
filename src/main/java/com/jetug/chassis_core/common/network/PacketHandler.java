@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.common.network;
 
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.network.packet.*;
-import com.jetug.chassis_core.common.data.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -15,7 +15,7 @@ import java.util.List;
 public class PacketHandler {
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
 	private static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder
-									.named(new ResourceLocation(Global.MOD_ID, "network"))
+									.named(new ResourceLocation(ChassisCore.MOD_ID, "network"))
 									.clientAcceptedVersions(PROTOCOL_VERSION::equals)
 									.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 									.networkProtocolVersion(() -> PROTOCOL_VERSION)

@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.events;
 
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static java.lang.System.out;
 import static net.minecraftforge.event.entity.player.PlayerInteractEvent.*;
 
-@Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CustomHandler {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
@@ -22,36 +22,36 @@ public class CustomHandler {
         out.println(entity);
     }
 
-    @SubscribeEvent
-    public static void onPlayerInteract(EntityInteract event) {
-        if(cancelInteraction(event.getPlayer()))
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerInteract(EntityInteractSpecific event) {
-        if(cancelInteraction(event.getPlayer()))
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerInteract(RightClickBlock event) {
-        if(cancelInteraction(event.getPlayer()))
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerHurt(LivingHurtEvent event) {
-        if(event.getEntity() instanceof Player player
-                && isWearingSteamChassis(player)
-                && getSteamChassis(player).hasFireProtection()){
-            event.setCanceled(true);
-        }
-    }
-
-    private static boolean cancelInteraction(Player player){
-        return isWearingSteamChassis(player) && getSteamChassis(player).attackChargeController.isChargingAttack();
-    }
+//    @SubscribeEvent
+//    public static void onPlayerInteract(EntityInteract event) {
+//        if(cancelInteraction(event.getPlayer()))
+//            event.setCanceled(true);
+//    }
+//
+//    @SubscribeEvent
+//    public static void onPlayerInteract(EntityInteractSpecific event) {
+//        if(cancelInteraction(event.getPlayer()))
+//            event.setCanceled(true);
+//    }
+//
+//    @SubscribeEvent
+//    public static void onPlayerInteract(RightClickBlock event) {
+//        if(cancelInteraction(event.getPlayer()))
+//            event.setCanceled(true);
+//    }
+//
+//    @SubscribeEvent
+//    public static void onPlayerHurt(LivingHurtEvent event) {
+//        if(event.getEntity() instanceof Player player
+//                && isWearingSteamChassis(player)
+//                && getSteamChassis(player).hasFireProtection()){
+//            event.setCanceled(true);
+//        }
+//    }
+//
+//    private static boolean cancelInteraction(Player player){
+//        return isWearingSteamChassis(player) && getSteamChassis(player).attackChargeController.isChargingAttack();
+//    }
 
 //    @SubscribeEvent
 //    public static void onBlockBreak(BlockEvent.BreakEvent event) {

@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.data.constants;
 
-import com.jetug.chassis_core.common.util.Pos2D;
+import com.jetug.chassis_core.common.util.Pos2I;
 
 import java.awt.*;
 
@@ -16,30 +16,30 @@ public class Gui {
     public static final int TAB_HEIGHT = 27;
     public static final int TAB_WIDTH = 29;
 
-    public static final Pos2D TOP_TAB_ICON_POS_1 = new Pos2D(6, -20) ;
-    public static final Pos2D TOP_TAB_ICON_POS_2 = new Pos2D(35, -20) ;
+    public static final Pos2I TOP_TAB_ICON_POS_1 = new Pos2I(6, -20) ;
+    public static final Pos2I TOP_TAB_ICON_POS_2 = new Pos2I(35, -20) ;
 
-    public static final Pos2D BOTTOM_TAB_ICON_POS_1 = new Pos2D(6, -20) ;
-    public static final Pos2D BOTTOM_TAB_ICON_POS_2 = new Pos2D(35, -20) ;
+    public static final Pos2I BOTTOM_TAB_ICON_POS_1 = new Pos2I(6, -20) ;
+    public static final Pos2I BOTTOM_TAB_ICON_POS_2 = new Pos2I(35, -20) ;
 
-    public static final Pos2D HEAD_SLOT_POS        = new Pos2D(68, 8);
-    public static final Pos2D BODY_SLOT_POS        = new Pos2D(68, 44);
-    public static final Pos2D LEFT_ARM_SLOT_POS    = new Pos2D(59, 26);
-    public static final Pos2D RIGHT_ARM_SLOT_POS   = new Pos2D(77, 26);
-    public static final Pos2D LEFT_LEG_SLOT_POS    = new Pos2D(59, 62);
-    public static final Pos2D RIGHT_LEG_SLOT_POS   = new Pos2D(77, 62);
-    public static final Pos2D ENGINE_SLOT_POS      = new Pos2D(98, 26);
+    public static final Pos2I HEAD_SLOT_POS        = new Pos2I(68, 8);
+    public static final Pos2I BODY_SLOT_POS        = new Pos2I(68, 44);
+    public static final Pos2I LEFT_ARM_SLOT_POS    = new Pos2I(59, 26);
+    public static final Pos2I RIGHT_ARM_SLOT_POS   = new Pos2I(77, 26);
+    public static final Pos2I LEFT_LEG_SLOT_POS    = new Pos2I(59, 62);
+    public static final Pos2I RIGHT_LEG_SLOT_POS   = new Pos2I(77, 62);
+    public static final Pos2I ENGINE_SLOT_POS      = new Pos2I(98, 26);
 
-    public static final Pos2D FRAME_BODY_SLOT_POS        = new Pos2D(8 , 17);
-    public static final Pos2D FRAME_LEFT_ARM_SLOT_POS    = new Pos2D(80, 35);
-    public static final Pos2D FRAME_RIGHT_ARM_SLOT_POS   = new Pos2D(8 , 35);
-    public static final Pos2D FRAME_LEFT_LEG_SLOT_POS    = new Pos2D(80, 71);
-    public static final Pos2D FRAME_RIGHT_LEG_SLOT_POS   = new Pos2D(8 , 71);
-    public static final Pos2D LEFT_HAND_SLOT_POS         = new Pos2D(80, 53);
-    public static final Pos2D RIGHT_HAND_SLOT_POS        = new Pos2D(8 , 53);
-    public static final Pos2D BACK_SLOT_POS              = new Pos2D(152, 17);
-    public static final Pos2D ENGINE_SLOT_POS2           = new Pos2D(152, 35);
-    public static final Pos2D COOLING_SLOT_POS           = new Pos2D(152, 71);
+    public static final Pos2I FRAME_BODY_SLOT_POS        = new Pos2I(8 , 17);
+    public static final Pos2I FRAME_LEFT_ARM_SLOT_POS    = new Pos2I(80, 35);
+    public static final Pos2I FRAME_RIGHT_ARM_SLOT_POS   = new Pos2I(8 , 35);
+    public static final Pos2I FRAME_LEFT_LEG_SLOT_POS    = new Pos2I(80, 71);
+    public static final Pos2I FRAME_RIGHT_LEG_SLOT_POS   = new Pos2I(8 , 71);
+    public static final Pos2I LEFT_HAND_SLOT_POS         = new Pos2I(80, 53);
+    public static final Pos2I RIGHT_HAND_SLOT_POS        = new Pos2I(8 , 53);
+    public static final Pos2I BACK_SLOT_POS              = new Pos2I(152, 17);
+    public static final Pos2I ENGINE_SLOT_POS2           = new Pos2I(152, 35);
+    public static final Pos2I COOLING_SLOT_POS           = new Pos2I(152, 71);
 
     public static final Rectangle HEAD_ICON_OFFSET        = createStandardIcon(19, 0);
     public static final Rectangle BODY_ICON_OFFSET        = createStandardIcon(19, 17);

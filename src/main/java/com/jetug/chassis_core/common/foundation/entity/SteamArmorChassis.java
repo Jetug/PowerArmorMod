@@ -1,6 +1,10 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.common.data.enums.DashDirection;
+import com.jetug.chassis_core.common.foundation.container.menu.ArmorStationMenu;
+import com.jetug.chassis_core.common.foundation.container.menu.ChassisMenu;
+import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
+import com.jetug.chassis_core.common.foundation.item.DrillItem;
 import com.jetug.chassis_core.common.foundation.item.EngineItem;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import com.jetug.chassis_core.common.network.data.ArmorData;
@@ -9,12 +13,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -41,6 +49,7 @@ import static com.jetug.chassis_core.common.util.helpers.timer.PovUtils.getBlock
 import static net.minecraft.client.renderer.debug.DebugRenderer.getTargetedEntity;
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
+import static net.minecraft.world.InteractionHand.MAIN_HAND;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
 
@@ -102,6 +111,51 @@ public class SteamArmorChassis extends WearableChassis {
     }
 
     @Override
+    protected void updateSpeed() {
+        if(inventory.getItem(ENGINE.ordinal()).getItem() instanceof EngineItem engine)
+            setSpeed(getSpeedAttribute() * engine.speed);
+        else {
+            setSpeed(getMinSpeed());
+            return;
+        }
+
+        for (var part : armor){
+            if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem)
+                setSpeed(getSpeed() * armorItem.speed);
+        }
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(){
+        return new MenuProvider() {
+            @Override
+            public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
+                return new ChassisMenu(id, inventory, menu, SteamArmorChassis.this);
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return SteamArmorChassis.this.getDisplayName();
+            }
+        };
+    }
+
+    @Override
+    protected MenuProvider getStantionMenuProvider() {
+        return new MenuProvider() {
+            @Override
+            public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
+                return new ArmorStationMenu(id, inventory, menu, SteamArmorChassis.this);
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return SteamArmorChassis.this.getDisplayName();
+            }
+        };
+    }
+
+    @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         if (damageSource.isFire() && hasFireProtection()) return false;
         return super.hurt(damageSource, damage);
@@ -154,6 +208,15 @@ public class SteamArmorChassis extends WearableChassis {
     public boolean isDashing() {
         return isDashing;
     }
+
+    boolean isDrillItemInHand() {
+        return getPlayerPassenger().getItemInHand(MAIN_HAND).getItem() instanceof DrillItem;
+    }
+
+    boolean playerHandIsEmpty() {
+        return getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty();
+    }
+
 
     public void dash(DashDirection direction) {
         if (!hasJetpack() || !hasEquipment(ENGINE)) return;

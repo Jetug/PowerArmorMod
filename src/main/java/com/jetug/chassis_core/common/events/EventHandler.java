@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.common.events;
 
-import com.jetug.chassis_core.common.data.constants.Global;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;

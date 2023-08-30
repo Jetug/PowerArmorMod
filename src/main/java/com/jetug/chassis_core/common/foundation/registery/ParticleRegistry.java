@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.foundation.registery;
 
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.particles.JetParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
@@ -14,10 +14,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = Global.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ParticleRegistry {
     private static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister
-            .create(ForgeRegistries.PARTICLE_TYPES, Global.MOD_ID);
+            .create(ForgeRegistries.PARTICLE_TYPES, ChassisCore.MOD_ID);
 
     public static final RegistryObject<SimpleParticleType> JET = PARTICLES.register("jet",
             () -> new SimpleParticleType(true));

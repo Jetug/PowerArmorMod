@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.common.util.helpers;
 
 import com.google.gson.JsonParser;
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -134,7 +134,7 @@ public class TextureHelper {
         }
         catch (Exception e){
             if(!(e instanceof IOException || e instanceof IllegalStateException))
-                Global.LOGGER.log(ERROR, e.getMessage(), e);
+                ChassisCore.LOGGER.log(ERROR, e.getMessage(), e);
             return null;
         }
     }
@@ -143,7 +143,7 @@ public class TextureHelper {
         var minecraft = Minecraft.getInstance();
         var nativeImage = getNativeImage(image);
         var texture = new DynamicTexture(nativeImage);
-        var resourceLocation = new ResourceLocation(Global.MOD_ID, name);
+        var resourceLocation = new ResourceLocation(ChassisCore.MOD_ID, name);
         minecraft.getTextureManager().register(resourceLocation, texture);
         return resourceLocation;
     }

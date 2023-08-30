@@ -1,27 +1,18 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
-import com.jetug.chassis_core.common.foundation.container.menu.ChassisMenu;
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.item.DrillItem;
-import com.jetug.chassis_core.common.foundation.container.menu.ArmorStationMenu;
 import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
-import com.jetug.chassis_core.common.data.constants.Global;
-import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
+import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.common.util.helpers.*;
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -35,7 +26,6 @@ import javax.annotation.Nullable;
 
 import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static net.minecraft.util.Mth.*;
 import static net.minecraft.world.InteractionHand.*;
 import static org.apache.logging.log4j.Level.*;
@@ -134,7 +124,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
-        Global.LOGGER.log(INFO, level.isClientSide);
+        ChassisCore.LOGGER.log(INFO, level.isClientSide);
         var stack = player.getItemInHand(hand);
 
         if(isServerSide && !player.isPassenger()) {
@@ -212,7 +202,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     }
 
     public void damageArmorItem(BodyPart bodyPart, DamageSource damageSource, float damage) {
-        Global.LOGGER.info("damageArmorItem" + isClientSide);
+        ChassisCore.LOGGER.info("damageArmorItem" + isClientSide);
         var itemStack = inventory.getItem(bodyPart.getId());
 
         if(itemStack.getItem() instanceof ChassisArmor armorItem)
@@ -230,36 +220,22 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     public void openGUI(Player player) {
         Global.referenceMob = this;
 
-        if (isServerSide) {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new ChassisMenu(id, inventory, menu, WearableChassis.this);
-                }
+        var provider = getMenuProvider();
 
-                @Override
-                public Component getDisplayName() {
-                    return WearableChassis.this.getDisplayName();
-                }
-            });
+        if (isServerSide && provider != null) {
+            player.openMenu(getMenuProvider());
         }
     }
 
+    @Nullable protected abstract MenuProvider getMenuProvider();
+    @Nullable protected abstract MenuProvider getStantionMenuProvider();
+
     public void openStationGUI(Player player) {
         Global.referenceMob = this;
+        var provider = getStantionMenuProvider();
 
-        if (isServerSide) {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
-                    return new ArmorStationMenu(id, inventory, menu, WearableChassis.this);
-                }
-
-                @Override
-                public Component getDisplayName() {
-                    return WearableChassis.this.getDisplayName();
-                }
-            });
+        if (isServerSide && provider != null) {
+            player.openMenu(provider);
         }
     }
 
@@ -297,14 +273,6 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         player.setYRot(getYRot());
         player.setXRot(getXRot());
         player.startRiding(this);
-    }
-
-    boolean isDrillItemInHand() {
-        return getPlayerPassenger().getItemInHand(MAIN_HAND).getItem() instanceof DrillItem;
-    }
-
-    boolean playerHandIsEmpty() {
-        return getPlayerPassenger().getItemInHand(MAIN_HAND).isEmpty();
     }
 
     private boolean isJumping() {

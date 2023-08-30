@@ -2,7 +2,7 @@ package com.jetug.chassis_core.common.foundation.loot;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -113,12 +113,12 @@ public class ModLootModifier extends LootModifier {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class EventHandler {
         @SubscribeEvent
         public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
             event.getRegistry().register(new Serializer()
-                    .setRegistryName(new ResourceLocation(Global.MOD_ID, "loot_gen")));
+                    .setRegistryName(new ResourceLocation(ChassisCore.MOD_ID, "loot_gen")));
         }
     }
 }

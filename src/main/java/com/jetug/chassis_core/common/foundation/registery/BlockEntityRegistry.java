@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.foundation.registery;
 
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.block.entity.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -12,7 +12,7 @@ import static com.jetug.chassis_core.common.foundation.registery.BlockRegistry.C
 
 public class BlockEntityRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Global.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ChassisCore.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<ArmorStationBlockEntity>> ARMOR_STATION_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("armor_station_block_entity", () ->

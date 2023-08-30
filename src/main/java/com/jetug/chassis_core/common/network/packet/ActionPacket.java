@@ -36,8 +36,8 @@ public class ActionPacket{
         switch (message.action){
             case DISMOUNT -> player.stopRiding();
             case OPEN_GUI -> armor.openGUI(player);
-            case ADD_ATTACK_CHARGE -> armor.addAttackCharge();
-            case RESET_ATTACK_CHARGE -> armor.resetAttackCharge();
+//            case ADD_ATTACK_CHARGE -> armor.addAttackCharge();
+//            case RESET_ATTACK_CHARGE -> armor.resetAttackCharge();
         }
     }
 }

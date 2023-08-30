@@ -1,12 +1,12 @@
 package com.jetug.chassis_core.client.events;
 
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.client.gui.hud.*;
 import com.jetug.chassis_core.common.foundation.container.screen.*;
 import com.jetug.chassis_core.common.foundation.registery.GuiRegistry;
 import com.jetug.chassis_core.client.input.LongClickController;
 import com.jetug.chassis_core.client.render.renderers.*;
-import com.jetug.chassis_core.common.data.constants.Global;
 import com.jetug.chassis_core.client.input.DoubleClickController;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -25,7 +25,7 @@ import static com.jetug.chassis_core.client.render.renderers.CustomHandRenderer.
 import static com.jetug.chassis_core.common.foundation.registery.ContainerRegistry.CASTING_TABLE_MENU;
 import static com.jetug.chassis_core.common.foundation.registery.EntityTypeRegistry.*;
 
-@Mod.EventBusSubscriber(modid = Global.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     public static final DoubleClickController DOUBLE_CLICK_CONTROLLER = new DoubleClickController();

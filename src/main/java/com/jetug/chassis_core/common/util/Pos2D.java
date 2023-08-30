@@ -1,10 +1,10 @@
 package com.jetug.chassis_core.common.util;
 
 public class Pos2D {
-    public int x;
-    public int y;
+    public double x;
+    public double y;
 
-    public Pos2D(int x, int y) {
+    public Pos2D(double x, double y) {
         this.x = x;
         this.y = y;
     }

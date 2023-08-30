@@ -12,7 +12,7 @@ import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.data.constants.Global.MOD_ID;
+import static com.jetug.chassis_core.ChassisCore.MOD_ID;
 
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);

@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.util.helpers;
 
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +23,7 @@ public class BufferedImageHelper {
             return getImage(imageArr);
         }
         catch (IOException e) {
-            Global.LOGGER.log(Level.ERROR, e);
+            ChassisCore.LOGGER.log(Level.ERROR, e);
             return null;
         }
     }

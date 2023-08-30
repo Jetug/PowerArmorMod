@@ -1,15 +1,20 @@
 package com.jetug.chassis_core;
 
-import com.jetug.chassis_core.common.data.constants.Global;
 import com.jetug.chassis_core.common.foundation.registery.*;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
-import static com.jetug.chassis_core.common.data.constants.Global.MOD_EVENT_BUS;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
-@Mod(Global.MOD_ID)
+@Mod(ChassisCore.MOD_ID)
 public class ChassisCore {
+    public static final String MOD_ID = "chassis_core";
+    public static final Logger LOGGER = LogManager.getLogger();
+    public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
     public ChassisCore() {
         GeckoLib.initialize();

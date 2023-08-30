@@ -25,9 +25,9 @@ public class InventorySyncAction extends Action<InventorySyncAction>{
         this.inventory = inventory;
     }
 
-    public int getId(){
-        return 1;
-    }
+//    public int getId(){
+//        return 1;
+//    }
 
     @Override
     public void write(FriendlyByteBuf buffer) {

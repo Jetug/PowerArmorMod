@@ -1,7 +1,10 @@
 package com.jetug.chassis_core.common.input;
 
 import com.jetug.chassis_core.common.data.enums.DashDirection;
+import com.jetug.chassis_core.common.events.CommonInputEvent;
+import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.MinecraftForge;
 
 import static com.jetug.chassis_core.common.input.KeyAction.*;
 import static com.jetug.chassis_core.common.input.InputKey.*;
@@ -10,6 +13,8 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
     public static void onKeyInput(InputKey key, KeyAction action, Player player) {
+        MinecraftForge.EVENT_BUS.post(new CommonInputEvent(key, action, player));
+
         if (!isWearingChassis(player) || key == null) return;
 
         if((action == PRESS || action == REPEAT) && key == JUMP)

@@ -233,33 +233,27 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         updateSpeed();
     }
 
-    private void updateSpeed(){
-        if(inventory.getItem(ENGINE.ordinal()).getItem() instanceof EngineItem engine)
-             setSpeed(getSpeedAttribute() * engine.speed);
-        else {
-            setSpeed(0.05f);
-            return;
-        }
+    protected float getMinSpeed(){
+        return 0.05f;
+    }
 
-        for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem)
-                setSpeed(getSpeed() * armorItem.speed);
-        }
+    protected void updateSpeed(){
+
     }
 
     private void updateTotalArmor(){
-        totalDefense   = 0;
-        totalToughness = 0;
+        this.totalDefense   = 0;
+        this.totalToughness = 0;
 
         for (var part : armor){
             if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem){
-                totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
-                totalToughness += armorItem.getMaterial().getToughness();
+                this.totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
+                this.totalToughness += armorItem.getMaterial().getToughness();
             }
         }
     }
 
-    private float getSpeedAttribute(){
+    public float getSpeedAttribute(){
         return (float)getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 }

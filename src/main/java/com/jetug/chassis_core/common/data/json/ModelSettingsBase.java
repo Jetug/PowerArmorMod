@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.data.json;
 
-import com.jetug.chassis_core.common.data.constants.Global;
+import com.jetug.chassis_core.ChassisCore;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class ModelSettingsBase {
@@ -9,10 +9,10 @@ public abstract class ModelSettingsBase {
     public String texture;
 
     public ResourceLocation getModelLocation(){
-        return new ResourceLocation(Global.MOD_ID, model);
+        return new ResourceLocation(ChassisCore.MOD_ID, model);
     }
 
     public ResourceLocation getTextureLocation(){
-        return new ResourceLocation(Global.MOD_ID, texture);
+        return new ResourceLocation(ChassisCore.MOD_ID, texture);
     }
 }

@@ -27,9 +27,9 @@ public class CastingStatusAction extends Action<CastingStatusAction>{
         this.blockPos = blockPos;
     }
 
-    public int getId(){
-        return 4;
-    }
+//    public int getId(){
+//        return 4;
+//    }
 
     private CompoundTag writeContainerData(ContainerData data){
         var tag = new CompoundTag();

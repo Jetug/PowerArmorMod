@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.common.foundation.registery;
 
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.entity.*;
-import com.jetug.chassis_core.common.data.constants.Global;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class EntityTypeRegistry {
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Global.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, ChassisCore.MOD_ID);
 
     public static final RegistryObject<EntityType<SteamArmorChassis>> ARMOR_CHASSIS =
             registerEntity("armor_chassis", EntityType.Builder
@@ -30,7 +30,7 @@ public class EntityTypeRegistry {
 
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String entityName, EntityType.Builder<T> builder) {
-        return ENTITY_TYPES.register(entityName, () -> builder.build(new ResourceLocation(Global.MOD_ID, entityName).toString()));
+        return ENTITY_TYPES.register(entityName, () -> builder.build(new ResourceLocation(ChassisCore.MOD_ID, entityName).toString()));
     }
 
     public static void register(IEventBus eventBus){

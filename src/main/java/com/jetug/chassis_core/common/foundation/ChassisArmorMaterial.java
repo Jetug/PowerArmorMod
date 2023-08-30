@@ -6,7 +6,7 @@ import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
-public class PowerArmorMaterial {
+public class ChassisArmorMaterial {
     private static final int[] HEALTH_PER_SLOT = new int[]{11, 16, 13, 13};
 
     private final String name;
@@ -19,8 +19,8 @@ public class PowerArmorMaterial {
     private final LazyLoadedValue<Ingredient> repairIngredient;
     private final int[] craftPerSlot;
 
-    public PowerArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, float toughness,  int enchantmentValue,
-                              SoundEvent sound, float knockbackResistance, Supplier<Ingredient> p_40481_, int[] craftPerSlot) {
+    public ChassisArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, float toughness, int enchantmentValue,
+                                SoundEvent sound, float knockbackResistance, Supplier<Ingredient> p_40481_, int[] craftPerSlot) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
         this.slotProtections = slotProtections;

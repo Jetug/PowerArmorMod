@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.common.foundation.registery;
 
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.container.menu.*;
-import com.jetug.chassis_core.common.data.constants.Global;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -13,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ContainerRegistry {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister
-            .create(ForgeRegistries.CONTAINERS, Global.MOD_ID);
+            .create(ForgeRegistries.CONTAINERS, ChassisCore.MOD_ID);
 
     public static final RegistryObject<MenuType<ChassisMenu>> ARMOR_CONTAINER
             = CONTAINERS.register("power_armor", () -> new MenuType<>(ChassisMenu::new));

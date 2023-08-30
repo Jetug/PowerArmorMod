@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.client.render.layers;
 
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.data.constants.Global;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -97,7 +97,7 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
     }
 
     private ResourceLocation createResource(String playerUUID, AbstractTexture abstractTexture){
-        var headTextureLocation = new ResourceLocation(Global.MOD_ID, playerUUID);
+        var headTextureLocation = new ResourceLocation(ChassisCore.MOD_ID, playerUUID);
         textureManager.register(headTextureLocation, abstractTexture);
         return headTextureLocation;
     }

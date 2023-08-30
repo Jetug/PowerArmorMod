@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.common.data.constants;
 
+import com.jetug.chassis_core.ChassisCore;
 import net.minecraft.resources.ResourceLocation;
 
 public class Resources {
@@ -31,6 +32,6 @@ public class Resources {
     public static final ResourceLocation HAND_MODEL_LOCATION   = resourceLocation("geo/misc/hand.geo.json");
 
     public static ResourceLocation resourceLocation(String location){
-        return new ResourceLocation(Global.MOD_ID, location);
+        return new ResourceLocation(ChassisCore.MOD_ID, location);
     }
 }

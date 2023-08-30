@@ -24,6 +24,7 @@ package com.jetug.chassis_core.mixin;
 
 import java.awt.*;
 
+import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -46,14 +47,9 @@ import static com.jetug.chassis_core.common.data.constants.Resources.*;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static net.minecraft.world.item.Items.*;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(InventoryScreen.class)
 @OnlyIn(Dist.CLIENT)
 public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
-    @Shadow @Final private RecipeBookComponent recipeBookComponent;
-
     @Shadow public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
 
     public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
@@ -66,6 +62,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
         var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
+            Global.saveMousePos();
             doServerAction(ActionType.OPEN_GUI);
         }
     }

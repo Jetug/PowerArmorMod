@@ -11,7 +11,7 @@ public class ActionRegistry {
     private static Map<Class, Integer> actionsId = new HashMap<>();
 
     static {
-        addAction(new DashAction());
+        //addAction(new DashAction());
         addAction(new InventorySyncAction());
         addAction(new InputAction());
         addAction(new CastingStatusAction());
@@ -25,9 +25,10 @@ public class ActionRegistry {
         return actionsId.get(type);
     }
 
-    private static <T extends Action> void addAction(T action){
-        actions.put(action.getId(), action);
-        actionsId.put(action.getClass(), currentId++);
+    public static <T extends Action> void addAction(T action){
+        var id = currentId++;
+        actions.put(id, action);
+        actionsId.put(action.getClass(), id);
     }
 
 }
