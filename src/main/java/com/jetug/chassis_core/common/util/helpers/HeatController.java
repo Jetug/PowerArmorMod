@@ -1,5 +1,8 @@
 package com.jetug.chassis_core.common.util.helpers;
 
+import com.jetug.chassis_core.common.foundation.item.EngineItem;
+
+import static com.jetug.chassis_core.common.data.enums.BodyPart.ENGINE;
 import static com.jetug.chassis_core.common.util.helpers.MathHelper.getInPercents;
 
 public class HeatController {
