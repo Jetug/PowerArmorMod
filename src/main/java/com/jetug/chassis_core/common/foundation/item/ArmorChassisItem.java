@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.common.data.enums.BodyPart;
-import com.jetug.chassis_core.common.foundation.ModCreativeModeTab;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.foundation.registery.EntityTypeRegistry;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
@@ -21,7 +20,7 @@ import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
 public class ArmorChassisItem extends Item {
 
     public ArmorChassisItem() {
-        super((new Item.Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
+        super((new Item.Properties()).stacksTo(1));
     }
 
     @Override

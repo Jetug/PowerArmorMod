@@ -5,6 +5,7 @@
   "client": [
     "ClientPacketListenerMixin",
     "CreativeInventoryScreenMixin",
+    "ForgeIngameGuiMixin",
     "InventoryScreenMixin",
     "PlayerRenderMixin"
   ],

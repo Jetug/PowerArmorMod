@@ -1,5 +1,9 @@
 package com.jetug.chassis_core.client.render.utils;
 
+import com.jetug.chassis_core.common.data.enums.BodyPart;
+import com.jetug.chassis_core.common.data.json.EquipmentSettings;
+import com.jetug.chassis_core.common.data.json.FrameSettings;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector4f;
@@ -11,6 +15,42 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class GeoUtils {
+
+    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, BodyPart part, boolean isPov){
+        if(entity.isEquipmentVisible(part)) {
+            var item = entity.getEquipmentItem(part);
+            addModelPart(provider, item.getSettings(), isPov);
+        }
+        else {
+            removeModelPart(provider, entity.getSettings(), part);
+        }
+    }
+
+    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings, boolean isPov) {
+        if(settings == null) return;
+        var attachments = isPov ? settings.pov : settings.attachments;
+
+        for (var equipmentAttachment : attachments) {
+            var frameBone = getFrameBone(provider, equipmentAttachment.frame);
+            var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
+            if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
+
+            switch (equipmentAttachment.mode) {
+                case ADD -> addBone(frameBone, armorBone);
+                case REPLACE -> replaceBone(frameBone, armorBone);
+            }
+        }
+    }
+
+    public static void removeModelPart(AnimatedGeoModel provider, FrameSettings settings,
+                                       BodyPart part){
+        if (settings == null) return;
+        var attachments =  settings.getAttachments(part);
+        if (attachments == null) return;
+        for (var bone : attachments.bones)
+            returnToDefault(provider, bone);
+    }
+
     public static GeoModel getModel(ResourceLocation location){
         return GeckoLibCache.getInstance().getGeoModels().get(location);
     }
@@ -31,46 +71,9 @@ public class GeoUtils {
     }
 
     public static void replaceBone(GeoBone frameBone, GeoBone armorBone) {
-//        var x = frameBone.getPivotX();
-//        var y = frameBone.getPivotY();
-//        var z = frameBone.getPivotZ();
-//
-//        armorBone.setPivotX(x);
-//        armorBone.setPivotY(y);
-//        armorBone.setPivotZ(z);
-
-//        armorBone.childCubes.forEach((cube) -> {
-//            cube.pivot = new Vector3f(x,y,z);
-//        });
-//
-//        armorBone.setWorldSpaceXform(frameBone.getWorldSpaceXform());
-//        armorBone.setModelPosition(frameBone.getModelPosition());
-
-//        var orig = armorBone.getPosition();
-//        var vec = frameBone.getPosition();
-//        var base = new Vector3d(0,0,0);
-//        base.add(vec);
-//        armorBone.setPosition(base);
-//        orig = armorBone.getPosition();
-//
-//        var t = orig;
-//        setModelPosition(armorBone, frameBone.getModelPosition());
-
         frameBone.parent.childBones.remove(frameBone);
         if (frameBone.parent.childBones.contains(armorBone)) return;
         frameBone.parent.childBones.add(armorBone);
-    }
-
-    public static void setModelPosition(GeoBone geoBone, Vector3d pos) {
-        /* Doesn't work on bones with parent transforms */
-        GeoBone parent = geoBone.getParent();
-        Matrix4f identity = new Matrix4f();
-        identity.setIdentity();
-        Matrix4f matrix = parent.getModelSpaceXform().copy(); // parent == null ? identity : parent.getModelSpaceXform().copy();
-        matrix.invert();
-        Vector4f vec = new Vector4f(-(float) pos.x / 16f, (float) pos.y / 16f, (float) pos.z / 16f, 1);
-        vec.transform(matrix);
-        geoBone.setPosition(-vec.x() * 16f, vec.y() * 16f, vec.z() * 16f);
     }
 
     @Nullable

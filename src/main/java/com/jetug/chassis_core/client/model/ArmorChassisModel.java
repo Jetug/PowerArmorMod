@@ -1,8 +1,5 @@
 package com.jetug.chassis_core.client.model;
 
-import com.jetug.generated.resources.Animations;
-import com.jetug.generated.resources.Models;
-import com.jetug.generated.resources.Textures;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -12,6 +9,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResourceLocation;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
+import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 
 //@SuppressWarnings({"unchecked"})
 //public class ArmorChassisModel<Type extends WearableChassis & IAnimatable> extends AnimatedGeoModel<Type>
@@ -58,19 +56,19 @@ public class ArmorChassisModel<Type extends WearableChassis & IAnimatable> exten
 
     @Override
     public ResourceLocation getModelLocation(Type object) {
-        if(object == null) return Models.ERROR;
+        if(object == null) return resourceLocation("geo/error.geo.json");
         return getResourceLocation(object,"geo/chassis/", ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureLocation(Type object) {
-        if(object == null) return Textures.ENTITY_ERROR;
+        if(object == null) return resourceLocation("textures/entity/error.png");
         return getResourceLocation(object,"textures/entity/", ".png");
     }
 
     @Override
     public ResourceLocation getAnimationFileLocation(Type object) {
-        if(object == null) return Animations.ERROR;
+        if(object == null) return resourceLocation("animations/error.animation.json");
         return getResourceLocation(object,"animations/", ".animation.json");
     }
 

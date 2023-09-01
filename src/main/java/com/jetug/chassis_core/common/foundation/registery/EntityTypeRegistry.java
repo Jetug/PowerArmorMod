@@ -14,10 +14,10 @@ import net.minecraftforge.registries.RegistryObject;
 public class EntityTypeRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, ChassisCore.MOD_ID);
 
-    public static final RegistryObject<EntityType<SteamArmorChassis>> ARMOR_CHASSIS =
-            registerEntity("armor_chassis", EntityType.Builder
-                    .of(SteamArmorChassis::new, MobCategory.MISC)
-                    .sized(1.0f, 2.3f));
+//    public static final RegistryObject<EntityType<ExampleChassis>> ARMOR_CHASSIS =
+//            registerEntity("armor_chassis", EntityType.Builder
+//                    .of(ExampleChassis::new, MobCategory.MISC)
+//                    .sized(1.0f, 2.3f));
 
 //    public static final RegistryObject<EntityType<PowerArmorFrame>> POWER_ARMOR_FRAME =
 //            registerEntity("power_armor_frame", EntityType.Builder

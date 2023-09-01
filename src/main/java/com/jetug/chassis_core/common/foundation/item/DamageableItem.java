@@ -11,10 +11,6 @@ public abstract class DamageableItem extends ChassisEquipment {
         super(pProperties, part);
     }
 
-    public DamageableItem(BodyPart part) {
-        super(part);
-    }
-
     public static int getItemDamage(ItemStack itemStack) {
         if(itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getOrCreateTag();

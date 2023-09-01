@@ -25,10 +25,12 @@ package com.jetug.chassis_core.mixin;
 import java.awt.*;
 
 import com.jetug.chassis_core.Global;
+import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.recipebook.*;
 import net.minecraft.client.renderer.GameRenderer;
@@ -78,14 +80,13 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if(!isWearingChassis()) return;
 
         Lighting.setupFor3DItems();
         itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,
                 topPos + TOP_TAB_ICON_POS_1.y);
-        itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_2.x,
-                topPos + TOP_TAB_ICON_POS_2.y);
         Lighting.setupForFlatItems();
+        GuiUtils.drawChassisIcon(this,poseStack, leftPos + TOP_TAB_ICON_POS_2.x, topPos + TOP_TAB_ICON_POS_2.y);
     }
 }

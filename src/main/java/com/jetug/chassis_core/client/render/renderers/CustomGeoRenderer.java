@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client.render.renderers;
 
+import com.jetug.chassis_core.client.HandEntity;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -20,13 +21,13 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 import java.util.Collections;
 import java.util.List;
 
-public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T> {
+public class CustomGeoRenderer implements IGeoRenderer<HandEntity> {
     protected MultiBufferSource rtb = null;
-    public final AnimatedGeoModel<T> model;
+    public final AnimatedGeoModel<HandEntity> model;
 
     protected final List<GeoLayerRenderer> layerRenderers = new ObjectArrayList<>();
 
-    public CustomGeoRenderer(AnimatedGeoModel<T> model){
+    public CustomGeoRenderer(AnimatedGeoModel<HandEntity> model){
         this.model = model;
     }
 
@@ -45,19 +46,43 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
     }
 
     @Override
-    public AnimatedGeoModel<T> getGeoModelProvider() {
+    public AnimatedGeoModel<HandEntity> getGeoModelProvider() {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T animatable) {
+    public ResourceLocation getTextureLocation(HandEntity animatable) {
         return model.getTextureLocation(animatable);
     }
 
-    public void render(T animatable, WearableChassis chassisEntity, PoseStack poseStack,
+    public void render(WearableChassis chassisEntity, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource,
                        int packedLight) {
 
+        this.baseRender(chassisEntity.getHandEntity(), poseStack, bufferSource, packedLight);
+        this.renderLayers(chassisEntity, poseStack, bufferSource, packedLight);
+    }
+
+    private void renderLayers(WearableChassis chassisEntity, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, int packedLight) {
+        var partialTick = Minecraft.getInstance().getFrameTime();
+        for (var layerRenderer : this.layerRenderers) {
+            renderLayer(poseStack, bufferSource, packedLight,
+                    chassisEntity, 0, 0, partialTick, 0,
+                    0, 0, layerRenderer);
+        }
+    }
+
+    protected void renderLayer(PoseStack poseStack, MultiBufferSource bufferSource,
+                               int packedLight, WearableChassis animatable,
+                               float limbSwing, float limbSwingAmount,
+                               float partialTick, float rotFloat, float netHeadYaw,
+                               float headPitch, GeoLayerRenderer layerRenderer) {
+        layerRenderer.render(poseStack, bufferSource, packedLight, animatable, limbSwing,
+                limbSwingAmount, partialTick, rotFloat,
+                netHeadYaw, headPitch);
+    }
+
+    private void baseRender(HandEntity animatable, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, int packedLight) {
         var animationEvent = new AnimationEvent<>(animatable, 0, 0,
                 Minecraft.getInstance().getFrameTime(), false,
                 Collections.singletonList(new EntityModelData()));
@@ -71,22 +96,8 @@ public class CustomGeoRenderer<T extends IAnimatable> implements IGeoRenderer<T>
         render(getModel(), animatable, 0, renderType, poseStack, bufferSource, null, packedLight, OverlayTexture.NO_OVERLAY,
                 renderColor.getRed() / 255f, renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
                 renderColor.getAlpha() / 255f);
-
-        var partialTick = Minecraft.getInstance().getFrameTime();
-        for (var layerRenderer : this.layerRenderers) {
-            renderLayer(poseStack, bufferSource, packedLight, chassisEntity, 0, 0, partialTick, 0,
-                    0, 0, bufferSource, layerRenderer);
-        }
-
     }
 
-    protected void renderLayer(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, WearableChassis animatable,
-                               float limbSwing, float limbSwingAmount, float partialTick, float rotFloat, float netHeadYaw,
-                               float headPitch, MultiBufferSource bufferSource2, GeoLayerRenderer layerRenderer) {
-        layerRenderer.render(poseStack, bufferSource, packedLight, animatable, limbSwing,
-                limbSwingAmount, partialTick, rotFloat,
-                netHeadYaw, headPitch);
-    }
     public GeoModel getModel(){
         return getGeoModelProvider().getModel(getGeoModelProvider().getModelLocation(null));
     }

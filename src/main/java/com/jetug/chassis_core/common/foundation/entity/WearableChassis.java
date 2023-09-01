@@ -1,12 +1,13 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.foundation.item.DrillItem;
+import com.jetug.chassis_core.client.HandEntity;
 import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.common.util.helpers.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,10 +25,10 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
+import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
 import static net.minecraft.util.Mth.*;
-import static net.minecraft.world.InteractionHand.*;
 import static org.apache.logging.log4j.Level.*;
 
 public abstract class WearableChassis extends ArmorChassisBase implements IAnimatable {
@@ -36,6 +37,8 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     public static final int MAX_PUNCH_FORCE = 20;
     public static final int DASH_DURATION = 10;
     public static final int PUNCH_DURATION = 10;
+    public static final HandEntity HAND_ENTITY = new HandEntity();
+    public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
 
     public final Speedometer speedometer = new Speedometer(this);
 
@@ -63,6 +66,14 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 //    public EntityDimensions getDimensions(Pose pPose) {
 //        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
 //    }
+
+    public HandEntity getHandEntity(){
+        return HAND_ENTITY;
+    }
+
+    public ResourceLocation getIcon(){
+        return DEFAULT_ICON;
+    }
 
     @Override
     public void tick() {
@@ -282,8 +293,6 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     private double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
     }
-
-
 
 //    @Override
 //    public boolean causeFallDamage(float height, float p_225503_2_, @NotNull DamageSource damageSource) {

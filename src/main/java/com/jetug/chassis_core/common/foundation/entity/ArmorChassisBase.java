@@ -142,22 +142,22 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public boolean hasEquipment(BodyPart part){
         return !inventory.getItem(part.ordinal()).isEmpty();
     }
-
-    public boolean hasPowerKnuckle(){
-        return (getEquipment(RIGHT_HAND).getItem() instanceof PowerKnuckle);
-    }
-
-    public PowerKnuckle getPowerKnuckle(){
-        return (PowerKnuckle) getEquipment(RIGHT_HAND).getItem();
-    }
-
-    public boolean hasJetpack(){
-        return getEquipment(BACK).getItem() instanceof JetpackItem;
-    }
-
-    public JetpackItem getJetpack(){
-        return (JetpackItem) getEquipment(BACK).getItem();
-    }
+//
+//    public boolean hasPowerKnuckle(){
+//        return (getEquipment(RIGHT_HAND).getItem() instanceof PowerKnuckle);
+//    }
+//
+//    public PowerKnuckle getPowerKnuckle(){
+//        return (PowerKnuckle) getEquipment(RIGHT_HAND).getItem();
+//    }
+//
+//    public boolean hasJetpack(){
+//        return getEquipment(BACK).getItem() instanceof JetpackItem;
+//    }
+//
+//    public JetpackItem getJetpack(){
+//        return (JetpackItem) getEquipment(BACK).getItem();
+//    }
 
     public int getArmorDurability(BodyPart bodyPart) {
         var itemStack = inventory.getItem(bodyPart.getId());

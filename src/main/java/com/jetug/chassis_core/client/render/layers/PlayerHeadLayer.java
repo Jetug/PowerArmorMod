@@ -18,11 +18,10 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
-import static java.lang.System.out;
 
 public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
     private final IGeoRenderer<T> entityRenderer;
-    private static final HashMap<String, ResourceLocation> playerTextures = new HashMap<>();
+    private static final HashMap<String, ResourceLocation> playerHeads = new HashMap<>();
     private final TextureManager textureManager;
     private final int textureWidth;
     private final int textureHeight;
@@ -41,9 +40,6 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
-            var test = entity.getControllingPassenger();
-            out.println(test);
-
             var texture = getHeadLayerRL(clientPlayer, entity);
             if (texture == null) return;
 
@@ -74,24 +70,24 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
     private ResourceLocation getHeadLayerRL(Player clientPlayer, WearableChassis entity) {
         var tag = clientPlayer.getUUID().toString();
 
-        if (!playerTextures.containsKey(tag)) {
+        if (!playerHeads.containsKey(tag)) {
             var texture = getDefaultResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
             if(texture == null) return null;
             var resource = createResource(tag, texture);
-            playerTextures.put(tag, resource);
+            playerHeads.put(tag, resource);
 
-            downloadPlayerHeadTexture( clientPlayer, entity);
+            downloadPlayerHeadTexture(clientPlayer);
         }
-        return playerTextures.get(tag);
+        return playerHeads.get(tag);
     }
 
-    private void downloadPlayerHeadTexture(Player clientPlayer, WearableChassis entity){
+    private void downloadPlayerHeadTexture(Player clientPlayer){
        var thread = new Thread(() -> {
             var tag = clientPlayer.getUUID().toString();
             var texture = getResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
             if(texture == null) return;
             var resource = createResource(tag, texture);
-            playerTextures.put(tag, resource);
+            playerHeads.put(tag, resource);
         });
        thread.start();
     }

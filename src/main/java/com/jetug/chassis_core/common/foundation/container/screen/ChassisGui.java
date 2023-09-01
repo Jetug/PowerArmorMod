@@ -1,10 +1,11 @@
 package com.jetug.chassis_core.common.foundation.container.screen;
 
-import com.jetug.chassis_core.common.foundation.container.menu.*;
+import com.jetug.chassis_core.Global;
+import com.jetug.chassis_core.client.render.utils.GuiUtils;
+import com.jetug.chassis_core.common.data.enums.BodyPart;
+import com.jetug.chassis_core.common.foundation.container.menu.ChassisMenu;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.util.Pos2I;
-import com.jetug.chassis_core.Global;
-import com.jetug.chassis_core.common.data.enums.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -18,12 +19,13 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
-import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.*;
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
+import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
-import static net.minecraft.world.item.Items.*;
+import static net.minecraft.world.item.Items.CHEST;
+import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
 public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
@@ -85,7 +87,7 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
-        //RenderSystem.setShaderTexture(0, ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, ICONS_LOCATION);
 
         renderIcon(HELMET, EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
         renderIcon(BODY_ARMOR, EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
@@ -109,21 +111,37 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
         }
 
         if(isWearingChassis()) {
-            if (minecraft.player.isCreative()) {
-                RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
-                this.blit(poseStack, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
-            } else {
-                RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-                this.blit(poseStack, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
-            }
+            renderTabs(poseStack);
+            renderIcons(poseStack);
+        }
+    }
 
-            if (minecraft.player.isCreative()) {
-                this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance()         , right - 6  - 16, bottom + 4);
-                this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), right - 30 - 16, bottom + 4);
-            } else {
-                this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos + -20);
-                this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), leftPos + 35, topPos + -20);
-            }
+    private int getRight(){
+        return leftPos + imageWidth;
+    }
+
+    private int getBottom(){
+        return topPos + imageHeight;
+    }
+
+    private void renderTabs(PoseStack poseStack) {
+        if (minecraft.player.isCreative()) {
+            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
+            this.blit(poseStack, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
+        } else {
+            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
+            this.blit(poseStack, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
+        }
+    }
+
+    private void renderIcons(PoseStack poseStack) {
+        if (minecraft.player.isCreative()) {
+            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance(), right - 6  - 16, bottom + 4);
+            GuiUtils.drawChassisIcon(this, poseStack, right - 30 - 16, bottom + 4);
+        } else {
+            this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
+            GuiUtils.drawChassisIcon(this, poseStack, leftPos + 35, topPos - 20);
+
         }
     }
 
@@ -137,15 +155,6 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
             RenderSystem.setShaderTexture(0, pTextureId);
             blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
         //}
-    }
-
-
-    private int getRight(){
-        return leftPos + imageWidth;
-    }
-
-    private int getBottom(){
-        return topPos + imageHeight;
     }
 
     private void renderEntity(WearableChassis powerArmor) {

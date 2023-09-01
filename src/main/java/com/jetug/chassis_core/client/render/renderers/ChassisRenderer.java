@@ -3,7 +3,6 @@ package com.jetug.chassis_core.client.render.renderers;
 import com.jetug.chassis_core.client.model.*;
 import com.jetug.chassis_core.client.render.layers.*;
 import com.jetug.chassis_core.common.data.enums.*;
-import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
@@ -16,21 +15,17 @@ import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-
-import java.util.*;
 
 import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
-import static com.jetug.chassis_core.client.render.utils.ParticleUtils.showJetpackParticles;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
-public class ArmorChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
+public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
     private final ArmorChassisModel<T> armorChassisModel;
     protected ItemStack mainHandItem, offHandItem;
 
-    public ArmorChassisRenderer(EntityRendererProvider.Context renderManager) {
+    public ChassisRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ArmorChassisModel<>());
         armorChassisModel = (ArmorChassisModel<T>)getGeoModelProvider();
         initLayers();
@@ -107,40 +102,5 @@ public class ArmorChassisRenderer<T extends WearableChassis> extends ModGeoRende
             stack.translate(0, 0.125, 0.37);
             stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
-    }
-
-    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, BodyPart part, boolean isPov){
-        if(entity.isEquipmentVisible(part)) {
-            var item = entity.getEquipmentItem(part);
-            addModelPart(provider, item.getSettings(), isPov);
-        }
-        else {
-            removeModelPart(provider, entity.getSettings(), part);
-        }
-    }
-
-    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings, boolean isPov) {
-        if(settings == null) return;
-        var attachments = isPov ? settings.pov : settings.attachments;
-
-        for (var equipmentAttachment : attachments) {
-            var frameBone = getFrameBone(provider, equipmentAttachment.frame);
-            var armorBone = getArmorBone(settings.getModelLocation(), equipmentAttachment.armor);
-            if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
-
-            switch (equipmentAttachment.mode) {
-                case ADD -> addBone(frameBone, armorBone);
-                case REPLACE -> replaceBone(frameBone, armorBone);
-            }
-        }
-    }
-
-    public static void removeModelPart(AnimatedGeoModel provider, FrameSettings settings,
-                                       BodyPart part){
-        if (settings == null) return;
-        var attachments =  settings.getAttachments(part);
-        if (attachments == null) return;
-        for (var bone : attachments.bones)
-            returnToDefault(provider, bone);
     }
 }

@@ -2,7 +2,6 @@ package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.ClientConfig;
-import com.jetug.chassis_core.client.gui.hud.*;
 import com.jetug.chassis_core.common.foundation.container.screen.*;
 import com.jetug.chassis_core.common.foundation.registery.GuiRegistry;
 import com.jetug.chassis_core.client.input.LongClickController;
@@ -22,7 +21,6 @@ import net.minecraftforge.fml.event.lifecycle.*;
 
 import static com.jetug.chassis_core.client.KeyBindings.*;
 import static com.jetug.chassis_core.client.render.renderers.CustomHandRenderer.*;
-import static com.jetug.chassis_core.common.foundation.registery.ContainerRegistry.CASTING_TABLE_MENU;
 import static com.jetug.chassis_core.common.foundation.registery.EntityTypeRegistry.*;
 
 @Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -35,7 +33,7 @@ public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
-        event.registerEntityRenderer(ARMOR_CHASSIS.get(), SteamArmorRenderer::new);
+//        event.registerEntityRenderer(ARMOR_CHASSIS.get(), SteamArmorRenderer::new);
 //        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), PowerArmorRenderer::new);
         //event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
     }
@@ -46,12 +44,11 @@ public final class SetupEvents {
         for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
 
         //MenuScreens.register(ModMenuTypes.CASTING_TABLE_MENU.get(), CastingTableGui::new);
-        MenuScreens.register(CASTING_TABLE_MENU.get(), CastingTableScreen::new);
+        //MenuScreens.register(CASTING_TABLE_MENU.get(), CastingTableScreen::new);
 
         event.enqueueWork(GuiRegistry::register);
         ClientConfig.modResourceManager.loadConfigs();
         registerClickListeners();
-        setupGui(event);
         registerHandRenderer();
     }
 
@@ -59,10 +56,5 @@ public final class SetupEvents {
         DOUBLE_CLICK_CONTROLLER.addListener(InputEvents::onDoubleClick);
         LONG_CLICK_CONTROLLER.setRepeatListener(InputEvents::onLongClick);
         LONG_CLICK_CONTROLLER.setReleaseListener(InputEvents::onLongRelease);
-    }
-
-    public static void setupGui(FMLClientSetupEvent event)
-    {
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Armor heat", new HeatRenderer());
     }
 }

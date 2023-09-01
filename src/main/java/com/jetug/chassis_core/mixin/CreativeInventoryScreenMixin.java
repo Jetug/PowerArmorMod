@@ -23,13 +23,12 @@
 package com.jetug.chassis_core.mixin;
 
 import com.jetug.chassis_core.Global;
+import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.ActionType;
-import com.jetug.chassis_core.common.util.Pos2D;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -38,7 +37,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -47,11 +45,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
 
-import static com.jetug.chassis_core.common.foundation.container.screen.ChassisGui.TABS_WIDTH;
+import static com.jetug.chassis_core.common.data.constants.Gui.TOP_TAB_ICON_POS_2;
+import static com.jetug.chassis_core.common.foundation.container.screen.SteamArmorGui.TABS_WIDTH;
 import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 import static com.jetug.chassis_core.common.data.constants.Gui.TAB_HEIGHT;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 /**
@@ -89,11 +89,12 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(PoseStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if(!PlayerUtils.isWearingChassis()) return;
-        Lighting.setupFor3DItems();
-        this.itemRenderer.renderAndDecorateItem(PA_FRAME.get().getDefaultInstance(), getRight() - 30 - 16, getBottom() + 4);
-        Lighting.setupForFlatItems();
+//        Lighting.setupFor3DItems();
+//        Lighting.setupForFlatItems();
+        GuiUtils.drawChassisIcon(this,poseStack, getRight() - 30 - 16, getBottom() + 4);
+
     }
 
     private int getRight(){

@@ -21,8 +21,8 @@ public class ContainerRegistry {
     public static final RegistryObject<MenuType<ArmorStationMenu>> ARMOR_STATION_MENU
             = CONTAINERS.register("armor_station", () -> new MenuType<>(ArmorStationMenu::new));
 
-    public static final RegistryObject<MenuType<CastingTableMenu>> CASTING_TABLE_MENU =
-            registerMenuType(CastingTableMenu::new, "casting_table_menu");
+//    public static final RegistryObject<MenuType<CastingTableMenu>> CASTING_TABLE_MENU =
+//            registerMenuType(CastingTableMenu::new, "casting_table_menu");
 
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {

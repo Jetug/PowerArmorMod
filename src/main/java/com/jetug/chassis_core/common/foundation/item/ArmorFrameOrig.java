@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.foundation.item;
 
-import com.jetug.chassis_core.common.foundation.ModCreativeModeTab;
+
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -25,7 +25,7 @@ public class ArmorFrameOrig extends Item {
     public static final String ENTITY_UUID = "EntityUUID";
 
     public ArmorFrameOrig() {
-        super((new Properties()).stacksTo(1).tab(ModCreativeModeTab.MY_TAB));
+        super((new Properties()).stacksTo(1));
     }
 
     @Override

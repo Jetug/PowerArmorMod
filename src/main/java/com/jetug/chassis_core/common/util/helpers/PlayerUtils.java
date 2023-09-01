@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.common.util.helpers;
 
-import com.jetug.chassis_core.common.foundation.entity.SteamArmorChassis;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import net.minecraft.client.Minecraft;
@@ -28,25 +27,9 @@ public class PlayerUtils {
         return player != null && player.getVehicle() instanceof WearableChassis;
     }
 
-    public static boolean isWearingSteamChassis(){
-        return isWearingSteamChassis(getLocalPlayer());
-    }
-
-    public static boolean isWearingSteamChassis(Entity player){
-        return player != null && player.getVehicle() instanceof SteamArmorChassis;
-    }
-
     public static WearableChassis getPlayerChassis(){
         return getPlayerChassis(getLocalPlayer());
     }
-
-    @Nullable
-    public static SteamArmorChassis getSteamChassis(Player player){
-        if(player.getVehicle() instanceof SteamArmorChassis)
-            return (SteamArmorChassis) player.getVehicle();
-        else return null;
-    }
-
 
     @Nullable
     public static WearableChassis getPlayerChassis(Player player){

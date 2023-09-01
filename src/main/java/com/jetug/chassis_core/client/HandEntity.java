@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.client.render.renderers;
+package com.jetug.chassis_core.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -9,7 +9,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import static com.jetug.generated.animations.ArmorChassisHandAnimation.*;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static com.jetug.chassis_core.common.util.helpers.AnimationHelper.*;
 import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
@@ -26,35 +25,8 @@ public class HandEntity implements IAnimatable {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
-        if(!isWearingSteamChassis(player)) return PlayState.STOP;
-
-        var controller = event.getController();
-        var armor = getSteamChassis(player);
-        controller.animationSpeed = 1;
-
-        if(armor.isPunching()){
-            controller.animationSpeed = 2;
-            setAnimation(controller, PUNCH, PLAY_ONCE);
-        }
-        else if(armor.attackChargeController.isMaxCharge()){
-            setAnimation(controller,PUNCH_MAX_CHARGE, LOOP);
-        }
-        else if(armor.attackChargeController.isChargingAttack()){
-            controller.animationSpeed = 0.3;
-            setAnimation(controller,PUNCH_CHARGE, LOOP);
-        }
-        else if(player.swinging){
-            controller.animationSpeed = 3;
-            setAnimation(controller,HIT, LOOP);
-        }
-        else if(armor.isWalking()){
-            setAnimation(controller,WALK, LOOP);
-        }
-        else {
-            setAnimation(controller,IDLE, LOOP);
-        }
-        return PlayState.CONTINUE;
+    protected <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
+        return PlayState.STOP;
     }
 
     @Override

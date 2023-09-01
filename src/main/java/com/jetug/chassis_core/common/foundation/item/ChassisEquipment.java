@@ -2,7 +2,6 @@ package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.common.data.json.EquipmentSettings;
 import com.jetug.chassis_core.common.data.enums.*;
-import com.jetug.chassis_core.common.foundation.ModCreativeModeTab;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import net.minecraft.world.item.Item;
 
@@ -21,10 +20,10 @@ public class ChassisEquipment extends Item {
         this.part = part;
     }
 
-    public ChassisEquipment(BodyPart part) {
-        super(new Item.Properties().tab(ModCreativeModeTab.MY_TAB).stacksTo(1));
-        this.part = part;
-    }
+//    public ChassisEquipment(BodyPart part) {
+//        super(new Item.Properties().stacksTo(1));
+//        this.part = part;
+//    }
 
     @Nullable
     public EquipmentSettings getSettings(){

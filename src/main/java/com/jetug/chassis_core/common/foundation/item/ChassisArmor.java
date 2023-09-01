@@ -1,19 +1,16 @@
 package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.common.foundation.ChassisArmorMaterial;
-import com.jetug.chassis_core.common.foundation.ModCreativeModeTab;
 import com.jetug.chassis_core.common.data.enums.*;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 
 public class ChassisArmor extends DamageableItem {
     private final ChassisArmorMaterial material;
-    public final float speed;
 
-    public ChassisArmor(ChassisArmorMaterial material, BodyPart part, float speed) {
-        super((new Properties()).durability(material.getDurabilityForSlot(part)).tab(ModCreativeModeTab.MY_TAB), part);
+    public ChassisArmor(Properties pProperties, ChassisArmorMaterial material, BodyPart part) {
+        super(pProperties.durability(material.getDurabilityForSlot(part)), part);
         this.material = material;
-        this.speed = speed;
     }
 
     public ChassisArmorMaterial getMaterial(){

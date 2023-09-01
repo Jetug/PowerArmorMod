@@ -19,8 +19,10 @@ public class ChassisArmorMaterial {
     private final LazyLoadedValue<Ingredient> repairIngredient;
     private final int[] craftPerSlot;
 
-    public ChassisArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, float toughness, int enchantmentValue,
-                                SoundEvent sound, float knockbackResistance, Supplier<Ingredient> p_40481_, int[] craftPerSlot) {
+    public ChassisArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections,
+                                float toughness, int enchantmentValue,
+                                SoundEvent sound, float knockbackResistance,
+                                Supplier<Ingredient> p_40481_, int[] craftPerSlot) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
         this.slotProtections = slotProtections;
