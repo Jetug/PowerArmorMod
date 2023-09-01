@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.common.foundation.container.menu.base;
+package com.jetug.chassis_core.common.foundation.container.menu;
 
 import com.jetug.chassis_core.common.data.enums.BodyPart;
 import com.jetug.chassis_core.common.foundation.container.slot.EquipmentSlot;

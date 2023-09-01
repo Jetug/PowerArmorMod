@@ -31,22 +31,9 @@ public final class SetupEvents {
     private static final LongClickController LONG_CLICK_CONTROLLER = new LongClickController();
 
     @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent()
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event){
-//        event.registerEntityRenderer(ARMOR_CHASSIS.get(), SteamArmorRenderer::new);
-//        event.registerEntityRenderer(POWER_ARMOR_FRAME.get(), PowerArmorRenderer::new);
-        //event.registerEntityRenderer(POWER_ARMOR_PART.get(), RenderNothing::new);
-    }
-
-    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
-
-        //MenuScreens.register(ModMenuTypes.CASTING_TABLE_MENU.get(), CastingTableGui::new);
-        //MenuScreens.register(CASTING_TABLE_MENU.get(), CastingTableScreen::new);
-
-        event.enqueueWork(GuiRegistry::register);
         ClientConfig.modResourceManager.loadConfigs();
         registerClickListeners();
         registerHandRenderer();

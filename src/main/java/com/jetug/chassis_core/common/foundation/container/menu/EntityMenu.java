@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.common.foundation.container.menu.base;
+package com.jetug.chassis_core.common.foundation.container.menu;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;

@@ -5,7 +5,7 @@ license="GNU General Public License v3.0"
 modId="chassis_core"
 version="${file.jarVersion}"
 displayName="Armorpunk"
-logoFile="logo.png"
+logoFile="chassis_core.png"
 authors="Jetug"
 description='''
 This mod adds mechanical armor

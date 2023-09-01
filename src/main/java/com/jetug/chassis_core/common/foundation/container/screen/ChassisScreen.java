@@ -3,7 +3,6 @@ package com.jetug.chassis_core.common.foundation.container.screen;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.BodyPart;
-import com.jetug.chassis_core.common.foundation.container.menu.ChassisMenu;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.util.Pos2I;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -22,25 +22,26 @@ import java.awt.*;
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
-import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.PA_FRAME;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
-public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
+public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
     public static final int TABS_WIDTH = 57;
     public static final float MIN_SCALE = 0.0001F;
+    private final ResourceLocation guiResource;
 
     private float mousePosX;
     private float mousePosY;
     private int right;
     private int bottom;
 
-    public ChassisGui(ChassisMenu container, Inventory inventory, Component name) {
+    public ChassisScreen(T container, Inventory inventory, Component name, ResourceLocation guiResource) {
         super(container, inventory, name);
+        this.guiResource = guiResource;
     }
 
     @Override
@@ -79,31 +80,10 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.mousePosX = mouseX;
-        this.mousePosY = mouseY;
-
-
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-
-        RenderSystem.setShaderTexture(0, ICONS_LOCATION);
-
-        renderIcon(HELMET, EMPTY_ARMOR_SLOT_HEAD     , poseStack, HEAD_SLOT_POS     );
-        renderIcon(BODY_ARMOR, EMPTY_ARMOR_SLOT_BODY     , poseStack, BODY_SLOT_POS     );
-        renderIcon(LEFT_ARM_ARMOR, EMPTY_ARMOR_SLOT_LEFT_ARM , poseStack, RIGHT_ARM_SLOT_POS);
-        renderIcon(RIGHT_ARM_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_ARM, poseStack, LEFT_ARM_SLOT_POS );
-        renderIcon(LEFT_LEG_ARMOR, EMPTY_ARMOR_SLOT_LEFT_LEG , poseStack, RIGHT_LEG_SLOT_POS);
-        renderIcon(RIGHT_LEG_ARMOR, EMPTY_ARMOR_SLOT_RIGHT_LEG, poseStack, LEFT_LEG_SLOT_POS );
-
-        this.renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    @Override
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ARMOR_INVENTORY_TEXTURE);
+        RenderSystem.setShaderTexture(0, guiResource);
         this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         if (Global.referenceMob instanceof WearableChassis powerArmor) {
@@ -114,6 +94,17 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
             renderTabs(poseStack);
             renderIcons(poseStack);
         }
+    }
+
+    @Override
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        this.mousePosX = mouseX;
+        this.mousePosY = mouseY;
+
+        this.renderBackground(poseStack);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
+        this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private int getRight(){
@@ -140,8 +131,7 @@ public class ChassisGui extends AbstractContainerScreen<ChassisMenu> {
             GuiUtils.drawChassisIcon(this, poseStack, right - 30 - 16, bottom + 4);
         } else {
             this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
-            GuiUtils.drawChassisIcon(this, poseStack, leftPos + 35, topPos - 20);
-
+            GuiUtils.drawChassisIcon(this, poseStack, leftPos + 32, topPos - 20);
         }
     }
 

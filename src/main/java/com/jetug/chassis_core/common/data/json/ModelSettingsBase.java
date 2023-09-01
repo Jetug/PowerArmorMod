@@ -9,10 +9,10 @@ public abstract class ModelSettingsBase {
     public String texture;
 
     public ResourceLocation getModelLocation(){
-        return new ResourceLocation(ChassisCore.MOD_ID, model);
+        return new ResourceLocation(model);
     }
 
     public ResourceLocation getTextureLocation(){
-        return new ResourceLocation(ChassisCore.MOD_ID, texture);
+        return new ResourceLocation(texture);
     }
 }
