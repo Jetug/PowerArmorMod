@@ -1,9 +1,5 @@
 package com.jetug.chassis_core.common.foundation.item;
 
-import com.jetug.chassis_core.common.data.enums.BodyPart;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.foundation.registery.EntityTypeRegistry;
-import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;

@@ -1,8 +1,6 @@
 package com.jetug.chassis_core.common.events;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.foundation.registery.EntityTypeRegistry;
 import com.jetug.chassis_core.common.network.PacketHandler;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
