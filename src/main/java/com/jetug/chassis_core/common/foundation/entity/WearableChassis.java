@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.client.HandEntity;
 import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
@@ -25,6 +24,8 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
+import java.util.HashMap;
+
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
@@ -34,9 +35,6 @@ import static org.apache.logging.log4j.Level.*;
 public abstract class WearableChassis extends ArmorChassisBase implements IAnimatable {
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
-    public static final int MAX_PUNCH_FORCE = 20;
-    public static final int DASH_DURATION = 10;
-    public static final int PUNCH_DURATION = 10;
     public static final HandEntity HAND_ENTITY = new HandEntity();
     public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
 
@@ -47,9 +45,21 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-
     public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);
+        createPartIdMap();
+    }
+
+    protected int size;
+
+    protected void createPartIdMap(){
+        var i = 0;
+        partIdMap.put(HELMET         , i++);
+        partIdMap.put(BODY_ARMOR     , i++);
+        partIdMap.put(LEFT_ARM_ARMOR , i++);
+        partIdMap.put(RIGHT_ARM_ARMOR, i++);
+        partIdMap.put(LEFT_LEG_ARMOR , i++);
+        size = i;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -61,11 +71,6 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
                 .add(Attributes.JUMP_STRENGTH, 0.5D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
-
-//    @Override
-//    public EntityDimensions getDimensions(Pose pPose) {
-//        return super.getDimensions(pPose).scale(1,  isShiftDown()? 0.5f : 1);
-//    }
 
     public HandEntity getHandEntity(){
         return HAND_ENTITY;
@@ -212,9 +217,13 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         return this.factory;
     }
 
-    public void damageArmorItem(BodyPart bodyPart, DamageSource damageSource, float damage) {
+    public Integer getPartId(String chassisPart){
+        return partIdMap.get(chassisPart);
+    }
+
+    public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
         ChassisCore.LOGGER.info("damageArmorItem" + isClientSide);
-        var itemStack = inventory.getItem(bodyPart.getId());
+        var itemStack = inventory.getItem(getPartId(chassisPart));
 
         if(itemStack.getItem() instanceof ChassisArmor armorItem)
             armorItem.damageArmor(itemStack, (int) damage);

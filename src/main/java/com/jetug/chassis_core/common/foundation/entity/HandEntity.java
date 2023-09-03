@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.client;
+package com.jetug.chassis_core.common.foundation.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

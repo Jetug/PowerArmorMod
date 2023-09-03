@@ -2,6 +2,7 @@ package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.ClientConfig;
+import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.client.input.LongClickController;
 import com.jetug.chassis_core.client.input.DoubleClickController;
 import net.minecraft.client.KeyMapping;
@@ -25,7 +26,7 @@ public final class SetupEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        for (KeyMapping key: getKeys()) ClientRegistry.registerKeyBinding(key);
+        KeyBindings.register();
         ClientConfig.modResourceManager.loadConfigs();
         registerClickListeners();
         registerHandRenderer();

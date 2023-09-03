@@ -16,7 +16,7 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class GeoUtils {
 
-    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, BodyPart part, boolean isPov){
+    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, String part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
             addModelPart(provider, item.getSettings(), isPov);

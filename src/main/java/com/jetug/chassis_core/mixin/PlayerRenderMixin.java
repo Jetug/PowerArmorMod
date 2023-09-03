@@ -16,7 +16,7 @@ public class
 PlayerRenderMixin {
     private static final String getEntityHitResult = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;";
 
-    @Inject(at = @At(value = "TAIL"), method = "renderHand", cancellable = true)
+    @Inject(at = @At(value = "TAIL"), method = "renderHand", cancellable = true, remap = false)
     private void renderHand(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, AbstractClientPlayer pPlayer,
                             ModelPart pRendererArm, ModelPart pRendererArmwear, CallbackInfo ci) {
 

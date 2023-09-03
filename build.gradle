@@ -102,7 +102,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.2.9'
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.57')
 
     implementation fileTree('libs') { include '*.jar' }

@@ -2,6 +2,7 @@ package com.jetug.chassis_core.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,5 +27,10 @@ public class KeyBindings {
         } catch (IllegalAccessException ignored) {}
 
         return keys;
+    }
+
+    public static void register(){
+        for (KeyMapping key: getKeys())
+            ClientRegistry.registerKeyBinding(key);
     }
 }

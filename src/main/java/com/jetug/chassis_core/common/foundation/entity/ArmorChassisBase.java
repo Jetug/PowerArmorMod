@@ -3,10 +3,8 @@ package com.jetug.chassis_core.common.foundation.entity;
 import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.common.data.json.FrameSettings;
 import com.jetug.chassis_core.common.events.*;
-import com.jetug.chassis_core.common.foundation.container.menu.*;
 import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
-import com.jetug.chassis_core.common.util.helpers.HeatController;
 import com.jetug.chassis_core.common.util.helpers.timer.*;
 import com.jetug.chassis_core.common.network.data.*;
 import com.jetug.chassis_core.common.data.enums.*;
@@ -23,13 +21,11 @@ import org.jetbrains.annotations.*;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.jetug.chassis_core.common.network.data.ArmorData.*;
 import static com.jetug.chassis_core.common.data.constants.NBT.*;
 import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyContainer;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
-import static com.jetug.chassis_core.common.util.helpers.MathHelper.*;
 
 public class ArmorChassisBase extends EmptyLivingEntity implements ContainerListener {
     public static final int COOLING = 5;
@@ -48,7 +44,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     private ListTag serializedInventory;
     private Container previousContainer;
 
-    public final BodyPart[] armor = new BodyPart[]{
+    public final String[] armor = new String[]{
             HELMET,
             BODY_ARMOR,
             LEFT_ARM_ARMOR,
@@ -56,6 +52,11 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
             LEFT_LEG_ARMOR,
             RIGHT_LEG_ARMOR,
     };
+    protected HashMap<String, Integer> partIdMap = new HashMap<>();
+
+    public String[] getEquipment(){
+        return partIdMap.keySet().toArray(new String[0]);
+    }
 
     public final BodyPart[] equipment = BodyPart.values();
 
@@ -125,10 +126,23 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
-    public boolean isEquipmentVisible(BodyPart bodyPart){
-        if(bodyPart.isArmorItem())
-            return hasArmor(bodyPart);
-        else return !getEquipment(bodyPart).isEmpty();
+    protected String[] armorParts = new String[]{
+            HELMET          ,
+            BODY_ARMOR      ,
+            LEFT_ARM_ARMOR  ,
+            RIGHT_ARM_ARMOR ,
+            LEFT_LEG_ARMOR  ,
+            RIGHT_LEG_ARMOR ,
+    }
+
+    public boolean isArmorItem(String chassisPart){
+        return Arrays.stream(armorParts).toList().contains(chassisPart);
+    }
+
+    public boolean isEquipmentVisible(String chassisPart){
+        if(isArmorItem(chassisPart))
+            return hasArmor(chassisPart);
+        else return !getEquipment(chassisPart).isEmpty();
     }
 
     public boolean hasArmor(BodyPart bodyPart) {
@@ -238,7 +252,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     protected void updateSpeed(){
-
+        setSpeed(getSpeedAttribute());
     }
 
     private void updateTotalArmor(){

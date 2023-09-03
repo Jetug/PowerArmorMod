@@ -52,13 +52,13 @@ import static net.minecraft.world.item.Items.*;
 @Mixin(InventoryScreen.class)
 @OnlyIn(Dist.CLIENT)
 public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
-    @Shadow public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
+    @Shadow(remap = false) public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
 
     public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked", at = @At("HEAD"), remap = false)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if(!isWearingChassis()) return;
 
@@ -69,7 +69,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         }
     }
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
+    @Inject(method = "renderBg", at = @At("TAIL"), remap = false)
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         if(!isWearingChassis()) return;
 
@@ -79,7 +79,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = "render", at = @At("TAIL"), remap = false)
     public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if(!isWearingChassis()) return;
 

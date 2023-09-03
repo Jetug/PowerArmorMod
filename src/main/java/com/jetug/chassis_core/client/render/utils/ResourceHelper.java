@@ -20,15 +20,15 @@ public class ResourceHelper {
                 .hasResource(path);
     }
 
-    public static ResourceLocation getResourceLocation(ArmorChassisBase chassis, String path, String extension){
+    public static ResourceLocation getChassisResource(ArmorChassisBase chassis, String path, String extension){
         var name = chassis.getModelId();
         var modId = chassis.getType().getRegistryName().getNamespace();
 
         return new ResourceLocation(modId, path + name + extension);
     }
 
-    public static ResourceLocation getResourceLocation(String path, String extension){
+    public static ResourceLocation getChassisResource(String path, String extension){
         var chassis = PlayerUtils.getPlayerChassis();
-        return getResourceLocation(chassis, path, extension);
+        return getChassisResource(chassis, path, extension);
     }
 }

@@ -34,7 +34,7 @@ public class ForgeIngameGuiMixin extends Gui {
     }
 
     @Final
-    @Shadow
+    @Shadow(remap = false)
     public static final IIngameOverlay FOOD_LEVEL_ELEMENT =
             OverlayRegistry.registerOverlayTop("Food Level", (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
 

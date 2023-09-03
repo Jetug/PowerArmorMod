@@ -7,33 +7,33 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResourceLocation;
+import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getChassisResource;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 
 //@SuppressWarnings({"unchecked"})
-//public class ArmorChassisModel<Type extends WearableChassis & IAnimatable> extends AnimatedGeoModel<Type>
+//public class ChassisModel<Type extends WearableChassis & IAnimatable> extends AnimatedGeoModel<Type>
 //{
-//    public ArmorChassisModel(){
+//    public ChassisModel(){
 //        super();
 //    }
 //
 //    @Override
 //    public ResourceLocation getModelLocation(Type object) {
 //        if(object == null) return Models.ERROR;
-//        return getResourceLocation(object,"geo/chassis/", ".geo.json");
+//        return getChassisResource(object,"geo/chassis/", ".geo.json");
 //    }
 //
 //    @Override
 //    public ResourceLocation getTextureLocation(Type object) {
 //        if(object == null) return Textures.ENTITY_ERROR;
-//        return getResourceLocation(object,"textures/entity/", ".png");
+//        return getChassisResource(object,"textures/entity/", ".png");
 //    }
 //
 //    @Override
 //    public ResourceLocation getAnimationFileLocation(Type object) {
 //        if(object == null) return Animations.ERROR;
-//        return getResourceLocation(object,"animations/", ".animation.json");
+//        return getChassisResource(object,"animations/", ".animation.json");
 //    }
 //
 //    @Override
@@ -48,28 +48,28 @@ import static com.jetug.chassis_core.common.data.constants.Resources.resourceLoc
 //}
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class ArmorChassisModel<Type extends WearableChassis & IAnimatable> extends AnimatedGeoModel<Type>
+public class ChassisModel<Type extends WearableChassis & IAnimatable> extends AnimatedGeoModel<Type>
 {
-    public ArmorChassisModel(){
+    public ChassisModel(){
         super();
     }
 
     @Override
     public ResourceLocation getModelLocation(Type object) {
         if(object == null) return resourceLocation("geo/error.geo.json");
-        return getResourceLocation(object,"geo/chassis/", ".geo.json");
+        return getChassisResource(object,"geo/chassis/", ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureLocation(Type object) {
         if(object == null) return resourceLocation("textures/entity/error.png");
-        return getResourceLocation(object,"textures/entity/", ".png");
+        return getChassisResource(object,"textures/entity/", ".png");
     }
 
     @Override
     public ResourceLocation getAnimationFileLocation(Type object) {
         if(object == null) return resourceLocation("animations/error.animation.json");
-        return getResourceLocation(object,"animations/", ".animation.json");
+        return getChassisResource(object,"animations/", ".animation.json");
     }
 
     @Override

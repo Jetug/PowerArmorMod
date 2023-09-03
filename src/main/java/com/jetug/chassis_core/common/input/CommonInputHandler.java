@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.common.input;
 
-import com.jetug.chassis_core.common.data.enums.DashDirection;
 import com.jetug.chassis_core.common.events.CommonInputEvent;
 import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import net.minecraft.world.entity.player.Player;

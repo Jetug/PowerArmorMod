@@ -14,9 +14,9 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @Mixin(Mob.class)
 public abstract class LivingEntityMixin {
-    @Shadow private LivingEntity target;
+    @Shadow(remap = false) private LivingEntity target;
 
-    @Inject(method = "setTarget", at = @At("TAIL"))
+    @Inject(method = "setTarget", at = @At("TAIL"), remap = false)
     public void setTarget(LivingEntity pTarget, CallbackInfo ci) {
         if(pTarget instanceof Player player && isWearingChassis(player)){
             target = (LivingEntity) player.getVehicle();

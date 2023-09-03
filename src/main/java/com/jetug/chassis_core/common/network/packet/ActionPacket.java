@@ -30,7 +30,7 @@ public class ActionPacket{
 
     public static void handle(ActionPacket message, Supplier<NetworkEvent.Context> context) {
         var player = context.get().getSender();
-        if (player == null || !isWearingChassis(player)) return;
+        if (!isWearingChassis(player)) return;
         var armor = (WearableChassis)player.getVehicle();
 
         switch (message.action){

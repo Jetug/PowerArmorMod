@@ -22,12 +22,12 @@ import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
 public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
-    private final ArmorChassisModel<T> armorChassisModel;
+    private final ChassisModel<T> armorChassisModel;
     protected ItemStack mainHandItem, offHandItem;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new ArmorChassisModel<>());
-        armorChassisModel = (ArmorChassisModel<T>)getGeoModelProvider();
+        super(renderManager, new ChassisModel<>());
+        armorChassisModel = (ChassisModel<T>)getGeoModelProvider();
         initLayers();
     }
 
@@ -45,7 +45,7 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
                        float red, float green, float blue, float alpha) {
 
         if (isInvisible(animatable)) return;
-        for (var part : animatable.equipment)
+        for (var part : animatable.getEquipment())
             renderEquipment(armorChassisModel ,animatable, part, false);
 
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,

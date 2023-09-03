@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.common.data.enums;
+package com.jetug.chassis_core.common.data.json;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -29,7 +29,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
     @Final
     @Shadow private static Logger LOGGER;
 
-    @Inject(method = "handleSetEntityPassengersPacket", at = @At("HEAD"))
+    @Inject(method = "handleSetEntityPassengersPacket", at = @At("HEAD"), remap = false)
     public void handleSetEntityPassengersPacket(ClientboundSetPassengersPacket pPacket, CallbackInfo ci) {
         PacketUtils.ensureRunningOnSameThread(pPacket, this, this.minecraft);
         Entity entity = this.level.getEntity(pPacket.getVehicle());
