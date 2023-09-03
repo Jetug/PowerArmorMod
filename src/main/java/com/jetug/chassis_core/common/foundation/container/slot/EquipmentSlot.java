@@ -6,10 +6,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class EquipmentSlot extends Slot {
-    private final BodyPart bodyPart;
+import java.util.Objects;
 
-    public EquipmentSlot(BodyPart bodyPart, Container itemHandler, int index, int x, int y) {
+public class EquipmentSlot extends Slot {
+    private final String bodyPart;
+
+    public EquipmentSlot(String bodyPart, Container itemHandler, int index, int x, int y) {
         super(itemHandler, index, x, y);
         this.bodyPart = bodyPart;
     }
@@ -18,6 +20,6 @@ public class EquipmentSlot extends Slot {
     public boolean mayPlace(ItemStack stack) {
         return super.mayPlace(stack)
                 && stack.getItem() instanceof ChassisEquipment item
-                && item.part == bodyPart;
+                && Objects.equals(item.part, bodyPart);
     }
 }

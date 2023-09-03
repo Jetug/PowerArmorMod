@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
+import org.stringtemplate.v4.ST;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -47,19 +48,6 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);
-        createPartIdMap();
-    }
-
-    protected int size;
-
-    protected void createPartIdMap(){
-        var i = 0;
-        partIdMap.put(HELMET         , i++);
-        partIdMap.put(BODY_ARMOR     , i++);
-        partIdMap.put(LEFT_ARM_ARMOR , i++);
-        partIdMap.put(RIGHT_ARM_ARMOR, i++);
-        partIdMap.put(LEFT_LEG_ARMOR , i++);
-        size = i;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -217,21 +205,17 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         return this.factory;
     }
 
-    public Integer getPartId(String chassisPart){
-        return partIdMap.get(chassisPart);
-    }
-
     public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
         ChassisCore.LOGGER.info("damageArmorItem" + isClientSide);
-        var itemStack = inventory.getItem(getPartId(chassisPart));
+        var itemStack = getItem(chassisPart);
 
         if(itemStack.getItem() instanceof ChassisArmor armorItem)
             armorItem.damageArmor(itemStack, (int) damage);
     }
 
     @Nullable
-    public ChassisEquipment getEquipmentItem(BodyPart part) {
-        var stack = getEquipment(part);
+    public ChassisEquipment getEquipmentItem(String part) {
+        var stack = getItem(part);
         if(!stack.isEmpty())
             return (ChassisEquipment) stack.getItem();
         return null;

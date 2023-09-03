@@ -6,6 +6,8 @@ import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
+import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
+
 public class ChassisArmorMaterial {
     private static final int[] HEALTH_PER_SLOT = new int[]{11, 16, 13, 13};
 
@@ -34,12 +36,24 @@ public class ChassisArmorMaterial {
         this.craftPerSlot = craftPerSlot;
     }
 
-    public int getDurabilityForSlot(BodyPart bodyPart) {
-        return HEALTH_PER_SLOT[bodyPart.getArmorPartId()] * this.durabilityMultiplier;
+    private int getPartId(String part){
+        var i = 0;
+        return switch (part){
+            case HELMET          -> 0;
+            case BODY_ARMOR      -> 1;
+            case LEFT_ARM_ARMOR  -> 2;
+            case RIGHT_ARM_ARMOR -> 3;
+            case LEFT_LEG_ARMOR  -> 4;
+            default -> 0;
+        };
     }
 
-    public int getDefenseForSlot(BodyPart bodyPart) {
-        return slotProtections[bodyPart.getArmorPartId()];
+    public int getDurabilityForSlot(String bodyPart) {
+        return HEALTH_PER_SLOT[getPartId(bodyPart)] * this.durabilityMultiplier;
+    }
+
+    public int getDefenseForSlot(String bodyPart) {
+        return slotProtections[getPartId(bodyPart)];
     }
 
     public int getEnchantmentValue() {
@@ -66,7 +80,7 @@ public class ChassisArmorMaterial {
         return this.knockbackResistance;
     }
 
-    public int getCraftPerSlotForSlot(BodyPart bodyPart) {
-        return craftPerSlot[bodyPart.getArmorPartId()];
+    public int getCraftPerSlotForSlot(String bodyPart) {
+        return craftPerSlot[getPartId(bodyPart)];
     }
 }

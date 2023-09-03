@@ -13,12 +13,10 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 @SuppressWarnings("ConstantConditions")
 public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
     private final IGeoRenderer entityRenderer;
-    public BodyPart bodyPart;
 
-    public EquipmentLayer(IGeoRenderer entityRenderer, BodyPart bodyPart) {
+    public EquipmentLayer(IGeoRenderer entityRenderer) {
         super(entityRenderer);
         this.entityRenderer = entityRenderer;
-        this.bodyPart = bodyPart;
     }
 
     @Override
@@ -26,11 +24,14 @@ public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<
                        int packedLightIn, T entity,
                        float limbSwing, float limbSwingAmount, float partialTicks,
                        float ageInTicks, float netHeadYaw, float headPitch) {
-        if(entity.isEquipmentVisible(bodyPart)) {
-            var item = entity.getEquipmentItem(bodyPart);
-            if (item.getSettings() == null) return;
-            var texture = item.getSettings().getTextureLocation();
-            render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
+
+        for(var part : entity.getEquipment()) {
+            if (entity.isEquipmentVisible(part)) {
+                var item = entity.getEquipmentItem(part);
+                if (item.getSettings() == null) return;
+                var texture = item.getSettings().getTextureLocation();
+                render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
+            }
         }
     }
 

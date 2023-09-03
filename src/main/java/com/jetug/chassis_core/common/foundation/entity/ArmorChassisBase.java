@@ -28,9 +28,6 @@ import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContai
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
 
 public class ArmorChassisBase extends EmptyLivingEntity implements ContainerListener {
-    public static final int COOLING = 5;
-    public static final int P_SIZE = values().length;
-
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
@@ -53,20 +50,31 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
             RIGHT_LEG_ARMOR,
     };
     protected HashMap<String, Integer> partIdMap = new HashMap<>();
+    protected int inventorySize;
 
-    public String[] getEquipment(){
-        return partIdMap.keySet().toArray(new String[0]);
-    }
-
-    public final BodyPart[] equipment = BodyPart.values();
 
 
     public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         noCulling = true;
+        createPartIdMap();
         initInventory();
         updateParams();
         //getType().getModelId()
+    }
+
+    public Integer getPartId(String chassisPart){
+        return partIdMap.get(chassisPart);
+    }
+
+    protected void createPartIdMap(){
+        var i = 0;
+        partIdMap.put(HELMET         , i++);
+        partIdMap.put(BODY_ARMOR     , i++);
+        partIdMap.put(LEFT_ARM_ARMOR , i++);
+        partIdMap.put(RIGHT_ARM_ARMOR, i++);
+        partIdMap.put(LEFT_LEG_ARMOR , i++);
+        inventorySize = i;
     }
 
     @Override
@@ -133,28 +141,28 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
             RIGHT_ARM_ARMOR ,
             LEFT_LEG_ARMOR  ,
             RIGHT_LEG_ARMOR ,
+    };
+
+    public boolean isEquipmentVisible(String chassisPart){
+        if(isArmorItem(chassisPart))
+            return hasArmor(chassisPart);
+        else return !getItem(chassisPart).isEmpty();
     }
 
     public boolean isArmorItem(String chassisPart){
         return Arrays.stream(armorParts).toList().contains(chassisPart);
     }
 
-    public boolean isEquipmentVisible(String chassisPart){
-        if(isArmorItem(chassisPart))
-            return hasArmor(chassisPart);
-        else return !getEquipment(chassisPart).isEmpty();
+    public boolean hasArmor(String chassisPart) {
+        return getArmorDurability(chassisPart) != 0;
     }
 
-    public boolean hasArmor(BodyPart bodyPart) {
-        return getArmorDurability(bodyPart) != 0;
+    public String[] getEquipment(){
+        return partIdMap.keySet().toArray(new String[0]);
     }
 
-    public ItemStack getEquipment(BodyPart part) {
-        return inventory.getItem(part.ordinal());
-    }
-
-    public boolean hasEquipment(BodyPart part){
-        return !inventory.getItem(part.ordinal()).isEmpty();
+    public boolean hasEquipment(String part){
+        return !getItem(part).isEmpty();
     }
 //
 //    public boolean hasPowerKnuckle(){
@@ -173,8 +181,12 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 //        return (JetpackItem) getEquipment(BACK).getItem();
 //    }
 
-    public int getArmorDurability(BodyPart bodyPart) {
-        var itemStack = inventory.getItem(bodyPart.getId());
+    public ItemStack getItem(String chassisPart){
+        return inventory.getItem(getPartId(chassisPart));
+    }
+
+    public int getArmorDurability(String chassisPart) {
+        var itemStack = getItem(chassisPart);
         if(itemStack.isEmpty()) return 0;
         return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
@@ -209,7 +221,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     protected void initInventory(){
         SimpleContainer inventoryBuff = this.inventory;
-        this.inventory = new SimpleContainer(P_SIZE);
+        this.inventory = new SimpleContainer(inventorySize);
         if (inventoryBuff != null) {
             inventoryBuff.removeListener(this);
             int i = Math.min(inventoryBuff.getContainerSize(), this.inventory.getContainerSize());
@@ -260,7 +272,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         this.totalToughness = 0;
 
         for (var part : armor){
-            if (inventory.getItem(part.ordinal()).getItem() instanceof ChassisArmor armorItem){
+            if (getItem(part).getItem() instanceof ChassisArmor armorItem){
                 this.totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
                 this.totalToughness += armorItem.getMaterial().getToughness();
             }

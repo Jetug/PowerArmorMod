@@ -8,7 +8,7 @@ public class FrameSettings extends ModelSettingsBase {
     public FrameAttachment[] attachments;
 
     @Nullable
-    public FrameAttachment getAttachments(BodyPart part) {
+    public FrameAttachment getAttachments(String part) {
         for (var att : attachments) {
             if(att.part == part) return att;
         }

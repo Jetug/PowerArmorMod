@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.client.render.utils;
 
-import com.jetug.chassis_core.common.data.enums.BodyPart;
 import com.jetug.chassis_core.common.data.json.EquipmentSettings;
 import com.jetug.chassis_core.common.data.json.FrameSettings;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
@@ -43,7 +42,7 @@ public class GeoUtils {
     }
 
     public static void removeModelPart(AnimatedGeoModel provider, FrameSettings settings,
-                                       BodyPart part){
+                                       String part){
         if (settings == null) return;
         var attachments =  settings.getAttachments(part);
         if (attachments == null) return;

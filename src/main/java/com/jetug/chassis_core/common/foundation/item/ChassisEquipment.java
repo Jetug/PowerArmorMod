@@ -13,17 +13,12 @@ public class ChassisEquipment extends Item {
     private String name = null;
     private EquipmentSettings settings = null;
 
-    public final BodyPart part;
+    public final String part;
 
-    public ChassisEquipment(Properties pProperties, BodyPart part) {
+    public ChassisEquipment(Properties pProperties, String part) {
         super(pProperties);
         this.part = part;
     }
-
-//    public ChassisEquipment(BodyPart part) {
-//        super(new Item.Properties().stacksTo(1));
-//        this.part = part;
-//    }
 
     @Nullable
     public EquipmentSettings getSettings(){

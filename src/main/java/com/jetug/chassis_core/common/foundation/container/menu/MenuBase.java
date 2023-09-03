@@ -1,8 +1,5 @@
 package com.jetug.chassis_core.common.foundation.container.menu;
 
-import com.jetug.chassis_core.common.data.enums.BodyPart;
-import com.jetug.chassis_core.common.foundation.container.slot.EquipmentSlot;
-import com.jetug.chassis_core.common.util.Pos2I;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,9 +18,6 @@ public class MenuBase extends AbstractContainerMenu {
     private static final int INVENTORY_POS_X = 8;
     private static final int HOTBAR_POS_X = INVENTORY_POS_X;
     private static final int INVENTORY_ROW_SIZE = 9;
-
-    private final HashMap<BodyPart, Integer> slotsMap = new HashMap<>();
-    private Integer slotId = 0;
 
     protected final int inventoryPosY;
     protected final int hotbarPosY;
@@ -99,11 +93,5 @@ public class MenuBase extends AbstractContainerMenu {
         for (int slot = 0; slot < 9; ++slot) {
             this.addSlot(new Slot(playerInventory, slot, HOTBAR_POS_X + slot * SLOT_SIZE, hotbarPosY));
         }
-    }
-
-    protected void createSlot(BodyPart bodyPart, Pos2I pos){
-        slotsMap.put(bodyPart, slotId);
-        this.addSlot(new EquipmentSlot(bodyPart, container, bodyPart.getId(), pos.x, pos.y));
-        slotId++;
     }
 }

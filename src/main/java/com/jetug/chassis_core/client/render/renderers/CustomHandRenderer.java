@@ -23,7 +23,7 @@ public class CustomHandRenderer extends CustomGeoRenderer {
     }
 
     private void initLayers(){
-        addLayer(new EquipmentLayer(this, BodyPart.RIGHT_ARM_ARMOR));
+        addLayer(new EquipmentLayer(this));
     }
 
     public CustomHandRenderer(AnimatedGeoModel<HandEntity> model) {

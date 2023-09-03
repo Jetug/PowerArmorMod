@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.foundation.registery;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.data.enums.BodyPart;
 import com.jetug.chassis_core.common.foundation.item.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;

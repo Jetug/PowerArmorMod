@@ -1,13 +1,12 @@
 package com.jetug.chassis_core.common.foundation.item;
 
-import com.jetug.chassis_core.common.data.enums.BodyPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class DamageableItem extends ChassisEquipment {
     private static final String DAMAGE_KEY = "Damage";
 
-    public DamageableItem(Properties pProperties, BodyPart part) {
+    public DamageableItem(Properties pProperties, String part) {
         super(pProperties, part);
     }
 
