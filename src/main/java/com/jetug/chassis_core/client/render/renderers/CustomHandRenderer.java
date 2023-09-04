@@ -1,9 +1,9 @@
 package com.jetug.chassis_core.client.render.renderers;
 
+import com.jetug.chassis_core.common.data.enums.ChassisPart;
 import com.jetug.chassis_core.common.foundation.entity.HandEntity;
 import com.jetug.chassis_core.client.model.HandModel;
 import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
-import com.jetug.chassis_core.common.data.enums.BodyPart;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,7 +35,7 @@ public class CustomHandRenderer extends CustomGeoRenderer {
     public void render(WearableChassis chassisEntity, PoseStack poseStack,
                        @Nullable MultiBufferSource bufferSource, int packedLight) {
         super.render(chassisEntity, poseStack, bufferSource, packedLight);
-        renderEquipment(handModel, chassisEntity, BodyPart.RIGHT_ARM_ARMOR, true);
+        renderEquipment(handModel, chassisEntity, ChassisPart.RIGHT_ARM_ARMOR, true);
     }
 
     public static void registerHandRenderer(){

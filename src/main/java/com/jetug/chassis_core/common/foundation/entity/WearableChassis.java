@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
 import com.jetug.chassis_core.Global;
@@ -18,18 +17,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
-import org.stringtemplate.v4.ST;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-import java.util.HashMap;
-
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
-import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
+import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 

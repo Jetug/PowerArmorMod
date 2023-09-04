@@ -7,7 +7,6 @@ import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import com.jetug.chassis_core.common.util.helpers.timer.*;
 import com.jetug.chassis_core.common.network.data.*;
-import com.jetug.chassis_core.common.data.enums.*;
 
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
@@ -22,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.jetug.chassis_core.common.data.constants.NBT.*;
-import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
+import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyContainer;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
@@ -31,6 +30,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
+    public static final int INVENTORY_SIZE = 6;
 
     protected float totalDefense;
     protected float totalToughness;
@@ -52,7 +52,9 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     protected HashMap<String, Integer> partIdMap = new HashMap<>();
     protected int inventorySize;
 
-
+    public int getInventorySize() {
+        return inventorySize;
+    }
 
     public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -74,6 +76,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         partIdMap.put(LEFT_ARM_ARMOR , i++);
         partIdMap.put(RIGHT_ARM_ARMOR, i++);
         partIdMap.put(LEFT_LEG_ARMOR , i++);
+        partIdMap.put(RIGHT_LEG_ARMOR, i++);
         inventorySize = i;
     }
 
@@ -157,8 +160,8 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         return getArmorDurability(chassisPart) != 0;
     }
 
-    public String[] getEquipment(){
-        return partIdMap.keySet().toArray(new String[0]);
+    public Set<String> getEquipment(){
+        return partIdMap.keySet();
     }
 
     public boolean hasEquipment(String part){

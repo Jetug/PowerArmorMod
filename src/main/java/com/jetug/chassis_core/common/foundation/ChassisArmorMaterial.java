@@ -1,12 +1,11 @@
 package com.jetug.chassis_core.common.foundation;
 
-import com.jetug.chassis_core.common.data.enums.*;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
+import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
 
 public class ChassisArmorMaterial {
     private static final int[] HEALTH_PER_SLOT = new int[]{11, 16, 13, 13};
@@ -37,14 +36,12 @@ public class ChassisArmorMaterial {
     }
 
     private int getPartId(String part){
-        var i = 0;
         return switch (part){
-            case HELMET          -> 0;
-            case BODY_ARMOR      -> 1;
-            case LEFT_ARM_ARMOR  -> 2;
-            case RIGHT_ARM_ARMOR -> 3;
-            case LEFT_LEG_ARMOR  -> 4;
-            default -> 0;
+            case HELMET -> 0;
+            case BODY_ARMOR -> 1;
+            case LEFT_ARM_ARMOR, RIGHT_ARM_ARMOR -> 2;
+            case LEFT_LEG_ARMOR , RIGHT_LEG_ARMOR -> 3;
+            default -> throw new IllegalStateException("Unexpected value: " + this);
         };
     }
 

@@ -32,7 +32,7 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     }
 
     private void initLayers(){
-//        for (int i = 0; i < BodyPart.values().length; i++)
+//        for (int i = 0; i < ChassisPart.values().length; i++)
         addLayer(new EquipmentLayer(this));
         addLayer(new PlayerHeadLayer(this));
     }

@@ -2,7 +2,7 @@ package com.jetug.chassis_core.common.foundation.container.screen;
 
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
-import com.jetug.chassis_core.common.data.enums.BodyPart;
+import com.jetug.chassis_core.common.data.enums.ChassisPart;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.util.Pos2I;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,7 +21,6 @@ import java.awt.*;
 
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.*;
-import static com.jetug.chassis_core.common.data.enums.BodyPart.*;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
@@ -135,13 +134,13 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
         }
     }
 
-    private void renderIcon(BodyPart bodyPart, PoseStack poseStack, Pos2I pos, Rectangle icon){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty())
+    private void renderIcon(ChassisPart chassisPart, PoseStack poseStack, Pos2I pos, Rectangle icon){
+        //if(menu.slots == null || menu.slots.get(chassisPart.ordinal()).getEquipment().isEmpty())
             blit(poseStack, leftPos + pos.x, topPos + pos.y, icon.x, icon.y, icon.width, icon.height);
     }
 
-    private void renderIcon(BodyPart bodyPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2I pos){
-        //if(menu.slots == null || menu.slots.get(bodyPart.ordinal()).getEquipment().isEmpty()) {
+    private void renderIcon(ChassisPart chassisPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2I pos){
+        //if(menu.slots == null || menu.slots.get(chassisPart.ordinal()).getEquipment().isEmpty()) {
             RenderSystem.setShaderTexture(0, pTextureId);
             blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
         //}
