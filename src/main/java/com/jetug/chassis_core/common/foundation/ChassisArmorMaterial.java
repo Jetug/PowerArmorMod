@@ -18,12 +18,11 @@ public class ChassisArmorMaterial {
     private final SoundEvent sound;
     private final float knockbackResistance;
     private final LazyLoadedValue<Ingredient> repairIngredient;
-    private final int[] craftPerSlot;
 
     public ChassisArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections,
                                 float toughness, int enchantmentValue,
                                 SoundEvent sound, float knockbackResistance,
-                                Supplier<Ingredient> p_40481_, int[] craftPerSlot) {
+                                Supplier<Ingredient> p_40481_) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
         this.slotProtections = slotProtections;
@@ -32,10 +31,9 @@ public class ChassisArmorMaterial {
         this.sound = sound;
         this.knockbackResistance = knockbackResistance;
         this.repairIngredient = new LazyLoadedValue<>(p_40481_);
-        this.craftPerSlot = craftPerSlot;
     }
 
-    private int getPartId(String part){
+    protected int getPartId(String part){
         return switch (part){
             case HELMET -> 0;
             case BODY_ARMOR -> 1;
@@ -75,9 +73,5 @@ public class ChassisArmorMaterial {
 
     public float getKnockbackResistance() {
         return this.knockbackResistance;
-    }
-
-    public int getCraftPerSlotForSlot(String bodyPart) {
-        return craftPerSlot[getPartId(bodyPart)];
     }
 }

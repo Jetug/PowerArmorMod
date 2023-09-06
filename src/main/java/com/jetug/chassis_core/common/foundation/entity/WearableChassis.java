@@ -23,6 +23,8 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
+import java.util.HashMap;
+
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
 import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
@@ -44,6 +46,10 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);
+    }
+
+    public WearableChassis(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
+        super(pEntityType, pLevel, partIdMap);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

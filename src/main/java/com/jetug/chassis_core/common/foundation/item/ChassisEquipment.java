@@ -12,7 +12,6 @@ import static com.jetug.chassis_core.client.ClientConfig.*;
 public class ChassisEquipment extends Item {
     private String name = null;
     private EquipmentSettings settings = null;
-
     public final String part;
 
     public ChassisEquipment(Properties pProperties, String part) {

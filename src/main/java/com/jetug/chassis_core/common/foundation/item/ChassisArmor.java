@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 
 public class ChassisArmor extends DamageableItem {
-    private final ChassisArmorMaterial material;
+    public final ChassisArmorMaterial material;
 
     public ChassisArmor(Properties pProperties, ChassisArmorMaterial material, String part) {
         super(pProperties.durability(material.getDurabilityForSlot(part)), part);
@@ -33,9 +33,5 @@ public class ChassisArmor extends DamageableItem {
     {
         var resultDamage = getItemDamage(itemStack)+dmg;
         setItemDamage(itemStack, Math.min(resultDamage, itemStack.getMaxDamage()));
-    }
-
-    public int getIngredientCount(){
-        return material.getCraftPerSlotForSlot(part);
     }
 }

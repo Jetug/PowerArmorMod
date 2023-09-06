@@ -2,6 +2,7 @@ package com.jetug.chassis_core.client.render.renderers;
 
 import com.jetug.chassis_core.client.model.*;
 import com.jetug.chassis_core.client.render.layers.*;
+import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
@@ -11,10 +12,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
@@ -22,7 +25,7 @@ import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
 public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
-    private final ChassisModel<T> armorChassisModel;
+    protected final ChassisModel<T> armorChassisModel;
     protected ItemStack mainHandItem, offHandItem;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
@@ -102,5 +105,15 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
             stack.translate(0, 0.125, 0.37);
             stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
+    }
+
+    @Nullable
+    public GeoBone getFrameBone(String name){
+        return GeoUtils.getFrameBone(armorChassisModel, name);
+    }
+
+    @Nullable
+    public GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
+        return GeoUtils.getArmorBone(resourceLocation, name);
     }
 }

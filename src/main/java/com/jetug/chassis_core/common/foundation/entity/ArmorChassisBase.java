@@ -34,6 +34,12 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     protected float totalDefense;
     protected float totalToughness;
+
+    public static HashMap<String, Integer> PART_IDS = new HashMap<>();
+    protected HashMap<String, Integer> partIdMap = PART_IDS;
+
+    protected int inventorySize = 6;
+
     public SimpleContainer inventory;
 
     private String chassisId = null;
@@ -49,36 +55,54 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
             LEFT_LEG_ARMOR,
             RIGHT_LEG_ARMOR,
     };
-    protected HashMap<String, Integer> partIdMap = new HashMap<>();
-    protected int inventorySize;
+
+    static {
+        var i = 0;
+        PART_IDS.put(HELMET         , i++);
+        PART_IDS.put(BODY_ARMOR     , i++);
+        PART_IDS.put(LEFT_ARM_ARMOR , i++);
+        PART_IDS.put(RIGHT_ARM_ARMOR, i++);
+        PART_IDS.put(LEFT_LEG_ARMOR , i++);
+        PART_IDS.put(RIGHT_LEG_ARMOR, i++);
+    }
 
     public int getInventorySize() {
         return inventorySize;
     }
 
+    public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
+        super(pEntityType, pLevel);
+        this.partIdMap = partIdMap;
+        this.inventorySize = partIdMap.size();
+        init();
+    }
+
     public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        init();
+    }
+
+    public void init(){
         noCulling = true;
-        createPartIdMap();
         initInventory();
         updateParams();
-        //getType().getModelId()
     }
 
     public Integer getPartId(String chassisPart){
-        return partIdMap.get(chassisPart);
+        var val = partIdMap.get(chassisPart);
+        return val != null ? val : 0;
     }
 
-    protected void createPartIdMap(){
-        var i = 0;
-        partIdMap.put(HELMET         , i++);
-        partIdMap.put(BODY_ARMOR     , i++);
-        partIdMap.put(LEFT_ARM_ARMOR , i++);
-        partIdMap.put(RIGHT_ARM_ARMOR, i++);
-        partIdMap.put(LEFT_LEG_ARMOR , i++);
-        partIdMap.put(RIGHT_LEG_ARMOR, i++);
-        inventorySize = i;
-    }
+//    protected void createPartIdMap(){
+//        var i = 0;
+//        partIdMap.put(HELMET         , i++);
+//        partIdMap.put(BODY_ARMOR     , i++);
+//        partIdMap.put(LEFT_ARM_ARMOR , i++);
+//        partIdMap.put(RIGHT_ARM_ARMOR, i++);
+//        partIdMap.put(LEFT_LEG_ARMOR , i++);
+//        partIdMap.put(RIGHT_LEG_ARMOR, i++);
+//        inventorySize = i;
+//    }
 
     @Override
     public void tick() {
@@ -160,7 +184,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         return getArmorDurability(chassisPart) != 0;
     }
 
-    public Set<String> getEquipment(){
+    public Collection<String> getEquipment(){
         return partIdMap.keySet();
     }
 
@@ -187,6 +211,11 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public ItemStack getItem(String chassisPart){
         return inventory.getItem(getPartId(chassisPart));
     }
+
+    public void setItem(String chassisPart, ItemStack itemStack){
+        inventory.setItem(getPartId(chassisPart), itemStack);
+    }
+
 
     public int getArmorDurability(String chassisPart) {
         var itemStack = getItem(chassisPart);

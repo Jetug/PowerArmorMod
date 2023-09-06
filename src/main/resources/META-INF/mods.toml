@@ -7,9 +7,7 @@ version="${file.jarVersion}"
 displayName="Chassis core"
 logoFile="chassis_core.png"
 authors="Jetug"
-description='''
-Core for exoskeleton armor mods
-'''
+description='''Core for exoskeleton armor mods'''
 
 [[dependencies.chassis_core]]
     modId="forge" #mandatory
