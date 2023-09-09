@@ -20,6 +20,7 @@ public class ResourceHelper {
                 .hasResource(path);
     }
 
+
     public static ResourceLocation getChassisResource(ArmorChassisBase chassis, String path, String extension){
         var name = chassis.getModelId();
         var modId = chassis.getType().getRegistryName().getNamespace();

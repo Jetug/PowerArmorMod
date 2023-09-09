@@ -1,9 +1,9 @@
 package com.jetug.chassis_core.client.resources;
 
 import com.google.gson.*;
-import com.jetug.chassis_core.common.data.json.EquipmentSettings;
-import com.jetug.chassis_core.common.data.json.FrameSettings;
-import com.jetug.chassis_core.common.data.json.ModelSettingsBase;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.jetug.chassis_core.common.data.json.FrameConfig;
+import com.jetug.chassis_core.common.data.json.ModelConfigBase;
 import net.minecraft.client.*;
 import net.minecraft.resources.*;
 import javax.annotation.*;
@@ -17,16 +17,16 @@ public class ModResourceManager {
     private static final String EQUIPMENT_DIR = CONFIG_DIR + "equipment";
     private static final String FRAME_DIR = CONFIG_DIR + "chassis";
 
-    private final Map<String, EquipmentSettings> equipmentSettings = new HashMap<>();
-    private final Map<String, FrameSettings> frameSettings = new HashMap<>();
+    private final Map<String, EquipmentConfig> equipmentSettings = new HashMap<>();
+    private final Map<String, FrameConfig> frameSettings = new HashMap<>();
 
     @Nullable
-    public EquipmentSettings getEquipmentSettings(String itemId){
+    public EquipmentConfig getEquipmentSettings(String itemId){
         return equipmentSettings.get(itemId);
     }
 
     @Nullable
-    public FrameSettings getFrameSettings(String frameId){
+    public FrameConfig getFrameSettings(String frameId){
         return frameSettings.get(frameId);
     }
 
@@ -38,7 +38,7 @@ public class ModResourceManager {
 
     private void loadEquipment() {
         for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR)) {
-            var settings = getSettings(config, EquipmentSettings.class);
+            var settings = getSettings(config, EquipmentConfig.class);
             if(settings != null)
                 equipmentSettings.put(settings.name, settings);
         }
@@ -46,7 +46,7 @@ public class ModResourceManager {
 
     private void loadFrame() {
         for (ResourceLocation config : getJsonResources(FRAME_DIR)) {
-            var settings = getSettings(config, FrameSettings.class);
+            var settings = getSettings(config, FrameConfig.class);
             if(settings != null)
                 frameSettings.put(settings.name, settings);
         }
@@ -58,10 +58,10 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private EquipmentSettings getEquipmentSettings(ResourceLocation resourceLocation){
+    private EquipmentConfig getEquipmentSettings(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, EquipmentSettings.class);
+            var settings = new Gson().fromJson(readIn, EquipmentConfig.class);
             settings.name = getResourceName(resourceLocation);
             return settings;
         }
@@ -71,10 +71,10 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private FrameSettings getFrameSettings(ResourceLocation resourceLocation){
+    private FrameConfig getFrameSettings(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, FrameSettings.class);
+            var settings = new Gson().fromJson(readIn, FrameConfig.class);
             settings.name = getResourceName(resourceLocation);
             return settings;
         }
@@ -84,7 +84,7 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private <T extends ModelSettingsBase> T getSettings(ResourceLocation resourceLocation, Class<T> classOfT){
+    private <T extends ModelConfigBase> T getSettings(ResourceLocation resourceLocation, Class<T> classOfT){
         try {
             var readIn = getBufferedReader(resourceLocation);
             var settings = new Gson().fromJson(readIn, classOfT);

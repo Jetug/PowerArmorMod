@@ -1,11 +1,9 @@
 package com.jetug.chassis_core.common.data.json;
 
-import com.jetug.chassis_core.common.data.enums.*;
-
 import javax.annotation.*;
 import java.util.Objects;
 
-public class FrameSettings extends ModelSettingsBase {
+public class FrameConfig extends ModelConfigBase {
     public FrameAttachment[] attachments;
 
     @Nullable

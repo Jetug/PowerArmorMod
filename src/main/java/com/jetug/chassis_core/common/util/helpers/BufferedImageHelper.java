@@ -55,6 +55,17 @@ public class BufferedImageHelper {
         return scaledImage;
     }
 
+    public static void cropZone(BufferedImage image, int x, int y, int width, int height) {
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
+                if (i < x || i >= x + width || j < y || j >= y + height) {
+                    int rgba = image.getRGB(i, j) & 0x00FFFFFF;
+                    image.setRGB(i, j, rgba);
+                }
+            }
+        }
+    }
+
     public static void cropImage(BufferedImage img, int xPos, int yPos) {
         for (int x = 0; x < img.getWidth(); x++) {
             for (int y = 0; y < img.getHeight(); y++) {

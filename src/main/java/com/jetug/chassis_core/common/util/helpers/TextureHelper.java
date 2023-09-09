@@ -31,6 +31,21 @@ import static org.apache.logging.log4j.Level.*;
 public class TextureHelper {
     public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
+    public static ResourceLocation createResource(String name, AbstractTexture abstractTexture){
+        var textureManager = Minecraft.getInstance().getTextureManager();
+        var headTextureLocation = new ResourceLocation(ChassisCore.MOD_ID, name);
+        textureManager.register(headTextureLocation, abstractTexture);
+        return headTextureLocation;
+    }
+
+    @Nullable
+    public static AbstractTexture cropTexture(ResourceLocation resourceLocation, int x, int y, int width, int height) {
+        var image = resourceToBufferedImage(resourceLocation);
+        if (image == null) return null;
+        cropZone(image, x, y, width, height);
+        return new DynamicTexture(getNativeImage(image));
+    }
+
     @Nullable
     public static BufferedImage getPlayerHeadImage(Player clientPlayer) {
         try {

@@ -1,7 +1,8 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
-import com.jetug.chassis_core.common.data.json.FrameSettings;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.jetug.chassis_core.common.data.json.FrameConfig;
 import com.jetug.chassis_core.common.events.*;
 import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
@@ -43,7 +44,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public SimpleContainer inventory;
 
     private String chassisId = null;
-    private FrameSettings settings = null;
+    private FrameConfig settings = null;
     private ListTag serializedInventory;
     private Container previousContainer;
 
@@ -104,11 +105,20 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 //        inventorySize = i;
 //    }
 
+//    private final Map<String, EquipmentConfig> history = new HashMap<>();
+
     @Override
     public void tick() {
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
+
+//        if(isClientSide) {
+//            for (var e : getEquipment()) {
+//                if(hasEquipment())
+//                history.put(e, )
+//            }
+//        }
     }
 
     @Override
@@ -143,7 +153,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     @Nullable
-    public FrameSettings getSettings(){
+    public FrameConfig getSettings(){
         if(settings == null)
             settings = ClientConfig.modResourceManager.getFrameSettings(getModelId());
         return settings;

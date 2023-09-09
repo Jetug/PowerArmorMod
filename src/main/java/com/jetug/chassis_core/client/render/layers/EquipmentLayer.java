@@ -12,11 +12,8 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 @SuppressWarnings("ConstantConditions")
 public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
-    private final IGeoRenderer entityRenderer;
-
     public EquipmentLayer(IGeoRenderer entityRenderer) {
         super(entityRenderer);
-        this.entityRenderer = entityRenderer;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<
         matrixStackIn.pushPose();
         matrixStackIn.scale(1.0f, 1.0f, 1.0f);
         matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-        var model = entityRenderer.getGeoModelProvider().getModelLocation(entity);
+        var model = getRenderer().getGeoModelProvider().getModelLocation(entity);
         this.getRenderer().render(this.getEntityModel().getModel(model), entity, partialTicks, cameo, matrixStackIn,
                 bufferIn, bufferIn.getBuffer(cameo), packedLightIn, overlay, 1f, 1f, 1f, 1f);
         matrixStackIn.popPose();

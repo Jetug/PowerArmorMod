@@ -2,9 +2,7 @@ package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector4f;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -12,8 +10,11 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
-public class GeoUtils {
+import java.util.ArrayList;
+import java.util.List;
 
+@SuppressWarnings("rawtypes")
+public class GeoUtils {
     public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, String part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
             var item = entity.getEquipmentItem(part);
@@ -24,7 +25,7 @@ public class GeoUtils {
         }
     }
 
-    public static void addModelPart(AnimatedGeoModel provider, EquipmentSettings settings, boolean isPov) {
+    public static void addModelPart(AnimatedGeoModel provider, EquipmentConfig settings, boolean isPov) {
         if(settings == null) return;
         var attachments = isPov ? settings.pov : settings.attachments;
 
@@ -34,43 +35,61 @@ public class GeoUtils {
             if (frameBone == null || armorBone == null || equipmentAttachment.mode == null) continue;
 
             switch (equipmentAttachment.mode) {
-                case ADD -> addBone(frameBone, armorBone);
-                case REPLACE -> replaceBone(frameBone, armorBone);
+                case ADD -> addBone(provider, frameBone, armorBone);
+                case REPLACE -> replaceBone(provider, frameBone, armorBone);
             }
         }
     }
 
-    public static void removeModelPart(AnimatedGeoModel provider, FrameSettings settings,
-                                       String part){
-        if (settings == null) return;
-        var attachments =  settings.getAttachments(part);
+    public static void removeModelPart(AnimatedGeoModel provider, FrameConfig frameConfig, String part){
+        if (frameConfig == null) return;
+        var attachments =  frameConfig.getAttachments(part);
         if (attachments == null) return;
+
         for (var bone : attachments.bones)
-            returnToDefault(provider, bone);
+            returnToDefault(provider, bone, List.of(attachments.bones));
     }
 
     public static GeoModel getModel(ResourceLocation location){
         return GeckoLibCache.getInstance().getGeoModels().get(location);
     }
 
-    public static void returnToDefault(AnimatedGeoModel provider, String boneName){
+    public static void returnToDefault(AnimatedGeoModel provider, String boneName, List bones){
         var bone = getFrameBone(provider, boneName);
         if(bone == null) return;
         var parentBone = getFrameBone(provider, bone.parent.name);
         if(parentBone == null) return;
 
         parentBone.childBones.remove(bone);
-        parentBone.childBones.add(getFrameBone(provider, boneName));
+        var buffBone = getFrameBone(provider, boneName);
+
+        //for (int i = 0; i < parentBone.childBones.size(); i++)
+//
+//        var toRemove = new ArrayList<GeoBone>();
+//        for (var child : parentBone.childBones){
+//            if(!bones.contains(child.name)){
+//                toRemove.add(child);
+//            }
+//        }
+
+        //parentBone.childBones = new ObjectArrayList<>();
+        parentBone.childBones.add(buffBone);
     }
 
-    public static void addBone(GeoBone frameBone, GeoBone armorBone) {
-        if (frameBone.childBones.contains(armorBone)) return;
+    public static void addBone(AnimatedGeoModel provider, GeoBone frameBone, GeoBone armorBone) {
+        //returnToDefault(provider, frameBone.name);
+
+        //return;
+        frameBone.childBones.remove(armorBone);
         frameBone.childBones.add(armorBone);
     }
 
-    public static void replaceBone(GeoBone frameBone, GeoBone armorBone) {
+    public static void replaceBone(AnimatedGeoModel provider, GeoBone frameBone, GeoBone armorBone) {
+        //returnToDefault(provider, frameBone.name);
+
         frameBone.parent.childBones.remove(frameBone);
-        if (frameBone.parent.childBones.contains(armorBone)) return;
+        //if (frameBone.parent.childBones.contains(armorBone)) return;
+        frameBone.parent.childBones.remove(armorBone);
         frameBone.parent.childBones.add(armorBone);
     }
 

@@ -20,19 +20,14 @@ import java.util.HashMap;
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
-    private final IGeoRenderer<T> entityRenderer;
     private static final HashMap<String, ResourceLocation> playerHeads = new HashMap<>();
     private final TextureManager textureManager;
-    private final int textureWidth;
-    private final int textureHeight;
+    private int textureWidth;
+    private int textureHeight;
 
     public PlayerHeadLayer(IGeoRenderer<T> entityRenderer) {
         super(entityRenderer);
-        this.entityRenderer = entityRenderer;
-        this.textureManager =  Minecraft.getInstance().getTextureManager();
-        var size = getTextureSize(entityRenderer.getTextureLocation(null));
-        textureWidth = size.getA();
-        textureHeight = size.getB();
+        this.textureManager = Minecraft.getInstance().getTextureManager();
     }
 
     @Override
@@ -49,7 +44,7 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
             matrixStackIn.pushPose();
             matrixStackIn.scale(1.0f, 1.0f, 1.0f);
             matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-            var model = entityRenderer.getGeoModelProvider().getModelLocation(entity);
+            var model = getRenderer().getGeoModelProvider().getModelLocation(entity);
 
             this.getRenderer().render(
                     getEntityModel().getModel(model),
@@ -66,11 +61,18 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
         }
     }
 
+    private void setTextureSize(T entity){
+        var size = getTextureSize(entityRenderer.getTextureLocation(entity));
+        textureWidth = size.getA();
+        textureHeight = size.getB();
+    }
+
     @Nullable
-    private ResourceLocation getHeadLayerRL(Player clientPlayer, WearableChassis entity) {
+    private ResourceLocation getHeadLayerRL(Player clientPlayer, T entity) {
         var tag = clientPlayer.getUUID().toString();
 
         if (!playerHeads.containsKey(tag)) {
+            setTextureSize(entity);
             var texture = getDefaultResizedHeadTexture(clientPlayer, textureWidth, textureHeight);
             if(texture == null) return null;
             var resource = createResource(tag, texture);
@@ -90,11 +92,5 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
             playerHeads.put(tag, resource);
         });
        thread.start();
-    }
-
-    private ResourceLocation createResource(String playerUUID, AbstractTexture abstractTexture){
-        var headTextureLocation = new ResourceLocation(ChassisCore.MOD_ID, playerUUID);
-        textureManager.register(headTextureLocation, abstractTexture);
-        return headTextureLocation;
     }
 }
