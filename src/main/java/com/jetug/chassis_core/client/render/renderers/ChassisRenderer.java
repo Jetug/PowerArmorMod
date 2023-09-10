@@ -41,8 +41,8 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     }
 
     private void initLayers(){
-        addLayer(new EquipmentLayer(this));
-        addLayer(new PlayerHeadLayer(this));
+        addLayer(new EquipmentLayer<>(this));
+        addLayer(new PlayerHeadLayer<>(this));
     }
 
     @Override
@@ -66,15 +66,15 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
                                   float red, float green, float blue, float alpha) {
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-        var value = attachmentForBone.get(bone.name);
-        if(value != null){
-            var chassisBone = getFrameBone(bone.name);
-
-            switch (value.second.mode) {
-                case ADD -> addBone(chassisModel, chassisBone, value.first);
-                case REPLACE -> replaceBone(chassisModel, chassisBone, value.first);
-            }
-        }
+//        var value = attachmentForBone.get(bone.name);
+//        if(value != null){
+//            var chassisBone = getFrameBone(bone.name);
+//
+//            switch (value.second.mode) {
+//                case ADD -> addBone(chassisModel, chassisBone, value.first);
+//                case REPLACE -> replaceBone(chassisModel, chassisBone, value.first);
+//            }
+//        }
     }
 
     private final Map<String, Pair<GeoBone, EquipmentAttachment>> attachmentForBone = new HashMap<>();
@@ -86,16 +86,16 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
 
-        for (var part : animatable.getEquipment()) {
-            if(animatable.isEquipmentVisible(part)) {
-                var item = animatable.getEquipmentItem(part);
-                var config = item.getConfig();
-                for(var att : config.attachments){
-                    var equipmentBone = getArmorBone(config.getModelLocation(), att.armor);
-                    attachmentForBone.put(att.frame, Pair.of(equipmentBone, att));
-                }
-            }
-        }
+//        for (var part : animatable.getEquipment()) {
+//            if(animatable.isEquipmentVisible(part)) {
+//                var item = animatable.getEquipmentItem(part);
+//                var config = item.getConfig();
+//                for(var att : config.attachments){
+//                    var equipmentBone = getArmorBone(config.getModelLocation(), att.armor);
+//                    attachmentForBone.put(att.frame, Pair.of(equipmentBone, att));
+//                }
+//            }
+//        }
     }
 
     @Nullable

@@ -24,8 +24,8 @@ public class GeoUtils {
     public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity,
                                        String part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
-//            var item = entity.getEquipmentItem(part);
-//            addModelPart(provider, item.getConfig(), isPov);
+            var item = entity.getEquipmentItem(part);
+            addModelPart(provider, item.getConfig(), isPov);
         }
         else removeModelPart(provider, entity, part);
     }
