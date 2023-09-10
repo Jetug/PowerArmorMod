@@ -41,8 +41,8 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     }
 
     private void initLayers(){
-        addLayer(new EquipmentLayer<>(this));
-        addLayer(new PlayerHeadLayer<>(this));
+        addLayer(new EquipmentLayer(this));
+        addLayer(new PlayerHeadLayer(this));
     }
 
     @Override
