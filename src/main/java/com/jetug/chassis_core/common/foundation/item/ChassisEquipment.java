@@ -19,7 +19,7 @@ public class ChassisEquipment extends Item {
     }
 
     @Nullable
-    public EquipmentConfig getSettings(){
+    public EquipmentConfig getConfig(){
         if(settings == null) settings = modResourceManager.getEquipmentSettings(getName());
         return settings;
     }

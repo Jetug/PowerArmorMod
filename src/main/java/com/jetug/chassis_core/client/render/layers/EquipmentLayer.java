@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.client.render.layers;
 
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.data.enums.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,8 +24,8 @@ public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<
         for(var part : entity.getEquipment()) {
             if (entity.isEquipmentVisible(part)) {
                 var item = entity.getEquipmentItem(part);
-                if (item.getSettings() == null) return;
-                var texture = item.getSettings().getTextureLocation();
+                if (item.getConfig() == null) return;
+                var texture = item.getConfig().getTextureLocation();
                 render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
             }
         }

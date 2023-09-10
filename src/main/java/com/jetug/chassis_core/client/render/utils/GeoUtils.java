@@ -2,7 +2,6 @@ package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -10,15 +9,14 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class GeoUtils {
     public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, String part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
-            var item = entity.getEquipmentItem(part);
-            addModelPart(provider, item.getSettings(), isPov);
+//            var item = entity.getEquipmentItem(part);
+//            addModelPart(provider, item.getConfig(), isPov);
         }
         else {
             removeModelPart(provider, entity.getSettings(), part);
