@@ -61,14 +61,19 @@ public class GeoUtils {
     }
 
     private static GeoModel getGeoModel(AnimatedGeoModel provider, WearableChassis chassis) {
-        var rawModel = models.get(chassis.getType());
-        if(rawModel == null){
-            var chassisModel = provider.getModelLocation(chassis);
-            var manager = Minecraft.getInstance().getResourceManager();
-            rawModel = modelLoader.loadModel(manager, chassisModel);
+//        var rawModel = models.get(chassis.getType());
+//        if(rawModel == null){
+//            var chassisModel = provider.getModelLocation(chassis);
+//            var manager = Minecraft.getInstance().getResourceManager();
+//            rawModel = modelLoader.loadModel(manager, chassisModel);
+//
+//            models.put(chassis.getType(), rawModel);
+//        }
 
-            models.put(chassis.getType(), rawModel);
-        }
+        var chassisModel = provider.getModelLocation(chassis);
+        var manager = Minecraft.getInstance().getResourceManager();
+        var rawModel = modelLoader.loadModel(manager, chassisModel);
+
         return rawModel;
     }
 

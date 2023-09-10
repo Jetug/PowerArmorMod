@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.model.*;
 
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.renderEquipment;
+import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 
 @SuppressWarnings("unchecked")
 public class CustomHandRenderer extends CustomGeoRenderer {
