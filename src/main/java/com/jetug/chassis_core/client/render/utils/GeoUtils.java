@@ -47,7 +47,7 @@ public class GeoUtils {
     }
 
     public static void removeModelPart(AnimatedGeoModel provider, WearableChassis chassis, String part){
-        var chassisConfig = chassis.getSettings();
+        var chassisConfig = chassis.getConfig();
         if (chassisConfig == null) return;
         var attachments =  chassisConfig.getAttachments(part);
         if (attachments == null) return;

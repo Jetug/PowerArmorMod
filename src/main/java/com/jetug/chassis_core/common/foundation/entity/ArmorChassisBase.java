@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.data.json.FrameConfig;
 import com.jetug.chassis_core.common.events.*;
 import com.jetug.chassis_core.common.foundation.item.*;
@@ -153,7 +152,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     @Nullable
-    public FrameConfig getSettings(){
+    public FrameConfig getConfig(){
         if(settings == null)
             settings = ClientConfig.modResourceManager.getFrameSettings(getModelId());
         return settings;
