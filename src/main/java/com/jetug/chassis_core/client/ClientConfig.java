@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client;
 
+import com.jetug.chassis_core.client.render.renderers.EquipmentRenderer;
 import com.jetug.chassis_core.client.resources.ModResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -10,6 +11,7 @@ import software.bernie.geckolib3.file.GeoModelLoader;
 public class ClientConfig {
     public static final ModResourceManager modResourceManager = new ModResourceManager();
     public static final GeoModelLoader modelLoader = new GeoModelLoader();
+    public static final EquipmentRenderer equipmentRenderer = new EquipmentRenderer();
 
     @NotNull public static final Options OPTIONS = Minecraft.getInstance().options;
 
