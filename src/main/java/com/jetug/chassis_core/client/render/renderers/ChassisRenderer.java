@@ -8,6 +8,8 @@ import com.jetug.chassis_core.common.data.json.EquipmentAttachment;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,8 +75,8 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         return animatable.getConfig().getPartForBone(boneName);
     }
 
-    @Override
-    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
+//    @Override
+    public void renderRecursively2(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
                                   int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
         bone.isHidden = bonesToHide.contains(bone.name);
@@ -87,12 +90,79 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
                 var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
 //                setPivot(bone, armorBone);
 //                armorBone.setRotation(bone.getRotation());
-
                 super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             }
         }
 
     }
+
+    @Override
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                                  int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
+        RenderUtils.translateMatrixToBone(poseStack, bone);
+        RenderUtils.translateToPivotPoint(poseStack, bone);
+
+        bone.isHidden = bonesToHide.contains(bone.name);
+
+        boolean rotOverride = bone.rotMat != null;
+
+        if (rotOverride) {
+            poseStack.last().pose().multiply(bone.rotMat);
+            poseStack.last().normal().mul(new Matrix3f(bone.rotMat));
+        }
+        else {
+            RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+        }
+
+        RenderUtils.scaleMatrixForBone(poseStack, bone);
+
+        if (bone.isTrackingXform()) {
+            Matrix4f poseState = poseStack.last().pose().copy();
+            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.dispatchedMat);
+
+            bone.setModelSpaceXform(RenderUtils.invertAndMultiplyMatrices(poseState, this.renderEarlyMat));
+            localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
+            bone.setLocalSpaceXform(localMatrix);
+
+            Matrix4f worldState = localMatrix.copy();
+
+            worldState.translate(new Vector3f(this.animatable.position()));
+            bone.setWorldSpaceXform(worldState);
+        }
+
+        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+
+        var bonesToRender = new ArrayList<>(bone.childBones);
+
+        var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
+        if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
+            var config = item.getConfig();
+            var armorBoneName = config.getArmorBone(bone.name);
+            if(armorBoneName != null) {
+                var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
+                //super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                bonesToRender.add(armorBone);
+            }
+        }
+
+        if (!bone.isHidden) {
+            if (!bone.cubesAreHidden()) {
+                for (GeoCube geoCube : bone.childCubes) {
+                    poseStack.pushPose();
+                    renderCube(geoCube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                    poseStack.popPose();
+                }
+            }
+
+            for (GeoBone childBone : bonesToRender) {
+                renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            }
+        }
+
+        poseStack.popPose();
+    }
+
 
     private final Map<String, Pair<GeoBone, EquipmentAttachment>> attachmentForBone = new HashMap<>();
     private ArrayList<String> bonesToHide;
