@@ -2,6 +2,7 @@ package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.foundation.entity.*;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.*;
 import net.minecraft.resources.*;
 import net.minecraft.world.entity.EntityType;
@@ -20,6 +21,20 @@ import static com.jetug.chassis_core.client.ClientConfig.*;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class GeoUtils {
     private static final Map<EntityType, GeoModel> models = new HashMap<>();
+
+    public static Vector3f getPivot(GeoBone bone){
+        return new Vector3f(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+    }
+
+    public static void setPivot(GeoBone source, GeoBone target){
+        setPivot(target, getPivot(source));
+    }
+
+    public static void setPivot(GeoBone bone, Vector3f pivot){
+        bone.setPivotX(pivot.x());
+        bone.setPivotY(pivot.y());
+        bone.setPivotZ(pivot.z());
+    }
 
     public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity,
                                        String part, boolean isPov){

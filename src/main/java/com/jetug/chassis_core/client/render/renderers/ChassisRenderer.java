@@ -76,33 +76,22 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
                                   int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
+        bone.isHidden = bonesToHide.contains(bone.name);
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 
-//       render(T animatable, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, ItemStack stack) {
-//
-//        equipmentRenderer.render( poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
+        if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
+            var config = item.getConfig();
+            var armorBoneName = config.getArmorBone(bone.name);
+            if(armorBoneName != null) {
+                var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
+//                setPivot(bone, armorBone);
+//                armorBone.setRotation(bone.getRotation());
 
-        bone.isHidden = bonesToHide.contains(bone.name);
-
-        var value = attachmentForBone.get(bone.name);
-        if(value != null){
-            var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
-            if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
-                var config = item.getConfig();
-                var armorBoneName = config.getArmorBone(bone.name);
-                if(armorBoneName != null) {
-                    var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
-                    super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-                }
+                super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             }
-
-//            var chassisBone = getFrameBone(bone.name);
-
-//            switch (value.second.mode) {
-//                case ADD -> addBone(chassisModel, chassisBone, value.first);
-//                case REPLACE -> replaceBone(chassisModel, chassisBone, value.first);
-//            }
         }
+
     }
 
     private final Map<String, Pair<GeoBone, EquipmentAttachment>> attachmentForBone = new HashMap<>();
@@ -114,7 +103,7 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
-        //bonesToHide = new ArrayList<>();
+        bonesToHide = new ArrayList<>();
 
         for (var part : animatable.getEquipment()) {
             if(animatable.isEquipmentVisible(part)) {
