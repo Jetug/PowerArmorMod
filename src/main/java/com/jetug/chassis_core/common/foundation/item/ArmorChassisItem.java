@@ -54,7 +54,7 @@ public class ArmorChassisItem extends Item {
 //        var stack = context.getItemInHand();
 //        var world = context.getLevel();
 //        var entity = new WearableChassis(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
-//        entity.inventory.setItem(ChassisPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
+//        entity.inventory.setEquipment(ChassisPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
 //        //entity.setPos(context.getClickLocation());
 //        moveEntityToClickedBlock(entity, context);
 //

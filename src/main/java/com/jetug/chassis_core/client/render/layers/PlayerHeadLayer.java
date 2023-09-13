@@ -21,13 +21,11 @@ import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
     private static final HashMap<String, ResourceLocation> playerHeads = new HashMap<>();
-    private final TextureManager textureManager;
     private int textureWidth;
     private int textureHeight;
 
     public PlayerHeadLayer(IGeoRenderer<T> entityRenderer) {
         super(entityRenderer);
-        this.textureManager = Minecraft.getInstance().getTextureManager();
     }
 
     @Override

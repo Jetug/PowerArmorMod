@@ -209,7 +209,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
         ChassisCore.LOGGER.info("damageArmorItem" + isClientSide);
-        var itemStack = getItem(chassisPart);
+        var itemStack = getEquipment(chassisPart);
 
         if(itemStack.getItem() instanceof ChassisArmor armorItem)
             armorItem.damageArmor(itemStack, (int) damage);
@@ -217,11 +217,12 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
 
     @Nullable
     public ChassisEquipment getEquipmentItem(String part) {
-        var stack = getItem(part);
+        var stack = getEquipment(part);
         if(!stack.isEmpty())
             return (ChassisEquipment) stack.getItem();
         return null;
     }
+
 
     public void openGUI(Player player) {
         Global.referenceMob = this;

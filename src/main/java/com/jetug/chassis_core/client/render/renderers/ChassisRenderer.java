@@ -1,10 +1,8 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.ibm.icu.impl.Pair;
 import com.jetug.chassis_core.client.model.*;
 import com.jetug.chassis_core.client.render.layers.*;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
-import com.jetug.chassis_core.common.data.json.EquipmentAttachment;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
@@ -18,28 +16,25 @@ import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.util.EModelRenderCycle;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
+import static java.util.Collections.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
 public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
     protected final ChassisModel<T> chassisModel;
     protected ItemStack mainHandItem, offHandItem;
+    protected ArrayList<String> bonesToHide;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ChassisModel<>());
         chassisModel = (ChassisModel<T>)getGeoModelProvider();
-        initLayers();
-    }
-
-    private void initLayers(){
-        addLayer(new EquipmentLayer(this));
-        addLayer(new PlayerHeadLayer(this));
+        addLayer(new EquipmentLayer<>(this));
+        addLayer(new PlayerHeadLayer<>(this));
     }
 
     @Override
@@ -50,54 +45,70 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
                        float red, float green, float blue, float alpha) {
 
         if (isInvisible(animatable)) return;
-        for (var part : animatable.getEquipment())
-            renderEquipment(chassisModel, animatable, part, false);
 
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
                 packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    @Override
-    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer,
-    int packedLight, int packedOverlay,
-    float red, float green, float blue, float alpha) {
-        super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    @Nullable
+    protected Collection<GeoBone> getEquipmentBones(String boneName, T animatable) {
+        var result = new ArrayList<GeoBone>();
+        var configs = animatable.getItemConfigs();
+        for (var config: configs) {
+            var boneNames = config.getArmorBone(boneName);
 
-        var value = attachmentForBone.get(bone.name);
-        if(value != null){
-            var chassisBone = getFrameBone(bone.name);
-
-            switch (value.second.mode) {
-            case ADD -> addBone(chassisModel, chassisBone, value.first);
-            case REPLACE -> replaceBone(chassisModel, chassisBone, value.first);
+            for (var name : boneNames) {
+                var armorBone = getArmorBone(config.getModelLocation(), name);
+                result.add(armorBone);
+            }
         }
-        }
-        else{
-
-        }
+        return result;
     }
 
-    private final Map<String, Pair<GeoBone, EquipmentAttachment>> attachmentForBone = new HashMap<>();
+    @Override
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                                  int packedOverlay, float red, float green, float blue, float alpha) {
+        if (getCurrentModelRenderCycle() != EModelRenderCycle.INITIAL)
+            renderRecursivelyOriginal(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        else renderItemInHand(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    private void renderRecursivelyOriginal(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
+        setupBone(bone, poseStack);
+
+        var bonesToRender = new ArrayList<>(bone.childBones);
+        bonesToRender.addAll(getEquipmentBones(bone.name, animatable));
+        bone.isHidden = bonesToHide.contains(bone.name);
+
+        if (!bone.isHidden) {
+            if (!bone.cubesAreHidden()) {
+                for (GeoCube geoCube : bone.childCubes) {
+                    poseStack.pushPose();
+                    renderCube(geoCube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                    poseStack.popPose();
+                }
+            }
+
+            for (GeoBone childBone : bonesToRender) {
+                renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            }
+        }
+
+        poseStack.popPose();
+    }
 
     @Override
     public void renderEarly(T animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource,
-    VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
+                            VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
+        bonesToHide = new ArrayList<>();
 
-        for (var part : animatable.getEquipment()) {
-            if(animatable.isEquipmentVisible(part)) {
-            var item = animatable.getEquipmentItem(part);
-            var config = item.getConfig();
-            for(var att : config.attachments){
-                var equipmentBone = getArmorBone(config.getModelLocation(), att.armor);
-                attachmentForBone.put(att.frame, Pair.of(equipmentBone, att));
-            }
-        }
-        }
+        for (var config : animatable.getItemConfigs())
+            addAll(bonesToHide, config.hide);
     }
-
 
     @Nullable
     @Override
@@ -134,16 +145,11 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     }
 
     @Nullable
-    public GeoBone getFrameBone(String name){
-        return GeoUtils.getFrameBone(chassisModel, name);
-    }
-
-    @Nullable
     public GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
         return GeoUtils.getArmorBone(resourceLocation, name);
     }
 
-    public boolean isInvisible(T animatable) {
+    private boolean isInvisible(T animatable) {
         var clientPlayer = Minecraft.getInstance().player;
         var pov = Minecraft.getInstance().options.getCameraType();
 

@@ -1,26 +1,48 @@
 package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.data.json.*;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import com.jetug.chassis_core.common.foundation.entity.*;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.*;
+import net.minecraft.resources.*;
+import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.*;
+import software.bernie.geckolib3.geo.render.built.*;
+import software.bernie.geckolib3.model.*;
+import software.bernie.geckolib3.resource.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@SuppressWarnings("rawtypes")
+import static com.jetug.chassis_core.client.ClientConfig.*;
+
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class GeoUtils {
-    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity, String part, boolean isPov){
+    private static final Map<EntityType, GeoModel> models = new HashMap<>();
+
+    public static Vector3f getPivot(GeoBone bone){
+        return new Vector3f(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+    }
+
+    public static void setPivot(GeoBone source, GeoBone target){
+        setPivot(target, getPivot(source));
+    }
+
+    public static void setPivot(GeoBone bone, Vector3f pivot){
+        bone.setPivotX(pivot.x());
+        bone.setPivotY(pivot.y());
+        bone.setPivotZ(pivot.z());
+    }
+
+    public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity,
+                                       String part, boolean isPov){
         if(entity.isEquipmentVisible(part)) {
-//            var item = entity.getEquipmentItem(part);
-//            addModelPart(provider, item.getConfig(), isPov);
+            var item = entity.getEquipmentItem(part);
+            addModelPart(provider, item.getConfig(), isPov);
         }
-        else {
-            removeModelPart(provider, entity.getSettings(), part);
-        }
+        else removeModelPart(provider, entity, part);
     }
 
     public static void addModelPart(AnimatedGeoModel provider, EquipmentConfig settings, boolean isPov) {
@@ -39,20 +61,38 @@ public class GeoUtils {
         }
     }
 
-    public static void removeModelPart(AnimatedGeoModel provider, FrameConfig frameConfig, String part){
-        if (frameConfig == null) return;
-        var attachments =  frameConfig.getAttachments(part);
+    public static void removeModelPart(AnimatedGeoModel provider, WearableChassis chassis, String part){
+        var chassisConfig = chassis.getConfig();
+        if (chassisConfig == null) return;
+        var attachments =  chassisConfig.getAttachments(part);
         if (attachments == null) return;
 
-        for (var bone : attachments.bones)
-            returnToDefault(provider, bone, List.of(attachments.bones));
+        try{
+            GeoModel rawModel = getGeoModel(provider, chassis);
+            for (var bone : attachments.bones)
+                returnToDefault(provider, bone, rawModel);
+        }
+        catch (Exception ignored){}
     }
 
-    public static GeoModel getModel(ResourceLocation location){
-        return GeckoLibCache.getInstance().getGeoModels().get(location);
+    private static GeoModel getGeoModel(AnimatedGeoModel provider, WearableChassis chassis) {
+//        var rawModel = models.get(chassis.getType());
+//        if(rawModel == null){
+//            var chassisModel = provider.getModelLocation(chassis);
+//            var manager = Minecraft.getInstance().getResourceManager();
+//            rawModel = modelLoader.loadModel(manager, chassisModel);
+//
+//            models.put(chassis.getType(), rawModel);
+//        }
+
+        var chassisModel = provider.getModelLocation(chassis);
+        var manager = Minecraft.getInstance().getResourceManager();
+        var rawModel = modelLoader.loadModel(manager, chassisModel);
+
+        return rawModel;
     }
 
-    public static void returnToDefault(AnimatedGeoModel provider, String boneName, List bones){
+    public static void returnToDefault(AnimatedGeoModel provider, String boneName, GeoModel geoModel){
         var bone = getFrameBone(provider, boneName);
         if(bone == null) return;
         var parentBone = getFrameBone(provider, bone.parent.name);
@@ -60,18 +100,36 @@ public class GeoUtils {
 
         parentBone.childBones.remove(bone);
         var buffBone = getFrameBone(provider, boneName);
+        var toRemove = new ArrayList<GeoBone>();
 
-        //for (int i = 0; i < parentBone.childBones.size(); i++)
-//
-//        var toRemove = new ArrayList<GeoBone>();
-//        for (var child : parentBone.childBones){
-//            if(!bones.contains(child.name)){
-//                toRemove.add(child);
-//            }
-//        }
+        for (var child : parentBone.childBones){
+            if(geoModel.getBone(child.name).isEmpty()){
+                toRemove.add(child);
+            }
+        }
+
+        parentBone.childBones.removeAll(toRemove);
 
         //parentBone.childBones = new ObjectArrayList<>();
         parentBone.childBones.add(buffBone);
+    }
+
+    public static List<GeoBone> getAllBones(List<GeoBone> inputList) {
+        List<GeoBone> values = new ArrayList<>();
+
+        for (GeoBone bone : inputList) {
+            if (bone.childBones.size() > 0) {
+                values.addAll(getAllBones(bone.childBones));
+            } else {
+                values.add(bone);
+            }
+        }
+
+        return values;
+    }
+
+    public static GeoModel getModel(ResourceLocation location){
+        return GeckoLibCache.getInstance().getGeoModels().get(location);
     }
 
     public static void addBone(AnimatedGeoModel provider, GeoBone frameBone, GeoBone armorBone) {
