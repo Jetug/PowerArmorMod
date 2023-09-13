@@ -11,10 +11,7 @@ import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.model.*;
 import software.bernie.geckolib3.resource.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.jetug.chassis_core.client.ClientConfig.*;
 
@@ -35,6 +32,22 @@ public class GeoUtils {
         bone.setPivotY(pivot.y());
         bone.setPivotZ(pivot.z());
     }
+
+    @Nullable
+    public static Collection<GeoBone> getEquipmentBones(String boneName, WearableChassis animatable) {
+        var result = new ArrayList<GeoBone>();
+        var configs = animatable.getItemConfigs();
+        for (var config: configs) {
+            var boneNames = config.getArmorBone(boneName);
+
+            for (var name : boneNames) {
+                var armorBone = GeoUtils.getArmorBone(config.getModelLocation(), name);
+                result.add(armorBone);
+            }
+        }
+        return result;
+    }
+
 
     public static void renderEquipment(AnimatedGeoModel provider, WearableChassis entity,
                                        String part, boolean isPov){

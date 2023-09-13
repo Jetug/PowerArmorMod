@@ -20,6 +20,7 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 
 import java.util.*;
 
+import static com.jetug.chassis_core.client.render.utils.GeoUtils.getEquipmentBones;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static java.util.Collections.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -43,26 +44,9 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
                        MultiBufferSource bufferSource, VertexConsumer buffer,
                        int packedLight, int packedOverlay,
                        float red, float green, float blue, float alpha) {
-
         if (isInvisible(animatable)) return;
-
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
                 packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Nullable
-    protected Collection<GeoBone> getEquipmentBones(String boneName, T animatable) {
-        var result = new ArrayList<GeoBone>();
-        var configs = animatable.getItemConfigs();
-        for (var config: configs) {
-            var boneNames = config.getArmorBone(boneName);
-
-            for (var name : boneNames) {
-                var armorBone = getArmorBone(config.getModelLocation(), name);
-                result.add(armorBone);
-            }
-        }
-        return result;
     }
 
     @Override
@@ -142,11 +126,6 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
             stack.translate(0, 0.125, 0.37);
             stack.mulPose(Vector3f.YP.rotationDegrees(180));
         }
-    }
-
-    @Nullable
-    public GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
-        return GeoUtils.getArmorBone(resourceLocation, name);
     }
 
     private boolean isInvisible(T animatable) {
