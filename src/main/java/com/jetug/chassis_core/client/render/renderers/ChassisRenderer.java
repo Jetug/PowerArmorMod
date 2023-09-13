@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.client.render.renderers;
 
 import com.ibm.icu.impl.Pair;
+import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.model.*;
 import com.jetug.chassis_core.client.render.layers.*;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
@@ -23,12 +24,8 @@ import software.bernie.geckolib3.core.processor.*;
 import software.bernie.geckolib3.geo.render.built.*;
 import software.bernie.geckolib3.util.RenderUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static java.util.Collections.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -65,9 +62,24 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
     }
 
     @Nullable
+    protected Collection<GeoBone> getEquipmentBones(String boneName, T animatable) {
+        var result = new ArrayList<GeoBone>();
+        var configs = animatable.getItemConfigs();
+        for (var config: configs) {
+            var boneNames = config.getArmorBone(boneName);
+
+            for (var name : boneNames) {
+                var armorBone = getArmorBone(config.getModelLocation(), name);
+                result.add(armorBone);
+            }
+        }
+        return result;
+    }
+
+    @Nullable
     protected ItemStack getItemForBone(String boneName, T animatable) {
         var part = getChassisPart(boneName, animatable);
-        return part == null ? null : animatable.getItem(part);
+        return part == null ? null : animatable.getEquipment(part);
     }
 
     @Nullable
@@ -85,11 +97,10 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
         if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
             var config = item.getConfig();
-            var armorBoneName = config.getArmorBone(bone.name);
-            if(armorBoneName != null) {
-                var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
-//                setPivot(bone, armorBone);
-//                armorBone.setRotation(bone.getRotation());
+            var armorBoneNames = config.getArmorBone(bone.name);
+
+            for (var name : armorBoneNames) {
+                var armorBone = getArmorBone(item.getConfig().getModelLocation(), name);
                 super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             }
         }
@@ -104,6 +115,9 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         RenderUtils.translateToPivotPoint(poseStack, bone);
 
         bone.isHidden = bonesToHide.contains(bone.name);
+
+        if(Objects.equals(bone.name, "body_top"))
+            ChassisCore.LOGGER.error(bone.name);
 
         boolean rotOverride = bone.rotMat != null;
 
@@ -135,16 +149,19 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
 
         var bonesToRender = new ArrayList<>(bone.childBones);
 
-        var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
-        if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
-            var config = item.getConfig();
-            var armorBoneName = config.getArmorBone(bone.name);
-            if(armorBoneName != null) {
-                var armorBone = getArmorBone(item.getConfig().getModelLocation(), armorBoneName);
-                //super.renderRecursively(armorBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-                bonesToRender.add(armorBone);
-            }
-        }
+//        var itemStack = getItemForBone(bone.name, currentEntityBeingRendered);
+//        if(itemStack != null && itemStack.getItem() instanceof ChassisEquipment item){
+//            var config = item.getConfig();
+//            var armorBoneNames = config.getArmorBone(bone.name);
+//
+//            for (var name : armorBoneNames) {
+//                var armorBone = getArmorBone(item.getConfig().getModelLocation(), name);
+//                bonesToRender.add(armorBone);
+//            }
+//        }
+
+
+        bonesToRender.addAll(getEquipmentBones(bone.name, animatable));
 
         if (!bone.isHidden) {
             if (!bone.cubesAreHidden()) {

@@ -5,6 +5,8 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
@@ -22,11 +24,13 @@ public class EquipmentConfig extends ModelConfigBase {
     public EquipmentAttachment[] pov;
 
     @Nullable
-    public String getArmorBone(String chassisBone){
+    public Collection<String> getArmorBone(String chassisBone){
+        var result = new ArrayList<String>();
         for (var attachment: attachments) {
-            if(Objects.equals(attachment.frame, chassisBone)) return attachment.armor;
+            if(Objects.equals(attachment.frame, chassisBone))
+                result.add(attachment.armor);
         }
-        return null;
+        return result;
     }
 
     public ResourceLocation getModelLocation(){

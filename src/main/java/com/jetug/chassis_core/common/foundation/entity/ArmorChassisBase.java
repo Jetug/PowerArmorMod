@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.data.json.FrameConfig;
 import com.jetug.chassis_core.common.events.*;
 import com.jetug.chassis_core.common.foundation.item.*;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 
 import static com.jetug.chassis_core.common.data.constants.NBT.*;
 import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
@@ -182,7 +184,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public boolean isEquipmentVisible(String chassisPart){
         if(isArmorItem(chassisPart))
             return hasArmor(chassisPart);
-        else return !getItem(chassisPart).isEmpty();
+        else return !getEquipment(chassisPart).isEmpty();
     }
 
     public boolean isArmorItem(String chassisPart){
@@ -198,36 +200,72 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     public boolean hasEquipment(String part){
-        return !getItem(part).isEmpty();
+        return !getEquipment(part).isEmpty();
     }
+
+    public static <T, R> Collection<R> returnCollection(Collection<T> collection, Function<T, R> function){
+        var result = new ArrayList<R>();
+        for (var item : collection) {
+            var val = function.apply(item);
+            if(val != null) result.add(val);
+        }
+        return result;
+    }
+
+    public Collection<ItemStack> getVisibleEquipment() {
+//        var result = new ArrayList<ItemStack>();
+//        for (var part : getEquipment()) {
+//            if (isEquipmentVisible(part)) {
+//                result.add(getEquipment(part));
+//            }
+//        }
+//        return result;
+
+        return returnCollection(getEquipment(), (part) -> isEquipmentVisible(part) ? getEquipment(part) : null);
+    }
+
+    public Collection<EquipmentConfig> getItemConfigs() {
+//        var result = new ArrayList<EquipmentConfig>();
+//
+//        for (var equipment : getVisibleEquipment()) {
+//            if(equipment.getItem() instanceof ChassisEquipment chassisEquipment){
+//                chassisEquipment.getConfig();
+//            }
+//        }
+//
+//        return result;
+
+        return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment)equipment.getItem()).getConfig());
+    }
+
 //
 //    public boolean hasPowerKnuckle(){
-//        return (getEquipment(RIGHT_HAND).getItem() instanceof PowerKnuckle);
+//        return (getEquipment(RIGHT_HAND).getEquipment() instanceof PowerKnuckle);
 //    }
 //
 //    public PowerKnuckle getPowerKnuckle(){
-//        return (PowerKnuckle) getEquipment(RIGHT_HAND).getItem();
+//        return (PowerKnuckle) getEquipment(RIGHT_HAND).getEquipment();
 //    }
 //
 //    public boolean hasJetpack(){
-//        return getEquipment(BACK).getItem() instanceof JetpackItem;
+//        return getEquipment(BACK).getEquipment() instanceof JetpackItem;
 //    }
 //
 //    public JetpackItem getJetpack(){
-//        return (JetpackItem) getEquipment(BACK).getItem();
+//        return (JetpackItem) getEquipment(BACK).getEquipment();
 //    }
 
-    public ItemStack getItem(String chassisPart){
+    public ItemStack getEquipment(String chassisPart){
         return inventory.getItem(getPartId(chassisPart));
     }
 
-    public void setItem(String chassisPart, ItemStack itemStack){
+    public void setEquipment(String chassisPart, ItemStack itemStack){
         inventory.setItem(getPartId(chassisPart), itemStack);
     }
 
 
     public int getArmorDurability(String chassisPart) {
-        var itemStack = getItem(chassisPart);
+        var itemStack = getEquipment(chassisPart);
         if(itemStack.isEmpty()) return 0;
         return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
@@ -313,7 +351,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         this.totalToughness = 0;
 
         for (var part : armor){
-            if (getItem(part).getItem() instanceof ChassisArmor armorItem){
+            if (getEquipment(part).getItem() instanceof ChassisArmor armorItem){
                 this.totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
                 this.totalToughness += armorItem.getMaterial().getToughness();
             }
