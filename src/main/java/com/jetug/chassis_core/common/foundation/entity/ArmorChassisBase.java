@@ -1,8 +1,7 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
-import com.jetug.chassis_core.common.data.json.FrameConfig;
+import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.events.*;
 import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
@@ -16,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.*;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.*;
 
 import javax.annotation.Nullable;
@@ -29,25 +29,23 @@ import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContai
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
 
 public class ArmorChassisBase extends EmptyLivingEntity implements ContainerListener {
+    public static final int INVENTORY_SIZE = 6;
+    public static HashMap<String, Integer> PART_IDS = new HashMap<>();
+
+    private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(getType().getRegistryName()));
+    private ChassisConfig config = null;
+    private ListTag serializedInventory;
+    private Container previousContainer;
+
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
-    public static final int INVENTORY_SIZE = 6;
-
     protected float totalDefense;
     protected float totalToughness;
-
-    public static HashMap<String, Integer> PART_IDS = new HashMap<>();
+    protected int inventorySize = 6;
     protected HashMap<String, Integer> partIdMap = PART_IDS;
 
-    protected int inventorySize = 6;
-
     public SimpleContainer inventory;
-
-    private String chassisId = null;
-    private FrameConfig settings = null;
-    private ListTag serializedInventory;
-    private Container previousContainer;
 
     public final String[] armor = new String[]{
             HELMET,
@@ -154,16 +152,14 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     @Nullable
-    public FrameConfig getConfig(){
-        if(settings == null)
-            settings = ClientConfig.modResourceManager.getFrameSettings(getModelId());
-        return settings;
+    public ChassisConfig getConfig(){
+        if(config == null)
+            config = ClientConfig.modResourceManager.getFrameSettings(getModelId());
+        return config;
     }
 
     public String getModelId(){
-        if(chassisId == null)
-            chassisId = ResourceHelper.getResourceName(getType().getRegistryName());
-        return chassisId;
+        return chassisId.get();
     }
 
     public void containerRealyChanged(Container container){
@@ -213,28 +209,10 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     }
 
     public Collection<ItemStack> getVisibleEquipment() {
-//        var result = new ArrayList<ItemStack>();
-//        for (var part : getEquipment()) {
-//            if (isEquipmentVisible(part)) {
-//                result.add(getEquipment(part));
-//            }
-//        }
-//        return result;
-
         return returnCollection(getEquipment(), (part) -> isEquipmentVisible(part) ? getEquipment(part) : null);
     }
 
     public Collection<EquipmentConfig> getItemConfigs() {
-//        var result = new ArrayList<EquipmentConfig>();
-//
-//        for (var equipment : getVisibleEquipment()) {
-//            if(equipment.getItem() instanceof ChassisEquipment chassisEquipment){
-//                chassisEquipment.getConfig();
-//            }
-//        }
-//
-//        return result;
-
         return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment)equipment.getItem()).getConfig());
     }
 

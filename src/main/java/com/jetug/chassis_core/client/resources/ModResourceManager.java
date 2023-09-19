@@ -2,7 +2,7 @@ package com.jetug.chassis_core.client.resources;
 
 import com.google.gson.*;
 import com.jetug.chassis_core.common.data.json.EquipmentConfig;
-import com.jetug.chassis_core.common.data.json.FrameConfig;
+import com.jetug.chassis_core.common.data.json.ChassisConfig;
 import com.jetug.chassis_core.common.data.json.ModelConfigBase;
 import net.minecraft.client.*;
 import net.minecraft.resources.*;
@@ -18,7 +18,7 @@ public class ModResourceManager {
     private static final String FRAME_DIR = CONFIG_DIR + "chassis";
 
     private final Map<String, EquipmentConfig> equipmentSettings = new HashMap<>();
-    private final Map<String, FrameConfig> frameSettings = new HashMap<>();
+    private final Map<String, ChassisConfig> frameSettings = new HashMap<>();
 
     @Nullable
     public EquipmentConfig getEquipmentSettings(String itemId){
@@ -26,7 +26,7 @@ public class ModResourceManager {
     }
 
     @Nullable
-    public FrameConfig getFrameSettings(String frameId){
+    public ChassisConfig getFrameSettings(String frameId){
         return frameSettings.get(frameId);
     }
 
@@ -46,7 +46,7 @@ public class ModResourceManager {
 
     private void loadFrame() {
         for (ResourceLocation config : getJsonResources(FRAME_DIR)) {
-            var settings = getSettings(config, FrameConfig.class);
+            var settings = getSettings(config, ChassisConfig.class);
             if(settings != null)
                 frameSettings.put(settings.name, settings);
         }
@@ -71,10 +71,10 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private FrameConfig getFrameSettings(ResourceLocation resourceLocation){
+    private ChassisConfig getFrameSettings(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, FrameConfig.class);
+            var settings = new Gson().fromJson(readIn, ChassisConfig.class);
             settings.name = getResourceName(resourceLocation);
             return settings;
         }

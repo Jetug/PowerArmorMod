@@ -32,17 +32,16 @@ import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 
 public abstract class WearableChassis extends ArmorChassisBase implements IAnimatable {
-    public static final float ROTATION = (float) Math.PI / 180F;
-    public static final int EFFECT_DURATION = 9;
-    public static final HandEntity HAND_ENTITY = new HandEntity();
-    public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
-
-    public final Speedometer speedometer = new Speedometer(this);
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     protected boolean isJumping;
     protected float playerJumpScale;
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public static final float ROTATION = (float) Math.PI / 180F;
+    public static final int EFFECT_DURATION = 9;
+    public static final HandEntity HAND_ENTITY = new HandEntity();
+    public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
+    public final Speedometer speedometer = new Speedometer(this);
 
     public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
         super(type, worldIn);

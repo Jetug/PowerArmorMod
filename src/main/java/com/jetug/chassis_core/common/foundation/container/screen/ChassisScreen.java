@@ -31,12 +31,12 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
     public static final int ENTITY_POS_Y = 73;
     public static final int TABS_WIDTH = 57;
     public static final float MIN_SCALE = 0.0001F;
-    private final ResourceLocation guiResource;
+    protected final ResourceLocation guiResource;
 
-    private float mousePosX;
-    private float mousePosY;
-    private int right;
-    private int bottom;
+    protected float mousePosX;
+    protected float mousePosY;
+    protected int right;
+    protected int bottom;
 
     public ChassisScreen(T container, Inventory inventory, Component name, ResourceLocation guiResource) {
         super(container, inventory, name);
@@ -146,7 +146,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
         //}
     }
 
-    private void renderEntity(WearableChassis powerArmor) {
+    protected void renderEntity(WearableChassis powerArmor) {
         var scale = 1F / Math.max(MIN_SCALE, powerArmor.getScale());
 
         InventoryScreen.renderEntityInInventory(

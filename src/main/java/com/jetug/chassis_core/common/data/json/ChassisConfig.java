@@ -6,7 +6,7 @@ import javax.annotation.*;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class FrameConfig extends ModelConfigBase {
+public class ChassisConfig extends ModelConfigBase {
     public FrameAttachment[] attachments;
     private final Lazy<HashMap<String, String>> boneMap = Lazy.of(this::boneMap);
 

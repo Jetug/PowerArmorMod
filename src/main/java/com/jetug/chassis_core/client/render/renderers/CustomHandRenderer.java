@@ -37,7 +37,6 @@ public class CustomHandRenderer extends CustomGeoRenderer {
                        @Nullable MultiBufferSource bufferSource, int packedLight) {
         currentChassis = chassisEntity;
         super.render(chassisEntity, poseStack, bufferSource, packedLight);
-        //renderEquipment(handModel, chassisEntity, ChassisPart.RIGHT_ARM_ARMOR, true);
     }
 
     @Override

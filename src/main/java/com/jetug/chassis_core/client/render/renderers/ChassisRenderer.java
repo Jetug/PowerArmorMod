@@ -47,6 +47,7 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         if (isInvisible(animatable)) return;
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
                 packedLight, packedOverlay, red, green, blue, alpha);
+        bonesToHide = new ArrayList<>();
     }
 
     @Override
@@ -59,13 +60,13 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
 
     private void renderRecursivelyOriginal(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.pushPose();
+        //bone.isHidden = bonesToHide.contains(bone.name);
         setupBone(bone, poseStack);
 
         var bonesToRender = new ArrayList<>(bone.childBones);
         bonesToRender.addAll(getEquipmentBones(bone.name, animatable));
-        bone.isHidden = bonesToHide.contains(bone.name);
 
-        if (!bone.isHidden) {
+        if (!bone.isHidden && !bonesToHide.contains(bone.name)) {
             if (!bone.cubesAreHidden()) {
                 for (GeoCube geoCube : bone.childCubes) {
                     poseStack.pushPose();
