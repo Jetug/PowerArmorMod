@@ -10,8 +10,4 @@ public class ClientConfig {
     public static final ModResourceManager modResourceManager = new ModResourceManager();
 
     @NotNull public static final Options OPTIONS = Minecraft.getInstance().options;
-
-    public static LocalPlayer getLocalPlayer(){
-        return Minecraft.getInstance().player;
-    }
 }

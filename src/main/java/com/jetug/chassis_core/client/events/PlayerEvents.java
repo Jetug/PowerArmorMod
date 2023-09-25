@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.client.render.renderers.*;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraftforge.api.distmarker.*;
 import net.minecraftforge.client.event.*;
@@ -21,18 +22,37 @@ public class PlayerEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onRenderHand(RenderArmEvent event) {
-        if (!isWearingChassis()) return;
+    public static void onRenderHand(RenderHandEvent event) {
+        if (!isWearingChassis() || !isMainHandEmpty()) return;
 
-        var poseStack = new PoseStack();
+        var poseStack = event.getPoseStack();
+        poseStack.pushPose();
         poseStack.translate(0.5, -0.5, -0.6);
 
         CustomHandRenderer.getHandRenderer().render(
                 getPlayerChassis(),
-                poseStack,
+                event.getPoseStack(),
                 event.getMultiBufferSource(),
                 event.getPackedLight());
 
-        event.setCanceled(true);
+        poseStack.popPose();
+        //event.setCanceled(true);
     }
+
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent()
+//    public static void onRenderHand(RenderArmEvent event) {
+//        if (!isWearingChassis()) return;
+//
+//        var poseStack = event.getPoseStack();
+//        poseStack.translate(0.5, -0.5, -0.6);
+//
+//        CustomHandRenderer.getHandRenderer().render(
+//                getPlayerChassis(),
+//                poseStack,
+//                event.getMultiBufferSource(),
+//                event.getPackedLight());
+//
+//        event.setCanceled(true);
+//    }
 }

@@ -13,8 +13,8 @@ import com.jetug.chassis_core.common.input.InputKey;
 import com.jetug.chassis_core.common.input.KeyAction;
 
 import static com.jetug.chassis_core.client.ClientConfig.OPTIONS;
-import static com.jetug.chassis_core.client.ClientConfig.getLocalPlayer;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getLocalPlayer;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {

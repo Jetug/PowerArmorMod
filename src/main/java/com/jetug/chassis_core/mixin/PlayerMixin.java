@@ -12,7 +12,6 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends Entity {
-
     public PlayerMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }

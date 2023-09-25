@@ -50,12 +50,19 @@ public class CustomHandRenderer extends CustomGeoRenderer {
         if (bone.childBonesAreHiddenToo())
             return;
 
-        var bonesToRender = new ArrayList<>(bone.childBones);
-        bonesToRender.addAll(getEquipmentBones(bone.name, currentChassis));
+        doSafe(() -> {
+            var bonesToRender = new ArrayList<>(bone.childBones);
+            bonesToRender.addAll(getEquipmentBones(bone.name, currentChassis));
 
-        for (GeoBone childBone : bonesToRender) {
-            renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        }
+            for (GeoBone childBone : bonesToRender) {
+                renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            }
+        });
+    }
+
+    public static void doSafe(Runnable runnable){
+        try{ runnable.run(); }
+        catch (Exception e){ e.printStackTrace(); }
     }
 
     public static void registerHandRenderer(){

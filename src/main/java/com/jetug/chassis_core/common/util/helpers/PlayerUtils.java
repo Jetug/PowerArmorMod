@@ -3,6 +3,7 @@ package com.jetug.chassis_core.common.util.helpers;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,6 +18,14 @@ import static com.jetug.chassis_core.common.network.PacketSender.*;
 public class PlayerUtils {
     public static void addEffect(Player player, MobEffect effect, int amplifier){
         player.addEffect(new MobEffectInstance(effect, WearableChassis.EFFECT_DURATION, amplifier, false, false));
+    }
+
+    public static LocalPlayer getLocalPlayer(){
+        return Minecraft.getInstance().player;
+    }
+
+    public static boolean isMainHandEmpty(){
+        return getLocalPlayer().getMainHandItem().isEmpty();
     }
 
     public static boolean isWearingChassis(){

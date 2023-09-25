@@ -115,9 +115,6 @@ public abstract class ModGeoRenderer<T extends LivingEntity & IAnimatable> exten
         translateMatrixToBone(poseStack, bone);
         translateToPivotPoint(poseStack, bone);
 
-        if(Objects.equals(bone.name, "body_top"))
-            ChassisCore.LOGGER.error(bone.name);
-
         boolean rotOverride = bone.rotMat != null;
 
         if (rotOverride) {

@@ -20,7 +20,7 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 
 import java.util.*;
 
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.getEquipmentBones;
+import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static java.util.Collections.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
