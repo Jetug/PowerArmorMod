@@ -76,6 +76,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         timer.tick();
     }
 
+
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         float finalDamage = getDamageAfterAbsorb(damage);
@@ -83,24 +84,29 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         if(damageSource == DamageSource.CACTUS)
             return false;
 
+        damageArmor(damageSource, damage);
+
+        if (hasPlayerPassenger())
+            getPlayerPassenger().hurt(damageSource, finalDamage);
+
+        return true;
+    }
+
+    public void damageArmor(DamageSource damageSource, float damage) {
         if(isServerSide){
             if(damageSource == DamageSource.FALL) {
                 damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
                 damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
             }
             else{
-                damageArmorItem(HELMET, damageSource , damage);
-                damageArmorItem(BODY_ARMOR, damageSource , damage);
-                damageArmorItem(LEFT_ARM_ARMOR, damageSource , damage);
-                damageArmorItem(RIGHT_ARM_ARMOR, damageSource , damage);
+                damageArmorItem(HELMET, damageSource, damage);
+                damageArmorItem(BODY_ARMOR, damageSource, damage);
+                damageArmorItem(LEFT_ARM_ARMOR, damageSource, damage);
+                damageArmorItem(RIGHT_ARM_ARMOR, damageSource, damage);
                 damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
                 damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
             }
         }
-
-        if (hasPlayerPassenger()) getPlayerPassenger().hurt(damageSource, finalDamage);
-
-        return true;
     }
 
     @Override
@@ -272,6 +278,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     }
 
     private float getDamageAfterAbsorb(float damage){
+        updateTotalArmor();
         return CombatRules.getDamageAfterAbsorb(damage, totalDefense, totalToughness);
     }
 

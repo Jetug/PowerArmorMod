@@ -41,7 +41,7 @@ public class PlayerUtils {
     }
 
     @Nullable
-    public static WearableChassis getPlayerChassis(Player player){
+    public static WearableChassis getPlayerChassis(Entity player){
         if(player.getVehicle() instanceof WearableChassis)
             return (WearableChassis) player.getVehicle();
         else return null;

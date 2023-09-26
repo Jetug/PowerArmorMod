@@ -40,11 +40,12 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     protected final TickTimer timer = new TickTimer();
     protected final boolean isClientSide = level.isClientSide;
     protected final boolean isServerSide = !level.isClientSide;
+
     protected float totalDefense;
     protected float totalToughness;
+
     protected int inventorySize = 6;
     protected HashMap<String, Integer> partIdMap = PART_IDS;
-
     public SimpleContainer inventory;
 
     public final String[] armor = new String[]{
@@ -64,6 +65,14 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         PART_IDS.put(RIGHT_ARM_ARMOR, i++);
         PART_IDS.put(LEFT_LEG_ARMOR , i++);
         PART_IDS.put(RIGHT_LEG_ARMOR, i++);
+    }
+
+    public float getTotalDefense() {
+        return totalDefense;
+    }
+
+    public float getTotalToughness() {
+        return totalToughness;
     }
 
     public int getInventorySize() {
@@ -324,7 +333,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         setSpeed(getSpeedAttribute());
     }
 
-    private void updateTotalArmor(){
+    public void updateTotalArmor(){
         this.totalDefense   = 0;
         this.totalToughness = 0;
 

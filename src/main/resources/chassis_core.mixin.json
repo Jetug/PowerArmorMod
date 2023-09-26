@@ -17,6 +17,7 @@
   "mixins": [
     "LivingEntityMixin",
     "MixinProjectileUtil",
+    "MobMixin",
     "PlayerMixin"
   ]
 }
