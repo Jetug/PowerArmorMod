@@ -1,6 +1,14 @@
 package com.jetug.chassis_core.common.util.extensions;
 
-public class Array {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Collection {
+    @SafeVarargs
+    public static <T> ArrayList<T> arrayListOf(T...args){
+        return new ArrayList<>(Arrays.asList(args));
+    }
+
     public static int[] arrayFloatToInt(float[] array){
         int[] result = new int[array.length];
         for (int i = 0; i < array.length ;i++){

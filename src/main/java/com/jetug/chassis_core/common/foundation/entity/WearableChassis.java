@@ -1,8 +1,7 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
-import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
+import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.common.util.helpers.*;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +12,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +24,11 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
-import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
-import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
+import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 
-public abstract class WearableChassis extends ArmorChassisBase implements IAnimatable {
+public abstract class WearableChassis extends ChassisBase implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     protected boolean isJumping;
@@ -43,7 +40,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
     public final Speedometer speedometer = new Speedometer(this);
 
-    public WearableChassis(EntityType<? extends ArmorChassisBase> type, Level worldIn) {
+    public WearableChassis(EntityType<? extends ChassisBase> type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -52,7 +49,7 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return ArmorChassisBase.createLivingAttributes()
+        return ChassisBase.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
@@ -139,8 +136,8 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
         var stack = player.getItemInHand(hand);
 
         if(isServerSide && !player.isPassenger()) {
-            if (stack.getItem() == Items.STICK)
-                return giveEntityItemToPlayer(player, this, hand);
+//            if (stack.getItem() == Items.STICK)
+//                return giveEntityItemToPlayer(player, this, hand);
             if (player.isShiftKeyDown()) {
                 openGUI(player);
                 return InteractionResult.SUCCESS;
@@ -227,7 +224,6 @@ public abstract class WearableChassis extends ArmorChassisBase implements IAnima
             return (ChassisEquipment) stack.getItem();
         return null;
     }
-
 
     public void openGUI(Player player) {
         Global.referenceMob = this;

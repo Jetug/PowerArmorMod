@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
+import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.common.data.json.*;
 import com.jetug.chassis_core.common.events.*;
 import com.jetug.chassis_core.common.foundation.item.*;
@@ -14,21 +15,26 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.*;
 import net.minecraft.world.item.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.*;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
 import static com.jetug.chassis_core.common.data.constants.NBT.*;
-import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
+import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
+import static com.jetug.chassis_core.common.util.extensions.Collection.arrayListOf;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyContainer;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
+import static java.util.Collections.addAll;
 
-public class ArmorChassisBase extends EmptyLivingEntity implements ContainerListener {
+public class ChassisBase extends EmptyLivingEntity implements ContainerListener {
     public static final int INVENTORY_SIZE = 6;
     public static HashMap<String, Integer> PART_IDS = new HashMap<>();
 
@@ -43,6 +49,9 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     protected float totalDefense;
     protected float totalToughness;
+
+    public HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
+    public Collection<String> bonesToHide = new ArrayList<>();
 
     protected int inventorySize = 6;
     protected HashMap<String, Integer> partIdMap = PART_IDS;
@@ -67,26 +76,14 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         PART_IDS.put(RIGHT_LEG_ARMOR, i++);
     }
 
-    public float getTotalDefense() {
-        return totalDefense;
-    }
-
-    public float getTotalToughness() {
-        return totalToughness;
-    }
-
-    public int getInventorySize() {
-        return inventorySize;
-    }
-
-    public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
+    public ChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
         super(pEntityType, pLevel);
         this.partIdMap = partIdMap;
         this.inventorySize = partIdMap.size();
         init();
     }
 
-    public ArmorChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
+    public ChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         init();
     }
@@ -97,11 +94,33 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         updateParams();
     }
 
+    //GETTERS
+    public float getTotalDefense() {
+        return totalDefense;
+    }
+
+    public float getTotalToughness() {
+        return totalToughness;
+    }
+
+    public Collection<String> getBonesToHide() {
+        return bonesToHide;
+    }
+
+    public int getInventorySize() {
+        return inventorySize;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public Collection<GeoBone> getEquipmentBones(String frameBoneName) {
+        var result = bonesToRender.get(frameBoneName);
+        return result == null ? new ArrayList<>() : result;
+    }
+
     public Integer getPartId(String chassisPart){
         var val = partIdMap.get(chassisPart);
         return val != null ? val : 0;
     }
-
 //    protected void createPartIdMap(){
 //        var i = 0;
 //        partIdMap.put(HELMET         , i++);
@@ -111,6 +130,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 //        partIdMap.put(LEFT_LEG_ARMOR , i++);
 //        partIdMap.put(RIGHT_LEG_ARMOR, i++);
 //        inventorySize = i;
+
 //    }
 
 //    private final Map<String, EquipmentConfig> history = new HashMap<>();
@@ -225,23 +245,6 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment)equipment.getItem()).getConfig());
     }
 
-//
-//    public boolean hasPowerKnuckle(){
-//        return (getEquipment(RIGHT_HAND).getEquipment() instanceof PowerKnuckle);
-//    }
-//
-//    public PowerKnuckle getPowerKnuckle(){
-//        return (PowerKnuckle) getEquipment(RIGHT_HAND).getEquipment();
-//    }
-//
-//    public boolean hasJetpack(){
-//        return getEquipment(BACK).getEquipment() instanceof JetpackItem;
-//    }
-//
-//    public JetpackItem getJetpack(){
-//        return (JetpackItem) getEquipment(BACK).getEquipment();
-//    }
-
     public ItemStack getEquipment(String chassisPart){
         return inventory.getItem(getPartId(chassisPart));
     }
@@ -249,7 +252,6 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
     public void setEquipment(String chassisPart, ItemStack itemStack){
         inventory.setItem(getPartId(chassisPart), itemStack);
     }
-
 
     public int getArmorDurability(String chassisPart) {
         var itemStack = getEquipment(chassisPart);
@@ -259,10 +261,7 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
 
     public ArmorData getArmorData(){
         var data = new ArmorData(getId());
-        data.inventory = serializedInventory;//serializeInventory(inventory);
-        //data.heat = heatController.getHeat();
-        //data.attackCharge = attackCharge;
-
+        data.inventory = serializedInventory;
         return data;
     }
 
@@ -320,13 +319,33 @@ public class ArmorChassisBase extends EmptyLivingEntity implements ContainerList
         deserializeInventory(inventory, nbtTags);
     }
 
+    protected float getMinSpeed(){
+        return 0.05f;
+    }
+
     private void updateParams(){
         updateTotalArmor();
         updateSpeed();
+        updateBones();
     }
 
-    protected float getMinSpeed(){
-        return 0.05f;
+    @OnlyIn(Dist.CLIENT)
+    protected void updateBones(){
+        bonesToRender.clear();
+        bonesToHide.clear();
+
+        for (var config : getItemConfigs()) {
+            addAll(bonesToHide, config.hide);
+
+            for(var attachment : config.attachments){
+                var bone = GeoUtils.getArmorBone(config.getModelLocation(),attachment.armor);
+                if( bone == null ) continue;
+
+                if( !bonesToRender.containsKey(attachment.frame))
+                     bonesToRender.put(attachment.frame, arrayListOf(bone));
+                else bonesToRender.get(attachment.frame).add(bone);
+            }
+        }
     }
 
     protected void updateSpeed(){

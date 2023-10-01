@@ -11,7 +11,6 @@ public class ActionRegistry {
     private static Map<Class, Integer> actionsId = new HashMap<>();
 
     static {
-        //addAction(new DashAction());
         addAction(new InventorySyncAction());
         addAction(new InputAction());
         addAction(new CastingStatusAction());

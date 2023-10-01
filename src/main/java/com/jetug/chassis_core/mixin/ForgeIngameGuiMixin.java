@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
+
 @Mixin(ForgeIngameGui.class)
 @OnlyIn(Dist.CLIENT)
 public class ForgeIngameGuiMixin extends Gui {
@@ -27,21 +29,15 @@ public class ForgeIngameGuiMixin extends Gui {
     }
 
     @Inject(method = "renderHealthMount(IILcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At("HEAD"), cancellable = true, remap = false)
-    protected void renderHealthMount(int width, int height, PoseStack poseStack, CallbackInfo ci)
-    {
-        if(PlayerUtils.isWearingChassis())
-            ci.cancel();
+    protected void renderHealthMount(int width, int height, PoseStack poseStack, CallbackInfo ci) {
+        if(isWearingChassis()) ci.cancel();
     }
 
     @Final
     @Shadow(remap = false)
-    public static final IIngameOverlay FOOD_LEVEL_ELEMENT =
-            OverlayRegistry.registerOverlayTop("Food Level", (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
-
+    public static final IIngameOverlay FOOD_LEVEL_ELEMENT = OverlayRegistry.registerOverlayTop("Food Level", (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
         var minecraft = Minecraft.getInstance();
-        boolean isMounted = minecraft.player.getVehicle() instanceof LivingEntity && !PlayerUtils.isWearingChassis();
-        if (!isMounted && !minecraft.options.hideGui && gui.shouldDrawSurvivalElements())
-        {
+        if (isWearingChassis() && !minecraft.options.hideGui && gui.shouldDrawSurvivalElements()) {
             gui.setupOverlayRenderState(true, false);
             gui.renderFood(screenWidth, screenHeight, poseStack);
         }

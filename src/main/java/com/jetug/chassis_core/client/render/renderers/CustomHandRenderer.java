@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.jetug.chassis_core.common.data.enums.ChassisPart;
 import com.jetug.chassis_core.common.foundation.entity.HandEntity;
 import com.jetug.chassis_core.client.model.HandModel;
 import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
@@ -14,8 +13,6 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.*;
 
 import java.util.ArrayList;
-
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 
 @SuppressWarnings("unchecked")
 public class CustomHandRenderer extends CustomGeoRenderer {
@@ -52,7 +49,8 @@ public class CustomHandRenderer extends CustomGeoRenderer {
 
         doSafe(() -> {
             var bonesToRender = new ArrayList<>(bone.childBones);
-            bonesToRender.addAll(getEquipmentBones(bone.name, currentChassis));
+            var equipmentBones = currentChassis.getEquipmentBones(bone.name);
+            bonesToRender.addAll(equipmentBones);
 
             for (GeoBone childBone : bonesToRender) {
                 renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);

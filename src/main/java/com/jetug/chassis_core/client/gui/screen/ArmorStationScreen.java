@@ -1,9 +1,6 @@
-package com.jetug.chassis_core.common.foundation.container.screen;
+package com.jetug.chassis_core.client.gui.screen;
 
-import com.jetug.chassis_core.common.data.constants.*;
-import com.jetug.chassis_core.common.foundation.container.menu.*;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -12,7 +9,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static com.mojang.blaze3d.systems.RenderSystem.*;
 
-public class ArmorStationScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+public class ArmorStationScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     private final ResourceLocation guiResource;
 
     public ArmorStationScreen(T menu, Inventory pPlayerInventory,

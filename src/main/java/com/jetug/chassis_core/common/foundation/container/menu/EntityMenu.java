@@ -24,6 +24,10 @@ public abstract class EntityMenu extends MenuBase {
         return super.stillValid(playerIn) && this.entity.isAlive() && this.entity.distanceTo(playerIn) < 8.0F;
     }
 
+    public WearableChassis getEntity() {
+        return entity;
+    }
+
     protected abstract int getId(String chassisPart);
 
     protected void createSlot(String chassisPart, Pos2I pos){

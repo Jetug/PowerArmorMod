@@ -26,7 +26,6 @@ import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -46,9 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
 
-import static com.jetug.chassis_core.common.data.constants.Gui.TOP_TAB_ICON_POS_2;
-import static com.jetug.chassis_core.common.foundation.container.screen.ChassisScreen.TABS_WIDTH;
-import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.PA_FRAME;
+import static com.jetug.chassis_core.client.gui.screen.ChassisScreen.TABS_WIDTH;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 import static com.jetug.chassis_core.common.data.constants.Gui.TAB_HEIGHT;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;

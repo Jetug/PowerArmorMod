@@ -5,7 +5,7 @@ import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.data.enums.ChassisPart.*;
+import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
 
 public class ChassisArmorMaterial {
     private static final int[] HEALTH_PER_SLOT = new int[]{11, 16, 13, 13};

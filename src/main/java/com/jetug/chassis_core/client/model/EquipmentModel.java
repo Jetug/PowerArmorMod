@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.client.model;
 
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -15,7 +16,7 @@ public class EquipmentModel<T extends ChassisEquipment> extends AnimatedGeoModel
 
     @Override
     public ResourceLocation getTextureLocation(T item) {
-        return item.getConfig().getTextureLocation();
+        return item.getConfig().getTextureLocation(EquipmentConfig.DEFAULT);
     }
 
     @Override

@@ -1,6 +1,5 @@
-package com.jetug.chassis_core.common.foundation;
+package com.jetug.chassis_core.common.util.helpers;
 
-import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -18,41 +17,32 @@ import org.jetbrains.annotations.Nullable;
 
 public class EntityHelper {
     public static final String ENTITY_TAG = "EntityTag";
-    public static final String ITEM_ENTITY_ID = "ItemEntityID";
+    public static final String CHASSIS_ENTITY_ID = "ItemEntityID";
     public static final String ENTITY_UUID = "EntityUUID";
 
-    public static InteractionResult giveEntityItemToPlayer(Player playerIn, LivingEntity target, InteractionHand hand) {
-        if (!playerIn.level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-
-            playerIn.swing(hand);
-            playerIn.level.playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
-            var entityInItem = entityToItem(target);
-            playerIn.getInventory().add(entityInItem);
-
-            return InteractionResult.SUCCESS;
+    public static void giveEntityItemToPlayer(Player player, ItemStack stack, LivingEntity target) {
+        if (!player.level.isClientSide) {
+            var entityInItem = entityToItem(stack, target);
+            player.getInventory().add(entityInItem);
         }
-
-        return InteractionResult.FAIL;
     }
 
-    public static @NotNull ItemStack entityToItem(LivingEntity target) {
-        var trueStack = new ItemStack(ItemRegistry.PA_FRAME.get());
+    public static @NotNull ItemStack entityToItem(ItemStack stack, LivingEntity target) {
         var newTag    = new CompoundTag();
         var entityTag = new CompoundTag();
 
         target.save(entityTag);
         newTag.put(ENTITY_TAG, entityTag);
-
-        newTag.putString(ITEM_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
-        trueStack.setTag(newTag);
+        newTag.putString(CHASSIS_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
+        stack.setTag(newTag);
         target.remove(Entity.RemovalReason.DISCARDED);
-        return trueStack;
+        return stack;
     }
 
     @Nullable
     public static Entity entityFromItem(ItemStack stack, Level world) {
-        if (stack.getTag() != null && !stack.getTag().getString(ITEM_ENTITY_ID).isEmpty()) {
-            var id = stack.getTag().getString(ITEM_ENTITY_ID);
+        if (stack.getTag() != null && !stack.getTag().getString(CHASSIS_ENTITY_ID).isEmpty()) {
+            var id = stack.getTag().getString(CHASSIS_ENTITY_ID);
             var type = EntityType.byString(id).orElse(null);
             if (type != null) {
                 Entity entity = type.create(world);
@@ -73,7 +63,7 @@ public class EntityHelper {
     @SuppressWarnings("DataFlowIssue")
     public static void clearItemTags(ItemStack stack){
         CompoundTag tag = stack.getTag();
-        tag.remove(ITEM_ENTITY_ID);
+        tag.remove(CHASSIS_ENTITY_ID);
         tag.remove(ENTITY_TAG);
         tag.remove(ENTITY_UUID);
         stack.setTag(tag);

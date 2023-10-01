@@ -19,12 +19,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class ArmorFrameOrig extends Item {
+public class ArmorChassisStorage extends Item {
     public static final String ENTITY_TAG = "EntityTag";
-    public static final String DRAGON_HORN_ENTITY_ID = "DragonHornEntityID";
+    public static final String CHASSIS_ENTITY_ID = "ChassisEntityID";
     public static final String ENTITY_UUID = "EntityUUID";
 
-    public ArmorFrameOrig() {
+    public ArmorChassisStorage() {
         super((new Properties()).stacksTo(1));
     }
 
@@ -48,7 +48,7 @@ public class ArmorFrameOrig extends Item {
             target.save(entityTag);
             newTag.put(ENTITY_TAG, entityTag);
 
-            newTag.putString(DRAGON_HORN_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
+            newTag.putString(CHASSIS_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
             trueStack.setTag(newTag);
 
             playerIn.swing(hand);
@@ -67,9 +67,9 @@ public class ArmorFrameOrig extends Item {
 
         ItemStack stack = context.getItemInHand();
 
-        if (stack.getTag() != null && !stack.getTag().getString(DRAGON_HORN_ENTITY_ID).isEmpty()) {
+        if (stack.getTag() != null && !stack.getTag().getString(CHASSIS_ENTITY_ID).isEmpty()) {
             var world = context.getLevel();
-            var id = stack.getTag().getString(DRAGON_HORN_ENTITY_ID);
+            var id = stack.getTag().getString(CHASSIS_ENTITY_ID);
             var type = EntityType.byString(id).orElse(null);
             if (type != null) {
                 Entity entity = type.create(world);
@@ -88,7 +88,7 @@ public class ArmorFrameOrig extends Item {
 
                 if (world.addFreshEntity(entity)) {
                     CompoundTag tag = stack.getTag();
-                    tag.remove(DRAGON_HORN_ENTITY_ID);
+                    tag.remove(CHASSIS_ENTITY_ID);
                     tag.remove(ENTITY_TAG);
                     tag.remove(ENTITY_UUID);
                     stack.setTag(tag);

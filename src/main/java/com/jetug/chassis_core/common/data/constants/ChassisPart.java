@@ -1,12 +1,13 @@
-package com.jetug.chassis_core.common.data.enums;
+package com.jetug.chassis_core.common.data.constants;
 
 public class ChassisPart {
-    public static final String HELMET          = "head"           ;
-    public static final String BODY_ARMOR      = "body"           ;
-    public static final String LEFT_ARM_ARMOR  = "left_arm"       ;
-    public static final String RIGHT_ARM_ARMOR = "right_arm"      ;
-    public static final String LEFT_LEG_ARMOR  = "left_leg"       ; //5
-    public static final String RIGHT_LEG_ARMOR = "right_leg"      ;
+    public static final String HELMET          = "head_armor"           ;
+    public static final String BODY_ARMOR      = "body_armor"           ;
+    public static final String LEFT_ARM_ARMOR  = "left_arm_armor"       ;
+    public static final String RIGHT_ARM_ARMOR = "right_arm_armor"      ;
+    public static final String LEFT_LEG_ARMOR  = "left_leg_armor"       ; //5
+    public static final String RIGHT_LEG_ARMOR = "right_leg_armor"      ;
+
     public static final String ENGINE          = "engine"         ;
     public static final String BACK            = "back"           ;
     public static final String COOLING         = "cooling"        ;

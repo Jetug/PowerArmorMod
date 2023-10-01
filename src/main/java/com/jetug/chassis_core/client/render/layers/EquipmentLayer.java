@@ -23,10 +23,14 @@ public class EquipmentLayer<T extends WearableChassis> extends GeoLayerRenderer<
 
         for(var part : entity.getEquipment()) {
             if (entity.isEquipmentVisible(part)) {
+                var stack = entity.getEquipment(part);
                 var item = entity.getEquipmentItem(part);
+
                 if (item.getConfig() == null) return;
-                var texture = item.getConfig().getTextureLocation();
-                render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
+                var texture = item.getTexture(stack);
+
+                if (texture != null)
+                    render(matrixStackIn, bufferIn, packedLightIn, entity, partialTicks, texture);
             }
         }
     }

@@ -2,7 +2,6 @@ package com.jetug.chassis_core.client.render.renderers;
 
 import com.jetug.chassis_core.client.model.*;
 import com.jetug.chassis_core.client.render.layers.*;
-import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Vector3f;
@@ -11,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import software.bernie.geckolib3.core.processor.*;
@@ -20,7 +18,6 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 
 import java.util.*;
 
-import static com.jetug.chassis_core.client.render.utils.GeoUtils.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static java.util.Collections.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -29,7 +26,7 @@ import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T> {
     protected final ChassisModel<T> chassisModel;
     protected ItemStack mainHandItem, offHandItem;
-    protected ArrayList<String> bonesToHide;
+    protected Collection<String> bonesToHide;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ChassisModel<>());
@@ -47,12 +44,13 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         if (isInvisible(animatable)) return;
         super.render(model, animatable, partialTick, type, poseStack, bufferSource, buffer,
                 packedLight, packedOverlay, red, green, blue, alpha);
-        bonesToHide = new ArrayList<>();
     }
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight,
                                   int packedOverlay, float red, float green, float blue, float alpha) {
+        bone.isHidden = bonesToHide.contains(bone.name);
+
         if (getCurrentModelRenderCycle() != EModelRenderCycle.INITIAL)
             renderRecursivelyOriginal(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         else renderItemInHand(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -60,24 +58,21 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
 
     private void renderRecursivelyOriginal(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.pushPose();
-        //bone.isHidden = bonesToHide.contains(bone.name);
         setupBone(bone, poseStack);
 
-        var bonesToRender = new ArrayList<>(bone.childBones);
-        bonesToRender.addAll(getEquipmentBones(bone.name, animatable));
-
-        if (!bone.isHidden && !bonesToHide.contains(bone.name)) {
-            if (!bone.cubesAreHidden()) {
-                for (GeoCube geoCube : bone.childCubes) {
-                    poseStack.pushPose();
-                    renderCube(geoCube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-                    poseStack.popPose();
-                }
+        if (!bone.isHidden) {
+            if (!bone.cubesAreHidden()) for (GeoCube geoCube : bone.childCubes) {
+                poseStack.pushPose();
+                renderCube(geoCube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                poseStack.popPose();
             }
 
-            for (GeoBone childBone : bonesToRender) {
+            var bonesToRender = new ArrayList<>(bone.childBones);
+            var equipmentBones = animatable.getEquipmentBones(bone.name);
+            bonesToRender.addAll(equipmentBones);
+
+            for (GeoBone childBone : bonesToRender)
                 renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            }
         }
 
         poseStack.popPose();
@@ -89,10 +84,7 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         mainHandItem = animatable.getPlayerItem(MAINHAND);
         offHandItem  = animatable.getPlayerItem(OFFHAND);
-        bonesToHide = new ArrayList<>();
-
-        for (var config : animatable.getItemConfigs())
-            addAll(bonesToHide, config.hide);
+        bonesToHide = animatable.getBonesToHide();
     }
 
     @Nullable

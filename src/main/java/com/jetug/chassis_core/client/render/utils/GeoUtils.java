@@ -21,7 +21,7 @@ public class GeoUtils {
 
             for (var name : boneNames) {
                 var armorBone = GeoUtils.getArmorBone(config.getModelLocation(), name);
-                result.add(armorBone);
+                if(armorBone != null) result.add(armorBone);
             }
         }
         return result;
@@ -38,6 +38,7 @@ public class GeoUtils {
 
     @Nullable
     public static GeoBone getArmorBone(ResourceLocation resourceLocation, String name){
-        return getModel(resourceLocation).getBone(name).orElse(null);
+        var model = getModel(resourceLocation);
+        return model == null ? null : model.getBone(name).orElse(null);
     }
 }

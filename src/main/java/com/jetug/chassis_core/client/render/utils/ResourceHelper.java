@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.client.render.utils;
 
-import com.jetug.chassis_core.common.foundation.entity.ArmorChassisBase;
+import com.jetug.chassis_core.common.foundation.entity.ChassisBase;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ public class ResourceHelper {
     }
 
 
-    public static ResourceLocation getChassisResource(ArmorChassisBase chassis, String path, String extension){
+    public static ResourceLocation getChassisResource(ChassisBase chassis, String path, String extension){
         var name = chassis.getModelId();
         var modId = chassis.getType().getRegistryName().getNamespace();
 

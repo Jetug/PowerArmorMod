@@ -1,22 +1,30 @@
 package com.jetug.chassis_core.common.foundation.item;
 
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.chassis_core.common.foundation.EntityHelper.*;
+import static com.jetug.chassis_core.common.util.helpers.EntityHelper.*;
 
-public class ArmorChassisItem extends Item {
+public class ChassisItem <T extends WearableChassis> extends Item {
 
-    public ArmorChassisItem() {
-        super((new Item.Properties()).stacksTo(1));
+    private final EntityType.EntityFactory<T> factory;
+    private final RegistryObject<EntityType<T>> type;
+
+    public ChassisItem(Item.Properties properties, RegistryObject<EntityType<T>> type, EntityType.EntityFactory<T> factory) {
+        super((properties.stacksTo(1)));
+        this.factory = factory;
+        this.type = type;
     }
 
     @Override
@@ -50,19 +58,18 @@ public class ArmorChassisItem extends Item {
         }
     }
 
-    private static void summonNewEntity(UseOnContext context) {
-//        var stack = context.getItemInHand();
-//        var world = context.getLevel();
-//        var entity = new WearableChassis(EntityTypeRegistry.ARMOR_CHASSIS.get(), world);
-//        entity.inventory.setEquipment(ChassisPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
-//        //entity.setPos(context.getClickLocation());
-//        moveEntityToClickedBlock(entity, context);
-//
-//        if (world.addFreshEntity(entity)) {
-//            stack.shrink(1);
-//        }
-    }
+    private void summonNewEntity(UseOnContext context) {
+        var stack = context.getItemInHand();
+        var world = context.getLevel();
+        var entity = factory.create(type.get(), world);
+        //entity.inventory.setEquipment(ChassisPart.ENGINE.ordinal(), new ItemStack(ItemRegistry.ENGINE.get()));
+        //entity.setPos(context.getClickLocation());
+        moveEntityToClickedBlock(entity, context);
 
+        if (world.addFreshEntity(entity)) {
+            stack.shrink(1);
+        }
+    }
 
     private static void moveEntityToClickedBlock(Entity savedEntity, UseOnContext context) {
         var clickedPos = context.getClickedPos();

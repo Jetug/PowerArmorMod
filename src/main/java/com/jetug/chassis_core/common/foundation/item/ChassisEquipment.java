@@ -2,7 +2,9 @@ package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.Lazy;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -12,6 +14,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 
 import static com.jetug.chassis_core.client.ClientConfig.*;
+import static com.jetug.chassis_core.common.data.json.EquipmentConfig.DEFAULT;
 
 public class ChassisEquipment extends Item implements IAnimatable {
     public final String part;
@@ -22,6 +25,14 @@ public class ChassisEquipment extends Item implements IAnimatable {
     public ChassisEquipment(Properties pProperties, String part) {
         super(pProperties);
         this.part = part;
+    }
+
+    @Nullable
+    public ResourceLocation getTexture(ItemStack stack){
+        var tag = stack.getOrCreateTag();
+        var variant = tag.contains("variant") ? tag.getString("variant") : DEFAULT;
+        var value = getConfig().getTextureLocation(variant);
+        return value != null ? value : getConfig().getTextureLocation(DEFAULT);
     }
 
     @Nullable

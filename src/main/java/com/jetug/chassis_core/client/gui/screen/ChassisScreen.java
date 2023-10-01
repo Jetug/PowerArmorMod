@@ -1,14 +1,11 @@
-package com.jetug.chassis_core.common.foundation.container.screen;
+package com.jetug.chassis_core.client.gui.screen;
 
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
-import com.jetug.chassis_core.common.data.enums.ChassisPart;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.util.Pos2I;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -26,7 +23,7 @@ import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
 @SuppressWarnings({"DataFlowIssue", "ConstantConditions"})
-public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     public static final int ENTITY_POS_X = 41;
     public static final int ENTITY_POS_Y = 73;
     public static final int TABS_WIDTH = 57;
@@ -54,9 +51,6 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
             Global.mouseX = null;
             Global.mouseY = null;
         }
-//        addWidget(new Button(leftPos, topPos, 50, 50, new TextComponent("TEST"), (c) -> {
-//            minecraft.setScreen(new InventoryScreen(minecraft.player));
-//        }));
     }
 
     @Override
@@ -102,7 +96,6 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
 
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
-
         this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
@@ -132,18 +125,6 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends AbstractCont
             this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
             GuiUtils.drawChassisIcon(this, poseStack, leftPos + 32, topPos - 20);
         }
-    }
-
-    private void renderIcon(ChassisPart chassisPart, PoseStack poseStack, Pos2I pos, Rectangle icon){
-        //if(menu.slots == null || menu.slots.get(chassisPart.ordinal()).getEquipment().isEmpty())
-            blit(poseStack, leftPos + pos.x, topPos + pos.y, icon.x, icon.y, icon.width, icon.height);
-    }
-
-    private void renderIcon(ChassisPart chassisPart, ResourceLocation pTextureId, PoseStack poseStack, Pos2I pos){
-        //if(menu.slots == null || menu.slots.get(chassisPart.ordinal()).getEquipment().isEmpty()) {
-            RenderSystem.setShaderTexture(0, pTextureId);
-            blit(poseStack, leftPos + pos.x, topPos + pos.y, 0, 0, 16, 16);
-        //}
     }
 
     protected void renderEntity(WearableChassis powerArmor) {

@@ -14,8 +14,6 @@ public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, ChassisCore.MOD_ID);
 
-    public static final RegistryObject<Item> PA_FRAME = ITEMS.register("pa_frame", ArmorChassisItem::new);
-
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
     }
