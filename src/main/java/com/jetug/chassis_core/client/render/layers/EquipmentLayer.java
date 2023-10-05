@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("ConstantConditions")
-public class EquipmentLayer<T extends WearableChassis> extends GeoRenderLayer<T> {
+public class EquipmentLayer<T extends WearableChassis> extends LayerBase<T> {
     public EquipmentLayer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }
@@ -31,21 +31,12 @@ public class EquipmentLayer<T extends WearableChassis> extends GeoRenderLayer<T>
 
                 if (texture == null) return;
 //                    render(poseStack, bufferSource, packedLight, entity, partialTick, texture);
-
-                int overlay = OverlayTexture.NO_OVERLAY;
-                var renderTypeNew = RenderType.armorCutoutNoCull(texture);
-                poseStack.pushPose();
-                poseStack.scale(1.0f, 1.0f, 1.0f);
-                poseStack.translate(0.0d, 0.0d, 0.0d);
-                var model = getRenderer().getGeoModel().getModelResource(entity);
-                this.getRenderer().reRender(bakedModel, poseStack, bufferSource, entity,
-                        renderTypeNew, bufferSource.getBuffer(renderTypeNew), partialTick,
-                        packedLight, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-
-                poseStack.popPose();
+                renderLayer(poseStack, entity, bakedModel, bufferSource, partialTick, packedLight, texture);
             }
         }
     }
+
+
 
 //
 //    @Override

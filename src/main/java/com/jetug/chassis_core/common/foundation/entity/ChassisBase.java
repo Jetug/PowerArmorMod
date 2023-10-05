@@ -224,6 +224,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return partIdMap.keySet();
     }
 
+    public Collection<String> getPovEquipment(){
+        return Collections.singleton(RIGHT_ARM_ARMOR);
+    }
+
     public boolean hasEquipment(String part){
         return !getEquipment(part).isEmpty();
     }

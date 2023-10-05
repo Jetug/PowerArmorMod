@@ -27,7 +27,7 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 import java.util.Collections;
 import java.util.List;
 
-public class CustomGeoRenderer<T extends WearableChassis> implements GeoRenderer<T> {
+public class CustomGeoRenderer<T extends GeoEntity > implements GeoRenderer<T> {
     protected MultiBufferSource rtb = null;
     public final GeoModel<T> model;
     protected final GeoRenderLayersContainer<T> renderLayers = new GeoRenderLayersContainer(this);
@@ -66,12 +66,14 @@ public class CustomGeoRenderer<T extends WearableChassis> implements GeoRenderer
 
     @Override
     public GeoModel<T> getGeoModel() {
-        return null;
+        return model;
     }
+
+    private T animatable;
 
     @Override
     public T getAnimatable() {
-        return null;
+        return animatable;
     }
 
 //    @Override
@@ -99,6 +101,7 @@ public class CustomGeoRenderer<T extends WearableChassis> implements GeoRenderer
 //        GeoRenderer.super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, partialTick, packedLight);
 
         // var hand = animatable.getHandEntity();
+        this.animatable = animatable;
 
         poseStack.pushPose();
         var renderColor = this.getRenderColor(animatable, partialTick, packedLight);

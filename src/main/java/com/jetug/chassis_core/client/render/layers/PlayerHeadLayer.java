@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
-public class PlayerHeadLayer<T extends WearableChassis> extends GeoRenderLayer<T> {
+public class PlayerHeadLayer<T extends WearableChassis> extends LayerBase<T>  {
     private static final HashMap<String, ResourceLocation> playerHeads = new HashMap<>();
     private int textureWidth;
     private int textureHeight;
@@ -32,19 +32,7 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoRenderLayer<T
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
             var texture = getHeadLayerRL(clientPlayer, entity);
             if (texture == null) return;
-
-            var cameo = RenderType.armorCutoutNoCull(texture);
-            int overlay = OverlayTexture.NO_OVERLAY;
-
-            poseStack.pushPose();
-            poseStack.scale(1.0f, 1.0f, 1.0f);
-            poseStack.translate(0.0d, 0.0d, 0.0d);
-
-            this.getRenderer().reRender(bakedModel, poseStack, bufferSource, entity,
-                    cameo, bufferSource.getBuffer(cameo), partialTick,
-                    packedLight, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-
-            poseStack.popPose();
+            renderLayer(poseStack, entity, bakedModel, bufferSource, partialTick, packedLight, texture);
         }
     }
 

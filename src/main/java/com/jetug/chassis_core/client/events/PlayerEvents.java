@@ -1,8 +1,11 @@
 package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.client.render.renderers.*;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.*;
@@ -33,6 +36,7 @@ public class PlayerEvents {
                 getPlayerChassis(),
                 event.getPoseStack(),
                 event.getMultiBufferSource(),
+                event.getPartialTicks(),
                 event.getPackedLight());
 
         poseStack.popPose();
