@@ -24,5 +24,6 @@ public class ChassisCore {
 
     private void register() {
         ItemRegistry.register(MOD_EVENT_BUS);
+        EntityTypes.register(MOD_EVENT_BUS);
     }
 }

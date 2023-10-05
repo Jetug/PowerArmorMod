@@ -33,7 +33,7 @@ public class PlayerEvents {
         poseStack.translate(0.5, -0.5, -0.6);
 
         CustomHandRenderer.getHandRenderer().render(
-                getPlayerChassis(),
+                getPlayerChassis().getHandEntity(),
                 event.getPoseStack(),
                 event.getMultiBufferSource(),
                 event.getPartialTicks(),

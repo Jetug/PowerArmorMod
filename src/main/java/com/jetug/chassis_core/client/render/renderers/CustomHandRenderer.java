@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
-public class CustomHandRenderer extends CustomGeoRenderer {
+public class CustomHandRenderer extends CustomGeoRenderer<HandEntity> {
     protected static CustomHandRenderer handRenderer;
     protected static final HandModel handModel = new HandModel();
     protected HandEntity currentChassis;
@@ -35,11 +36,11 @@ public class CustomHandRenderer extends CustomGeoRenderer {
         var texture = getTextureLocation(animatable);
         if(texture == null) return;
         var renderTypeNew = RenderType.armorCutoutNoCull(texture);
-        poseStack.pushPose();
+        //poseStack.pushPose();
         poseStack.scale(1.0f, 1.0f, 1.0f);
         poseStack.translate(0.0d, 0.0d, 0.0d);
         super.render(animatable, poseStack, bufferSource, renderTypeNew, bufferSource.getBuffer(renderTypeNew), partialTick,  packedLight);
-        poseStack.popPose();
+        //poseStack.popPose();
 
         //super.render(animatable, poseStack, bufferSource, packedLight);
     }
