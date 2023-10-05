@@ -70,8 +70,6 @@ public class ChassisRenderer<T extends WearableChassis> extends ModGeoRenderer<T
         bone.setHidden(bonesToHide.contains(bone.getName()));
 
 //        MultiBufferSource bufferSource = getCurrentRTB();
-
-
         //var currentTexture = getTextureLocation(this.currentEntityBeingRendered);
         poseStack.pushPose();
 

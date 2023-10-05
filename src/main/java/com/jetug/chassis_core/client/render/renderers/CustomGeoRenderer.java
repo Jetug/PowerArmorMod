@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoRenderer;
@@ -26,7 +27,7 @@ import software.bernie.geckolib3.util.EModelRenderCycle;
 import java.util.Collections;
 import java.util.List;
 
-public class CustomGeoRenderer<T extends GeoEntity> implements GeoRenderer<T> {
+public class CustomGeoRenderer<T extends WearableChassis> implements GeoRenderer<T> {
     protected MultiBufferSource rtb = null;
     public final GeoModel<T> model;
     protected final GeoRenderLayersContainer<T> renderLayers = new GeoRenderLayersContainer(this);
@@ -95,7 +96,37 @@ public class CustomGeoRenderer<T extends GeoEntity> implements GeoRenderer<T> {
     public void render(T animatable, PoseStack poseStack, MultiBufferSource bufferSource,
                        RenderType renderType, VertexConsumer buffer,
                        float partialTick, int packedLight) {
-        GeoRenderer.super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, partialTick, packedLight);
+//        GeoRenderer.super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, partialTick, packedLight);
+
+        // var hand = animatable.getHandEntity();
+
+        poseStack.pushPose();
+        var renderColor = this.getRenderColor(animatable, partialTick, packedLight);
+        var red = renderColor.getRedFloat();
+        var green = renderColor.getGreenFloat();
+        var blue = renderColor.getBlueFloat();
+        var alpha = renderColor.getAlphaFloat();
+        var packedOverlay = this.getPackedOverlay(animatable, 0.0F);
+
+        BakedGeoModel model = this.getGeoModel().getBakedModel(this.getGeoModel().getModelResource(animatable));
+        if (renderType == null) {
+            renderType = this.getRenderType(animatable, this.getTextureLocation(animatable), bufferSource, partialTick);
+        }
+
+        if (buffer == null) {
+            buffer = bufferSource.getBuffer(renderType);
+        }
+
+        this.preRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        if (this.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {
+            this.preApplyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, (float)packedLight, packedLight, packedOverlay);
+            this.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            this.applyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+            this.postRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            this.firePostRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
+        }
+
+        poseStack.popPose();
     }
 
 //    public void render(WearableChassis chassisEntity, PoseStack poseStack,
