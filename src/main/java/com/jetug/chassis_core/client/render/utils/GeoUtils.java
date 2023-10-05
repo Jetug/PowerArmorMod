@@ -1,13 +1,17 @@
 package com.jetug.chassis_core.client.render.utils;
 
 import com.jetug.chassis_core.common.foundation.entity.*;
-import com.mojang.math.Vector3f;
+import mod.azure.azurelib.cache.AzureLibCache;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.core.animation.AnimationProcessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.*;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.*;
-import software.bernie.geckolib3.geo.render.built.*;
-import software.bernie.geckolib3.model.*;
-import software.bernie.geckolib3.resource.*;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
+
 import java.util.*;
 
 @SuppressWarnings({"rawtypes"})
@@ -27,8 +31,21 @@ public class GeoUtils {
         return result;
     }
 
-    public static GeoModel getModel(ResourceLocation location){
-        return GeckoLibCache.getInstance().getGeoModels().get(location);
+    public static void setHeadAnimation(LivingEntity animatable, AnimationProcessor animationProcessor) {
+        var head = animationProcessor.getBone("head");
+        var partialTick = Minecraft.getInstance().getFrameTime();
+
+        float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
+        float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
+        float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
+        float netHeadYaw = lerpHeadRot - lerpBodyRot;
+
+        head.setRotX(-headPitch * ((float) Math.PI / 180F));
+        head.setRotY(-netHeadYaw * ((float) Math.PI / 180F));
+    }
+
+    public static BakedGeoModel getModel(ResourceLocation location){
+        return AzureLibCache.getBakedModels().get(location);
     }
 
     @Nullable

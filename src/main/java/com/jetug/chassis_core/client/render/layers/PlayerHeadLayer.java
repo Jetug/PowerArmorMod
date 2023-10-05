@@ -1,37 +1,34 @@
 package com.jetug.chassis_core.client.render.layers;
 
-import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
-public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer<T> {
+public class PlayerHeadLayer<T extends WearableChassis> extends GeoRenderLayer<T> {
     private static final HashMap<String, ResourceLocation> playerHeads = new HashMap<>();
     private int textureWidth;
     private int textureHeight;
 
-    public PlayerHeadLayer(IGeoRenderer<T> entityRenderer) {
+    public PlayerHeadLayer(GeoRenderer<T> entityRenderer) {
         super(entityRenderer);
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
-                       float limbSwing, float limbSwingAmount, float partialTicks,
-                       float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack poseStack, T entity, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
             var texture = getHeadLayerRL(clientPlayer, entity);
             if (texture == null) return;
@@ -39,28 +36,51 @@ public class PlayerHeadLayer<T extends WearableChassis> extends GeoLayerRenderer
             var cameo = RenderType.armorCutoutNoCull(texture);
             int overlay = OverlayTexture.NO_OVERLAY;
 
-            matrixStackIn.pushPose();
-            matrixStackIn.scale(1.0f, 1.0f, 1.0f);
-            matrixStackIn.translate(0.0d, 0.0d, 0.0d);
-            var model = getRenderer().getGeoModelProvider().getModelLocation(entity);
+            poseStack.pushPose();
+            poseStack.scale(1.0f, 1.0f, 1.0f);
+            poseStack.translate(0.0d, 0.0d, 0.0d);
 
-            this.getRenderer().render(
-                    getEntityModel().getModel(model),
-                    entity,
-                    partialTicks,
-                    cameo,
-                    matrixStackIn,
-                    bufferIn,
-                    bufferIn.getBuffer(cameo),
-                    packedLightIn,
-                    overlay,
-                    1f, 1f, 1f, 1f);
-            matrixStackIn.popPose();
+            this.getRenderer().reRender(bakedModel, poseStack, bufferSource, entity,
+                    cameo, bufferSource.getBuffer(cameo), partialTick,
+                    packedLight, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+
+            poseStack.popPose();
         }
     }
 
+//    @Override
+//    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity,
+//                       float limbSwing, float limbSwingAmount, float partialTicks,
+//                       float ageInTicks, float netHeadYaw, float headPitch) {
+//        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
+//            var texture = getHeadLayerRL(clientPlayer, entity);
+//            if (texture == null) return;
+//
+//            var cameo = RenderType.armorCutoutNoCull(texture);
+//            int overlay = OverlayTexture.NO_OVERLAY;
+//
+//            poseStack.pushPose();
+//            poseStack.scale(1.0f, 1.0f, 1.0f);
+//            poseStack.translate(0.0d, 0.0d, 0.0d);
+//            var model = getRenderer().getGeoModelProvider().getModelLocation(entity);
+//
+//            this.getRenderer().render(
+//                    getEntityModel().getModel(model),
+//                    entity,
+//                    partialTicks,
+//                    cameo,
+//                    poseStack,
+//                    buffer,
+//                    buffer.getBuffer(cameo),
+//                    packedLight,
+//                    overlay,
+//                    1f, 1f, 1f, 1f);
+//            poseStack.popPose();
+//        }
+//    }
+
     private void setTextureSize(T entity){
-        var size = getTextureSize(entityRenderer.getTextureLocation(entity));
+        var size = getTextureSize(getRenderer().getTextureLocation(entity));
         textureWidth = size.getA();
         textureHeight = size.getB();
     }

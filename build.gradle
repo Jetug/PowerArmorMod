@@ -1,8 +1,5 @@
-import groovy.json.JsonSlurper
-
 buildscript {
     repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://maven.parchmentmc.org' }
         maven { url = 'https://repo.spongepowered.org/maven' }
@@ -98,12 +95,13 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven {url 'https://libs.azuredoom.com:4443/mods'}
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.9'
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.57')
-
+    implementation fg.deobf("mod.azure.azurelib:azurelib-forge-1.18.2:1.0.23")
     implementation fileTree('libs') { include '*.jar' }
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

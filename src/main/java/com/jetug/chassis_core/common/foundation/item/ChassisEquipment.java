@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 
 import static com.jetug.chassis_core.client.ClientConfig.*;
 import static com.jetug.chassis_core.common.data.json.EquipmentConfig.DEFAULT;
+import static com.jetug.chassis_core.common.data.json.EquipmentConfig.VARIANT;
 
 public class ChassisEquipment extends Item implements IAnimatable {
     public final String part;
@@ -27,10 +28,14 @@ public class ChassisEquipment extends Item implements IAnimatable {
         this.part = part;
     }
 
+    public static String getVariant(ItemStack stack){
+        var tag = stack.getOrCreateTag();
+        return tag.contains(VARIANT) ? tag.getString(VARIANT) : DEFAULT;
+    }
+
     @Nullable
     public ResourceLocation getTexture(ItemStack stack){
-        var tag = stack.getOrCreateTag();
-        var variant = tag.contains("variant") ? tag.getString("variant") : DEFAULT;
+        var variant = getVariant(stack);
         var value = getConfig().getTextureLocation(variant);
         return value != null ? value : getConfig().getTextureLocation(DEFAULT);
     }

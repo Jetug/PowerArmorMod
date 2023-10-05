@@ -4,6 +4,9 @@ import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.common.util.helpers.*;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.CombatRules;
@@ -18,9 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.*;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
@@ -28,8 +29,8 @@ import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
 import static net.minecraft.util.Mth.*;
 import static org.apache.logging.log4j.Level.*;
 
-public abstract class WearableChassis extends ChassisBase implements IAnimatable {
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public abstract class WearableChassis extends ChassisBase implements GeoEntity {
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     protected boolean isJumping;
     protected float playerJumpScale;
@@ -205,8 +206,8 @@ public abstract class WearableChassis extends ChassisBase implements IAnimatable
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {

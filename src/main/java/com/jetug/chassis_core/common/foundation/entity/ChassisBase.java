@@ -9,6 +9,7 @@ import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import com.jetug.chassis_core.common.util.helpers.timer.*;
 import com.jetug.chassis_core.common.network.data.*;
 
+import mod.azure.azurelib.cache.object.GeoBone;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -20,7 +21,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.*;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.Nullable;
 import java.util.*;

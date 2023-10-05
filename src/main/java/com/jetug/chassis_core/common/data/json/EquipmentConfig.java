@@ -2,19 +2,16 @@ package com.jetug.chassis_core.common.data.json;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class EquipmentConfig extends ModelConfigBase {
     public static final String DEFAULT = "default";
+    public static final String VARIANT = "variant";
+
     private final Lazy<HashMap<String, ResourceLocation>> textureLocation = Lazy.of(this::initTextureResource);
     private final Lazy<ResourceLocation> modelLocation = Lazy.of(this::getModelResource);
 
@@ -34,6 +31,10 @@ public class EquipmentConfig extends ModelConfigBase {
                 result.add(attachment.armor);
         }
         return result;
+    }
+
+    public Collection<String> getAllVariants(){
+        return textureLocation.get().keySet();
     }
 
     public ResourceLocation getModelLocation(){

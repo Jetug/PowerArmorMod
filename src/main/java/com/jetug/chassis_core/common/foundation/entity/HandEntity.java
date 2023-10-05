@@ -1,36 +1,37 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
-import static com.jetug.chassis_core.common.util.helpers.AnimationHelper.*;
-import static software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes.*;
-import static software.bernie.geckolib3.util.GeckoLibUtil.*;
+import static mod.azure.azurelib.core.animation.RawAnimation.begin;
 
-public class HandEntity implements IAnimatable {
-    public AnimationFactory factory = createFactory(this);
+public class HandEntity implements GeoEntity {
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     public LocalPlayer player;
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
-        player = Minecraft.getInstance().player;
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controllerName", 0, predicate()));
     }
 
-    @SuppressWarnings("ConstantConditions")
-    protected <T extends IAnimatable> PlayState predicate(AnimationEvent<T> event) {
-        return PlayState.STOP;
+    @NotNull
+    protected AnimationController.AnimationStateHandler<HandEntity> predicate() {
+        return event -> PlayState.STOP;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }
