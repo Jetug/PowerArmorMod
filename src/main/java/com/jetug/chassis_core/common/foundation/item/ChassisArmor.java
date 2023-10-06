@@ -1,13 +1,8 @@
 package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.common.foundation.ChassisArmorMaterial;
-import com.jetug.chassis_core.common.data.enums.*;
-import com.jetug.chassis_core.common.foundation.container.slot.EquipmentSlot;
-import com.jetug.chassis_core.common.util.Pos2I;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.HashMap;
 
 public class ChassisArmor extends DamageableItem {
     public final ChassisArmorMaterial material;

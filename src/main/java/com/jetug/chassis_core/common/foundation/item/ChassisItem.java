@@ -14,7 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.chassis_core.common.util.helpers.EntityHelper.*;
+import static com.jetug.chassis_core.common.util.helpers.EntityHelper.clearItemTags;
+import static com.jetug.chassis_core.common.util.helpers.EntityHelper.entityFromItem;
 
 public class ChassisItem <T extends WearableChassis> extends Item {
 

@@ -2,7 +2,7 @@ package com.jetug.chassis_core.common.data.json;
 
 import net.minecraftforge.common.util.Lazy;
 
-import javax.annotation.*;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Objects;
 

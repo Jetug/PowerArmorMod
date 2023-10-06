@@ -1,7 +1,9 @@
 package com.jetug.chassis_core.common.network;
 
 import com.jetug.chassis_core.ChassisCore;
-import com.jetug.chassis_core.common.network.packet.*;
+import com.jetug.chassis_core.common.network.packet.ActionPacket;
+import com.jetug.chassis_core.common.network.packet.GenericPacket;
+import com.jetug.chassis_core.common.network.packet.PowerArmorPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;

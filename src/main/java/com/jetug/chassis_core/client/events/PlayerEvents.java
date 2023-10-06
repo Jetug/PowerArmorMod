@@ -1,15 +1,14 @@
 package com.jetug.chassis_core.client.events;
 
-import com.jetug.chassis_core.client.render.renderers.*;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
-import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.api.distmarker.*;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.*;
+import com.jetug.chassis_core.client.render.renderers.CustomHandRenderer;
+import com.mojang.math.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderArmEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
@@ -25,18 +24,21 @@ public class PlayerEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onRenderHand(RenderHandEvent event) {
+    public static void onRenderHand(RenderArmEvent event) {
         if (!isWearingChassis() || !isMainHandEmpty()) return;
 
         var poseStack = event.getPoseStack();
         poseStack.pushPose();
-        poseStack.translate(0.5, -0.5, -0.6);
+//        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
+        poseStack.translate(0, 0.5, 0); //-0.6
 
         CustomHandRenderer.getHandRenderer().render(
+                poseStack,
                 getPlayerChassis().getHandEntity(),
-                event.getPoseStack(),
                 event.getMultiBufferSource(),
-                event.getPartialTicks(),
+                null,
+                null,
                 event.getPackedLight());
 
         poseStack.popPose();

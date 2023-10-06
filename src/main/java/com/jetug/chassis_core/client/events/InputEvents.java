@@ -1,6 +1,8 @@
 package com.jetug.chassis_core.client.events;
 
-import com.jetug.chassis_core.common.input.*;
+import com.jetug.chassis_core.common.input.CommonInputHandler;
+import com.jetug.chassis_core.common.input.InputKey;
+import com.jetug.chassis_core.common.input.KeyAction;
 import com.jetug.chassis_core.common.network.actions.InputAction;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,8 +11,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
-import com.jetug.chassis_core.common.input.InputKey;
-import com.jetug.chassis_core.common.input.KeyAction;
 
 import static com.jetug.chassis_core.client.ClientConfig.OPTIONS;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;

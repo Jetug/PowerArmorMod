@@ -22,32 +22,34 @@
 
 package com.jetug.chassis_core.mixin;
 
-import java.awt.*;
-
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.inventory.*;
-import net.minecraft.client.gui.screens.recipebook.*;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.*;
-import net.minecraft.world.inventory.*;
-import net.minecraftforge.api.distmarker.*;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.*;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.jetug.chassis_core.common.foundation.registery.ItemRegistry.*;
-import static com.jetug.chassis_core.common.network.PacketSender.*;
+import java.awt.*;
+
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
-import static com.jetug.chassis_core.common.data.constants.Resources.*;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
-import static net.minecraft.world.item.Items.*;
+import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_TABS;
+import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
+import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
 @Mixin(InventoryScreen.class)
 @OnlyIn(Dist.CLIENT)

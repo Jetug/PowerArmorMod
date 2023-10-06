@@ -1,14 +1,20 @@
 package com.jetug.chassis_core.client.resources;
 
-import com.google.gson.*;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.google.gson.Gson;
 import com.jetug.chassis_core.common.data.json.ChassisConfig;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.data.json.ModelConfigBase;
-import net.minecraft.client.*;
-import net.minecraft.resources.*;
-import javax.annotation.*;
-import java.io.*;
-import java.util.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResourceName;
 

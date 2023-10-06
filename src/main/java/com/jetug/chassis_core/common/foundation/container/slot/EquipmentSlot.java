@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.common.foundation.container.slot;
 
-import com.jetug.chassis_core.common.data.enums.*;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;

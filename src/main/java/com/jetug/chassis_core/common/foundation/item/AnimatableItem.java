@@ -1,18 +1,18 @@
 package com.jetug.chassis_core.common.foundation.item;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.renderer.GeoItemRenderer;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.IItemRenderProperties;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 import java.util.function.Consumer;
 
-import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
-
-public abstract class AnimatableItem extends Item implements IAnimatable{
-    public AnimationFactory factory = createFactory(this);
+public abstract class AnimatableItem extends Item implements GeoItem {
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     public GeoItemRenderer renderer;
 
     public AnimatableItem(Properties pProperties) {
@@ -36,7 +36,7 @@ public abstract class AnimatableItem extends Item implements IAnimatable{
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

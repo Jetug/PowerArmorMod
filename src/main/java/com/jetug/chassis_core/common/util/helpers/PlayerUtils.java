@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.common.util.helpers;
 
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.data.enums.ActionType;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.TextComponent;
@@ -12,8 +12,7 @@ import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
-import static com.jetug.chassis_core.client.ClientConfig.*;
-import static com.jetug.chassis_core.common.network.PacketSender.*;
+import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 
 public class PlayerUtils {
     public static void addEffect(Player player, MobEffect effect, int amplifier){

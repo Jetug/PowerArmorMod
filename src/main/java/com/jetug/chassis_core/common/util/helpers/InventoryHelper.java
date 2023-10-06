@@ -7,7 +7,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import static com.jetug.chassis_core.common.data.constants.NBT.*;
+import static com.jetug.chassis_core.common.data.constants.NBT.SLOT_TAG;
 
 public class InventoryHelper {
     public static ListTag serializeInventory(@NotNull SimpleContainer inventory){

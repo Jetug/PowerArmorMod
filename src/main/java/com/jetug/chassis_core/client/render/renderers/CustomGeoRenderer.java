@@ -1,44 +1,23 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.jetug.chassis_core.common.foundation.entity.HandEntity;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.core.object.Color;
 import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayersContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
-import software.bernie.geckolib3.util.EModelRenderCycle;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CustomGeoRenderer<T extends GeoEntity > implements GeoRenderer<T> {
     protected MultiBufferSource rtb = null;
     public final GeoModel<T> model;
     protected final GeoRenderLayersContainer<T> renderLayers = new GeoRenderLayersContainer(this);
-    protected final List<GeoLayerRenderer> layerRenderers = new ObjectArrayList<>();
 
     public CustomGeoRenderer(GeoModel<T> model){
         this.model = model;
-    }
-
-    public final boolean addLayer(GeoLayerRenderer layer) {
-        return this.layerRenderers.add(layer);
     }
 
     public CustomGeoRenderer addRenderLayer(GeoRenderLayer<T> renderLayer) {
@@ -95,9 +74,7 @@ public class CustomGeoRenderer<T extends GeoEntity > implements GeoRenderer<T> {
     @Override
     public void updateAnimatedTextureFrame(T handEntity) {}
 
-    public void render(T animatable, PoseStack poseStack, MultiBufferSource bufferSource,
-                       RenderType renderType, VertexConsumer buffer,
-                       float partialTick, int packedLight) {
+    public void render(T animatable, PoseStack poseStack, MultiBufferSource bufferSource, float partialTick, int packedLight) {
 //        GeoRenderer.super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, 0, partialTick, packedLight);
 
         // var hand = animatable.getHandEntity();
@@ -111,14 +88,9 @@ public class CustomGeoRenderer<T extends GeoEntity > implements GeoRenderer<T> {
         var alpha = renderColor.getAlphaFloat();
         var packedOverlay = this.getPackedOverlay(animatable, 0.0F);
 
-        BakedGeoModel model = this.getGeoModel().getBakedModel(this.getGeoModel().getModelResource(animatable));
-        if (renderType == null) {
-            renderType = this.getRenderType(animatable, this.getTextureLocation(animatable), bufferSource, partialTick);
-        }
-
-        if (buffer == null) {
-            buffer = bufferSource.getBuffer(renderType);
-        }
+        var model = this.getGeoModel().getBakedModel(this.getGeoModel().getModelResource(animatable));
+        var renderType = this.getRenderType(animatable, this.getTextureLocation(animatable), bufferSource, partialTick);
+        var buffer = bufferSource.getBuffer(renderType);
 
         this.preRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         if (this.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {

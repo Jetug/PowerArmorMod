@@ -11,11 +11,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import oshi.util.tuples.Pair;
 
-
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +27,7 @@ import java.util.UUID;
 
 import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.*;
 import static com.jetug.chassis_core.common.util.helpers.texture.PlayerSkins.getSkin;
-import static org.apache.logging.log4j.Level.*;
+import static org.apache.logging.log4j.Level.ERROR;
 
 
 public class TextureHelper {

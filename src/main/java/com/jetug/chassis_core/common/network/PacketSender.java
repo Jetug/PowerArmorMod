@@ -1,11 +1,12 @@
 package com.jetug.chassis_core.common.network;
 
+import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.jetug.chassis_core.common.network.actions.Action;
 import com.jetug.chassis_core.common.network.packet.ActionPacket;
 import com.jetug.chassis_core.common.network.packet.GenericPacket;
-import com.jetug.chassis_core.common.data.enums.ActionType;
 
-import static com.jetug.chassis_core.common.network.PacketHandler.*;
+import static com.jetug.chassis_core.common.network.PacketHandler.sendToAllPlayers;
+import static com.jetug.chassis_core.common.network.PacketHandler.sendToServer;
 
 @SuppressWarnings("rawtypes")
 public class PacketSender {

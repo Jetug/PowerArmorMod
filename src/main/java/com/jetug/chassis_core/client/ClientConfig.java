@@ -3,7 +3,6 @@ package com.jetug.chassis_core.client;
 import com.jetug.chassis_core.client.resources.ModResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.player.LocalPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientConfig {

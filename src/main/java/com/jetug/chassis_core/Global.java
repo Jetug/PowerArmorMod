@@ -1,7 +1,5 @@
 package com.jetug.chassis_core;
 
-import com.jetug.chassis_core.common.util.Pos2D;
-import com.jetug.chassis_core.common.util.Pos2I;
 import com.jetug.chassis_core.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;

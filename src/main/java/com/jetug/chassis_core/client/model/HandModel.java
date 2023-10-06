@@ -4,9 +4,7 @@ import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-import static com.jetug.chassis_core.client.render.utils.ResourceHelper.*;
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getChassisResource;
 
 @SuppressWarnings("rawtypes")

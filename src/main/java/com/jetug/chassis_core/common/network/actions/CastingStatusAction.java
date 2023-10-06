@@ -9,8 +9,6 @@ import net.minecraft.world.inventory.ContainerData;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.nbt.NbtUtils.readBlockPos;
 import static net.minecraft.nbt.NbtUtils.writeBlockPos;
 import static net.minecraftforge.network.NetworkEvent.Context;

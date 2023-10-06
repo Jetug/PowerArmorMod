@@ -3,18 +3,15 @@ package com.jetug.chassis_core.client.events;
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.client.KeyBindings;
-import com.jetug.chassis_core.client.input.LongClickController;
 import com.jetug.chassis_core.client.input.DoubleClickController;
-import net.minecraft.client.KeyMapping;
+import com.jetug.chassis_core.client.input.LongClickController;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.*;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import static com.jetug.chassis_core.client.KeyBindings.*;
-import static com.jetug.chassis_core.client.render.renderers.CustomHandRenderer.*;
+import static com.jetug.chassis_core.client.render.renderers.CustomHandRenderer.registerHandRenderer;
 
 @Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class SetupEvents {

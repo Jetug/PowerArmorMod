@@ -46,11 +46,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.awt.*;
 
 import static com.jetug.chassis_core.client.gui.screen.ChassisScreen.TABS_WIDTH;
-import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 import static com.jetug.chassis_core.common.data.constants.Gui.TAB_HEIGHT;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
+import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

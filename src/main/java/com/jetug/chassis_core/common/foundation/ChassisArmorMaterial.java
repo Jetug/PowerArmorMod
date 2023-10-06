@@ -3,6 +3,7 @@ package com.jetug.chassis_core.common.foundation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.crafting.Ingredient;
+
 import java.util.function.Supplier;
 
 import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;

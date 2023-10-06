@@ -1,23 +1,12 @@
 package com.jetug.chassis_core.client.model;
 
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animation.AnimationProcessor;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import static com.jetug.chassis_core.client.render.utils.GeoUtils.setHeadAnimation;
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getChassisResource;
-import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 
 
@@ -49,7 +38,7 @@ public class ChassisModel<Type extends WearableChassis> extends GeoModel<Type>
     @Override
     public void setCustomAnimations(Type animatable, long instanceId, AnimationState<Type> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
-        setHeadAnimation(animatable, this.getAnimationProcessor());
+        setHeadAnimation(animatable, this.getAnimationProcessor(), animationState);
     }
 
 //    @Override

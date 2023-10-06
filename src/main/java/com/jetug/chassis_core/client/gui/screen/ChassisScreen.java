@@ -16,8 +16,10 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
-import static com.jetug.chassis_core.common.data.constants.Gui.*;
-import static com.jetug.chassis_core.common.data.constants.Resources.*;
+import static com.jetug.chassis_core.common.data.constants.Gui.TAB_HEIGHT;
+import static com.jetug.chassis_core.common.data.constants.Gui.TAB_WIDTH;
+import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
+import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_TABS;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;

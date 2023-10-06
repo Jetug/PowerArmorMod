@@ -1,14 +1,12 @@
 package com.jetug.chassis_core.common.network.packet;
 
-import com.jetug.chassis_core.common.network.actions.Action;
 import com.jetug.chassis_core.common.network.ActionRegistry;
+import com.jetug.chassis_core.common.network.actions.Action;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
-
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @SuppressWarnings("ALL")
 public class GenericPacket {

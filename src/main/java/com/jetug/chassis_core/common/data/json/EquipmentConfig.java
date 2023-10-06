@@ -4,9 +4,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Objects;
 
-import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createResource;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.cropTexture;
 
 public class EquipmentConfig extends ModelConfigBase {
     public static final String DEFAULT = "default";

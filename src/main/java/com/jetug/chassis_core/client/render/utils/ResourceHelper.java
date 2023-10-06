@@ -5,7 +5,8 @@ import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 
-import static org.apache.commons.io.FilenameUtils.*;
+import static org.apache.commons.io.FilenameUtils.getName;
+import static org.apache.commons.io.FilenameUtils.removeExtension;
 
 public class ResourceHelper {
     public static String getResourceName(ResourceLocation resourceLocation){

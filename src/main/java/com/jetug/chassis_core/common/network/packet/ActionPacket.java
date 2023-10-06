@@ -1,13 +1,13 @@
 package com.jetug.chassis_core.common.network.packet;
 
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.data.enums.ActionType;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @SuppressWarnings("ConstantConditions")
 public class ActionPacket{

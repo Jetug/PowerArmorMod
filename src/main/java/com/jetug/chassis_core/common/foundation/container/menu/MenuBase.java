@@ -8,8 +8,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.HashMap;
-
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static java.lang.System.out;
 

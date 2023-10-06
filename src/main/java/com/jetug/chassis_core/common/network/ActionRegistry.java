@@ -1,8 +1,12 @@
 package com.jetug.chassis_core.common.network;
 
-import com.jetug.chassis_core.common.network.actions.*;
+import com.jetug.chassis_core.common.network.actions.Action;
+import com.jetug.chassis_core.common.network.actions.CastingStatusAction;
+import com.jetug.chassis_core.common.network.actions.InputAction;
+import com.jetug.chassis_core.common.network.actions.InventorySyncAction;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("ALL")
 public class ActionRegistry {

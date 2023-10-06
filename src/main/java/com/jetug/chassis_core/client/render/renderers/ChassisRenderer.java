@@ -1,26 +1,29 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.jetug.chassis_core.client.model.*;
-import com.jetug.chassis_core.client.render.layers.*;
-import com.jetug.chassis_core.common.foundation.entity.*;
-import com.mojang.blaze3d.vertex.*;
+import com.jetug.chassis_core.client.model.ChassisModel;
+import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
+import com.jetug.chassis_core.client.render.layers.PlayerHeadLayer;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.cache.object.GeoCube;
-import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.*;
-import org.jetbrains.annotations.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import static com.jetug.chassis_core.common.data.constants.Bones.*;
+import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
+import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 

@@ -1,12 +1,12 @@
 package com.jetug.chassis_core.common.input;
 
 import com.jetug.chassis_core.common.events.CommonInputEvent;
-import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 
-import static com.jetug.chassis_core.common.input.KeyAction.*;
-import static com.jetug.chassis_core.common.input.InputKey.*;
+import static com.jetug.chassis_core.common.input.InputKey.JUMP;
+import static com.jetug.chassis_core.common.input.KeyAction.PRESS;
+import static com.jetug.chassis_core.common.input.KeyAction.REPEAT;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @SuppressWarnings("ConstantConditions")

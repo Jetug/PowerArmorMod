@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 
-import static com.jetug.chassis_core.common.data.constants.Gui.TOP_TAB_ICON_POS_2;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
 
 public class GuiUtils {

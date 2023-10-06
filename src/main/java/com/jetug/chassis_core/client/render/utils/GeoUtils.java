@@ -1,18 +1,21 @@
 package com.jetug.chassis_core.client.render.utils;
 
-import com.jetug.chassis_core.common.foundation.entity.*;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import mod.azure.azurelib.cache.AzureLibCache;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationProcessor;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.model.data.EntityModelData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.*;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @SuppressWarnings({"rawtypes"})
 public class GeoUtils {
@@ -31,27 +34,21 @@ public class GeoUtils {
         return result;
     }
 
-    public static void setHeadAnimation(LivingEntity animatable, AnimationProcessor animationProcessor) {
+    public static void setHeadAnimation(LivingEntity animatable, AnimationProcessor animationProcessor, AnimationState animationState) {
         var head = animationProcessor.getBone("head");
-        var partialTick = Minecraft.getInstance().getFrameTime();
-
-        float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
-        float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
-        float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-        float netHeadYaw = lerpHeadRot - lerpBodyRot;
-
-        head.setRotX(-headPitch * ((float) Math.PI / 180F));
-        head.setRotY(-netHeadYaw * ((float) Math.PI / 180F));
+        var data = (EntityModelData)animationState.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
+        head.setRotX(data.headPitch()  * ((float) Math.PI / 180F));
+        head.setRotY(data.netHeadYaw() * ((float) Math.PI / 180F));
     }
 
     public static BakedGeoModel getModel(ResourceLocation location){
         return AzureLibCache.getBakedModels().get(location);
     }
 
-    @Nullable
-    public static GeoBone getFrameBone(AnimatedGeoModel provider, String name){
-        return (GeoBone) provider.getAnimationProcessor().getBone(name);
-    }
+//    @Nullable
+//    public static GeoBone getFrameBone(AnimatedGeoModel provider, String name){
+//        return (GeoBone) provider.getAnimationProcessor().getBone(name);
+//    }
 
     @Nullable
     public static GeoBone getArmorBone(ResourceLocation resourceLocation, String name){

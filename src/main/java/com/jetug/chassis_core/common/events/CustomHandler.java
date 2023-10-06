@@ -3,15 +3,11 @@ package com.jetug.chassis_core.common.events;
 import com.jetug.chassis_core.ChassisCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.EventPriority;
 
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 import static java.lang.System.out;
-import static net.minecraftforge.event.entity.player.PlayerInteractEvent.*;
 
 @Mod.EventBusSubscriber(modid = ChassisCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CustomHandler {

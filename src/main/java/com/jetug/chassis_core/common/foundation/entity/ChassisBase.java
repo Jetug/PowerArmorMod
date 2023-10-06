@@ -2,36 +2,42 @@ package com.jetug.chassis_core.common.foundation.entity;
 
 import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
-import com.jetug.chassis_core.common.data.json.*;
-import com.jetug.chassis_core.common.events.*;
-import com.jetug.chassis_core.common.foundation.item.*;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
-import com.jetug.chassis_core.common.util.helpers.timer.*;
-import com.jetug.chassis_core.common.network.data.*;
-
+import com.jetug.chassis_core.common.data.json.ChassisConfig;
+import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.jetug.chassis_core.common.events.ContainerChangedEvent;
+import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
+import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
+import com.jetug.chassis_core.common.network.data.ArmorData;
+import com.jetug.chassis_core.common.util.helpers.timer.TickTimer;
 import mod.azure.azurelib.cache.object.GeoBone;
-import net.minecraft.nbt.*;
-import net.minecraft.world.*;
-import net.minecraft.world.entity.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.*;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
-import static com.jetug.chassis_core.common.data.constants.NBT.*;
 import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
+import static com.jetug.chassis_core.common.data.constants.NBT.ITEMS_TAG;
 import static com.jetug.chassis_core.common.util.extensions.Collection.arrayListOf;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyContainer;
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
-import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.*;
+import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.deserializeInventory;
+import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.serializeInventory;
 import static java.util.Collections.addAll;
 
 public class ChassisBase extends EmptyLivingEntity implements ContainerListener {

@@ -1,26 +1,23 @@
 package com.jetug.chassis_core.client.model;
 
-import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getChassisResource;
-
-public class EquipmentModel<T extends ChassisEquipment> extends AnimatedGeoModel<T> {
+public class EquipmentModel<T extends ChassisEquipment> extends GeoModel<T> {
     @Override
-    public ResourceLocation getModelLocation(T item) {
+    public ResourceLocation getModelResource(T item) {
         return item.getConfig().getModelLocation();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T item) {
+    public ResourceLocation getTextureResource(T item) {
         return item.getConfig().getTextureLocation(EquipmentConfig.DEFAULT);
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(T animatable) {
+    public ResourceLocation getAnimationResource(T animatable) {
         return null;
     }
 }
