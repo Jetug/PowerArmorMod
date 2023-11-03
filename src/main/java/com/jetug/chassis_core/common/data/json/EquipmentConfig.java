@@ -13,26 +13,26 @@ import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createRes
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.cropTexture;
 
 public class EquipmentConfig extends ModelConfigBase {
-    public static final String DEFAULT = "default";
-    public static final String VARIANT = "variant";
-
     private final Lazy<HashMap<String, ResourceLocation>> textureLocation = Lazy.of(this::initTextureResource);
     private final Lazy<ResourceLocation> modelLocation = Lazy.of(this::getModelResource);
 
+    public String parent;
     public String model;
     public HashMap<String, String> texture;
     public int[] uv;
     public String part;
     public String[] hide = new String[0];
     public EquipmentAttachment[] attachments;
-    public EquipmentAttachment[] pov;
+    public String[] mods = new String[0];
 
     @Nullable
     public Collection<String> getArmorBone(String chassisBone){
         var result = new ArrayList<String>();
         for (var attachment: attachments) {
+
             if(Objects.equals(attachment.frame, chassisBone))
                 result.add(attachment.armor);
+
         }
         return result;
     }

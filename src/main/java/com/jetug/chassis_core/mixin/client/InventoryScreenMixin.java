@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.jetug.chassis_core.mixin;
+package com.jetug.chassis_core.mixin.client;
 
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;

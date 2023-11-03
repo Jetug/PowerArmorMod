@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.client.model;
 
-import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +15,7 @@ public class HandModel extends GeoModel {
 
     @Override
     public ResourceLocation getTextureResource(GeoAnimatable geoAnimatable) {
-        return ResourceHelper.getChassisResource("textures/hand/", "_hand.png");
+        return getChassisResource("textures/hand/", "_hand.png");
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
+import com.jetug.chassis_core.common.foundation.item.StackUtils;
 import com.jetug.chassis_core.common.network.data.ArmorData;
 import com.jetug.chassis_core.common.util.helpers.timer.TickTimer;
 import mod.azure.azurelib.cache.object.GeoBone;
@@ -38,6 +39,7 @@ import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyCont
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.deserializeInventory;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.serializeInventory;
+import static java.util.Arrays.*;
 import static java.util.Collections.addAll;
 
 public class ChassisBase extends EmptyLivingEntity implements ContainerListener {
@@ -117,6 +119,37 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return inventorySize;
     }
 
+    protected static ChassisEquipment getAsChassisEquipment(ItemStack itemStack){
+        return (ChassisEquipment)itemStack.getItem();
+    }
+
+    public ArrayList<String> getMods(){
+        var res = new ArrayList<String>();
+        for(var config : getItemConfigs())
+            res.addAll(List.of(config.mods));
+        return res;
+    }
+
+    public ArrayList<String> getVisibleMods(){
+        var res = new ArrayList<String>();
+        for(var item : getVisibleEquipment())
+            res.addAll(StackUtils.getMods(item));
+        return res;
+    }
+
+//    public ArrayList<String> getHiddenBones(){
+//        var hidden = new ArrayList<String>();
+//        for(var item : getVisibleEquipment()) {
+//            var equipment = getAsChassisEquipment(item);
+//            var allMods = equipment.getConfig().mods.clone();
+//            var mods = StackUtils.getMods(item);
+//
+//            Arrays.stream(allMods).toList().removeAll(mods);
+//            hidden.add(Arrays.toString(allMods));
+//        }
+//        return hidden;
+//    }
+
     @OnlyIn(Dist.CLIENT)
     public Collection<GeoBone> getEquipmentBones(String frameBoneName) {
         var result = bonesToRender.get(frameBoneName);
@@ -189,7 +222,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     @Nullable
     public ChassisConfig getConfig(){
         if(config == null)
-            config = ClientConfig.modResourceManager.getFrameSettings(getModelId());
+            config = ClientConfig.modResourceManager.getFrameConfig(getModelId());
         return config;
     }
 
@@ -219,7 +252,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     }
 
     public boolean isArmorItem(String chassisPart){
-        return Arrays.stream(armorParts).toList().contains(chassisPart);
+        return stream(armorParts).toList().contains(chassisPart);
     }
 
     public boolean hasArmor(String chassisPart) {
@@ -344,11 +377,18 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         bonesToRender.clear();
         bonesToHide.clear();
 
-        for (var config : getItemConfigs()) {
+        for (var stack : getVisibleEquipment()) {
+            var item = getAsChassisEquipment(stack);
+            var config = item.getConfig();
+
             addAll(bonesToHide, config.hide);
 
             for(var attachment : config.attachments){
-                var bone = GeoUtils.getArmorBone(config.getModelLocation(),attachment.armor);
+                if(stream(config.mods).toList().contains(attachment.armor)
+                        && !StackUtils.hasMod(stack, attachment.armor))
+                    continue;
+
+                var bone = GeoUtils.getArmorBone(config.getModelLocation(), attachment.armor);
                 if( bone == null ) continue;
 
                 if( !bonesToRender.containsKey(attachment.frame))

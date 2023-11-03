@@ -39,7 +39,6 @@ public class PowerArmorPacket{
     }
 
     public static void handle(PowerArmorPacket message, Supplier<NetworkEvent.Context> context) {
-
         boolean isClientSide = context.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT || context.get().getDirection() == NetworkDirection.LOGIN_TO_CLIENT;
         boolean isServerSide = context.get().getDirection() == NetworkDirection.PLAY_TO_SERVER || context.get().getDirection() == NetworkDirection.LOGIN_TO_SERVER;
 

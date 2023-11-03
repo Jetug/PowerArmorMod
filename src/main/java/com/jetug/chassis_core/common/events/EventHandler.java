@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.common.events;
 
+import com.jetug.chassis_core.Global;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -16,7 +17,7 @@ public class EventHandler {
             case PLAYER:
                 break;
             case CLIENT:
-                //Global.CLIENT_TIMER.tick();
+                Global.CLIENT_TIMER.tick();
                 break;
             case SERVER:
                 break;

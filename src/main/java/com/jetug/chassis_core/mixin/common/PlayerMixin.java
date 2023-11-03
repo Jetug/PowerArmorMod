@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.mixin;
+package com.jetug.chassis_core.mixin.common;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

@@ -25,13 +25,13 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRenderHand(RenderArmEvent event) {
-        if (!isWearingChassis() || !isMainHandEmpty()) return;
+        if (!isWearingChassis()) return;
 
         var poseStack = event.getPoseStack();
         poseStack.pushPose();
 //        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
-        poseStack.translate(0, 0.5, 0); //-0.6
+        poseStack.translate(-0.5, 0, -0.8); //-0.6
 
         CustomHandRenderer.getHandRenderer().render(
                 poseStack,

@@ -1,4 +1,4 @@
-package com.jetug.chassis_core.mixin;
+package com.jetug.chassis_core.mixin.client;
 
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.client.Minecraft;

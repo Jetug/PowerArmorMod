@@ -3,11 +3,10 @@
   "package": "com.jetug.chassis_core.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "ClientPacketListenerMixin",
-    "CreativeInventoryScreenMixin",
-    "ForgeIngameGuiMixin",
-    "InventoryScreenMixin",
-    "PlayerRenderMixin"
+    "client.ClientPacketListenerMixin",
+    "client.CreativeInventoryScreenMixin",
+    "client.ForgeIngameGuiMixin",
+    "client.InventoryScreenMixin",
   ],
   "injectors": {
     "defaultRequire": 1
@@ -15,9 +14,9 @@
   "refmap": "chassis_core.mixin-refmap.json",
   "minVersion": "0.8",
   "mixins": [
-    "LivingEntityMixin",
-    "MixinProjectileUtil",
-    "MobMixin",
-    "PlayerMixin"
+    "common.LivingEntityMixin",
+    "common.MixinProjectileUtil",
+    "common.MobMixin",
+    "common.PlayerMixin"
   ]
 }

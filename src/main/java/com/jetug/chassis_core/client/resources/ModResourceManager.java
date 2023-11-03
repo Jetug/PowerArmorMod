@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,27 +28,56 @@ public class ModResourceManager {
     private final Map<String, ChassisConfig> frameSettings = new HashMap<>();
 
     @Nullable
-    public EquipmentConfig getEquipmentSettings(String itemId){
+    public EquipmentConfig getEquipmentConfig(String itemId){
         return equipmentSettings.get(itemId);
     }
 
     @Nullable
-    public ChassisConfig getFrameSettings(String frameId){
+    public ChassisConfig getFrameConfig(String frameId){
         return frameSettings.get(frameId);
     }
 
     public void loadConfigs(){
         loadEquipment();
         loadFrame();
-        //loadAnimations();
     }
 
     private void loadEquipment() {
         for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR)) {
             var settings = getSettings(config, EquipmentConfig.class);
-            if(settings != null)
-                equipmentSettings.put(settings.name, settings);
+            if(settings == null) continue;
+
+            if(isNotEmpty(settings.parent)){
+                var parent = getSettings(new ResourceLocation(settings.parent), EquipmentConfig.class);
+
+                try {
+                    var fields = settings.getClass().getFields();
+                    for (var field : fields){
+                        var obj = field.get(settings);
+
+                        var isEmptyString = (obj instanceof String str && str.equals(""));
+
+                        if(obj == null || isEmptyString || isEmptyArray(obj)){
+                            field.set(settings, parent.getClass().getField(field.getName()).get(parent));
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            equipmentSettings.put(settings.name, settings);
         }
+    }
+
+    private static boolean isEmptyArray(Object obj){
+        if (obj.getClass().isArray())
+            return 0 == Array.getLength(obj);
+        return false;
+    }
+
+    public static boolean isNotEmpty(String string){
+        return string != null && !string.equals("");
     }
 
     private void loadFrame() {
@@ -64,7 +94,7 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private EquipmentConfig getEquipmentSettings(ResourceLocation resourceLocation){
+    private EquipmentConfig getEquipmentConfig(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
             var settings = new Gson().fromJson(readIn, EquipmentConfig.class);
@@ -77,7 +107,7 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private ChassisConfig getFrameSettings(ResourceLocation resourceLocation){
+    private ChassisConfig getFrameConfig(ResourceLocation resourceLocation){
         try {
             var readIn = getBufferedReader(resourceLocation);
             var settings = new Gson().fromJson(readIn, ChassisConfig.class);
