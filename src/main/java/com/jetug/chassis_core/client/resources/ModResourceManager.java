@@ -3,6 +3,7 @@ package com.jetug.chassis_core.client.resources;
 import com.google.gson.Gson;
 import com.jetug.chassis_core.common.data.json.ChassisConfig;
 import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.jetug.chassis_core.common.data.json.ItemConfig;
 import com.jetug.chassis_core.common.data.json.ModelConfigBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -23,32 +24,41 @@ public class ModResourceManager {
     private static final String CONFIG_DIR = "config/model/";
     private static final String EQUIPMENT_DIR = CONFIG_DIR + "equipment";
     private static final String FRAME_DIR = CONFIG_DIR + "chassis";
+    private static final String ITEM_DIR = CONFIG_DIR + "item";
 
-    private final Map<String, EquipmentConfig> equipmentSettings = new HashMap<>();
-    private final Map<String, ChassisConfig> frameSettings = new HashMap<>();
+    private final Map<String, EquipmentConfig> equipmentConfig = new HashMap<>();
+    private final Map<String, ItemConfig> itemConfig = new HashMap<>();
+    private final Map<String, ChassisConfig> frameConfig = new HashMap<>();
+
+
+    @Nullable
+    public ItemConfig getItemConfig(String itemId){
+        return itemConfig.get(itemId);
+    }
 
     @Nullable
     public EquipmentConfig getEquipmentConfig(String itemId){
-        return equipmentSettings.get(itemId);
+        return equipmentConfig.get(itemId);
     }
 
     @Nullable
     public ChassisConfig getFrameConfig(String frameId){
-        return frameSettings.get(frameId);
+        return frameConfig.get(frameId);
     }
 
     public void loadConfigs(){
         loadEquipment();
         loadFrame();
+        loadItem();
     }
 
     private void loadEquipment() {
         for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR)) {
-            var settings = getSettings(config, EquipmentConfig.class);
+            var settings = getConfig(config, EquipmentConfig.class);
             if(settings == null) continue;
 
             if(isNotEmpty(settings.parent)){
-                var parent = getSettings(new ResourceLocation(settings.parent), EquipmentConfig.class);
+                var parent = getConfig(new ResourceLocation(settings.parent), EquipmentConfig.class);
 
                 try {
                     var fields = settings.getClass().getFields();
@@ -66,7 +76,23 @@ public class ModResourceManager {
                 }
             }
 
-            equipmentSettings.put(settings.name, settings);
+            equipmentConfig.put(settings.name, settings);
+        }
+    }
+
+    private void loadFrame() {
+        for (ResourceLocation config : getJsonResources(FRAME_DIR)) {
+            var settings = getConfig(config, ChassisConfig.class);
+            if(settings != null)
+                frameConfig.put(settings.name, settings);
+        }
+    }
+
+    private void loadItem() {
+        for (ResourceLocation config : getJsonResources(ITEM_DIR)) {
+            var settings = getConfig(config, ItemConfig.class);
+            if(settings != null)
+                itemConfig.put(settings.name, settings);
         }
     }
 
@@ -78,14 +104,6 @@ public class ModResourceManager {
 
     public static boolean isNotEmpty(String string){
         return string != null && !string.equals("");
-    }
-
-    private void loadFrame() {
-        for (ResourceLocation config : getJsonResources(FRAME_DIR)) {
-            var settings = getSettings(config, ChassisConfig.class);
-            if(settings != null)
-                frameSettings.put(settings.name, settings);
-        }
     }
 
     private static Collection<ResourceLocation> getJsonResources(String path){
@@ -120,7 +138,7 @@ public class ModResourceManager {
     }
 
     @Nullable
-    private <T extends ModelConfigBase> T getSettings(ResourceLocation resourceLocation, Class<T> classOfT){
+    private <T extends ModelConfigBase> T getConfig(ResourceLocation resourceLocation, Class<T> classOfT){
         try {
             var readIn = getBufferedReader(resourceLocation);
             var settings = new Gson().fromJson(readIn, classOfT);
