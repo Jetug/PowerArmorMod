@@ -62,29 +62,26 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
         if (!playerSkins.containsKey(player.getUUID())){
             setTextureSize(animatable);
             var tag = player.getUUID();
+            var skin = PlayerSkins.getSkin(player);
+            var image = resourceToBufferedImage(skin/*player.getSkinTextureLocation()*/);
 
-//            var skin = PlayerSkins.getSkin(player);
-
-            var image = resourceToBufferedImage(player.getSkinTextureLocation());
-
-//            try {
-//                if(image != null) {
-//                    var outputfile = new File("C:/Users/Jetug/Desktop/skins/orig" + tag + ".png");
-//                    ImageIO.write(image, "png", outputfile);
-//                }
-//
-//            } catch (IOException ignored) {}
+            try {
+                if(image != null) {
+                    var outputfile = new File("C:/Users/Jetug/Desktop/skins/orig" + tag + ".png");
+                    ImageIO.write(image, "png", outputfile);
+                }
+            } catch (IOException ignored) {}
 
             image = extendImage(image, textureWidth, textureHeight);
 
-//            try {
-//                var outputfile = new File("C:/Users/Jetug/Desktop/skins/" + tag + ".png");
-//                ImageIO.write(image, "png", outputfile);
-//
-//            } catch (IOException ignored) {}
+            try {
+                var outputfile = new File("C:/Users/Jetug/Desktop/skins/" + tag + ".png");
+                ImageIO.write(image, "png", outputfile);
+
+            } catch (IOException ignored) {}
 
             playerSkins.put(tag, createResource(image, "player_" + tag));
-            Minecraft.getInstance().player.sendMessage(new TextComponent(player.getSkinTextureLocation().toString()), player.getUUID());
+            Minecraft.getInstance().player.sendMessage(new TextComponent(skin.toString()), player.getUUID());
         }
         return playerSkins.get(player.getUUID());
     }

@@ -16,6 +16,7 @@ import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
 import java.util.*;
 
+import static com.jetug.chassis_core.client.ClientConfig.CHASSIS_HEAD_RENDERER;
 import static com.jetug.chassis_core.common.data.constants.Bones.*;
 import static net.minecraft.world.entity.EquipmentSlot.*;
 
@@ -29,7 +30,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
+//        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
@@ -59,7 +60,14 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                                   float partialTick, int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
         bone.setHidden(bonesToHide.contains(bone.getName()));
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
+                packedLight, packedOverlay, red, green, blue, alpha);
+
+        if(bone.getName().equals("head"))
+            CHASSIS_HEAD_RENDERER.render(
+                    poseStack, animatable, bufferSource,
+                    null, null, packedLight);
     }
 
     @Override
