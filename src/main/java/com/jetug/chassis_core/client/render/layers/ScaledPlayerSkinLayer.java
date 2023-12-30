@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client.render.layers;
 
+import com.ibm.icu.impl.Pair;
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.chassis_core.common.util.helpers.texture.PlayerSkins;
@@ -31,8 +32,7 @@ import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<T> {
     private static final HashMap<UUID, ResourceLocation> playerSkins = new HashMap<>();
-    private int textureWidth;
-    private int textureHeight;
+    private Pair<Integer, Integer> size = null;
 
     public ScaledPlayerSkinLayer(GeoRenderer<T> entityRenderer) {
         super(entityRenderer);
@@ -41,7 +41,8 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
     @Override
     public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
                        MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-
+        if (size == null)
+            this.size = getTextureSize(getRenderer().getTextureLocation(animatable));
         if(!animatable.isInvisible() && animatable.hasPlayerPassenger()) {
             var clientPlayer = (AbstractClientPlayer)animatable.getControllingPassenger();
             var texture = getPlayerSkin(clientPlayer, animatable);
@@ -50,22 +51,13 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
         }
     }
 
-    private void setTextureSize(T animatable){
-        var size = getTextureSize(getRenderer().getTextureLocation(animatable));
-        textureWidth = size.first;
-        textureHeight = size.second;
-    }
-
     @Nullable
     private ResourceLocation getPlayerSkin(AbstractClientPlayer player, T animatable) {
         if (!playerSkins.containsKey(player.getUUID())){
-            setTextureSize(animatable);
             var tag = player.getUUID();
-            var skin = PlayerSkins.getSkin(player);
             var image = getPlayerSkinImage(player);
-            image = extendImage(image, textureWidth, textureHeight);
+            image = extendImage(image, size.first, size.second);
             playerSkins.put(tag, createResource(image, "player_" + tag));
-            Minecraft.getInstance().player.sendMessage(new TextComponent(skin.toString()), player.getUUID());
         }
         return playerSkins.get(player.getUUID());
     }
