@@ -1,5 +1,6 @@
 package com.jetug.chassis_core;
 
+import com.jetug.chassis_core.client.render.layers.PlayerSkinStorage;
 import com.jetug.chassis_core.common.util.helpers.timer.TickTimer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;

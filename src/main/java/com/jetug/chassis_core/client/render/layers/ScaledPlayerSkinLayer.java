@@ -31,7 +31,8 @@ import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.*;
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<T> {
-    private static final HashMap<UUID, ResourceLocation> playerSkins = new HashMap<>();
+    private static final HashMap<Pair<UUID, Pair<Integer, Integer>>, ResourceLocation> playerSkins = new HashMap<>();
+    private final PlayerSkinStorage storage = PlayerSkinStorage.INSTANCE;
     private Pair<Integer, Integer> size = null;
 
     public ScaledPlayerSkinLayer(GeoRenderer<T> entityRenderer) {
@@ -41,24 +42,19 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
     @Override
     public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
                        MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        if (size == null)
-            this.size = getTextureSize(getRenderer().getTextureLocation(animatable));
-        if(!animatable.isInvisible() && animatable.hasPlayerPassenger()) {
+        if (size == null) this.size = getTextureSize(getRenderer().getTextureLocation(animatable));
+        if(animatable.hasPlayerPassenger()) {
             var clientPlayer = (AbstractClientPlayer)animatable.getControllingPassenger();
             var texture = getPlayerSkin(clientPlayer, animatable);
-            if (texture == null) return;
-            renderLayer(poseStack, animatable, bakedModel, bufferSource, partialTick, packedLight, texture);
+
+            if(!animatable.isInvisible() && texture != null) {
+                renderLayer(poseStack, animatable, bakedModel, bufferSource, partialTick, packedLight, texture);
+            }
         }
     }
 
     @Nullable
     private ResourceLocation getPlayerSkin(AbstractClientPlayer player, T animatable) {
-        if (!playerSkins.containsKey(player.getUUID())){
-            var tag = player.getUUID();
-            var image = getPlayerSkinImage(player);
-            image = extendImage(image, size.first, size.second);
-            playerSkins.put(tag, createResource(image, "player_" + tag));
-        }
-        return playerSkins.get(player.getUUID());
+        return storage.getSkin(player, size);
     }
 }

@@ -149,6 +149,11 @@ public class TextureHelper {
         return Objects.requireNonNullElse(skin, resourceToBufferedImage(getSkin(clientPlayer) /*clientPlayer.getSkinTextureLocation()*/));
     }
 
+    public static BufferedImage getDefaultPlayerSkinImage(Player clientPlayer) {
+        var skin = DefaultPlayerSkin.getDefaultSkin(clientPlayer.getGameProfile().getId());
+        return resourceToBufferedImage(skin);
+    }
+
     @Nullable
     public static BufferedImage skinRequest(UUID uuid) {
         var url = MINECRAFT_PROFILE_URL + uuid.toString().replace("-", "");

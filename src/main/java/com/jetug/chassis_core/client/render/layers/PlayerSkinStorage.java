@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createResource;
+import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.extendImage;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class PlayerSkinStorage {
     public static final PlayerSkinStorage INSTANCE = new PlayerSkinStorage();
@@ -21,13 +22,32 @@ public class PlayerSkinStorage {
     private PlayerSkinStorage(){}
 
     public void createSkin(Player player, Pair<Integer, Integer> size, BufferedImage image){
-        var key= Pair.of(player.getUUID(), size);
-        playerSkins.put(key, createResource(image, size.first + "x" + size.second + "_" + player.getUUID()));
+        var tag = player.getUUID();
+        var path = "player_" + size.first + "_" + size.second + "_" + tag;
+        playerSkins.put(Pair.of(tag, size), createResource(image, path));
     }
 
     public ResourceLocation getSkin(Player player, Pair<Integer, Integer> size){
-        var skin = playerSkins.get(Pair.of(player.getUUID(), size));
-        return skin;
-//        if(skin == null)
+        if (!playerSkins.containsKey(Pair.of(player.getUUID(), size))){
+            var thread = new Thread(() -> {
+                try {
+                    var image = getPlayerSkinImage(player);
+                    image = extendImage(image, size.first, size.second);
+                    createSkin(player, size, image);
+                }
+                catch (Exception e) { createTemplate(player, size); }
+            });
+            thread.start();
+            createTemplate(player, size);
+        }
+        return playerSkins.get(Pair.of(player.getUUID(), size));
+    }
+
+    private void createTemplate(Player player, Pair<Integer, Integer> size) {
+        var image = getDefaultPlayerSkinImage(player);
+        image = extendImage(image, size.first, size.second);
+        var tag = player.getUUID();
+        var path = "player_temp_" + size.first + "_" + size.second + "_" + tag;
+        playerSkins.put(Pair.of(tag, size), createResource(image, path));
     }
 }

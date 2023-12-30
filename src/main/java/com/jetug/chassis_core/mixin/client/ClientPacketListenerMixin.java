@@ -4,9 +4,11 @@ import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -18,13 +20,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
+import java.util.UUID;
+
+import static net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.*;
+
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin implements ClientGamePacketListener {
-    @Final
-    @Shadow private Minecraft minecraft;
-    @Shadow private ClientLevel level;
-    @Final
-    @Shadow private static Logger LOGGER;
+    @Shadow @Final private Minecraft minecraft;
+    @Shadow        private ClientLevel level;
+    @Shadow @Final private static Logger LOGGER;
+    @Shadow @Final private Map<UUID, PlayerInfo> playerInfoMap;
+
 
     @Inject(method = "handleSetEntityPassengersPacket", at = @At("HEAD"), cancellable = true)
     public void handleSetEntityPassengersPacket(ClientboundSetPassengersPacket pPacket, CallbackInfo ci) {
@@ -55,4 +62,19 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
         }
         ci.cancel();
     }
+
+//    @Inject(method = "handlePlayerInfo(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoPacket;)V", at = @At("HEAD"))
+//    public void handlePlayerInfo(ClientboundPlayerInfoPacket pPacket, CallbackInfo ci) {
+//        for(PlayerUpdate playerUpdate : pPacket.getEntries()) {
+//            if (pPacket.getAction() == Action.REMOVE_PLAYER) {
+//
+//            } else if (pPacket.getAction() == Action.ADD_PLAYER){
+//                PlayerInfo playerinfo = this.playerInfoMap.get(playerUpdate.getProfile().getId());
+//                playerinfo = new PlayerInfo(playerUpdate);
+//                this.playerInfoMap.put(playerinfo.getProfile().getId(), playerinfo);
+//                this.minecraft.getPlayerSocialManager().addPlayer(playerinfo);
+//
+//            }
+//        }
+//    }
 }
