@@ -3,6 +3,7 @@ package com.jetug.chassis_core.common.network;
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.common.network.packet.ActionPacket;
 import com.jetug.chassis_core.common.network.packet.GenericPacket;
+import com.jetug.chassis_core.common.network.packet.InventoryPacket;
 import com.jetug.chassis_core.common.network.packet.PowerArmorPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,6 +29,7 @@ public class PacketHandler {
 		HANDLER.registerMessage(disc++, ActionPacket.class	   , ActionPacket::write	 , ActionPacket::read	 , ActionPacket::handle		);
 		HANDLER.registerMessage(disc++, PowerArmorPacket.class , PowerArmorPacket::write , PowerArmorPacket::read, PowerArmorPacket::handle );
 		HANDLER.registerMessage(disc++, GenericPacket.class	   , GenericPacket::write	 , GenericPacket::read	 , GenericPacket::handle	);
+		HANDLER.registerMessage(disc++, InventoryPacket.class  , InventoryPacket::write	 , InventoryPacket::read , InventoryPacket::handle	);
 	}
 
 	public static void sendToServer(Object msg) {

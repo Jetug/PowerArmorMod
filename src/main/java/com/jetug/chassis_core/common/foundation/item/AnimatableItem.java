@@ -8,9 +8,8 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.world.item.*;
 import net.minecraftforge.client.*;
 import net.minecraftforge.common.util.*;
-
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
+import javax.annotation.*;
+import java.util.function.*;
 
 import static com.jetug.chassis_core.client.ClientConfig.*;
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.*;
@@ -21,13 +20,13 @@ public abstract class AnimatableItem extends Item implements GeoItem {
     private final Lazy<String> name = Lazy.of(() -> getResourceName(getRegistryName()));
     private final Lazy<ItemConfig> config = Lazy.of(() -> modResourceManager.getItemConfig(getName()));
 
-    public GeoItemRenderer<AnimatableItem> renderer;
+//    public GeoItemRenderer<AnimatableItem> renderer;
 
     public AnimatableItem(Properties pProperties) {
         super(pProperties);
     }
 
-    abstract protected GeoItemRenderer<AnimatableItem> createRenderer();
+//    abstract protected GeoItemRenderer<AnimatableItem> createRenderer();
 
     public String getName(){
         return name.get();
@@ -38,18 +37,18 @@ public abstract class AnimatableItem extends Item implements GeoItem {
         return config.get();
     }
 
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        super.initializeClient(consumer);
-        renderer = createRenderer();
-
-        consumer.accept(new IItemRenderProperties() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return renderer;
-            }
-        });
-    }
+//    @Override
+//    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//        super.initializeClient(consumer);
+//        renderer = createRenderer();
+//
+//        consumer.accept(new IItemRenderProperties() {
+//            @Override
+//            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+//                return renderer;
+//            }
+//        });
+//    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

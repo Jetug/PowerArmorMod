@@ -24,13 +24,11 @@ public class MixinProjectileUtil {
     @ModifyVariable(method = getEntityHitResult, at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private static Predicate<Entity> getEntityHitResult(Predicate<Entity> filterMod, Entity entity, Vec3 eyePosition, Vec3 pickVector, AABB box,
                                                          Predicate<Entity> filter){
-
-        var player = entity instanceof Player ? entity : Minecraft.getInstance().player;
-
-        if(isWearingChassis(player))
+//        var player = entity instanceof Player ? entity : Minecraft.getInstance().player;
+        if(isWearingChassis(entity))
         {
             return (levelEntity) ->{
-                var isNotFrameEntity = !(levelEntity instanceof WearableChassis powerArmor && player.getVehicle() == powerArmor);
+                var isNotFrameEntity = !(levelEntity instanceof WearableChassis powerArmor && entity.getVehicle() == powerArmor);
                 return filterMod.test(levelEntity) && isNotFrameEntity;
             };
         }

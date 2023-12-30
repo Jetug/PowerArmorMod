@@ -27,7 +27,9 @@ public class PlayerHeadLayer<T extends WearableChassis> extends LayerBase<T>  {
     @Override
     public void render(PoseStack poseStack, T entity, BakedGeoModel bakedModel, RenderType renderType,
                        MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        if(!entity.isInvisible() && entity.isVehicle() && entity.getControllingPassenger() instanceof Player clientPlayer ) {
+        if(!entity.isInvisible()
+                && entity.isVehicle()
+                && entity.getControllingPassenger() instanceof Player clientPlayer ) {
             var texture = getHeadLayerRL(clientPlayer, entity);
             if (texture == null) return;
             renderLayer(poseStack, entity, bakedModel, bufferSource, partialTick, packedLight, texture);
@@ -67,8 +69,8 @@ public class PlayerHeadLayer<T extends WearableChassis> extends LayerBase<T>  {
 
     private void setTextureSize(T entity){
         var size = getTextureSize(getRenderer().getTextureLocation(entity));
-        textureWidth = size.getA();
-        textureHeight = size.getB();
+        textureWidth = size.first;
+        textureHeight = size.second;
     }
 
     @Nullable

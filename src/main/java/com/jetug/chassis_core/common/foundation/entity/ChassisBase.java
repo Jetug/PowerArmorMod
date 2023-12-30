@@ -133,7 +133,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     public ArrayList<String> getVisibleMods(){
         var res = new ArrayList<String>();
         for(var item : getVisibleEquipment())
-            res.addAll(StackUtils.getMods(item));
+            res.addAll(StackUtils.getAttachments(item));
         return res;
     }
 
@@ -142,7 +142,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 //        for(var item : getVisibleEquipment()) {
 //            var equipment = getAsChassisEquipment(item);
 //            var allMods = equipment.getConfig().mods.clone();
-//            var mods = StackUtils.getMods(item);
+//            var mods = StackUtils.getAttachments(item);
 //
 //            Arrays.stream(allMods).toList().removeAll(mods);
 //            hidden.add(Arrays.toString(allMods));
@@ -385,10 +385,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 
             for(var attachment : config.attachments){
                 if(stream(config.mods).toList().contains(attachment.armor)
-                        && !StackUtils.hasMod(stack, attachment.armor))
+                        && !StackUtils.hasAttachment(stack, attachment.armor))
                     continue;
 
-                var bone = GeoUtils.getArmorBone(config.getModelLocation(), attachment.armor);
+                var bone = GeoUtils.getBone(config.getModelLocation(), attachment.armor);
                 if( bone == null ) continue;
 
                 if( !bonesToRender.containsKey(attachment.frame))

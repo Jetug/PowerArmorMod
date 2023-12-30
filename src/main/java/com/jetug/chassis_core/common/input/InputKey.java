@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.common.input;
 
-import com.jetug.chassis_core.client.KeyBindings;
+import com.jetug.chassis_core.client.*;
 import net.minecraft.client.KeyMapping;
 
 import static com.jetug.chassis_core.client.ClientConfig.OPTIONS;

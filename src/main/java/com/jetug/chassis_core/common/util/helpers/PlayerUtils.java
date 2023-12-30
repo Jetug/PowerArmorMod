@@ -31,8 +31,8 @@ public class PlayerUtils {
         return isWearingChassis(getLocalPlayer());
     }
 
-    public static boolean isWearingChassis(Entity player){
-        return player != null && player.getVehicle() instanceof WearableChassis;
+    public static boolean isWearingChassis(Entity entity){
+        return entity != null && entity.getVehicle() instanceof WearableChassis;
     }
 
     public static WearableChassis getPlayerChassis(){

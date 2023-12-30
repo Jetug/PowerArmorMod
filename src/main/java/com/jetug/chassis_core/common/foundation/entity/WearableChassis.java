@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -33,13 +34,14 @@ import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
+import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.INFO;
 
 public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     protected boolean isJumping;
-    protected float playerJumpScale;
+    protected float jumpScale;
 
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
@@ -84,14 +86,13 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
         float finalDamage = getDamageAfterAbsorb(damage);
-
-        if(damageSource == DamageSource.CACTUS)
-            return false;
-
         damageArmor(damageSource, damage);
 
-        if (hasPlayerPassenger())
-            getPlayerPassenger().hurt(damageSource, finalDamage);
+        if(damageSource == DamageSource.CACTUS || (hasPassenger() && damageSource.getEntity() == getPassenger()))
+            return false;
+
+        if (hasPassenger())
+            getPassenger().hurt(damageSource, finalDamage);
 
         return true;
     }
@@ -116,7 +117,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(hasPlayerPassenger()) this.yHeadRot = this.getYRot();
+        if(hasPassenger()) this.yHeadRot = this.getYRot();
     }
 
 //    @Override
@@ -139,17 +140,14 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
-        ChassisCore.LOGGER.log(INFO, level.isClientSide);
-        var stack = player.getItemInHand(hand);
+        ChassisCore.LOGGER.log(DEBUG, level.isClientSide);
 
         if(isServerSide && !player.isPassenger()) {
-//            if (stack.getItem() == Items.STICK)
-//                return giveEntityItemToPlayer(player, this, hand);
             if (player.isShiftKeyDown()) {
                 openGUI(player);
                 return InteractionResult.SUCCESS;
             } else if (!isVehicle()) {
-                this.doPlayerRide(player);
+                this.ride(player);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -167,7 +165,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        var yOffset = getPlayerPassenger().isShiftKeyDown() ?  1.2f : 1.0f;
+        var yOffset = getPassenger().isShiftKeyDown() ?  1.2f : 1.0f;
         var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - yOffset;
         entity.setPos(getX(), posY, getZ());
 
@@ -178,8 +176,8 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     @Override
     public void travel(@NotNull Vec3 travelVector) {
         if (!isAlive()) return;
-        if (isVehicle() && hasPlayerPassenger())
-            travelWithPlayer(travelVector);
+        if (isVehicle() && hasPassenger())
+            travelWithPassenger(travelVector);
         else {
             this.flyingSpeed = 0.02F;
             super.travel(travelVector);
@@ -206,7 +204,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
     @Override
     protected float tickHeadTurn(float pYRot, float pAnimStep) {
-        if(hasPlayerPassenger())
+        if(hasPassenger())
             return super.tickHeadTurn(pYRot, pAnimStep);
         return pAnimStep;
     }
@@ -255,15 +253,16 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     public Boolean isWalking(){
-        if (!hasPlayerPassenger())
+        if (!hasPassenger())
             return false;
 
-        var player = getPlayerPassenger();
-        return player.xxa != 0.0 || player.zza != 0.0;
+        var entity = getPassenger();
+        return entity.xxa != 0.0 || entity.zza != 0.0;
     }
 
     public boolean hasPlayerPassenger(){
         return getControllingPassenger() instanceof Player;
+
     }
 
     public Player getPlayerPassenger(){
@@ -272,23 +271,33 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return null;
     }
 
-    public ItemStack getPlayerItem(EquipmentSlot slot){
-        return hasPlayerPassenger() ? getPlayerPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
+    public boolean hasPassenger(){
+        return getControllingPassenger() instanceof LivingEntity;
+    }
+
+    public LivingEntity getPassenger(){
+        if(getControllingPassenger() instanceof LivingEntity livingEntity)
+            return livingEntity;
+        return null;
+    }
+
+    public ItemStack getPassengerItem(EquipmentSlot slot){
+        return hasPassenger() ? getPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
     }
 
     public void jump(){
-        playerJumpScale = 1.0F;
+        jumpScale = 1.0F;
+    }
+
+    public void ride(LivingEntity entity) {
+        entity.setYRot(getYRot());
+        entity.setXRot(getXRot());
+        entity.startRiding(this);
     }
 
     private float getDamageAfterAbsorb(float damage){
         updateTotalArmor();
         return CombatRules.getDamageAfterAbsorb(damage, totalDefense, totalToughness);
-    }
-
-    private void doPlayerRide(Player player) {
-        player.setYRot(getYRot());
-        player.setXRot(getXRot());
-        player.startRiding(this);
     }
 
     private boolean isJumping() {
@@ -320,41 +329,44 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 //        }
 //    }
 
-    private void travelWithPlayer(Vec3 travelVector) {
-        var player = getPlayerPassenger();
-        setRotationMatchingPassenger(player);
+    private void travelWithPassenger(Vec3 travelVector) {
+        var entity = getPassenger();
+        setRotationMatchingPassenger(entity);
 
-        if (playerJumpScale > 0.0F && !isJumping() && onGround)
-            jump(player);
+//        if(entity.yya > 0)
+//            jumpScale = 1.0F;
+
+        if (jumpScale > 0.0F && !isJumping() && onGround)
+            jump(entity);
 
         this.flyingSpeed = getSpeed() * 0.1F;
 
         if (isControlledByLocalInstance())
-            super.travel(new Vec3(player.xxa, travelVector.y, player.zza));
+            super.travel(new Vec3(entity.xxa, travelVector.y, entity.zza));
         else setDeltaMovement(Vec3.ZERO);
 
         if (onGround) {
-            playerJumpScale = 0.0F;
+            jumpScale = 0.0F;
             isJumping = false;
         }
     }
 
-    private void jump(Player player) {
-        var jump = getCustomJump() * playerJumpScale * getBlockJumpFactor();
+    private void jump(LivingEntity entity) {
+        var jump = getCustomJump() * jumpScale * getBlockJumpFactor();
         setDeltaMovement(getDeltaMovement().x, jump, getDeltaMovement().z);
         isJumping  = true;
         hasImpulse = true;
 
-        if (player.zza > 0.0F) {
+        if (entity.zza > 0.0F) {
             float x = sin(getYRot() * ROTATION);
             float z = cos(getYRot() * ROTATION);
             setDeltaMovement(getDeltaMovement().add(
-                    -0.4F * x * playerJumpScale,
+                    -0.4F * x * jumpScale,
                     0.0D,
-                    0.4F * z * playerJumpScale));
+                    0.4F * z * jumpScale));
         }
 
-        playerJumpScale = 0.0F;
+        jumpScale = 0.0F;
     }
 
     private void setRotationMatchingPassenger(LivingEntity livingEntity) {

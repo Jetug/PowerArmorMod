@@ -6,12 +6,11 @@ import com.jetug.chassis_core.common.foundation.entity.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.*;
 import mod.azure.azurelib.cache.object.*;
+import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.*;
-import mod.azure.azurelib.renderer.layer.*;
 import mod.azure.azurelib.util.*;
 import net.minecraft.client.*;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.world.item.*;
 import org.jetbrains.annotations.*;
@@ -25,18 +24,14 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     protected Collection<String> bonesToHide;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new ChassisModel<>());
-        addRenderLayer(new PlayerHeadLayer<>(this));
+        this(renderManager, new ChassisModel<>());
+    }
+
+    public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
+        super(renderManager, model);
+        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
-        addRenderLayer(new BlockAndItemGeoLayer<>(this, this::getItemForBone, (i, g) -> null){
-            @Override
-            protected ItemTransforms.TransformType getTransformTypeForStack(GeoBone bone, ItemStack stack, T animatable) {
-                return switch (bone.getName()) {
-                    case LEFT_HAND, RIGHT_HAND -> ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
-                    default -> ItemTransforms.TransformType.NONE;
-                };
-            }
-        });
+        addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
 
     @Override
@@ -90,13 +85,13 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                           float partialTick, int packedLight, int packedOverlay,
                           float red, float green, float blue, float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        mainHandItem = animatable.getPlayerItem(MAINHAND);
-        offHandItem  = animatable.getPlayerItem(OFFHAND);
+        mainHandItem = animatable.getPassengerItem(MAINHAND);
+        offHandItem  = animatable.getPassengerItem(OFFHAND);
         bonesToHide = animatable.getBonesToHide();
     }
 
     protected ItemStack getItemForBone(GeoBone bone, T animatable) {
-        if(animatable == null || !animatable.hasPlayerPassenger()) return null;
+        if(animatable == null || !animatable.hasPassenger()) return null;
 
         return switch (bone.getName()) {
             case LEFT_HAND -> offHandItem;
@@ -104,20 +99,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
             default -> null;
         };
     }
-
-//    @Override
-//    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, WearableChassis currentEntity, GeoBone bone) {
-//        stack.translate(0, 0, -0.09);
-//
-//        if (!(item.getItem() instanceof ShieldItem)) return;
-//        if (item == this.mainHandItem) {
-//            stack.translate(0, 0.125, -0.09);
-//        }
-//        else if (item == this.offHandItem) {
-//            stack.translate(0, 0.125, 0.37);
-//            stack.mulPose(Vector3f.YP.rotationDegrees(180));
-//        }
-//    }
 
     protected Vector3d getWorldPos(GeoBone bone, PoseStack poseStack){
         poseStack.pushPose();

@@ -2,7 +2,7 @@ package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.ClientConfig;
-import com.jetug.chassis_core.client.KeyBindings;
+import com.jetug.chassis_core.client.*;
 import com.jetug.chassis_core.client.input.DoubleClickController;
 import com.jetug.chassis_core.client.input.LongClickController;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +19,6 @@ public final class SetupEvents {
     public static final DoubleClickController DOUBLE_CLICK_CONTROLLER = new DoubleClickController();
     @OnlyIn(Dist.CLIENT)
     private static final LongClickController LONG_CLICK_CONTROLLER = new LongClickController();
-
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyBindings {
-
     public static final KeyMapping DASH = new KeyMapping("key.dash", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_CAPS_LOCK, "key.categories.armor");
 

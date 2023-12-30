@@ -38,7 +38,8 @@ public class ChassisModel<Type extends WearableChassis> extends GeoModel<Type>
     @Override
     public void setCustomAnimations(Type animatable, long instanceId, AnimationState<Type> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
-        setHeadAnimation(animatable, this.getAnimationProcessor(), animationState);
+        if(animatable.hasPassenger())
+            setHeadAnimation(animatable, this.getAnimationProcessor(), animationState);
     }
 
 //    @Override

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 public class EventHandler {
     @SubscribeEvent
     public static void onTick(TickEvent event) {
+        if(event.phase == TickEvent.Phase.END) return;
         switch (event.type){
             case WORLD:
                 break;

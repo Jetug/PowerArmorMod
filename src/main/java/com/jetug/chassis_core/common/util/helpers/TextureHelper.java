@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.common.util.helpers;
 
 import com.google.gson.JsonParser;
+import com.ibm.icu.impl.Pair;
 import com.jetug.chassis_core.ChassisCore;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
@@ -9,7 +10,6 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -169,10 +169,10 @@ public class TextureHelper {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
             var nativeImage = NativeImage.read(resource.getInputStream());
-            return new Pair<>(nativeImage.getWidth(), nativeImage.getHeight());
+            return Pair.of(nativeImage.getWidth(), nativeImage.getHeight());
 
         } catch (IOException e) {
-            return new Pair<>(0, 0);
+            return Pair.of(0, 0);
         }
     }
 
