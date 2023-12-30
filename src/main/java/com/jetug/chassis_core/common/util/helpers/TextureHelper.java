@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -49,6 +50,18 @@ public class TextureHelper {
     }
 
     @Nullable
+    public static BufferedImage getPlayerImage(Player clientPlayer) {
+        try {
+            return getPlayerSkinImage(clientPlayer);
+        }
+        catch (Exception e){
+            var skin = DefaultPlayerSkin.getDefaultSkin(clientPlayer.getGameProfile().getId());
+            return resourceToBufferedImage(skin);
+        }
+    }
+
+
+    @Nullable
     public static BufferedImage getPlayerHeadImage(Player clientPlayer) {
         try {
             var playerSkin = getPlayerSkinImage(clientPlayer);
@@ -57,7 +70,7 @@ public class TextureHelper {
             return playerSkin;
         }
         catch (Exception e){
-            var skin = getSkin(clientPlayer);
+            var skin = DefaultPlayerSkin.getDefaultSkin(clientPlayer.getGameProfile().getId());
             var playerSkin = resourceToBufferedImage(skin);
             if (playerSkin == null) return null;
 
@@ -131,7 +144,7 @@ public class TextureHelper {
 //    }
 
     @Nullable
-    private static BufferedImage getPlayerSkinImage(Player clientPlayer) {
+    public static BufferedImage getPlayerSkinImage(Player clientPlayer) {
         var skin = skinRequest(clientPlayer.getUUID());
         return Objects.requireNonNullElse(skin, resourceToBufferedImage(getSkin(clientPlayer) /*clientPlayer.getSkinTextureLocation()*/));
     }

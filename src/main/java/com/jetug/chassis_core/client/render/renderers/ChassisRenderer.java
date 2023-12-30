@@ -30,7 +30,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-//        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
+        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
@@ -60,14 +60,15 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                                   float partialTick, int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
         bone.setHidden(bonesToHide.contains(bone.getName()));
+//        if(bone.getName().equals("head")) {
+//            CHASSIS_HEAD_RENDERER.render(
+//                    poseStack, animatable, bufferSource,
+//                    null, null, packedLight);
+//        }
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
 
-        if(bone.getName().equals("head"))
-            CHASSIS_HEAD_RENDERER.render(
-                    poseStack, animatable, bufferSource,
-                    null, null, packedLight);
     }
 
     @Override

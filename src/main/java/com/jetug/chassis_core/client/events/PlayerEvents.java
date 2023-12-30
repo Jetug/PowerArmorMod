@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -44,6 +45,13 @@ public class PlayerEvents {
         poseStack.popPose();
         event.setCanceled(true);
     }
+
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent()
+//    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+//        if (!isWearingChassis()) return;
+//
+//    }
 
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent()

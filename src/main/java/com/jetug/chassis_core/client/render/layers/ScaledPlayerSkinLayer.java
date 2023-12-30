@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
@@ -26,8 +27,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.*;
-import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createResource;
-import static com.jetug.chassis_core.common.util.helpers.TextureHelper.getTextureSize;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.*;
 
 public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<T> {
     private static final HashMap<UUID, ResourceLocation> playerSkins = new HashMap<>();
@@ -58,28 +58,12 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
 
     @Nullable
     private ResourceLocation getPlayerSkin(AbstractClientPlayer player, T animatable) {
-//        player = Minecraft.getInstance().player;
         if (!playerSkins.containsKey(player.getUUID())){
             setTextureSize(animatable);
             var tag = player.getUUID();
             var skin = PlayerSkins.getSkin(player);
-            var image = resourceToBufferedImage(skin/*player.getSkinTextureLocation()*/);
-
-            try {
-                if(image != null) {
-                    var outputfile = new File("C:/Users/Jetug/Desktop/skins/orig" + tag + ".png");
-                    ImageIO.write(image, "png", outputfile);
-                }
-            } catch (IOException ignored) {}
-
+            var image = getPlayerSkinImage(player);
             image = extendImage(image, textureWidth, textureHeight);
-
-            try {
-                var outputfile = new File("C:/Users/Jetug/Desktop/skins/" + tag + ".png");
-                ImageIO.write(image, "png", outputfile);
-
-            } catch (IOException ignored) {}
-
             playerSkins.put(tag, createResource(image, "player_" + tag));
             Minecraft.getInstance().player.sendMessage(new TextComponent(skin.toString()), player.getUUID());
         }
