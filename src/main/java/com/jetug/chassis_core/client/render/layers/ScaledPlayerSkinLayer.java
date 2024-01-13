@@ -44,8 +44,7 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
                        MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if (size == null) this.size = getTextureSize(getRenderer().getTextureLocation(animatable));
         if(animatable.hasPlayerPassenger()) {
-            var clientPlayer = (AbstractClientPlayer)animatable.getControllingPassenger();
-            var texture = getPlayerSkin(clientPlayer, animatable);
+            var texture = getPlayerSkin(animatable.getPlayerPassenger(), animatable);
 
             if(!animatable.isInvisible() && texture != null) {
                 renderLayer(poseStack, animatable, bakedModel, bufferSource, partialTick, packedLight, texture);
@@ -54,7 +53,7 @@ public class ScaledPlayerSkinLayer<T extends WearableChassis> extends LayerBase<
     }
 
     @Nullable
-    private ResourceLocation getPlayerSkin(AbstractClientPlayer player, T animatable) {
+    private ResourceLocation getPlayerSkin(Player player, T animatable) {
         return storage.getSkin(player, size);
     }
 }

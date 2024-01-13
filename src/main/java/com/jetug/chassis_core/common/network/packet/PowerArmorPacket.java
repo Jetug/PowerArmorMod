@@ -47,7 +47,8 @@ public class PowerArmorPacket{
         if(isClientSide){
             player = Minecraft.getInstance().player;
         }
-        else if(isServerSide) {
+        else
+            if(isServerSide) {
             player = context.get().getSender();
         }
 

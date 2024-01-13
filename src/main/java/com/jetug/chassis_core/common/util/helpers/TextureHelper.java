@@ -35,8 +35,12 @@ public class TextureHelper {
     public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
     public static ResourceLocation createResource(String name, AbstractTexture abstractTexture){
+        return createResource(ChassisCore.MOD_ID, name, abstractTexture);
+    }
+
+    public static ResourceLocation createResource(String namespace, String name, AbstractTexture abstractTexture){
         var textureManager = Minecraft.getInstance().getTextureManager();
-        var headTextureLocation = new ResourceLocation(ChassisCore.MOD_ID, name);
+        var headTextureLocation = new ResourceLocation(namespace, name);
         textureManager.register(headTextureLocation, abstractTexture);
         return headTextureLocation;
     }
@@ -175,10 +179,14 @@ public class TextureHelper {
     }
 
     public static ResourceLocation createResource(BufferedImage image, String name) {
+        return createResource(image, ChassisCore.MOD_ID, name);
+    }
+
+    public static ResourceLocation createResource(BufferedImage image, String namespace, String name) {
         var minecraft = Minecraft.getInstance();
         var nativeImage = getNativeImage(image);
         var texture = new DynamicTexture(nativeImage);
-        var resourceLocation = new ResourceLocation(ChassisCore.MOD_ID, name);
+        var resourceLocation = new ResourceLocation(namespace, name);
         minecraft.getTextureManager().register(resourceLocation, texture);
         return resourceLocation;
     }
