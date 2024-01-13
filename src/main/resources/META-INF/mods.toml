@@ -21,3 +21,9 @@ description='''Core for exoskeleton armor mods'''
     versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.chassis_core]]
+    modId="azurelib"
+    mandatory=true
+    versionRange="[1.0.23,)"
+    ordering="AFTER"
+    side="BOTH"

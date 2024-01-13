@@ -1,7 +1,8 @@
 package com.jetug.chassis_core.common.network.data;
 
 import com.jetug.chassis_core.common.network.PacketHandler;
-import com.jetug.chassis_core.common.network.packet.PowerArmorPacket;
+import com.jetug.chassis_core.common.network.packet.C2SChassisPacket;
+import com.jetug.chassis_core.common.network.packet.S2CCassisPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,15 +42,15 @@ public class ArmorData {
     }
 
     public void sentToClientPlayer(ServerPlayer player) {
-        PacketHandler.sendTo(new PowerArmorPacket(this), player);
+        PacketHandler.sendTo(new S2CCassisPacket(this), player);
     }
 
     public void sentToServer() {
-        PacketHandler.sendToServer(new PowerArmorPacket(this));
+        PacketHandler.sendToServer(new C2SChassisPacket(this));
     }
 
     public void sentToClient() {
-        PacketHandler.sendToAllPlayers(new PowerArmorPacket(this));
+        PacketHandler.sendToAllPlayers(new S2CCassisPacket(this));
     }
 
     public boolean syncWithAll() {

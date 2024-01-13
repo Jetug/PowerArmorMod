@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client.events;
 
+import com.jetug.chassis_core.client.utils.KeyUtils;
 import com.jetug.chassis_core.common.input.CommonInputHandler;
 import com.jetug.chassis_core.common.input.InputKey;
 import com.jetug.chassis_core.common.input.KeyAction;
@@ -74,7 +75,7 @@ public class InputEvents {
     public static void onLongRelease(int key, int ticks){}
 
     private static void handleInput(int key, KeyAction action){
-        var inputKey = InputKey.getByKey(key);
+        var inputKey = KeyUtils.getByKey(key);
         if (getLocalPlayer() == null || inputKey == null) return;
 
         doServerAction(new InputAction(inputKey, action), -1);
