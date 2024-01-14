@@ -5,9 +5,7 @@ import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderArmEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -26,7 +24,7 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRenderHand(RenderArmEvent event) {
-        if (!isWearingChassis()) return;
+        if (!isLocalWearingChassis()) return;
 
         var poseStack = event.getPoseStack();
         poseStack.pushPose();
@@ -36,7 +34,7 @@ public class PlayerEvents {
 
         CustomHandRenderer.getHandRenderer().render(
                 poseStack,
-                getPlayerChassis().getHandEntity(),
+                getLocalPlayerChassis().getHandEntity(),
                 event.getMultiBufferSource(),
                 null,
                 null,
@@ -49,20 +47,20 @@ public class PlayerEvents {
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent()
 //    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-//        if (!isWearingChassis()) return;
+//        if (!isLocalWearingChassis()) return;
 //
 //    }
 
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent()
 //    public static void onRenderHand(RenderArmEvent event) {
-//        if (!isWearingChassis()) return;
+//        if (!isLocalWearingChassis()) return;
 //
 //        var poseStack = event.getPoseStack();
 //        poseStack.translate(0.5, -0.5, -0.6);
 //
 //        CustomHandRenderer.getHandRenderer().render(
-//                getPlayerChassis(),
+//                getLocalPlayerChassis(),
 //                poseStack,
 //                event.getMultiBufferSource(),
 //                event.getPackedLight());

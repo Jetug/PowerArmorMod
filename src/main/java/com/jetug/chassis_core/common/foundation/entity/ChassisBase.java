@@ -179,13 +179,6 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
-
-//        if(isClientSide) {
-//            for (var e : getEquipment()) {
-//                if(hasEquipment())
-//                history.put(e, )
-//            }
-//        }
     }
 
     @Override
@@ -369,7 +362,8 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     private void updateParams(){
         updateTotalArmor();
         updateSpeed();
-        updateBones();
+        if(isClientSide)
+            updateBones();
     }
 
     @OnlyIn(Dist.CLIENT)

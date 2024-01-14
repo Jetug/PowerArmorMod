@@ -17,7 +17,7 @@ public class CommonInputHandler {
         if (!isWearingChassis(player) || key == null) return;
 
         if((action == PRESS || action == REPEAT) && key == JUMP)
-            getPlayerChassis(player).jump();
+            getEntityChassis(player).jump();
 
         switch (action) {
             case PRESS -> onPress(key, player);
@@ -28,14 +28,14 @@ public class CommonInputHandler {
     }
 
     public static void onPress(InputKey key, Player player){
-        if (key == InputKey.LEAVE)
-            stopWearingArmor(player);
+//        if (key == InputKey.LEAVE)
+//            stopWearingArmor(player);
     }
 
     public static void onRelease(InputKey key, Player player){
         if (!isWearingChassis(player)) return;
-//        if(key == ATTACK) getPlayerChassis(player).powerPunch();
-//        if(key == USE) getPlayerChassis(player).resetAttackCharge();
+//        if(key == ATTACK) getLocalPlayerChassis(player).powerPunch();
+//        if(key == USE) getLocalPlayerChassis(player).resetAttackCharge();
     }
 
     public static void onDoubleClick(InputKey key, Player player){
@@ -51,14 +51,14 @@ public class CommonInputHandler {
 //        };
 //
 //        if(direction == null) return;
-//        getPlayerChassis(player).dash(direction);
+//        getLocalPlayerChassis(player).dash(direction);
     }
 
     public static void onLongPress(InputKey key, Player player){
-//        if (!isWearingChassis(player)) return;
+//        if (!isLocalWearingChassis(player)) return;
 //        var bool = key == USE;
 //        if(bool){
-//            getPlayerChassis(player).addAttackCharge();
+//            getLocalPlayerChassis(player).addAttackCharge();
 //        }
     }
 }

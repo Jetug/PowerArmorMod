@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.client.events;
 
+import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.client.utils.KeyUtils;
 import com.jetug.chassis_core.common.input.CommonInputHandler;
 import com.jetug.chassis_core.common.input.InputKey;
@@ -16,6 +17,7 @@ import org.lwjgl.glfw.GLFW;
 import static com.jetug.chassis_core.client.ClientConfig.OPTIONS;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getLocalPlayer;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.stopWearingArmor;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
@@ -26,8 +28,11 @@ public class InputEvents {
         if (isNotInGame()) return;
 
         KeyAction action;
-        if(event.getAction() == GLFW.GLFW_PRESS)
+        if(event.getAction() == GLFW.GLFW_PRESS) {
             action = KeyAction.PRESS;
+            if (event.getKey() == KeyBindings.LEAVE.getKey().getValue())
+                stopWearingArmor(Minecraft.getInstance().player);
+        }
         else if(event.getAction() == GLFW.GLFW_RELEASE)
             action = KeyAction.RELEASE;
         else

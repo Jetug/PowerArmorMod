@@ -63,7 +63,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!PlayerUtils.isWearingChassis()) return;
+        if(!PlayerUtils.isLocalWearingChassis()) return;
         var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
             Global.saveMousePos();
@@ -73,7 +73,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
-        if(!PlayerUtils.isWearingChassis()) return;
+        if(!PlayerUtils.isLocalWearingChassis()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -88,7 +88,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
 //    @Inject(method = "render", at = @At("TAIL"))
 //    public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-//        if(!PlayerUtils.isWearingChassis()) return;
+//        if(!PlayerUtils.isLocalWearingChassis()) return;
 ////        Lighting.setupFor3DItems();
 ////        Lighting.setupForFlatItems();
 //        GuiUtils.drawChassisIcon(this,poseStack, getRight() - 30 - 16, getBottom() + 4);

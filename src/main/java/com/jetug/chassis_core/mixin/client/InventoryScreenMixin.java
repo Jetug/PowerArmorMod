@@ -25,6 +25,7 @@ package com.jetug.chassis_core.mixin.client;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.data.enums.ActionType;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -48,7 +49,6 @@ import java.awt.*;
 import static com.jetug.chassis_core.common.data.constants.Gui.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_TABS;
 import static com.jetug.chassis_core.common.network.PacketSender.doServerAction;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
 @Mixin(InventoryScreen.class)
@@ -62,7 +62,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!isWearingChassis()) return;
+        if(!PlayerUtils.isLocalWearingChassis()) return;
 
         var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
         if(rect.contains(mouseX, mouseY)){
@@ -73,7 +73,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        if(!isWearingChassis()) return;
+        if(!PlayerUtils.isLocalWearingChassis()) return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -83,7 +83,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        if(!isWearingChassis()) return;
+        if(!PlayerUtils.isLocalWearingChassis()) return;
 
         Lighting.setupFor3DItems();
         itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,

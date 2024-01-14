@@ -1,9 +1,7 @@
 package com.jetug.chassis_core.mixin.common;
 
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;

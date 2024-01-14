@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.client.render.layers;
 
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -8,8 +9,6 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
 
 public class PovLayer extends LayerBase {
     public PovLayer(GeoRenderer<WearableChassis> entityRendererIn) {
@@ -20,7 +19,7 @@ public class PovLayer extends LayerBase {
     public void render(PoseStack poseStack, GeoAnimatable animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         super.render(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
 
-        var entity = getPlayerChassis();
+        var entity = PlayerUtils.getLocalPlayerChassis();
         if(entity == null) return;
 
         for(var part : entity.getPovEquipment()) {

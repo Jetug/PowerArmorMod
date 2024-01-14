@@ -9,6 +9,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -19,15 +21,13 @@ public class PlayerUtils {
         player.addEffect(new MobEffectInstance(effect, WearableChassis.EFFECT_DURATION, amplifier, false, false));
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static LocalPlayer getLocalPlayer(){
         return Minecraft.getInstance().player;
     }
 
-    public static boolean isMainHandEmpty(){
-        return getLocalPlayer().getMainHandItem().isEmpty();
-    }
-
-    public static boolean isWearingChassis(){
+    @OnlyIn(Dist.CLIENT)
+    public static boolean isLocalWearingChassis(){
         return isWearingChassis(getLocalPlayer());
     }
 
@@ -35,12 +35,13 @@ public class PlayerUtils {
         return entity != null && entity.getVehicle() instanceof WearableChassis;
     }
 
-    public static WearableChassis getPlayerChassis(){
-        return getPlayerChassis(getLocalPlayer());
+    @OnlyIn(Dist.CLIENT)
+    public static WearableChassis getLocalPlayerChassis(){
+        return getEntityChassis(getLocalPlayer());
     }
 
     @Nullable
-    public static WearableChassis getPlayerChassis(Entity entity){
+    public static WearableChassis getEntityChassis(Entity entity){
         if(entity.getVehicle() instanceof WearableChassis)
             return (WearableChassis) entity.getVehicle();
         else return null;
@@ -52,6 +53,7 @@ public class PlayerUtils {
         player.setInvisible(false);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void sendMessage(String text){
         var player = Minecraft.getInstance().player;
         try {

@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.common.network.actions;
 
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,7 +10,7 @@ import java.util.function.Supplier;
 
 import static com.jetug.chassis_core.common.data.constants.NBT.ITEMS_TAG;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.serializeInventory;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getPlayerChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getEntityChassis;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraftforge.network.NetworkEvent.Context;
 
@@ -48,12 +49,12 @@ public class InventorySyncAction extends Action<InventorySyncAction>{
     public void doServerAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
         var player = context.get().getSender();
         if(isWearingChassis(player))
-            getPlayerChassis(player).setInventory(message.inventory);
+            getEntityChassis(player).setInventory(message.inventory);
     }
 
     @Override
     public void doClientAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
-        if(isWearingChassis())
-            getPlayerChassis().setInventory(message.inventory);
+        if(PlayerUtils.isLocalWearingChassis())
+            PlayerUtils.getLocalPlayerChassis().setInventory(message.inventory);
     }
 }

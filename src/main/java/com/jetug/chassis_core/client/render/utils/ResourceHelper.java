@@ -30,7 +30,7 @@ public class ResourceHelper {
     }
 
     public static ResourceLocation getChassisResource(String path, String extension){
-        var chassis = PlayerUtils.getPlayerChassis();
+        var chassis = PlayerUtils.getLocalPlayerChassis();
         return getChassisResource(chassis, path, extension);
     }
 }

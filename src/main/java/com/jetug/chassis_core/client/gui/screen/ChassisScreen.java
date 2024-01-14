@@ -3,6 +3,7 @@ package com.jetug.chassis_core.client.gui.screen;
 import com.jetug.chassis_core.Global;
 import com.jetug.chassis_core.client.render.utils.GuiUtils;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,6 @@ import static com.jetug.chassis_core.common.data.constants.Gui.TAB_HEIGHT;
 import static com.jetug.chassis_core.common.data.constants.Gui.TAB_WIDTH;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_BOTTOM_TABS;
 import static com.jetug.chassis_core.common.data.constants.Resources.PLAYER_INVENTORY_TABS;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 import static net.minecraft.world.item.Items.CHEST;
 import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 
@@ -85,7 +85,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
             renderEntity(powerArmor);
         }
 
-        if(isWearingChassis()) {
+        if(PlayerUtils.isLocalWearingChassis()) {
             renderTabs(poseStack);
             renderIcons(poseStack);
         }

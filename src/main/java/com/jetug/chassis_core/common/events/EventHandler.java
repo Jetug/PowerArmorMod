@@ -32,8 +32,8 @@ public class EventHandler {
         var player = event.getPlayer();
         var target = event.getTarget();
 
-//        if(isWearingChassis(player))
-//            getPlayerChassis(player).powerPunch();
+//        if(isLocalWearingChassis(player))
+//            getLocalPlayerChassis(player).powerPunch();
     }
 
 //    @SubscribeEvent
@@ -52,7 +52,7 @@ public class EventHandler {
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
-//        if(event.getEntity() instanceof Player player && isWearingChassis(player)){
+//        if(event.getEntity() instanceof Player player && isLocalWearingChassis(player)){
 //            var damage = ((WearableChassis)player.getVehicle()).getPlayerDamageValue(event.getSource(), event.getAmount());
 //            player.hurt(event.getSource(), damage);
 //            event.setCanceled(true);
