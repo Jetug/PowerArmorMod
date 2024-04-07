@@ -15,11 +15,6 @@ public class CommonModEvents {
 //        event.put(EntityTypeRegistry.POWER_ARMOR_FRAME.get(), WearableChassis.createAttributes().build());
     }
 
-    @SubscribeEvent
-    public static void setup(final FMLCommonSetupEvent event) {
-        PacketHandler.register();
-    }
-
 //    @SubscribeEvent
 //    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
 //        event.getRegistry().register(new CastModifier.Serializer()

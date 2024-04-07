@@ -215,7 +215,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
-        ChassisCore.LOGGER.info("damageArmorItem" + isClientSide);
+//        ChassisCore.LOGGER.debug("damageArmorItem" + isClientSide);
         var itemStack = getEquipment(chassisPart);
 
         if(itemStack.getItem() instanceof ChassisArmor armorItem)
