@@ -1,12 +1,12 @@
 package com.jetug.chassis_core;
 
 import com.jetug.chassis_core.client.render.layers.PlayerSkinStorage;
-import com.jetug.chassis_core.common.foundation.registery.EntityTypes;
+import com.jetug.example.common.registery.EntityTypes;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import com.jetug.chassis_core.common.network.PacketHandler;
+import com.jetug.example.common.registery.ContainerRegistry;
 import mod.azure.azurelib.AzureLib;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -27,6 +27,7 @@ public class ChassisCore {
         register();
         EVENT_BUS.register(this);
         MOD_EVENT_BUS.addListener(this::onCommonSetup);
+
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
@@ -35,6 +36,7 @@ public class ChassisCore {
 
     private void register() {
         ItemRegistry.register(MOD_EVENT_BUS);
+        ContainerRegistry.register(MOD_EVENT_BUS);
         EntityTypes.register(MOD_EVENT_BUS);
     }
 }
