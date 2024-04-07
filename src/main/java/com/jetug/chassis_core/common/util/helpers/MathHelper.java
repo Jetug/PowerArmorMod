@@ -5,11 +5,11 @@ public class MathHelper {
         return (value / maxValue);
     }
 
-    public static int getInPercents(int value, int maxValue){
-       return (int)((float)value / maxValue * 100);
+    public static int getInPercents(int value, int maxValue) {
+        return (int) ((float) value / maxValue * 100);
     }
 
-    public static float getPercentOf(int value, int percents){
-        return value * ((float)percents / 100.0f);
+    public static float getPercentOf(int value, int percents) {
+        return value * ((float) percents / 100.0f);
     }
 }

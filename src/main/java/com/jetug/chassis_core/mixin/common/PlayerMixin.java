@@ -19,7 +19,7 @@ public abstract class PlayerMixin extends Entity {
 
     @Inject(at = @At(value = "HEAD"), method = "wantsToStopRiding", cancellable = true)
     private void wantsToStopRiding(CallbackInfoReturnable<Boolean> cir) {
-        if(isWearingChassis(this))
+        if (isWearingChassis(this))
             cir.setReturnValue(false);
     }
 }

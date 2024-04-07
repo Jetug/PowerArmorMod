@@ -24,7 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -35,19 +34,16 @@ import static com.jetug.chassis_core.common.data.constants.Resources.resourceLoc
 import static net.minecraft.util.Mth.cos;
 import static net.minecraft.util.Mth.sin;
 import static org.apache.logging.log4j.Level.DEBUG;
-import static org.apache.logging.log4j.Level.INFO;
 
 public abstract class WearableChassis extends ChassisBase implements GeoEntity {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    protected boolean isJumping;
-    protected float jumpScale;
-
     public static final float ROTATION = (float) Math.PI / 180F;
     public static final int EFFECT_DURATION = 9;
     public static final HandEntity HAND_ENTITY = new HandEntity();
     public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
     public final Speedometer speedometer = new Speedometer(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    protected boolean isJumping;
+    protected float jumpScale;
 
     public WearableChassis(EntityType<? extends ChassisBase> type, Level worldIn) {
         super(type, worldIn);
@@ -67,11 +63,11 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
-    public HandEntity getHandEntity(){
+    public HandEntity getHandEntity() {
         return HAND_ENTITY;
     }
 
-    public ResourceLocation getIcon(){
+    public ResourceLocation getIcon() {
         return DEFAULT_ICON;
     }
 
@@ -88,7 +84,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         float finalDamage = getDamageAfterAbsorb(damage);
         damageArmor(damageSource, damage);
 
-        if(damageSource == DamageSource.CACTUS || (hasPassenger() && damageSource.getEntity() == getPassenger()))
+        if (damageSource == DamageSource.CACTUS || (hasPassenger() && damageSource.getEntity() == getPassenger()))
             return false;
 
         if (hasPassenger())
@@ -98,12 +94,11 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     public void damageArmor(DamageSource damageSource, float damage) {
-        if(isServerSide){
-            if(damageSource == DamageSource.FALL) {
+        if (isServerSide) {
+            if (damageSource == DamageSource.FALL) {
                 damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
                 damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
-            }
-            else{
+            } else {
                 damageArmorItem(HELMET, damageSource, damage);
                 damageArmorItem(BODY_ARMOR, damageSource, damage);
                 damageArmorItem(LEFT_ARM_ARMOR, damageSource, damage);
@@ -117,7 +112,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if(hasPassenger()) this.yHeadRot = this.getYRot();
+        if (hasPassenger()) this.yHeadRot = this.getYRot();
     }
 
 //    @Override
@@ -142,7 +137,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
         ChassisCore.LOGGER.log(DEBUG, level.isClientSide);
 
-        if(isServerSide && !player.isPassenger()) {
+        if (isServerSide && !player.isPassenger()) {
             if (player.isShiftKeyDown()) {
                 openGUI(player);
                 return InteractionResult.SUCCESS;
@@ -165,7 +160,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     public void positionRider(Entity entity) {
         super.positionRider(entity);
 
-        var yOffset = getPassenger().isShiftKeyDown() ?  1.2f : 1.0f;
+        var yOffset = getPassenger().isShiftKeyDown() ? 1.2f : 1.0f;
         var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - yOffset;
         entity.setPos(getX(), posY, getZ());
 
@@ -190,7 +185,8 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     @Override
-    public void checkDespawn() {}
+    public void checkDespawn() {
+    }
 
     @Override
     public boolean canBreatheUnderwater() {
@@ -198,13 +194,13 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     @Override
-    public boolean canBeRiddenInWater(Entity rider) {
+    public boolean rideableUnderWater() {
         return true;
     }
 
     @Override
     protected float tickHeadTurn(float pYRot, float pAnimStep) {
-        if(hasPassenger())
+        if (hasPassenger())
             return super.tickHeadTurn(pYRot, pAnimStep);
         return pAnimStep;
     }
@@ -218,14 +214,14 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 //        ChassisCore.LOGGER.debug("damageArmorItem" + isClientSide);
         var itemStack = getEquipment(chassisPart);
 
-        if(itemStack.getItem() instanceof ChassisArmor armorItem)
+        if (itemStack.getItem() instanceof ChassisArmor armorItem)
             armorItem.damageArmor(itemStack, (int) damage);
     }
 
     @Nullable
     public ChassisEquipment getEquipmentItem(String part) {
         var stack = getEquipment(part);
-        if(!stack.isEmpty())
+        if (!stack.isEmpty())
             return (ChassisEquipment) stack.getItem();
         return null;
     }
@@ -240,8 +236,11 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         }
     }
 
-    @Nullable protected abstract MenuProvider getMenuProvider();
-    @Nullable protected abstract MenuProvider getStantionMenuProvider();
+    @Nullable
+    protected abstract MenuProvider getMenuProvider();
+
+    @Nullable
+    protected abstract MenuProvider getStantionMenuProvider();
 
     public void openStationGUI(Player player) {
         Global.referenceMob = this;
@@ -252,7 +251,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         }
     }
 
-    public Boolean isWalking(){
+    public Boolean isWalking() {
         if (!hasPassenger())
             return false;
 
@@ -260,32 +259,32 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return entity.xxa != 0.0 || entity.zza != 0.0;
     }
 
-    public boolean hasPlayerPassenger(){
+    public boolean hasPlayerPassenger() {
         return getControllingPassenger() instanceof Player;
 
     }
 
-    public Player getPlayerPassenger(){
-        if(getControllingPassenger() instanceof Player player)
+    public Player getPlayerPassenger() {
+        if (getControllingPassenger() instanceof Player player)
             return player;
         return null;
     }
 
-    public boolean hasPassenger(){
+    public boolean hasPassenger() {
         return getControllingPassenger() instanceof LivingEntity;
     }
 
-    public LivingEntity getPassenger(){
-        if(getControllingPassenger() instanceof LivingEntity livingEntity)
+    public LivingEntity getPassenger() {
+        if (getControllingPassenger() instanceof LivingEntity livingEntity)
             return livingEntity;
         return null;
     }
 
-    public ItemStack getPassengerItem(EquipmentSlot slot){
+    public ItemStack getPassengerItem(EquipmentSlot slot) {
         return hasPassenger() ? getPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
     }
 
-    public void jump(){
+    public void jump() {
         jumpScale = 1.0F;
     }
 
@@ -295,7 +294,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         entity.startRiding(this);
     }
 
-    private float getDamageAfterAbsorb(float damage){
+    private float getDamageAfterAbsorb(float damage) {
         updateTotalArmor();
         return CombatRules.getDamageAfterAbsorb(damage, totalDefense, totalToughness);
     }
@@ -354,7 +353,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     private void jump(LivingEntity entity) {
         var jump = getCustomJump() * jumpScale * getBlockJumpFactor();
         setDeltaMovement(getDeltaMovement().x, jump, getDeltaMovement().z);
-        isJumping  = true;
+        isJumping = true;
         hasImpulse = true;
 
         if (entity.zza > 0.0F) {

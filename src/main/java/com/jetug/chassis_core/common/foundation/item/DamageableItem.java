@@ -11,21 +11,18 @@ public abstract class DamageableItem extends ChassisEquipment {
     }
 
     public static int getItemDamage(ItemStack itemStack) {
-        if(itemStack.hasTag()) {
+        if (itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getOrCreateTag();
             return nbt.getInt(DAMAGE_KEY);
-        }
-        else return 0;
+        } else return 0;
     }
 
-    public static void setItemDamage(ItemStack head, int totalDamage)
-    {
+    public static void setItemDamage(ItemStack head, int totalDamage) {
         CompoundTag nbt = head.getOrCreateTag();
         nbt.putInt(DAMAGE_KEY, totalDamage);
     }
 
-    public static void damageItem(ItemStack itemStack, int dmg)
-    {
+    public static void damageItem(ItemStack itemStack, int dmg) {
         var resultDamage = getItemDamage(itemStack) + dmg;
         setItemDamage(itemStack, Math.min(resultDamage, itemStack.getMaxDamage()));
     }

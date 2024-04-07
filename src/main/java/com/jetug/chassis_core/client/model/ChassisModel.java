@@ -11,34 +11,33 @@ import static com.jetug.chassis_core.common.data.constants.Resources.resourceLoc
 
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class ChassisModel<Type extends WearableChassis> extends GeoModel<Type>
-{
-    public ChassisModel(){
+public class ChassisModel<Type extends WearableChassis> extends GeoModel<Type> {
+    public ChassisModel() {
         super();
     }
 
     @Override
     public ResourceLocation getModelResource(Type object) {
-        if(object == null) return resourceLocation("geo/error.geo.json");
-        return getChassisResource(object,"geo/chassis/", ".geo.json");
+        if (object == null) return resourceLocation("geo/error.geo.json");
+        return getChassisResource(object, "geo/chassis/", ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Type object) {
-        if(object == null) return resourceLocation("textures/entity/error.png");
-        return getChassisResource(object,"textures/entity/", ".png");
+        if (object == null) return resourceLocation("textures/entity/error.png");
+        return getChassisResource(object, "textures/entity/", ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(Type object) {
-        if(object == null) return resourceLocation("animations/error.animation.json");
-        return getChassisResource(object,"animations/", ".animation.json");
+        if (object == null) return resourceLocation("animations/error.animation.json");
+        return getChassisResource(object, "animations/", ".animation.json");
     }
 
     @Override
     public void setCustomAnimations(Type animatable, long instanceId, AnimationState<Type> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
-        if(animatable.hasPassenger())
+        if (animatable.hasPassenger())
             setHeadAnimation(animatable, this.getAnimationProcessor(), animationState);
     }
 

@@ -12,8 +12,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.UUID;
 
 import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.extendImage;
 import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.resourceToBufferedImage;
@@ -36,13 +34,13 @@ public class PlayerSkinLayer<T extends GeoAnimatable> extends LayerBase<T> {
         poseStack.translate(-0.5, -0.5, -0.5);
 
         var player = Minecraft.getInstance().player;
-        if(player == null) return;
+        if (player == null) return;
         var texture = getPlayerSkin(player, animatable);
         if (texture == null) return;
         renderLayer(poseStack, animatable, bakedModel, bufferSource, partialTick, packedLight, texture);
     }
 
-    private void setTextureSize(T animatable){
+    private void setTextureSize(T animatable) {
         var size = getTextureSize(getRenderer().getTextureLocation(animatable));
         textureWidth = size.first;
         textureHeight = size.second;

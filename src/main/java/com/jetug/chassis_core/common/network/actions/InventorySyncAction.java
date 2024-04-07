@@ -15,10 +15,12 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingCh
 import static net.minecraftforge.network.NetworkEvent.Context;
 
 @SuppressWarnings("ConstantConditions")
-public class InventorySyncAction extends Action<InventorySyncAction>{
+public class InventorySyncAction extends Action<InventorySyncAction> {
     private ListTag inventory;
 
-    public InventorySyncAction() {}
+    public InventorySyncAction() {
+    }
+
     public InventorySyncAction(SimpleContainer inventory) {
         this.inventory = serializeInventory(inventory);
     }
@@ -41,20 +43,20 @@ public class InventorySyncAction extends Action<InventorySyncAction>{
     @Override
     public InventorySyncAction read(FriendlyByteBuf buffer) {
         var nbt = buffer.readNbt();
-        var listTag = (ListTag)nbt.get(ITEMS_TAG);
+        var listTag = (ListTag) nbt.get(ITEMS_TAG);
         return new InventorySyncAction(listTag);
     }
 
     @Override
     public void doServerAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
         var player = context.get().getSender();
-        if(isWearingChassis(player))
+        if (isWearingChassis(player))
             getEntityChassis(player).setInventory(message.inventory);
     }
 
     @Override
     public void doClientAction(InventorySyncAction message, Supplier<Context> context, int entityId) {
-        if(PlayerUtils.isLocalWearingChassis())
+        if (PlayerUtils.isLocalWearingChassis())
             PlayerUtils.getLocalPlayerChassis().setInventory(message.inventory);
     }
 }

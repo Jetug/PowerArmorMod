@@ -7,7 +7,8 @@ import net.minecraftforge.common.MinecraftForge;
 import static com.jetug.chassis_core.common.input.InputKey.JUMP;
 import static com.jetug.chassis_core.common.input.KeyAction.PRESS;
 import static com.jetug.chassis_core.common.input.KeyAction.REPEAT;
-import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getEntityChassis;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @SuppressWarnings("ConstantConditions")
 public class CommonInputHandler {
@@ -16,7 +17,7 @@ public class CommonInputHandler {
 
         if (!isWearingChassis(player) || key == null) return;
 
-        if((action == PRESS || action == REPEAT) && key == JUMP)
+        if ((action == PRESS || action == REPEAT) && key == JUMP)
             getEntityChassis(player).jump();
 
         switch (action) {
@@ -27,18 +28,18 @@ public class CommonInputHandler {
         }
     }
 
-    public static void onPress(InputKey key, Player player){
+    public static void onPress(InputKey key, Player player) {
 //        if (key == InputKey.LEAVE)
 //            stopWearingArmor(player);
     }
 
-    public static void onRelease(InputKey key, Player player){
+    public static void onRelease(InputKey key, Player player) {
         if (!isWearingChassis(player)) return;
 //        if(key == ATTACK) getLocalPlayerChassis(player).powerPunch();
 //        if(key == USE) getLocalPlayerChassis(player).resetAttackCharge();
     }
 
-    public static void onDoubleClick(InputKey key, Player player){
+    public static void onDoubleClick(InputKey key, Player player) {
         if (!isWearingChassis(player)) return;
 
 //        DashDirection direction = switch (key){
@@ -54,7 +55,7 @@ public class CommonInputHandler {
 //        getLocalPlayerChassis(player).dash(direction);
     }
 
-    public static void onLongPress(InputKey key, Player player){
+    public static void onLongPress(InputKey key, Player player) {
 //        if (!isLocalWearingChassis(player)) return;
 //        var bool = key == USE;
 //        if(bool){

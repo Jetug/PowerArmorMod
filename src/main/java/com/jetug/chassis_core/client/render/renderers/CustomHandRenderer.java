@@ -9,14 +9,13 @@ import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.GeoObjectRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
-    protected static CustomHandRenderer handRenderer;
     protected static final HandModel handModel = new HandModel();
+    protected static CustomHandRenderer handRenderer;
     protected HandEntity currentChassis;
 
 //    static {
@@ -28,19 +27,12 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
         //addRenderLayer(new EquipmentLayer<>(this));
     }
 
-    @Override
-    public void renderRecursively(PoseStack poseStack, HandEntity animatable, GeoBone bone,
-                                  RenderType renderType, MultiBufferSource bufferSource,
-                                  VertexConsumer buffer, boolean isReRender, float partialTick,
-                                  int packedLight, int packedOverlay,
-                                  float red, float green, float blue, float alpha) {
-
-        if(Objects.equals(bone.getName(), "right_arm_pov")){
-            bone.setRotX(((float) Math.PI / 90));
+    public static void doSafe(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
-                isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
 //    public void render(HandEntity animatable, PoseStack poseStack, MultiBufferSource bufferSource, float partialTick, int packedLight) {
@@ -78,16 +70,26 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //        });
 //    }
 
-    public static void doSafe(Runnable runnable){
-        try{ runnable.run(); }
-        catch (Exception e){ e.printStackTrace(); }
-    }
-
-    public static void registerHandRenderer(){
+    public static void registerHandRenderer() {
         handRenderer = new CustomHandRenderer(handModel);
     }
 
-    public static CustomHandRenderer getHandRenderer(){
+    public static CustomHandRenderer getHandRenderer() {
         return handRenderer;
+    }
+
+    @Override
+    public void renderRecursively(PoseStack poseStack, HandEntity animatable, GeoBone bone,
+                                  RenderType renderType, MultiBufferSource bufferSource,
+                                  VertexConsumer buffer, boolean isReRender, float partialTick,
+                                  int packedLight, int packedOverlay,
+                                  float red, float green, float blue, float alpha) {
+
+        if (Objects.equals(bone.getName(), "right_arm_pov")) {
+            bone.setRotX(((float) Math.PI / 90));
+        }
+
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
+                isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

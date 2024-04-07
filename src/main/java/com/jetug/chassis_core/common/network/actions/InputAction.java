@@ -10,11 +10,13 @@ import java.util.function.Supplier;
 import static com.jetug.chassis_core.common.input.CommonInputHandler.onKeyInput;
 
 @SuppressWarnings("ConstantConditions")
-public class InputAction extends Action<InputAction>{
+public class InputAction extends Action<InputAction> {
     private InputKey key;
     private KeyAction action;
 
-    public InputAction() {}
+    public InputAction() {
+    }
+
     public InputAction(InputKey key, KeyAction action) {
         this.key = key;
         this.action = action;

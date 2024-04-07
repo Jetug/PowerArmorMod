@@ -20,9 +20,9 @@ public class PovLayer extends LayerBase {
         super.render(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
 
         var entity = PlayerUtils.getLocalPlayerChassis();
-        if(entity == null) return;
+        if (entity == null) return;
 
-        for(var part : entity.getPovEquipment()) {
+        for (var part : entity.getPovEquipment()) {
             if (entity.isEquipmentVisible(part)) {
                 var stack = entity.getEquipment(part);
                 var item = entity.getEquipmentItem(part);

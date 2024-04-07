@@ -12,7 +12,8 @@ import java.util.function.Supplier;
 public class S2CCassisPacket {
     public CompoundTag nbt = null;
 
-    public S2CCassisPacket() {}
+    public S2CCassisPacket() {
+    }
 
     public S2CCassisPacket(ArmorData armorData) {
         nbt = armorData.serializeNBT();
@@ -20,12 +21,6 @@ public class S2CCassisPacket {
 
     public S2CCassisPacket(CompoundTag armorData) {
         nbt = armorData;
-    }
-
-    public ArmorData getArmorData(){
-        var data = new ArmorData();
-        data.deserializeNBT(nbt);
-        return data;
     }
 
     public static void write(S2CCassisPacket message, FriendlyByteBuf buffer) {
@@ -41,7 +36,13 @@ public class S2CCassisPacket {
         var data = message.getArmorData();
         var entity = player.level.getEntity(data.entityId);
 
-        if(entity instanceof WearableChassis powerArmor)
+        if (entity instanceof WearableChassis powerArmor)
             powerArmor.setArmorData(data);
+    }
+
+    public ArmorData getArmorData() {
+        var data = new ArmorData();
+        data.deserializeNBT(nbt);
+        return data;
     }
 }

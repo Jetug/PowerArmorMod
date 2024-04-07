@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ExampleChassisScreen extends ChassisScreen<ExampleChassisMenu> {
     public static final ResourceLocation POWER_ARMOR_GUI =
             new ResourceLocation(ChassisCore.MOD_ID, "textures/screens/example_chassis/example_chassis_inventory.png");
+
     public ExampleChassisScreen(ExampleChassisMenu container, Inventory inventory, Component name) {
         super(container, inventory, name, POWER_ARMOR_GUI);
     }
@@ -27,7 +28,7 @@ public class ExampleChassisScreen extends ChassisScreen<ExampleChassisMenu> {
     @Override
     protected void renderEntity(WearableChassis powerArmor) {
         float scale = 1.0F / Math.max(1.0E-4F, powerArmor.getScale());
-        InventoryScreen.renderEntityInInventory(this.leftPos + 32, this.topPos + 73, (int)(scale * 23.0F),
-                (float)(this.leftPos + 51) - this.mousePosX, (float)(this.topPos + 75 - 50) - this.mousePosY, powerArmor);
+        InventoryScreen.renderEntityInInventory(this.leftPos + 32, this.topPos + 73, (int) (scale * 23.0F),
+                (float) (this.leftPos + 51) - this.mousePosX, (float) (this.topPos + 75 - 50) - this.mousePosY, powerArmor);
     }
 }

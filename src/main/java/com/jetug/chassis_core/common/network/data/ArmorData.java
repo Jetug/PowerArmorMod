@@ -18,7 +18,8 @@ public class ArmorData {
     public int heat;
     public int attackCharge;
 
-    public ArmorData() {}
+    public ArmorData() {
+    }
 
     public ArmorData(int entityId) {
         this.entityId = entityId;
@@ -36,7 +37,7 @@ public class ArmorData {
 
     public void deserializeNBT(CompoundTag nbt) {
         entityId = nbt.getInt(ID);
-        inventory = (ListTag)nbt.get(INVENTORY);
+        inventory = (ListTag) nbt.get(INVENTORY);
         heat = nbt.getInt(HEAT);
         attackCharge = nbt.getInt(ATTACK_CHARGE);
     }

@@ -35,20 +35,18 @@ public class ExampleChassis extends WearableChassis {
 
     public static HashMap<String, Integer> POWER_ARMOR_PART_IDS;
 
-    public static int getId(String chassisPart){
-        return POWER_ARMOR_PART_IDS.get(chassisPart);
-    }
-
-    private static void addSlot(String slot){
-        POWER_ARMOR_PART_IDS.put(slot, PART_IDS.size());
-    }
-
-    static{
+    static {
         POWER_ARMOR_PART_IDS = (HashMap<String, Integer>) PART_IDS.clone();
     }
 
+    public RawAnimation currentAnimation = null;
+
     public ExampleChassis(EntityType<? extends WearableChassis> type, Level worldIn) {
         super(type, worldIn, POWER_ARMOR_PART_IDS);
+    }
+
+    public static int getId(String chassisPart) {
+        return POWER_ARMOR_PART_IDS.get(chassisPart);
     }
 
 //    @Override
@@ -56,19 +54,22 @@ public class ExampleChassis extends WearableChassis {
 //        return List.of(armorParts);
 //    }
 
+    private static void addSlot(String slot) {
+        POWER_ARMOR_PART_IDS.put(slot, PART_IDS.size());
+    }
+
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        if(damageSource.isFall()){
+        if (damageSource.isFall()) {
             damageArmor(damageSource, damage);
             return false;
-        }
-        else return super.hurt(damageSource, damage);
+        } else return super.hurt(damageSource, damage);
     }
 
     @Override
     public boolean causeFallDamage(float height, float pMultiplier, DamageSource damageSource) {
         var damage = calculateFallDamage(height, pMultiplier);
-        if(damage >= 0)
+        if (damage >= 0)
             hurt(damageSource, damage);
         return false;
     }
@@ -84,7 +85,7 @@ public class ExampleChassis extends WearableChassis {
     }
 
     @Override
-    public MenuProvider getMenuProvider(){
+    public MenuProvider getMenuProvider() {
         return new MenuProvider() {
             @Override
             public AbstractContainerMenu createMenu(int id, Inventory menu, Player player) {
@@ -137,20 +138,16 @@ public class ExampleChassis extends WearableChassis {
                     animation = begin().then(HIT, PLAY_ONCE);
                 } else if (hurtTime > 0) {
                     animation = begin().then(HURT, PLAY_ONCE);
-                }
-                else if (isWalking()) {
+                } else if (isWalking()) {
                     controller.setAnimationSpeed(speedometer.getSpeed() * 4.0D);
                     animation = begin().then(WALK_ARMS, LOOP);
-                }
-                else animation = begin().then(IDLE, LOOP);
+                } else animation = begin().then(IDLE, LOOP);
             }
 
             currentAnimation = animation;
             return animation != null ? event.setAndContinue(animation) : PlayState.STOP;
         };
     }
-
-    public RawAnimation currentAnimation = null;
 
     private AnimationController.AnimationStateHandler<ExampleChassis> animateLegs() {
         return event -> {
@@ -163,18 +160,15 @@ public class ExampleChassis extends WearableChassis {
             var passenger = getPassenger();
 
             if (this.isWalking()) {
-                if (passenger.isShiftKeyDown()){
+                if (passenger.isShiftKeyDown()) {
                     animation = begin().then(SNEAK_WALK, LOOP);
-                }
-                else {
+                } else {
                     animation = begin().then(WALK_LEGS, LOOP);
                     controller.setAnimationSpeed(speedometer.getSpeed() * 4.0D);
                 }
-            }
-            else if (passenger.isShiftKeyDown()) {
+            } else if (passenger.isShiftKeyDown()) {
                 animation = begin().then(SNEAK_END, LOOP);
-            }
-            else {
+            } else {
                 return PlayState.STOP;
             }
             return event.setAndContinue(animation);

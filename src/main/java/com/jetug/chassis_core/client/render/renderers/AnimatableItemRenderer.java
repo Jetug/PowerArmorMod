@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.jetug.chassis_core.common.foundation.item.CustomizableItem;
 import com.jetug.chassis_core.common.foundation.item.IConfigProvider;
 import com.jetug.chassis_core.common.foundation.item.StackUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -38,7 +37,7 @@ public class AnimatableItemRenderer<T extends IConfigProvider & GeoAnimatable> e
     protected void renderAttachments(ItemStack stack, T item) {
         var config = item.getConfig();
 
-        if(config != null) {
+        if (config != null) {
             var allMods = config.mods;
             var visibleMods = StackUtils.getAttachments(stack);
 

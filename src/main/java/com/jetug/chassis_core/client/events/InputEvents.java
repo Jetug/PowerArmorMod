@@ -3,7 +3,6 @@ package com.jetug.chassis_core.client.events;
 import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.client.utils.KeyUtils;
 import com.jetug.chassis_core.common.input.CommonInputHandler;
-import com.jetug.chassis_core.common.input.InputKey;
 import com.jetug.chassis_core.common.input.KeyAction;
 import com.jetug.chassis_core.common.network.actions.InputAction;
 import net.minecraft.client.Minecraft;
@@ -23,17 +22,15 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.stopWearing
 public class InputEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onKeyInput(InputEvent.KeyInputEvent event)
-    {
+    public static void onKeyInput(InputEvent.Key event) {
         if (isNotInGame()) return;
 
         KeyAction action;
-        if(event.getAction() == GLFW.GLFW_PRESS) {
+        if (event.getAction() == GLFW.GLFW_PRESS) {
             action = KeyAction.PRESS;
             if (event.getKey() == KeyBindings.LEAVE.getKey().getValue())
                 stopWearingArmor(Minecraft.getInstance().player);
-        }
-        else if(event.getAction() == GLFW.GLFW_RELEASE)
+        } else if (event.getAction() == GLFW.GLFW_RELEASE)
             action = KeyAction.RELEASE;
         else
             action = KeyAction.REPEAT;
@@ -45,7 +42,7 @@ public class InputEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
-    public static void onMouseKeyInput(InputEvent.MouseInputEvent event) {
+    public static void onMouseKeyInput(InputEvent.MouseButton event) {
         //if (isNotInGame()) return;
 
         switch (event.getAction()) {
@@ -53,7 +50,7 @@ public class InputEvents {
 
             }
             case GLFW.GLFW_RELEASE -> {
-                if(event.getButton() != OPTIONS.keyUse.getKey().getValue() && isNotInGame()) return;
+                if (event.getButton() != OPTIONS.keyUse.getKey().getValue() && isNotInGame()) return;
                 handleInput(event.getButton(), KeyAction.RELEASE);
 //                getTargetedEntity(getLocalPlayer(), 5).ifPresent((e) ->{
 //                    System.out.println(e);
@@ -66,20 +63,21 @@ public class InputEvents {
         //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getButton()), KeyAction.RELEASE,  getLocalPlayer());
     }
 
-    public static void onDoubleClick(InputEvent.KeyInputEvent event){
+    public static void onDoubleClick(InputEvent.Key event) {
         if (isNotInGame()) return;
         handleInput(event.getKey(), KeyAction.DOUBLE_CLICK);
     }
 
-    public static void onLongClick(int key, int ticks){
+    public static void onLongClick(int key, int ticks) {
         if (isNotInGame()) return;
         //CommonInputHandler.onKeyInput(InputKey.getByKey(key), KeyAction.LONG_PRESS,  getLocalPlayer());
         handleInput(key, KeyAction.LONG_PRESS);
     }
 
-    public static void onLongRelease(int key, int ticks){}
+    public static void onLongRelease(int key, int ticks) {
+    }
 
-    private static void handleInput(int key, KeyAction action){
+    private static void handleInput(int key, KeyAction action) {
         var inputKey = KeyUtils.getByKey(key);
         if (getLocalPlayer() == null || inputKey == null) return;
 
@@ -87,7 +85,7 @@ public class InputEvents {
         CommonInputHandler.onKeyInput(inputKey, action, getLocalPlayer());
     }
 
-    public static boolean isNotInGame(){
+    public static boolean isNotInGame() {
         return Minecraft.getInstance().screen != null;
     }
 }

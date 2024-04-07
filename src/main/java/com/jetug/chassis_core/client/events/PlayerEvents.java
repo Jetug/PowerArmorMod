@@ -16,7 +16,7 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (isWearingChassis(event.getPlayer())) {
+        if (isWearingChassis(event.getEntity())) {
             event.setCanceled(true);
         }
     }

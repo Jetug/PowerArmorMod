@@ -41,7 +41,7 @@ public class MenuBase extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
-        try{
+        try {
             var sourceSlot = slots.get(index);
             if (!sourceSlot.hasItem()) return ItemStack.EMPTY;
             var sourceStack = sourceSlot.getItem();
@@ -63,8 +63,7 @@ public class MenuBase extends AbstractContainerMenu {
             else sourceSlot.setChanged();
             sourceSlot.onTake(playerIn, sourceStack);
             return copyOfSourceStack;
-        }
-        catch (Exception ignored){
+        } catch (Exception ignored) {
             return ItemStack.EMPTY;
         }
 

@@ -10,13 +10,12 @@ public class Speedometer {
     private double speed = 0;
     private Vec3 previousPosition;
 
-    public Speedometer(Entity entity)
-    {
+    public Speedometer(Entity entity) {
         this.entity = entity;
         previousPosition = entity.position();
     }
 
-    public void tick(){
+    public void tick() {
         speed = calculateDistance(previousPosition, entity.position());
         previousPosition = entity.position();
     }

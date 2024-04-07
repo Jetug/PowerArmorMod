@@ -4,14 +4,11 @@ import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,12 +22,11 @@ public class ForgeIngameGuiMixin extends Gui {
 
     @Inject(method = "renderHealthMount(IILcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At("HEAD"), cancellable = true, remap = false)
     protected void renderHealthMount(int width, int height, PoseStack poseStack, CallbackInfo ci) {
-        if(PlayerUtils.isLocalWearingChassis()) ci.cancel();
+        if (PlayerUtils.isLocalWearingChassis()) ci.cancel();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"), remap = false)
-    public void render(PoseStack poseStack, float partialTick, CallbackInfo ci)
-    {
+    public void render(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         IGuiOverlay overlay = (gui, poseStack1, partialTick1, screenWidth, screenHeight) -> {
             var minecraft = Minecraft.getInstance();
             if (PlayerUtils.isLocalWearingChassis() && !minecraft.options.hideGui && gui.shouldDrawSurvivalElements()) {
@@ -39,7 +35,7 @@ public class ForgeIngameGuiMixin extends Gui {
             }
         };
 
-        overlay.render((ForgeGui)(Gui)this, poseStack, partialTick, screenWidth, screenHeight);
+        overlay.render((ForgeGui) (Gui) this, poseStack, partialTick, screenWidth, screenHeight);
     }
 //
 //    @Final

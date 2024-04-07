@@ -12,14 +12,15 @@ public class DoubleClickController {
 
     private Integer lastKey;
     private int ticks = MAX_TICKS;
-    private Consumer<InputEvent.KeyInputEvent> listener = (e) -> {};
+    private Consumer<InputEvent.Key> listener = (e) -> {
+    };
 
-    public DoubleClickController(){
+    public DoubleClickController() {
         MinecraftForge.EVENT_BUS.addListener(this::onTick);
         MinecraftForge.EVENT_BUS.addListener(this::onClick);
     }
 
-    public void addListener(Consumer<InputEvent.KeyInputEvent> listener){
+    public void addListener(Consumer<InputEvent.Key> listener) {
         this.listener = listener;
     }
 
@@ -29,7 +30,7 @@ public class DoubleClickController {
         if (ticks <= 0) lastKey = null;
     }
 
-    private void onClick(final InputEvent.KeyInputEvent event){
+    private void onClick(final InputEvent.Key event) {
         if (event.getAction() != GLFW.GLFW_PRESS) return;
 
         if (lastKey == null || lastKey != event.getKey()) {

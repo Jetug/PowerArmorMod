@@ -54,18 +54,19 @@ import static net.minecraft.world.item.Items.CRAFTING_TABLE;
 @Mixin(InventoryScreen.class)
 @OnlyIn(Dist.CLIENT)
 public abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
-    @Shadow public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
-
     public InventoryScreenMixin(InventoryMenu screenHandler, Inventory playerInventory, Component textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
 
+    @Shadow
+    public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
+
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!PlayerUtils.isLocalWearingChassis()) return;
+        if (!PlayerUtils.isLocalWearingChassis()) return;
 
         var rect = new Rectangle(leftPos + 30, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
-        if(rect.contains(mouseX, mouseY)){
+        if (rect.contains(mouseX, mouseY)) {
             Global.saveMousePos();
             doServerAction(ActionType.OPEN_GUI);
         }
@@ -73,7 +74,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        if(!PlayerUtils.isLocalWearingChassis()) return;
+        if (!PlayerUtils.isLocalWearingChassis()) return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -83,12 +84,12 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        if(!PlayerUtils.isLocalWearingChassis()) return;
+        if (!PlayerUtils.isLocalWearingChassis()) return;
 
         Lighting.setupFor3DItems();
         itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,
                 topPos + TOP_TAB_ICON_POS_1.y);
         Lighting.setupForFlatItems();
-        GuiUtils.drawChassisIcon(this,poseStack, leftPos + TOP_TAB_ICON_POS_2.x, topPos + TOP_TAB_ICON_POS_2.y);
+        GuiUtils.drawChassisIcon(this, poseStack, leftPos + TOP_TAB_ICON_POS_2.x, topPos + TOP_TAB_ICON_POS_2.y);
     }
 }

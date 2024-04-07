@@ -15,9 +15,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BlockEntityBase extends BlockEntity{
-    protected LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+public abstract class BlockEntityBase extends BlockEntity {
     public final ItemStackHandler itemHandler;
+    protected LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public BlockEntityBase(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, int inventorySize) {
         super(pType, pPos, pBlockState);
@@ -46,7 +46,7 @@ public abstract class BlockEntityBase extends BlockEntity{
     }
 
     @Override
-    public void invalidateCaps()  {
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
     }

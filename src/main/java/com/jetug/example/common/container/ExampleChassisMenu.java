@@ -21,12 +21,12 @@ public class ExampleChassisMenu extends EntityMenu {
 
     public ExampleChassisMenu(int containerId, Container container, Inventory playerInventory, WearableChassis entity) {
         super(EXAMPLE_CHASSIS_MENU.get(), containerId, container, playerInventory, entity, SIZE, INVENTORY_POS_Y);
-        createSlot(HELMET          , new Pos2I(82 , 11));
-        createSlot(BODY_ARMOR      , new Pos2I(82 , 32));
-        createSlot(RIGHT_ARM_ARMOR  , new Pos2I(61 , 26));
-        createSlot(LEFT_ARM_ARMOR , new Pos2I(103, 26));
-        createSlot(RIGHT_LEG_ARMOR  , new Pos2I(69 , 54));
-        createSlot(LEFT_LEG_ARMOR , new Pos2I(95 , 54));
+        createSlot(HELMET, new Pos2I(82, 11));
+        createSlot(BODY_ARMOR, new Pos2I(82, 32));
+        createSlot(RIGHT_ARM_ARMOR, new Pos2I(61, 26));
+        createSlot(LEFT_ARM_ARMOR, new Pos2I(103, 26));
+        createSlot(RIGHT_LEG_ARMOR, new Pos2I(69, 54));
+        createSlot(LEFT_LEG_ARMOR, new Pos2I(95, 54));
     }
 
     @Override

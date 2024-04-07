@@ -1,7 +1,6 @@
 package com.jetug.chassis_core.common.util.helpers.timer;
 
 
-
 public class LoopTimerTask implements TimerTask {
     private final Runnable predicate;
 

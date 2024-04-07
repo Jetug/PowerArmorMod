@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.client.model;
 
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.foundation.item.StackUtils;
 import mod.azure.azurelib.model.GeoModel;

@@ -13,7 +13,7 @@ public class ChassisConfig extends ModelConfigBase {
     @Nullable
     public FrameAttachment getAttachments(String part) {
         for (var att : attachments) {
-            if(Objects.equals(att.part, part)) return att;
+            if (Objects.equals(att.part, part)) return att;
         }
         return null;
     }
@@ -27,7 +27,7 @@ public class ChassisConfig extends ModelConfigBase {
     public HashMap<String, String> boneMap() {
         var result = new HashMap<String, String>();
         for (var att : attachments) {
-            for(var bone : att.bones)
+            for (var bone : att.bones)
                 result.put(bone, att.part);
         }
         return result;

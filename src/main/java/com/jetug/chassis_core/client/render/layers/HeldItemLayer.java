@@ -1,14 +1,11 @@
 package com.jetug.chassis_core.client.render.layers;
 
-import com.jetug.chassis_core.client.render.renderers.ChassisRenderer;
-import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.BiFunction;
 

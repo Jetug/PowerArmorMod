@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class TickTimer {
     private final ArrayList<TimerTask> tasks = new ArrayList<>();
 
-    public void tick(){
+    public void tick() {
         ArrayList<TimerTask> removed = new ArrayList<>();
 
-        for (TimerTask task: tasks) {
+        for (TimerTask task : tasks) {
             task.tick();
             if (task.isCompleted())
                 removed.add(task);
@@ -17,11 +17,11 @@ public class TickTimer {
         tasks.removeAll(removed);
     }
 
-    public void addTimer(TimerTask task){
+    public void addTimer(TimerTask task) {
         tasks.add(task);
     }
 
-    public void addCooldownTimer(int duration, Runnable predicate){
+    public void addCooldownTimer(int duration, Runnable predicate) {
         tasks.add(new PlayOnceTimerTask(duration, predicate));
     }
 

@@ -18,7 +18,7 @@ public abstract class GuiBase<T extends AbstractContainerMenu> extends AbstractC
     }
 
     protected void renderLabels(PoseStack pPoseStack, int pX, int pY) {
-        for(var button : this.buttons) {
+        for (var button : this.buttons) {
             if (button.isShowingTooltip()) {
                 button.renderToolTip(pPoseStack, pX - this.leftPos, pY - this.topPos);
                 break;

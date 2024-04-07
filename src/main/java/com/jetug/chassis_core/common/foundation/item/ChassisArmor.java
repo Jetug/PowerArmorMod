@@ -12,21 +12,20 @@ public class ChassisArmor extends DamageableItem {
         this.material = material;
     }
 
-    public ChassisArmorMaterial getMaterial(){
-        return material;
-    }
-
-    public float getDamageAfterAbsorb(float damage){
-        return CombatRules.getDamageAfterAbsorb(damage, material.getDefenseForSlot(part), material.getToughness());
-    }
-
     public static boolean hasArmor(ItemStack itemStack) {
         return getItemDamage(itemStack) < itemStack.getMaxDamage();
     }
 
-    public void damageArmor(ItemStack itemStack, int dmg)
-    {
-        var resultDamage = getItemDamage(itemStack)+dmg;
+    public ChassisArmorMaterial getMaterial() {
+        return material;
+    }
+
+    public float getDamageAfterAbsorb(float damage) {
+        return CombatRules.getDamageAfterAbsorb(damage, material.getDefenseForSlot(part), material.getToughness());
+    }
+
+    public void damageArmor(ItemStack itemStack, int dmg) {
+        var resultDamage = getItemDamage(itemStack) + dmg;
         setItemDamage(itemStack, Math.min(resultDamage, itemStack.getMaxDamage()));
     }
 }

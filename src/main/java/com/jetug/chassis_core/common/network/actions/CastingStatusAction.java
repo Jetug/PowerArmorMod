@@ -14,11 +14,12 @@ import static net.minecraft.nbt.NbtUtils.writeBlockPos;
 import static net.minecraftforge.network.NetworkEvent.Context;
 
 @SuppressWarnings("ConstantConditions")
-public class CastingStatusAction extends Action<CastingStatusAction>{
+public class CastingStatusAction extends Action<CastingStatusAction> {
     private ContainerData data;
     private BlockPos blockPos;
 
-    public CastingStatusAction() {}
+    public CastingStatusAction() {
+    }
 
     public CastingStatusAction(ContainerData data, BlockPos blockPos) {
         this.data = data;
@@ -29,7 +30,7 @@ public class CastingStatusAction extends Action<CastingStatusAction>{
 //        return 4;
 //    }
 
-    private CompoundTag writeContainerData(ContainerData data){
+    private CompoundTag writeContainerData(ContainerData data) {
         var tag = new CompoundTag();
         var arr = new ArrayList<Integer>();
 
@@ -39,16 +40,18 @@ public class CastingStatusAction extends Action<CastingStatusAction>{
         return tag;
     }
 
-    private ContainerData readContainerData(CompoundTag tag){
-        return new ContainerData(){
+    private ContainerData readContainerData(CompoundTag tag) {
+        return new ContainerData() {
             private final int[] data = tag.getIntArray("arr");
+
             @Override
             public int get(int pIndex) {
                 return data[pIndex];
             }
 
             @Override
-            public void set(int pIndex, int pValue) {}
+            public void set(int pIndex, int pValue) {
+            }
 
             @Override
             public int getCount() {

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class LayerBase <T extends GeoAnimatable> extends GeoRenderLayer<T> {
+public class LayerBase<T extends GeoAnimatable> extends GeoRenderLayer<T> {
     public LayerBase(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }

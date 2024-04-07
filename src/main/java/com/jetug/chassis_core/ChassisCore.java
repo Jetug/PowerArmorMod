@@ -1,12 +1,15 @@
 package com.jetug.chassis_core;
 
+import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.client.render.layers.PlayerSkinStorage;
-import com.jetug.example.common.registery.EntityTypes;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import com.jetug.chassis_core.common.network.PacketHandler;
 import com.jetug.example.common.registery.ContainerRegistry;
+import com.jetug.example.common.registery.EntityTypes;
 import mod.azure.azurelib.AzureLib;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,9 +28,13 @@ public class ChassisCore {
     public ChassisCore() {
         AzureLib.initialize();
         register();
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MOD_EVENT_BUS.addListener(KeyBindings::register);
+        });
+
         EVENT_BUS.register(this);
         MOD_EVENT_BUS.addListener(this::onCommonSetup);
-
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {

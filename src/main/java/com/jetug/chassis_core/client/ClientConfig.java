@@ -13,5 +13,6 @@ public class ClientConfig {
     public static final ModResourceManager modResourceManager = new ModResourceManager();
     public static final ChassisHeadRenderer CHASSIS_HEAD_RENDERER = new ChassisHeadRenderer();
 
-    @NotNull public static final Options OPTIONS = Minecraft.getInstance().options;
+    @NotNull
+    public static final Options OPTIONS = Minecraft.getInstance().options;
 }

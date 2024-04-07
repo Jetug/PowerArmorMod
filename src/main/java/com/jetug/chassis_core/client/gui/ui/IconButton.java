@@ -32,7 +32,8 @@ public abstract class IconButton extends AbstractButton {
     }
 
     @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {}
+    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    }
 
     @Override
     public void renderButton(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {

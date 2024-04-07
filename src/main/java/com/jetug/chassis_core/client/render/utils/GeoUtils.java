@@ -22,12 +22,12 @@ public class GeoUtils {
     public static Collection<GeoBone> getEquipmentBones(String boneName, WearableChassis animatable) {
         var result = new ArrayList<GeoBone>();
         var configs = animatable.getItemConfigs();
-        for (var config: configs) {
+        for (var config : configs) {
             var boneNames = config.getArmorBone(boneName);
 
             for (var name : boneNames) {
                 var armorBone = GeoUtils.getBone(config.getModelLocation(), name);
-                if(armorBone != null) result.add(armorBone);
+                if (armorBone != null) result.add(armorBone);
             }
         }
         return result;
@@ -35,19 +35,19 @@ public class GeoUtils {
 
 
     public static void setHeadAnimation(CoreGeoBone head, AnimationState animationState) {
-        if(head == null) return;
-        var data = (EntityModelData)animationState.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(data.headPitch()  * ((float) Math.PI / 180F));
+        if (head == null) return;
+        var data = (EntityModelData) animationState.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
+        head.setRotX(data.headPitch() * ((float) Math.PI / 180F));
         head.setRotY(data.netHeadYaw() * ((float) Math.PI / 180F));
     }
 
     public static void setHeadAnimation(LivingEntity animatable, AnimationProcessor animationProcessor, AnimationState animationState) {
         var head = animationProcessor.getBone("head");
-        if(head == null) return;
+        if (head == null) return;
         setHeadAnimation(head, animationState);
     }
 
-    public static BakedGeoModel getModel(ResourceLocation location){
+    public static BakedGeoModel getModel(ResourceLocation location) {
         return AzureLibCache.getBakedModels().get(location);
     }
 
@@ -57,7 +57,7 @@ public class GeoUtils {
 //    }
 
     @Nullable
-    public static GeoBone getBone(ResourceLocation resourceLocation, String name){
+    public static GeoBone getBone(ResourceLocation resourceLocation, String name) {
         var model = getModel(resourceLocation);
         return model == null ? null : model.getBone(name).orElse(null);
     }

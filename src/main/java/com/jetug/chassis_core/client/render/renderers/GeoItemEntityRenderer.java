@@ -58,7 +58,7 @@ public class GeoItemEntityRenderer<T extends GeoAnimatable> extends GeoObjectRen
             var headPitch = 0;
             var motionThreshold = 0;
             var velocity = Vec3.ZERO;//jetug
-            var avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z)) / 2.0F;
+            var avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z)) / 2.0F;
             var animationState = new AnimationState(animatable, limbSwing, limbSwingAmount, partialTick,
                     avgVelocity >= motionThreshold && limbSwingAmount != 0.0F);
             var instanceId = this.getInstanceId(animatable);

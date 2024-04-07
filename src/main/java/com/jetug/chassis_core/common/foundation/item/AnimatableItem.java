@@ -1,23 +1,21 @@
 package com.jetug.chassis_core.common.foundation.item;
 
-import com.jetug.chassis_core.common.data.json.*;
-import mod.azure.azurelib.animatable.*;
-import mod.azure.azurelib.core.animatable.instance.*;
-import mod.azure.azurelib.renderer.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.world.item.*;
-import net.minecraftforge.client.*;
-import net.minecraftforge.common.util.*;
-import javax.annotation.*;
-import java.util.function.*;
+import com.jetug.chassis_core.common.data.json.ItemConfig;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.jetug.chassis_core.client.ClientConfig.*;
-import static com.jetug.chassis_core.client.render.utils.ResourceHelper.*;
-import static mod.azure.azurelib.util.AzureLibUtil.*;
+import javax.annotation.Nullable;
+
+import static com.jetug.chassis_core.client.ClientConfig.modResourceManager;
+import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResourceName;
+import static mod.azure.azurelib.util.AzureLibUtil.createInstanceCache;
 
 public abstract class AnimatableItem extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = createInstanceCache(this);
-    private final Lazy<String> name = Lazy.of(() -> getResourceName(getRegistryName()));
+    private final Lazy<String> name = Lazy.of(() -> getResourceName(ForgeRegistries.ITEMS.getKey(this)));
     private final Lazy<ItemConfig> config = Lazy.of(() -> modResourceManager.getItemConfig(getName()));
 
 //    public GeoItemRenderer<AnimatableItem> renderer;
@@ -28,12 +26,12 @@ public abstract class AnimatableItem extends Item implements GeoItem {
 
 //    abstract protected GeoItemRenderer<AnimatableItem> createRenderer();
 
-    public String getName(){
+    public String getName() {
         return name.get();
     }
 
     @Nullable
-    public ItemConfig getConfig(){
+    public ItemConfig getConfig() {
         return config.get();
     }
 

@@ -24,7 +24,7 @@ public class EntityHelper {
     }
 
     public static @NotNull ItemStack entityToItem(ItemStack stack, LivingEntity target) {
-        var newTag    = new CompoundTag();
+        var newTag = new CompoundTag();
         var entityTag = new CompoundTag();
 
         target.save(entityTag);
@@ -43,7 +43,7 @@ public class EntityHelper {
             if (type != null) {
                 Entity entity = type.create(world);
 
-                if(entity == null) return null;
+                if (entity == null) return null;
 
                 entity.load(stack.getTag().getCompound(ENTITY_TAG));
 
@@ -57,7 +57,7 @@ public class EntityHelper {
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public static void clearItemTags(ItemStack stack){
+    public static void clearItemTags(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         tag.remove(CHASSIS_ENTITY_ID);
         tag.remove(ENTITY_TAG);

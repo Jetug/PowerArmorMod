@@ -34,11 +34,11 @@ import static org.apache.logging.log4j.Level.ERROR;
 public class TextureHelper {
     public static final String MINECRAFT_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-    public static ResourceLocation createResource(String name, AbstractTexture abstractTexture){
+    public static ResourceLocation createResource(String name, AbstractTexture abstractTexture) {
         return createResource(ChassisCore.MOD_ID, name, abstractTexture);
     }
 
-    public static ResourceLocation createResource(String namespace, String name, AbstractTexture abstractTexture){
+    public static ResourceLocation createResource(String namespace, String name, AbstractTexture abstractTexture) {
         var textureManager = Minecraft.getInstance().getTextureManager();
         var headTextureLocation = new ResourceLocation(namespace, name);
         textureManager.register(headTextureLocation, abstractTexture);
@@ -57,8 +57,7 @@ public class TextureHelper {
     public static BufferedImage getPlayerImage(Player clientPlayer) {
         try {
             return getPlayerSkinImage(clientPlayer);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             var skin = DefaultPlayerSkin.getDefaultSkin(clientPlayer.getGameProfile().getId());
             return resourceToBufferedImage(skin);
         }
@@ -72,8 +71,7 @@ public class TextureHelper {
             if (playerSkin == null) return null;
             cropImage(playerSkin, 64, 16);
             return playerSkin;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             var skin = DefaultPlayerSkin.getDefaultSkin(clientPlayer.getGameProfile().getId());
             var playerSkin = resourceToBufferedImage(skin);
             if (playerSkin == null) return null;
@@ -101,7 +99,7 @@ public class TextureHelper {
         return playerSkin;
     }
 
-    private static void print(BufferedImage image){
+    private static void print(BufferedImage image) {
         var outputFile = new File("C:/Users/Jetug/Desktop/test/output.png"); // Путь к файлу и его расширение
         try {
             ImageIO.write(image, "png", outputFile);
@@ -123,11 +121,12 @@ public class TextureHelper {
 //        var skin = map.containsKey(Type.SKIN) ?
 //                minecraft.getSkinManager().registerTexture(map.get(Type.SKIN), Type.SKIN) :
 //                DefaultPlayerSkin.getDefaultSkin(clientPlayer.getUUID());
-;;
+        ;
+        ;
 
         var gameProfile = player.getGameProfile();
         var propertyMap = gameProfile.getProperties();
-        if(!propertyMap.containsKey("textures"))
+        if (!propertyMap.containsKey("textures"))
             return player.getSkinTextureLocation();
         var property = propertyMap.get("textures").iterator().next();
 
@@ -170,9 +169,8 @@ public class TextureHelper {
             var jsonUrl = json.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
 
             return ImageIO.read(new URL(jsonUrl));
-        }
-        catch (Exception e){
-            if(!(e instanceof IOException || e instanceof IllegalStateException))
+        } catch (Exception e) {
+            if (!(e instanceof IOException || e instanceof IllegalStateException))
                 ChassisCore.LOGGER.log(ERROR, e.getMessage(), e);
             return null;
         }
@@ -194,7 +192,7 @@ public class TextureHelper {
     public static Pair<Integer, Integer> getTextureSize(ResourceLocation resourceLocation) {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            var nativeImage = NativeImage.read(resource.getInputStream());
+            var nativeImage = NativeImage.read(resource.get().open());
             return Pair.of(nativeImage.getWidth(), nativeImage.getHeight());
 
         } catch (IOException e) {
@@ -212,7 +210,7 @@ public class TextureHelper {
 
     private static String decodeBase64(String base64) {
         byte[] decoded = Base64.getDecoder().decode(base64);
-        return new  String(decoded, StandardCharsets.UTF_8);
+        return new String(decoded, StandardCharsets.UTF_8);
     }
 
     private static String getHTML(String urlToRead) {
@@ -229,8 +227,7 @@ public class TextureHelper {
                 }
                 return result.toString();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
     }

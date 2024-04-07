@@ -18,7 +18,8 @@ public class GenericPacket {
         this.action = action;
     }
 
-    public GenericPacket() {}
+    public GenericPacket() {
+    }
 
     public static void write(GenericPacket message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.entityId);
@@ -34,10 +35,9 @@ public class GenericPacket {
 
     public static void handle(GenericPacket message, Supplier<NetworkEvent.Context> context) {
         boolean isClientSide = context.get().getDirection().getReceptionSide() == LogicalSide.CLIENT;
-        if(isClientSide){
+        if (isClientSide) {
             message.action.doClientAction(message.action, context, message.entityId);
-        }
-        else{
+        } else {
             message.action.doServerAction(message.action, context, message.entityId);
         }
     }

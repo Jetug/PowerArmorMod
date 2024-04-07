@@ -5,10 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -23,14 +22,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 import java.util.UUID;
 
-import static net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.*;
-
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin implements ClientGamePacketListener {
-    @Shadow @Final private Minecraft minecraft;
-    @Shadow        private ClientLevel level;
-    @Shadow @Final private static Logger LOGGER;
-    @Shadow @Final private Map<UUID, PlayerInfo> playerInfoMap;
+    @Shadow
+    @Final
+    private static Logger LOGGER;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+    @Shadow
+    private ClientLevel level;
+    @Shadow
+    @Final
+    private Map<UUID, PlayerInfo> playerInfoMap;
 
 
     @Inject(method = "handleSetEntityPassengersPacket", at = @At("HEAD"), cancellable = true)
@@ -44,7 +48,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
             boolean flag = entity.hasIndirectPassenger(this.minecraft.player);
             entity.ejectPassengers();
 
-            for(int i : pPacket.getPassengers()) {
+            for (int i : pPacket.getPassengers()) {
                 Entity entity1 = this.level.getEntity(i);
                 if (entity1 != null) {
                     entity1.startRiding(entity, true);
@@ -54,8 +58,8 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
                             this.minecraft.player.setYRot(entity.getYRot());
                             this.minecraft.player.setYHeadRot(entity.getYRot());
                         }
-                        if(!(entity instanceof WearableChassis))
-                            this.minecraft.gui.setOverlayMessage(new TranslatableComponent("mount.onboard", this.minecraft.options.keyShift.getTranslatedKeyMessage()), false);
+                        if (!(entity instanceof WearableChassis))
+                            this.minecraft.gui.setOverlayMessage(Component.translatable("mount.onboard", this.minecraft.options.keyShift.getTranslatedKeyMessage()), false);
                     }
                 }
             }

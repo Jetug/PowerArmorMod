@@ -14,15 +14,15 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingCh
 
 @Mixin(Mob.class)
 public abstract class MobMixin {
-    @Shadow private LivingEntity target;
+    @Shadow
+    private LivingEntity target;
 
     @Inject(method = "setTarget", at = @At("TAIL"))
     public void setTarget(LivingEntity pTarget, CallbackInfo ci) {
-        if(pTarget instanceof Player player && isWearingChassis(player)){
+        if (pTarget instanceof Player player && isWearingChassis(player)) {
             target = (LivingEntity) player.getVehicle();
-        }
-        else if(pTarget instanceof WearableChassis powerArmor
-                && (!powerArmor.hasPlayerPassenger() || powerArmor.getPlayerPassenger().isCreative())){
+        } else if (pTarget instanceof WearableChassis powerArmor
+                && (!powerArmor.hasPlayerPassenger() || powerArmor.getPlayerPassenger().isCreative())) {
             target = null;
         }
     }

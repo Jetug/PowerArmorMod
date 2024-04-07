@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 public class EventHandler {
     @SubscribeEvent
     public static void onTick(TickEvent event) {
-        if(event.phase == TickEvent.Phase.END) return;
-        switch (event.type){
-            case WORLD:
+        if (event.phase == TickEvent.Phase.END) return;
+        switch (event.type) {
+            case LEVEL:
                 break;
             case PLAYER:
                 break;
@@ -25,15 +25,6 @@ public class EventHandler {
             case RENDER:
                 break;
         }
-    }
-
-    @SubscribeEvent()
-    public static void onAttack(AttackEntityEvent event) {
-        var player = event.getPlayer();
-        var target = event.getTarget();
-
-//        if(isLocalWearingChassis(player))
-//            getLocalPlayerChassis(player).powerPunch();
     }
 
 //    @SubscribeEvent

@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
-            = DeferredRegister.create(ForgeRegistries.ENTITIES, ChassisCore.MOD_ID);
+            = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ChassisCore.MOD_ID);
 
     public static final RegistryObject<EntityType<ExampleChassis>> EXAMPLE_CHASSIS =
             registerEntity("example_chassis", EntityType.Builder
@@ -25,7 +25,7 @@ public class EntityTypes {
         return ENTITY_TYPES.register(entityName, () -> builder.build(new ResourceLocation(ChassisCore.MOD_ID, entityName).toString()));
     }
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
     }
 }

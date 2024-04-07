@@ -18,11 +18,10 @@ public class BufferedImageHelper {
     public static BufferedImage resourceToBufferedImage(ResourceLocation resourceLocation) {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            var nativeImage = NativeImage.read(resource.getInputStream());
+            var nativeImage = NativeImage.read(resource.get().open());
             var imageArr = nativeImage.asByteArray();
             return getImage(imageArr);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             ChassisCore.LOGGER.log(Level.ERROR, e);
             return null;
         }
@@ -34,9 +33,9 @@ public class BufferedImageHelper {
             for (int y = 0; y < img.getHeight(); y++) {
                 int clr = img.getRGB(x, y);
                 int alpha = (clr & 0xff000000) >> 24;
-                int red =   (clr & 0x00ff0000) >> 16;
+                int red = (clr & 0x00ff0000) >> 16;
                 int green = (clr & 0x0000ff00) >> 8;
-                int blue =   clr & 0x000000ff;
+                int blue = clr & 0x000000ff;
 
                 int rgb = alpha;
                 rgb = (rgb << 8) + blue;
@@ -49,7 +48,7 @@ public class BufferedImageHelper {
         return nativeImage;
     }
 
-    public static BufferedImage extendImage(BufferedImage image, int width, int height){
+    public static BufferedImage extendImage(BufferedImage image, int width, int height) {
         var scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         addImage(scaledImage, image, 0, 0);
         return scaledImage;
@@ -69,7 +68,7 @@ public class BufferedImageHelper {
     public static void cropImage(BufferedImage img, int xPos, int yPos) {
         for (int x = 0; x < img.getWidth(); x++) {
             for (int y = 0; y < img.getHeight(); y++) {
-                if(x >= xPos || y >= yPos)
+                if (x >= xPos || y >= yPos)
                     img.setRGB(x, y, (new Color(0.0f, 0.0f, 0.0f, 0.0f)).getRGB());
             }
         }

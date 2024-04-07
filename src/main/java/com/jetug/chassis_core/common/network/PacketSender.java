@@ -21,6 +21,7 @@ public class PacketSender {
     public static void doClientAction(Action action) {
         sendToAllPlayers(new GenericPacket(-1, action));
     }
+
     public static void doClientAction(Action action, int entityId) {
         sendToAllPlayers(new GenericPacket(entityId, action));
     }

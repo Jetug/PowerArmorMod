@@ -30,11 +30,11 @@ public abstract class EntityMenu extends MenuBase {
 
     protected abstract int getId(String chassisPart);
 
-    protected void createSlot(String chassisPart, Pos2I pos){
-        try{
+    protected void createSlot(String chassisPart, Pos2I pos) {
+        try {
             //if(entity == null) return;
             this.addSlot(new EquipmentSlot(chassisPart, container, getId(chassisPart), pos.x, pos.y));
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

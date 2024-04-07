@@ -20,15 +20,15 @@ public class ActionRegistry {
         addAction(new CastingStatusAction());
     }
 
-    public static Action getAction(int id){
+    public static Action getAction(int id) {
         return actions.get(id);
     }
 
-    public static int getActionId(Class type){
+    public static int getActionId(Class type) {
         return actionsId.get(type);
     }
 
-    public static <T extends Action> void addAction(T action){
+    public static <T extends Action> void addAction(T action) {
         var id = currentId++;
         actions.put(id, action);
         actionsId.put(action.getClass(), id);

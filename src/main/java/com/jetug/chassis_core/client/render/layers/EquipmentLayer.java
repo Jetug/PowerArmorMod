@@ -17,7 +17,7 @@ public class EquipmentLayer<T extends WearableChassis> extends LayerBase<T> {
     @Override
     public void render(PoseStack poseStack, T entity, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource,
                        VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        for(var part : entity.getEquipment()) {
+        for (var part : entity.getEquipment()) {
             if (entity.isEquipmentVisible(part)) {
                 var stack = entity.getEquipment(part);
                 var item = entity.getEquipmentItem(part);
@@ -31,7 +31,6 @@ public class EquipmentLayer<T extends WearableChassis> extends LayerBase<T> {
             }
         }
     }
-
 
 
 //

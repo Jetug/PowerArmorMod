@@ -26,7 +26,8 @@ public abstract class EmptyLivingEntity extends LivingEntity {
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {}
+    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {
+    }
 
     @Override
     public HumanoidArm getMainArm() {

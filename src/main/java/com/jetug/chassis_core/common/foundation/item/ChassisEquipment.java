@@ -9,17 +9,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
-import static com.jetug.chassis_core.client.ClientConfig.*;
-import static com.jetug.chassis_core.common.foundation.item.StackUtils.*;
-import static mod.azure.azurelib.util.AzureLibUtil.*;
+import static com.jetug.chassis_core.client.ClientConfig.modResourceManager;
+import static com.jetug.chassis_core.common.foundation.item.StackUtils.DEFAULT;
+import static com.jetug.chassis_core.common.foundation.item.StackUtils.getVariant;
+import static mod.azure.azurelib.util.AzureLibUtil.createInstanceCache;
 
 public class ChassisEquipment extends Item implements GeoItem {
     public final String part;
     private final AnimatableInstanceCache cache = createInstanceCache(this);
-    private final Lazy<String> name = Lazy.of(() -> ResourceHelper.getResourceName(getRegistryName()));
+    private final Lazy<String> name = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ITEMS.getKey(this)));
     private final Lazy<EquipmentConfig> config = Lazy.of(() -> modResourceManager.getEquipmentConfig(getName()));
 
     public ChassisEquipment(Properties pProperties, String part) {
@@ -28,18 +30,18 @@ public class ChassisEquipment extends Item implements GeoItem {
     }
 
     @Nullable
-    public ResourceLocation getTexture(ItemStack stack){
+    public ResourceLocation getTexture(ItemStack stack) {
         var variant = getVariant(stack);
         var value = getConfig().getTextureLocation(variant);
         return value != null ? value : getConfig().getTextureLocation(DEFAULT);
     }
 
     @Nullable
-    public EquipmentConfig getConfig(){
+    public EquipmentConfig getConfig() {
         return config.get();
     }
 
-    public String getName(){
+    public String getName() {
         return name.get();
     }
 
@@ -49,5 +51,6 @@ public class ChassisEquipment extends Item implements GeoItem {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+    }
 }

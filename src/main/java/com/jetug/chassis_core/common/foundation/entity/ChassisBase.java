@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -39,31 +40,22 @@ import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.copyCont
 import static com.jetug.chassis_core.common.util.helpers.ContainerUtils.isContainersEqual;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.deserializeInventory;
 import static com.jetug.chassis_core.common.util.helpers.InventoryHelper.serializeInventory;
-import static java.util.Arrays.*;
+import static java.util.Arrays.stream;
 import static java.util.Collections.addAll;
 
 public class ChassisBase extends EmptyLivingEntity implements ContainerListener {
     public static final int INVENTORY_SIZE = 6;
     public static HashMap<String, Integer> PART_IDS = new HashMap<>();
 
-    private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(getType().getRegistryName()));
-    private ChassisConfig config = null;
-    private ListTag serializedInventory;
-    private Container previousContainer;
-
-    protected final TickTimer timer = new TickTimer();
-    protected final boolean isClientSide = level.isClientSide;
-    protected final boolean isServerSide = !level.isClientSide;
-
-    protected float totalDefense;
-    protected float totalToughness;
-
-    public HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
-    public Collection<String> bonesToHide = new ArrayList<>();
-
-    protected int inventorySize = 6;
-    protected HashMap<String, Integer> partIdMap = PART_IDS;
-    public SimpleContainer inventory;
+    static {
+        var i = 0;
+        PART_IDS.put(HELMET, i++);
+        PART_IDS.put(BODY_ARMOR, i++);
+        PART_IDS.put(LEFT_ARM_ARMOR, i++);
+        PART_IDS.put(RIGHT_ARM_ARMOR, i++);
+        PART_IDS.put(LEFT_LEG_ARMOR, i++);
+        PART_IDS.put(RIGHT_LEG_ARMOR, i++);
+    }
 
     public final String[] armor = new String[]{
             HELMET,
@@ -73,16 +65,28 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
             LEFT_LEG_ARMOR,
             RIGHT_LEG_ARMOR,
     };
-
-    static {
-        var i = 0;
-        PART_IDS.put(HELMET         , i++);
-        PART_IDS.put(BODY_ARMOR     , i++);
-        PART_IDS.put(LEFT_ARM_ARMOR , i++);
-        PART_IDS.put(RIGHT_ARM_ARMOR, i++);
-        PART_IDS.put(LEFT_LEG_ARMOR , i++);
-        PART_IDS.put(RIGHT_LEG_ARMOR, i++);
-    }
+    protected final TickTimer timer = new TickTimer();
+    protected final boolean isClientSide = level.isClientSide;
+    protected final boolean isServerSide = !level.isClientSide;
+    private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType())));
+    public HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
+    public Collection<String> bonesToHide = new ArrayList<>();
+    public SimpleContainer inventory;
+    protected float totalDefense;
+    protected float totalToughness;
+    protected int inventorySize = 6;
+    protected HashMap<String, Integer> partIdMap = PART_IDS;
+    protected String[] armorParts = new String[]{
+            HELMET,
+            BODY_ARMOR,
+            LEFT_ARM_ARMOR,
+            RIGHT_ARM_ARMOR,
+            LEFT_LEG_ARMOR,
+            RIGHT_LEG_ARMOR,
+    };
+    private ChassisConfig config = null;
+    private ListTag serializedInventory;
+    private Container previousContainer;
 
     public ChassisBase(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
         super(pEntityType, pLevel);
@@ -96,7 +100,20 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         init();
     }
 
-    public void init(){
+    protected static ChassisEquipment getAsChassisEquipment(ItemStack itemStack) {
+        return (ChassisEquipment) itemStack.getItem();
+    }
+
+    public static <T, R> Collection<R> returnCollection(Collection<T> collection, Function<T, R> function) {
+        var result = new ArrayList<R>();
+        for (var item : collection) {
+            var val = function.apply(item);
+            if (val != null) result.add(val);
+        }
+        return result;
+    }
+
+    public void init() {
         noCulling = true;
         initInventory();
         updateParams();
@@ -119,24 +136,6 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return inventorySize;
     }
 
-    protected static ChassisEquipment getAsChassisEquipment(ItemStack itemStack){
-        return (ChassisEquipment)itemStack.getItem();
-    }
-
-    public ArrayList<String> getMods(){
-        var res = new ArrayList<String>();
-        for(var config : getItemConfigs())
-            res.addAll(List.of(config.mods));
-        return res;
-    }
-
-    public ArrayList<String> getVisibleMods(){
-        var res = new ArrayList<String>();
-        for(var item : getVisibleEquipment())
-            res.addAll(StackUtils.getAttachments(item));
-        return res;
-    }
-
 //    public ArrayList<String> getHiddenBones(){
 //        var hidden = new ArrayList<String>();
 //        for(var item : getVisibleEquipment()) {
@@ -150,15 +149,18 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 //        return hidden;
 //    }
 
-    @OnlyIn(Dist.CLIENT)
-    public Collection<GeoBone> getEquipmentBones(String frameBoneName) {
-        var result = bonesToRender.get(frameBoneName);
-        return result == null ? new ArrayList<>() : result;
+    public ArrayList<String> getMods() {
+        var res = new ArrayList<String>();
+        for (var config : getItemConfigs())
+            res.addAll(List.of(config.mods));
+        return res;
     }
 
-    public Integer getPartId(String chassisPart){
-        var val = partIdMap.get(chassisPart);
-        return val != null ? val : 0;
+    public ArrayList<String> getVisibleMods() {
+        var res = new ArrayList<String>();
+        for (var item : getVisibleEquipment())
+            res.addAll(StackUtils.getAttachments(item));
+        return res;
     }
 //    protected void createPartIdMap(){
 //        var i = 0;
@@ -173,6 +175,17 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 //    }
 
 //    private final Map<String, EquipmentConfig> history = new HashMap<>();
+
+    @OnlyIn(Dist.CLIENT)
+    public Collection<GeoBone> getEquipmentBones(String frameBoneName) {
+        var result = bonesToRender.get(frameBoneName);
+        return result == null ? new ArrayList<>() : result;
+    }
+
+    public Integer getPartId(String chassisPart) {
+        var val = partIdMap.get(chassisPart);
+        return val != null ? val : 0;
+    }
 
     @Override
     public void tick() {
@@ -213,38 +226,29 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     }
 
     @Nullable
-    public ChassisConfig getConfig(){
-        if(config == null)
+    public ChassisConfig getConfig() {
+        if (config == null)
             config = ClientConfig.modResourceManager.getFrameConfig(getModelId());
         return config;
     }
 
-    public String getModelId(){
+    public String getModelId() {
         return chassisId.get();
     }
 
-    public void containerRealyChanged(Container container){
+    public void containerRealyChanged(Container container) {
         updateParams();
         serializedInventory = serializeInventory(inventory);
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
     }
 
-    protected String[] armorParts = new String[]{
-            HELMET          ,
-            BODY_ARMOR      ,
-            LEFT_ARM_ARMOR  ,
-            RIGHT_ARM_ARMOR ,
-            LEFT_LEG_ARMOR  ,
-            RIGHT_LEG_ARMOR ,
-    };
-
-    public boolean isEquipmentVisible(String chassisPart){
-        if(isArmorItem(chassisPart))
+    public boolean isEquipmentVisible(String chassisPart) {
+        if (isArmorItem(chassisPart))
             return hasArmor(chassisPart);
         else return !getEquipment(chassisPart).isEmpty();
     }
 
-    public boolean isArmorItem(String chassisPart){
+    public boolean isArmorItem(String chassisPart) {
         return stream(armorParts).toList().contains(chassisPart);
     }
 
@@ -252,25 +256,16 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return getArmorDurability(chassisPart) != 0;
     }
 
-    public Collection<String> getEquipment(){
+    public Collection<String> getEquipment() {
         return partIdMap.keySet();
     }
 
-    public Collection<String> getPovEquipment(){
+    public Collection<String> getPovEquipment() {
         return Collections.singleton(RIGHT_ARM_ARMOR);
     }
 
-    public boolean hasEquipment(String part){
+    public boolean hasEquipment(String part) {
         return !getEquipment(part).isEmpty();
-    }
-
-    public static <T, R> Collection<R> returnCollection(Collection<T> collection, Function<T, R> function){
-        var result = new ArrayList<R>();
-        for (var item : collection) {
-            var val = function.apply(item);
-            if(val != null) result.add(val);
-        }
-        return result;
     }
 
     public Collection<ItemStack> getVisibleEquipment() {
@@ -278,49 +273,49 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     }
 
     public Collection<EquipmentConfig> getItemConfigs() {
-        return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment)equipment.getItem()).getConfig());
+        return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment) equipment.getItem()).getConfig());
     }
 
-    public ItemStack getEquipment(String chassisPart){
+    public ItemStack getEquipment(String chassisPart) {
         return inventory.getItem(getPartId(chassisPart));
     }
 
-    public void setEquipment(String chassisPart, ItemStack itemStack){
+    public void setEquipment(String chassisPart, ItemStack itemStack) {
         inventory.setItem(getPartId(chassisPart), itemStack);
     }
 
     public int getArmorDurability(String chassisPart) {
         var itemStack = getEquipment(chassisPart);
-        if(itemStack.isEmpty()) return 0;
+        if (itemStack.isEmpty()) return 0;
         return itemStack.getMaxDamage() - itemStack.getDamageValue();
     }
 
-    public ArmorData getArmorData(){
+    public ArmorData getArmorData() {
         var data = new ArmorData(getId());
         data.inventory = serializedInventory;
         return data;
     }
 
-    public void setArmorData(ArmorData data){
-        if(isClientSide) setClientArmorData(data);
+    public void setArmorData(ArmorData data) {
+        if (isClientSide) setClientArmorData(data);
         else setServerArmorData(data);
     }
 
-    public void setClientArmorData(ArmorData data){
+    public void setClientArmorData(ArmorData data) {
         deserializeInventory(inventory, data.inventory);
     }
 
-    public void setServerArmorData(ArmorData data){
+    public void setServerArmorData(ArmorData data) {
         //deserializeInventory(inventory, data.inventory);
         //heat = data.heat;
         //setAttackCharge(data.attackCharge);
     }
 
-    public void setInventory(ListTag tags){
+    public void setInventory(ListTag tags) {
         deserializeInventory(inventory, tags);
     }
 
-    protected void initInventory(){
+    protected void initInventory() {
         SimpleContainer inventoryBuff = this.inventory;
         this.inventory = new SimpleContainer(inventorySize);
         if (inventoryBuff != null) {
@@ -337,14 +332,14 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     }
 
     protected void syncDataWithClient() {
-        if(isServerSide) getArmorData().sentToClient();
+        if (isServerSide) getArmorData().sentToClient();
     }
 
     protected void syncDataWithServer() {
-        if(isClientSide) getArmorData().sentToServer();
+        if (isClientSide) getArmorData().sentToServer();
     }
 
-    protected void saveInventory(CompoundTag compound){
+    protected void saveInventory(CompoundTag compound) {
         if (inventory == null) return;
         compound.put(ITEMS_TAG, serializeInventory(inventory));
     }
@@ -355,19 +350,19 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         deserializeInventory(inventory, nbtTags);
     }
 
-    protected float getMinSpeed(){
+    protected float getMinSpeed() {
         return 0.05f;
     }
 
-    private void updateParams(){
+    private void updateParams() {
         updateTotalArmor();
         updateSpeed();
-        if(isClientSide)
+        if (isClientSide)
             updateBones();
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void updateBones(){
+    protected void updateBones() {
         bonesToRender.clear();
         bonesToHide.clear();
 
@@ -377,38 +372,38 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 
             addAll(bonesToHide, config.hide);
 
-            for(var attachment : config.attachments){
-                if(stream(config.mods).toList().contains(attachment.armor)
+            for (var attachment : config.attachments) {
+                if (stream(config.mods).toList().contains(attachment.armor)
                         && !StackUtils.hasAttachment(stack, attachment.armor))
                     continue;
 
                 var bone = GeoUtils.getBone(config.getModelLocation(), attachment.armor);
-                if( bone == null ) continue;
+                if (bone == null) continue;
 
-                if( !bonesToRender.containsKey(attachment.frame))
-                     bonesToRender.put(attachment.frame, arrayListOf(bone));
+                if (!bonesToRender.containsKey(attachment.frame))
+                    bonesToRender.put(attachment.frame, arrayListOf(bone));
                 else bonesToRender.get(attachment.frame).add(bone);
             }
         }
     }
 
-    protected void updateSpeed(){
+    protected void updateSpeed() {
         setSpeed(getSpeedAttribute());
     }
 
-    public void updateTotalArmor(){
-        this.totalDefense   = 0;
+    public void updateTotalArmor() {
+        this.totalDefense = 0;
         this.totalToughness = 0;
 
-        for (var part : armor){
-            if (getEquipment(part).getItem() instanceof ChassisArmor armorItem){
-                this.totalDefense   += armorItem.getMaterial().getDefenseForSlot(part);
+        for (var part : armor) {
+            if (getEquipment(part).getItem() instanceof ChassisArmor armorItem) {
+                this.totalDefense += armorItem.getMaterial().getDefenseForSlot(part);
                 this.totalToughness += armorItem.getMaterial().getToughness();
             }
         }
     }
 
-    public float getSpeedAttribute(){
-        return (float)getAttributeValue(Attributes.MOVEMENT_SPEED);
+    public float getSpeedAttribute() {
+        return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 }

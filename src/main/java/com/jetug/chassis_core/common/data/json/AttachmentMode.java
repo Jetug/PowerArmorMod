@@ -2,9 +2,9 @@ package com.jetug.chassis_core.common.data.json;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum AttachmentMode{
+public enum AttachmentMode {
     @SerializedName("add")
-    ADD    (),
+    ADD(),
     @SerializedName("replace")
     REPLACE();
 }

@@ -48,7 +48,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
         right = getRight();
         bottom = getBottom();
         var window = Minecraft.getInstance().getWindow().getWindow();
-        if(Global.mouseX != null && Global.mouseY != null) {
+        if (Global.mouseX != null && Global.mouseY != null) {
             GLFW.glfwSetCursorPos(window, Global.mouseX, Global.mouseY);
             Global.mouseX = null;
             Global.mouseY = null;
@@ -56,7 +56,8 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {}
+    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
+    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
@@ -67,7 +68,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
         } else {
             rect = new Rectangle(leftPos, topPos - TAB_HEIGHT, TAB_WIDTH, TAB_HEIGHT);
         }
-        if(rect.contains(mouseX, mouseY)){
+        if (rect.contains(mouseX, mouseY)) {
             minecraft.setScreen(new InventoryScreen(minecraft.player));
         }
 
@@ -85,7 +86,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
             renderEntity(powerArmor);
         }
 
-        if(PlayerUtils.isLocalWearingChassis()) {
+        if (PlayerUtils.isLocalWearingChassis()) {
             renderTabs(poseStack);
             renderIcons(poseStack);
         }
@@ -101,11 +102,11 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
         this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    private int getRight(){
+    private int getRight() {
         return leftPos + imageWidth;
     }
 
-    private int getBottom(){
+    private int getBottom() {
         return topPos + imageHeight;
     }
 
@@ -121,7 +122,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
 
     private void renderIcons(PoseStack poseStack) {
         if (minecraft.player.isCreative()) {
-            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance(), right - 6  - 16, bottom + 4);
+            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance(), right - 6 - 16, bottom + 4);
             GuiUtils.drawChassisIcon(this, poseStack, right - 30 - 16, bottom + 4);
         } else {
             this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
@@ -135,7 +136,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
         InventoryScreen.renderEntityInInventory(
                 leftPos + ENTITY_POS_X,
                 topPos + ENTITY_POS_Y,
-                (int)(scale * 23F),
+                (int) (scale * 23F),
                 leftPos + 51 - mousePosX,
                 topPos + 75 - 50 - mousePosY,
                 powerArmor);

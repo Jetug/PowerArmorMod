@@ -10,14 +10,15 @@ import java.util.function.Supplier;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.isWearingChassis;
 
 @SuppressWarnings("ConstantConditions")
-public class ActionPacket{
+public class ActionPacket {
     ActionType action = null;
 
     public ActionPacket(ActionType action) {
         this.action = action;
     }
 
-    public ActionPacket() {}
+    public ActionPacket() {
+    }
 
     public static void write(ActionPacket message, FriendlyByteBuf buffer) {
         buffer.writeByte(message.action.getId());
@@ -31,9 +32,9 @@ public class ActionPacket{
     public static void handle(ActionPacket message, Supplier<NetworkEvent.Context> context) {
         var player = context.get().getSender();
         if (!isWearingChassis(player)) return;
-        var armor = (WearableChassis)player.getVehicle();
+        var armor = (WearableChassis) player.getVehicle();
 
-        switch (message.action){
+        switch (message.action) {
             case DISMOUNT -> player.stopRiding();
             case OPEN_GUI -> armor.openGUI(player);
 //            case ADD_ATTACK_CHARGE -> armor.addAttackCharge();

@@ -1,24 +1,36 @@
 package com.jetug.chassis_core.client.render.renderers;
 
-import com.jetug.chassis_core.client.model.*;
-import com.jetug.chassis_core.client.render.layers.*;
-import com.jetug.chassis_core.common.foundation.entity.*;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.*;
-import mod.azure.azurelib.cache.object.*;
+import com.jetug.chassis_core.client.model.ChassisModel;
+import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
+import com.jetug.chassis_core.client.render.layers.HeldItemLayer;
+import com.jetug.chassis_core.client.render.layers.ScaledPlayerSkinLayer;
+import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Vector3d;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.*;
-import mod.azure.azurelib.util.*;
-import net.minecraft.client.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.world.item.*;
-import org.jetbrains.annotations.*;
-import java.util.*;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import static com.jetug.chassis_core.client.ClientConfig.CHASSIS_HEAD_RENDERER;
-import static com.jetug.chassis_core.common.data.constants.Bones.*;
-import static net.minecraft.world.entity.EquipmentSlot.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
+import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
+import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
+import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
 public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
@@ -38,9 +50,9 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     @Override
     public void render(T entity, float entityYaw, float partialTick,
                        PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        for(var name : entity.getMods())
+        for (var name : entity.getMods())
             getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(true));
-        for(var name : entity.getVisibleMods())
+        for (var name : entity.getVisibleMods())
             getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(false));
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
@@ -95,21 +107,21 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                           float red, float green, float blue, float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         mainHandItem = animatable.getPassengerItem(MAINHAND);
-        offHandItem  = animatable.getPassengerItem(OFFHAND);
+        offHandItem = animatable.getPassengerItem(OFFHAND);
         bonesToHide = animatable.getBonesToHide();
     }
 
     protected ItemStack getItemForBone(GeoBone bone, T animatable) {
-        if(animatable == null || !animatable.hasPassenger()) return null;
+        if (animatable == null || !animatable.hasPassenger()) return null;
 
         return switch (bone.getName()) {
             case LEFT_HAND -> offHandItem;
-            case RIGHT_HAND-> mainHandItem;
+            case RIGHT_HAND -> mainHandItem;
             default -> null;
         };
     }
 
-    protected Vector3d getWorldPos(GeoBone bone, PoseStack poseStack){
+    protected Vector3d getWorldPos(GeoBone bone, PoseStack poseStack) {
         poseStack.pushPose();
         RenderUtils.translateMatrixToBone(poseStack, bone);
         RenderUtils.translateToPivotPoint(poseStack, bone);
@@ -119,8 +131,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         if (rotOverride) {
             poseStack.last().pose().multiply(bone.getModelRotationMatrix());
             poseStack.last().normal().mul(new Matrix3f(bone.getModelRotationMatrix()));
-        }
-        else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+        } else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
 
         RenderUtils.scaleMatrixForBone(poseStack, bone);
 

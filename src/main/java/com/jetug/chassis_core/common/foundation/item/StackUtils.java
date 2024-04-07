@@ -1,24 +1,21 @@
 package com.jetug.chassis_core.common.foundation.item;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class StackUtils {
     public static final String DEFAULT = "default";
     public static final String VARIANT = "variant";
     public static final String ATTACHMENTS = "mods";
 
-    public static String getVariant(ItemStack stack){
+    public static String getVariant(ItemStack stack) {
         var tag = stack.getOrCreateTag();
         return tag.contains(VARIANT) ? tag.getString(VARIANT) : DEFAULT;
     }
 
-    public static void setVariant(ItemStack stack, String variant){
+    public static void setVariant(ItemStack stack, String variant) {
         var tag = stack.getOrCreateTag();
         tag.putString(VARIANT, variant);
         stack.setTag(tag);
@@ -30,25 +27,25 @@ public class StackUtils {
 //        setAttachment(stack, mods);
 //    }
 
-    public static boolean hasAttachment(ItemStack stack, String mod){
+    public static boolean hasAttachment(ItemStack stack, String mod) {
         var mods = getAttachments(stack);
         return mods.contains(mod);
     }
 
-    public static ArrayList<String> getAttachments(ItemStack stack){
+    public static ArrayList<String> getAttachments(ItemStack stack) {
         var tag = stack.getOrCreateTag();
         if (!tag.contains(ATTACHMENTS)) return new ArrayList<>();
         var attachments = tag.getCompound(ATTACHMENTS);
         var values = new ArrayList<String>();
 
-        for(var key : attachments.getAllKeys()){
+        for (var key : attachments.getAllKeys()) {
             values.add(attachments.getString(key));
         }
 
         return values;
     }
 
-    public static String getAttachment(ItemStack stack, String slot){
+    public static String getAttachment(ItemStack stack, String slot) {
         var tag = stack.getOrCreateTag();
         if (!tag.contains(ATTACHMENTS) || !tag.getCompound(ATTACHMENTS).contains(slot))
             return null;
@@ -69,7 +66,7 @@ public class StackUtils {
 //        stack.setTag(tag);
 //    }
 
-    public static void setAttachment(ItemStack stack, String slot, String attachment){
+    public static void setAttachment(ItemStack stack, String slot, String attachment) {
         var stackTag = stack.getOrCreateTag();
         var listTag = new CompoundTag();
         listTag.putString(slot, attachment);

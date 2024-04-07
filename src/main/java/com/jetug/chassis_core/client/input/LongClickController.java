@@ -12,23 +12,25 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class LongClickController {
+    private final Map<Integer, Integer> keys = new HashMap<>();
     private Integer lastKey;
     private int ticks = 0;
-    private final Map<Integer, Integer> keys = new HashMap<>();
-    private BiConsumer<Integer, Integer> repeatListener = (k, t) -> {};
-    private BiConsumer<Integer, Integer> releaseListener = (k, t) -> {};
+    private BiConsumer<Integer, Integer> repeatListener = (k, t) -> {
+    };
+    private BiConsumer<Integer, Integer> releaseListener = (k, t) -> {
+    };
 
-    public LongClickController(){
+    public LongClickController() {
         MinecraftForge.EVENT_BUS.addListener(this::onTick);
         MinecraftForge.EVENT_BUS.addListener(this::onMouseInput);
         MinecraftForge.EVENT_BUS.addListener(this::onKeyInput);
     }
 
-    public void setRepeatListener(BiConsumer<Integer, Integer> listener){
+    public void setRepeatListener(BiConsumer<Integer, Integer> listener) {
         this.repeatListener = listener;
     }
 
-    public void setReleaseListener(BiConsumer<Integer, Integer> listener){
+    public void setReleaseListener(BiConsumer<Integer, Integer> listener) {
         this.releaseListener = listener;
     }
 
@@ -50,17 +52,17 @@ public class LongClickController {
         }
     }
 
-    private void onMouseInput(final InputEvent.MouseInputEvent event){
+    private void onMouseInput(final InputEvent.MouseButton event) {
         onInput(event.getAction(), event.getButton());
     }
 
-    private void onKeyInput(final InputEvent.KeyInputEvent event){
+    private void onKeyInput(final InputEvent.Key event) {
         onInput(event.getAction(), event.getKey());
     }
 
-    private void onInput(int action, int key){
-        switch (action){
-            case GLFW_PRESS   ->   onPress(key);
+    private void onInput(int action, int key) {
+        switch (action) {
+            case GLFW_PRESS -> onPress(key);
             case GLFW_RELEASE -> onRelease(key);
         }
     }

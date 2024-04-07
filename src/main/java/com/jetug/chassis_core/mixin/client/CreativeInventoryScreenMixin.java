@@ -63,9 +63,9 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if(!PlayerUtils.isLocalWearingChassis()) return;
+        if (!PlayerUtils.isLocalWearingChassis()) return;
         var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
-        if(rect.contains(mouseX, mouseY)){
+        if (rect.contains(mouseX, mouseY)) {
             Global.saveMousePos();
             doServerAction(ActionType.OPEN_GUI);
         }
@@ -73,14 +73,14 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
-        if(!PlayerUtils.isLocalWearingChassis()) return;
+        if (!PlayerUtils.isLocalWearingChassis()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
         this.blit(poseStack, getRight() - TABS_WIDTH, getBottom() - 4, 0, 0, TABS_WIDTH, 32);
 
-        GuiUtils.drawChassisIcon(this,poseStack, getRight() - 30 - 16, getBottom() + 4);
+        GuiUtils.drawChassisIcon(this, poseStack, getRight() - 30 - 16, getBottom() + 4);
 //
 //        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
 //        this.blit(poseStack, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
@@ -96,12 +96,12 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 //    }
 
     @Unique
-    private int getRight(){
+    private int getRight() {
         return leftPos + imageWidth;
     }
 
     @Unique
-    private int getBottom(){
+    private int getBottom() {
         return topPos + imageHeight;
     }
 }
