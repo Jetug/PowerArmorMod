@@ -7,6 +7,7 @@ import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -76,30 +77,29 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, guiResource);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(guiResource, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         if (Global.referenceMob instanceof WearableChassis powerArmor) {
-            renderEntity(powerArmor);
+            renderEntity(graphics, powerArmor);
         }
 
         if (PlayerUtils.isLocalWearingChassis()) {
-            renderTabs(poseStack);
-            renderIcons(poseStack);
+            renderTabs(graphics);
+            renderIcons(graphics);
         }
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.mousePosX = mouseX;
         this.mousePosY = mouseY;
 
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     private int getRight() {
@@ -110,30 +110,29 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
         return topPos + imageHeight;
     }
 
-    private void renderTabs(PoseStack poseStack) {
+    private void renderTabs(GuiGraphics graphics) {
         if (minecraft.player.isCreative()) {
-            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
-            this.blit(poseStack, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
+            graphics.blit(PLAYER_INVENTORY_BOTTOM_TABS, right - TABS_WIDTH, bottom - 4, 0, 32, TABS_WIDTH, 62);
         } else {
-            RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-            this.blit(poseStack, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
+            graphics.blit(PLAYER_INVENTORY_TABS, leftPos, topPos - 28, 0, 32, TABS_WIDTH, 62);
         }
     }
 
-    private void renderIcons(PoseStack poseStack) {
+    private void renderIcons(GuiGraphics graphics) {
         if (minecraft.player.isCreative()) {
-            this.itemRenderer.renderAndDecorateItem(CHEST.getDefaultInstance(), right - 6 - 16, bottom + 4);
-            GuiUtils.drawChassisIcon(this, poseStack, right - 30 - 16, bottom + 4);
+            graphics.renderItem(CHEST.getDefaultInstance(), right - 6 - 16, bottom + 4);
+            GuiUtils.drawChassisIcon(graphics, right - 30 - 16, bottom + 4);
         } else {
-            this.itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
-            GuiUtils.drawChassisIcon(this, poseStack, leftPos + 32, topPos - 20);
+            graphics.renderItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + 6, topPos - 20);
+            GuiUtils.drawChassisIcon(graphics,  leftPos + 32, topPos - 20);
         }
     }
 
-    protected void renderEntity(WearableChassis powerArmor) {
+    protected void renderEntity(GuiGraphics graphics, WearableChassis powerArmor) {
         var scale = 1F / Math.max(MIN_SCALE, powerArmor.getScale());
 
         InventoryScreen.renderEntityInInventory(
+                graphics,
                 leftPos + ENTITY_POS_X,
                 topPos + ENTITY_POS_Y,
                 (int) (scale * 23F),

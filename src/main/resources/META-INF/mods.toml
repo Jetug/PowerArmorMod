@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 license = "The MIT License"
+
 [[mods]]
 modId = "chassis_core"
 version = "${file.jarVersion}"
@@ -12,18 +13,18 @@ description = '''Core for exoskeleton armor mods'''
 [[dependencies.chassis_core]]
 modId="forge"
 mandatory=true
-versionRange="[43.2.0,)"
+versionRange="[46, 48)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.chassis_core]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,1.20)"
+versionRange="[1.20, 1.20.2)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.chassis_core]]
 modId="azurelib"
 mandatory=true
-versionRange="[1.0.23,)"
+versionRange="[2.0.20,)"
 ordering="AFTER"
 side="BOTH"

@@ -1,7 +1,7 @@
 package com.jetug.chassis_core.client.events;
 
 import com.jetug.chassis_core.client.render.renderers.CustomHandRenderer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderArmEvent;
@@ -29,7 +29,7 @@ public class PlayerEvents {
         var poseStack = event.getPoseStack();
         poseStack.pushPose();
 //        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(90));
         poseStack.translate(-0.5, 0, -0.8); //-0.6
 
         CustomHandRenderer.getHandRenderer().render(

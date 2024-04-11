@@ -10,6 +10,7 @@ import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +20,7 @@ public class AnimatableItemRenderer<T extends IConfigProvider & GeoAnimatable> e
     }
 
 //    @Override
-//    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack,
+//    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack,
 //                             MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 //        var item = (T)stack.getItem();
 //        renderAttachments(stack, item);
@@ -27,7 +28,7 @@ public class AnimatableItemRenderer<T extends IConfigProvider & GeoAnimatable> e
 //    }
 
     @Override
-    public void render(ItemStack stack, ItemTransforms.TransformType transformType,
+    public void render(ItemStack stack, ItemDisplayContext transformType,
                        PoseStack poseStack, T animatable, @Nullable MultiBufferSource bufferSource,
                        @Nullable RenderType renderType, @Nullable VertexConsumer buffer, int packedLight) {
         renderAttachments(stack, animatable);

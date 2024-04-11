@@ -7,10 +7,6 @@ import com.jetug.chassis_core.client.render.layers.ScaledPlayerSkinLayer;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
@@ -23,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.joml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,32 +118,32 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         };
     }
 
-    protected Vector3d getWorldPos(GeoBone bone, PoseStack poseStack) {
-        poseStack.pushPose();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-
-        boolean rotOverride = bone.getModelRotationMatrix() != null;
-
-        if (rotOverride) {
-            poseStack.last().pose().multiply(bone.getModelRotationMatrix());
-            poseStack.last().normal().mul(new Matrix3f(bone.getModelRotationMatrix()));
-        } else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
-
-        var poseState = poseStack.last().pose().copy();
-        var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations);
-        localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
-        var worldState = localMatrix.copy();
-        worldState.translate(new Vector3f(this.animatable.position()));
-        var vec = new Vector4f(0, 0, 0, 1);
-        vec.transform(worldState);
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
-        poseStack.popPose();
-
-        return new Vector3d(vec.x(), vec.y(), vec.z());
-    }
+//    protected Vector3d getWorldPos(GeoBone bone, PoseStack poseStack) {
+//        poseStack.pushPose();
+//        RenderUtils.translateMatrixToBone(poseStack, bone);
+//        RenderUtils.translateToPivotPoint(poseStack, bone);
+//
+//        boolean rotOverride = bone.getModelRotationMatrix() != null;
+//
+//        if (rotOverride) {
+//            poseStack.last().pose().mul(bone.getModelRotationMatrix());
+//            poseStack.last().normal().mul(new Matrix3f(bone.getModelRotationMatrix()));
+//        } else RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+//
+//        RenderUtils.scaleMatrixForBone(poseStack, bone);
+//
+//        var poseState = (Matrix4f)poseStack.last().pose().clone();
+//        var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations);
+//        localMatrix.translate(new Vector3f(getRenderOffset(this.animatable, 1)));
+//        var worldState = localMatrix.clone();
+//        worldState.translate(new Vector3f(this.animatable.position()));
+//        var vec = new Vector4f(0, 0, 0, 1);
+//        vec.add(worldState);
+//        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+//        poseStack.popPose();
+//
+//        return new Vector3d(vec.x(), vec.y(), vec.z());
+//    }
 
     private boolean isInvisible(T animatable) {
         var clientPlayer = Minecraft.getInstance().player;

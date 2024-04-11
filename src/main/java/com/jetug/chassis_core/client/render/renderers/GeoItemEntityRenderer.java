@@ -2,7 +2,8 @@ package com.jetug.chassis_core.client.render.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Matrix4f;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -18,17 +19,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-
 public class GeoItemEntityRenderer<T extends GeoAnimatable> extends GeoObjectRenderer<T> {
     private ItemStack currentItemStack;
-    private TransformType currentTransform;
+    private ItemDisplayContext currentTransform;
 
     public GeoItemEntityRenderer(GeoModel<T> model) {
         super(model);
     }
 
-    public void render(ItemStack stack, TransformType transformType,
+    public void render(ItemStack stack, ItemDisplayContext transformType,
                        PoseStack poseStack, T animatable,
                        @Nullable MultiBufferSource bufferSource,
                        @Nullable RenderType renderType,

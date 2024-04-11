@@ -28,6 +28,7 @@ import com.jetug.chassis_core.common.data.enums.ActionType;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -72,28 +73,19 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
+    public void drawBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY, CallbackInfo ci) {
+
+        var poseStack = graphics.pose();
+
         if (!PlayerUtils.isLocalWearingChassis()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
-        this.blit(poseStack, getRight() - TABS_WIDTH, getBottom() - 4, 0, 0, TABS_WIDTH, 32);
+        graphics.blit(PLAYER_INVENTORY_BOTTOM_TABS, getRight() - TABS_WIDTH, getBottom() - 4, 0, 0, TABS_WIDTH, 32);
 
-        GuiUtils.drawChassisIcon(this, poseStack, getRight() - 30 - 16, getBottom() + 4);
-//
-//        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-//        this.blit(poseStack, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
+        GuiUtils.drawChassisIcon(graphics, poseStack, getRight() - 30 - 16, getBottom() + 4);
     }
-
-//    @Inject(method = "render", at = @At("TAIL"))
-//    public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-//        if(!PlayerUtils.isLocalWearingChassis()) return;
-////        Lighting.setupFor3DItems();
-////        Lighting.setupForFlatItems();
-//        GuiUtils.drawChassisIcon(this,poseStack, getRight() - 30 - 16, getBottom() + 4);
-//
-//    }
 
     @Unique
     private int getRight() {

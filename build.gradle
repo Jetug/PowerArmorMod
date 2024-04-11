@@ -28,8 +28,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: 'parchment', version: '2022.08.14-1.19.2'
-//    mappings channel: 'official', version: '1.19.2'
+    mappings channel: mappings_channel, version: mappings_version
 
     runs {
         client {
@@ -100,10 +99,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
-    implementation fg.deobf("mod.azure.azurelib:azurelib-forge-1.19.2:1.0.41")
-    implementation fileTree('libs') { include '*.jar' }
-
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation fg.deobf("mod.azure.azurelib:azurelib-neo-1.20.1:2.0.20")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

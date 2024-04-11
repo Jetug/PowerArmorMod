@@ -5,6 +5,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.BiFunction;
@@ -18,10 +19,10 @@ public class HeldItemLayer<T extends GeoAnimatable> extends BlockAndItemGeoLayer
     }
 
     @Override
-    protected ItemTransforms.TransformType getTransformTypeForStack(GeoBone bone, ItemStack stack, GeoAnimatable animatable) {
+    protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, GeoAnimatable animatable) {
         return switch (bone.getName()) {
-            case LEFT_HAND, RIGHT_HAND -> ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
-            default -> ItemTransforms.TransformType.NONE;
+            case LEFT_HAND, RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+            default -> ItemDisplayContext.NONE;
         };
     }
 }
