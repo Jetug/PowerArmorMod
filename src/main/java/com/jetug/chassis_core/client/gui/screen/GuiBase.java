@@ -3,6 +3,7 @@ package com.jetug.chassis_core.client.gui.screen;
 import com.google.common.collect.Lists;
 import com.jetug.chassis_core.client.gui.ui.IconButton;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,10 +18,11 @@ public abstract class GuiBase<T extends AbstractContainerMenu> extends AbstractC
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    protected void renderLabels(PoseStack pPoseStack, int pX, int pY) {
+    @Override
+    protected void renderLabels(GuiGraphics pGuiGraphics, int pX, int pY) {
         for (var button : this.buttons) {
             if (button.isShowingTooltip()) {
-                button.renderToolTip(pPoseStack, pX - this.leftPos, pY - this.topPos);
+                button.renderToolTip(pGuiGraphics, pX - this.leftPos, pY - this.topPos);
                 break;
             }
         }

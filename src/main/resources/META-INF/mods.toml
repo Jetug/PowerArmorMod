@@ -1,11 +1,11 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[46,)"
 license = "The MIT License"
 
 [[mods]]
 modId = "chassis_core"
 version = "${file.jarVersion}"
-displayName = "Chassis core"
+displayName = "Chassis Сore"
 logoFile = "chassis_core.png"
 authors = "Jetug"
 description = '''Core for exoskeleton armor mods'''

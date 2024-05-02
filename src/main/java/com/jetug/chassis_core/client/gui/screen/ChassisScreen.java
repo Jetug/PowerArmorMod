@@ -57,8 +57,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-    }
+    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {}
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int pButton) {
@@ -131,7 +130,7 @@ public class ChassisScreen<T extends AbstractContainerMenu> extends GuiBase<T> {
     protected void renderEntity(GuiGraphics graphics, WearableChassis powerArmor) {
         var scale = 1F / Math.max(MIN_SCALE, powerArmor.getScale());
 
-        InventoryScreen.renderEntityInInventory(
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
                 graphics,
                 leftPos + ENTITY_POS_X,
                 topPos + ENTITY_POS_Y,

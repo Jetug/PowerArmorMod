@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.mixin.common;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +21,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(pEntityType, pLevel);
     }
 
-    @Inject(method = "getDamageAfterArmorAbsorb", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F", at = @At("HEAD"), cancellable = true)
     protected void getDamageAfterArmorAbsorb(DamageSource pDamageSource, float pDamageAmount, CallbackInfoReturnable<Float> cir) {
 //        var r1 = isWearingChassis(this);
 //        var r2 =getEntityChassis(this);
@@ -28,7 +29,7 @@ public abstract class LivingEntityMixin extends Entity {
 //        ChassisCore.LOGGER.error(r1);
 //        ChassisCore.LOGGER.error(r2);
 
-        if (!pDamageSource.isBypassArmor() && isWearingChassis(this)) {
+        if (!pDamageSource.is(DamageTypeTags.BYPASSES_ARMOR) && isWearingChassis(this)) {
             var chassis = getEntityChassis(this);
             chassis.damageArmor(pDamageSource, pDamageAmount);
             pDamageAmount = CombatRules.getDamageAfterAbsorb(pDamageAmount, chassis.getTotalDefense(), chassis.getTotalToughness());

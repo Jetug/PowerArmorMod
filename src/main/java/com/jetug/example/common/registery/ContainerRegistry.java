@@ -16,17 +16,17 @@ public class ContainerRegistry {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister
             .create(ForgeRegistries.MENU_TYPES, ChassisCore.MOD_ID);
 
-    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
+    public static final RegistryObject<MenuType<ExampleChassisMenu>> EXAMPLE_CHASSIS_MENU
+            = registerMenuType("example_chassis_menu", ExampleChassisMenu::new);
+
+    public static final RegistryObject<MenuType<ExampleChassisStationMenu>> EXAMPLE_STATION_MENU
+            = registerMenuType("example_chassis_station_menu", ExampleChassisStationMenu::new);
+
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return CONTAINERS.register(name, () -> IForgeMenuType.create(factory));
-    }    public static final RegistryObject<MenuType<ExampleChassisMenu>> EXAMPLE_CHASSIS_MENU
-            = CONTAINERS.register("example_chassis_menu", () -> new MenuType<>(ExampleChassisMenu::new));
+    }
 
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);
-    }    public static final RegistryObject<MenuType<ExampleChassisStationMenu>> EXAMPLE_STATION_MENU
-            = CONTAINERS.register("example_chassis_station_menu", () -> new MenuType<>(ExampleChassisStationMenu::new));
-
-
-
-
+    }
 }

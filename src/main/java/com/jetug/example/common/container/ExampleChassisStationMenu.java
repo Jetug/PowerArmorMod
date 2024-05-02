@@ -3,6 +3,7 @@ package com.jetug.example.common.container;
 import com.jetug.chassis_core.common.foundation.container.menu.EntityMenu;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.example.common.entities.ExampleChassis;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +16,7 @@ public class ExampleChassisStationMenu extends EntityMenu {
     public static final int SIZE = 10;
     private static final int INVENTORY_POS_Y = 105;
 
-    public ExampleChassisStationMenu(int i, Inventory playerInventory) {
+    public ExampleChassisStationMenu(int i, Inventory playerInventory, FriendlyByteBuf buf) {
         this(i, new SimpleContainer(SIZE), playerInventory, null);
     }
 

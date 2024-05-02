@@ -33,7 +33,7 @@ public class C2SChassisPacket {
     public static void handle(C2SChassisPacket message, Supplier<NetworkEvent.Context> context) {
         var player = context.get().getSender();
         var data = message.getArmorData();
-        var entity = player.level.getEntity(data.entityId);
+        var entity = player.level().getEntity(data.entityId);
 
         if (entity instanceof WearableChassis powerArmor)
             powerArmor.setArmorData(data);

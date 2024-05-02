@@ -37,7 +37,7 @@ public abstract class ClientPacketListenerMixin implements ClientGamePacketListe
     private Map<UUID, PlayerInfo> playerInfoMap;
 
 
-    @Inject(method = "handleSetEntityPassengersPacket", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "handleSetEntityPassengersPacket(Lnet/minecraft/network/protocol/game/ClientboundSetPassengersPacket;)V", at = @At("HEAD"), cancellable = true)
     public void handleSetEntityPassengersPacket(ClientboundSetPassengersPacket pPacket, CallbackInfo ci) {
         PacketUtils.ensureRunningOnSameThread(pPacket, this, this.minecraft);
         Entity entity = this.level.getEntity(pPacket.getVehicle());

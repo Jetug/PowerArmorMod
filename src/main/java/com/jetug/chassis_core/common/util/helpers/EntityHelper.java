@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,7 @@ public class EntityHelper {
     public static final String ENTITY_UUID = "EntityUUID";
 
     public static void giveEntityItemToPlayer(Player player, ItemStack stack, LivingEntity target) {
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             var entityInItem = entityToItem(stack, target);
             player.getInventory().add(entityInItem);
         }
@@ -29,7 +30,7 @@ public class EntityHelper {
 
         target.save(entityTag);
         newTag.put(ENTITY_TAG, entityTag);
-        newTag.putString(CHASSIS_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
+        newTag.putString(CHASSIS_ENTITY_ID, ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString());
         stack.setTag(newTag);
         target.remove(Entity.RemovalReason.DISCARDED);
         return stack;

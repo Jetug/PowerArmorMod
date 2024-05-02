@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class ArmorChassisStorage extends Item {
@@ -37,7 +38,7 @@ public class ArmorChassisStorage extends Item {
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         ItemStack trueStack = playerIn.getItemInHand(hand);
-        if (!playerIn.level.isClientSide
+        if (!playerIn.level().isClientSide
                 && hand == InteractionHand.MAIN_HAND
                 && target instanceof WearableChassis
                 && (trueStack.getTag() == null
@@ -48,11 +49,11 @@ public class ArmorChassisStorage extends Item {
             target.save(entityTag);
             newTag.put(ENTITY_TAG, entityTag);
 
-            newTag.putString(CHASSIS_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
+            newTag.putString(CHASSIS_ENTITY_ID, ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString());
             trueStack.setTag(newTag);
 
             playerIn.swing(hand);
-            playerIn.level.playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
+            playerIn.level().playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
             target.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.SUCCESS;
         }

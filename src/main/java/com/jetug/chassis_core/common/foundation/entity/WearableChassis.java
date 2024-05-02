@@ -14,6 +14,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -84,18 +86,20 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         float finalDamage = getDamageAfterAbsorb(damage);
         damageArmor(damageSource, damage);
 
-        if (damageSource == DamageSource.CACTUS || (hasPassenger() && damageSource.getEntity() == getPassenger()))
+        var passenger = getControllingPassenger();
+
+        if (damageSource.is(DamageTypes.CACTUS) || (hasPassenger() && damageSource.getEntity() == passenger))
             return false;
 
-        if (hasPassenger())
-            getPassenger().hurt(damageSource, finalDamage);
+        if (passenger != null)
+            passenger.hurt(damageSource, finalDamage);
 
         return true;
     }
 
     public void damageArmor(DamageSource damageSource, float damage) {
         if (isServerSide) {
-            if (damageSource == DamageSource.FALL) {
+            if (damageSource.is(DamageTypes.FALL)) {
                 damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
                 damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
             } else {
@@ -135,7 +139,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vector, InteractionHand hand) {
-        ChassisCore.LOGGER.log(DEBUG, level.isClientSide);
+        ChassisCore.LOGGER.log(DEBUG, level().isClientSide);
 
         if (isServerSide && !player.isPassenger()) {
             if (player.isShiftKeyDown()) {
@@ -152,15 +156,20 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
     @Nullable
     @Override
-    public Entity getControllingPassenger() {
-        return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+    public LivingEntity getControllingPassenger() {
+        if (!this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof LivingEntity livingEntity)
+            return livingEntity;
+        return null;
     }
 
     @Override
-    public void positionRider(Entity entity) {
-        super.positionRider(entity);
+    public void positionRider(Entity entity, Entity.MoveFunction pCallback) {
+        super.positionRider(entity, pCallback);
 
-        var yOffset = getPassenger().isShiftKeyDown() ? 1.2f : 1.0f;
+        var passenger = getControllingPassenger();
+        if (passenger == null) return;
+
+        var yOffset = passenger.isShiftKeyDown() ? 1.2f : 1.0f;
         var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - yOffset;
         entity.setPos(getX(), posY, getZ());
 
@@ -174,7 +183,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         if (isVehicle() && hasPassenger())
             travelWithPassenger(travelVector);
         else {
-            this.flyingSpeed = 0.02F;
+//            this.flyingSpeed = 0.02F;
             super.travel(travelVector);
         }
     }
@@ -185,8 +194,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     @Override
-    public void checkDespawn() {
-    }
+    public void checkDespawn() {}
 
     @Override
     public boolean canBreatheUnderwater() {
@@ -194,9 +202,14 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     @Override
-    public boolean rideableUnderWater() {
-        return true;
+    public boolean dismountsUnderwater() {
+        return false;
     }
+
+//    @Override
+//    public boolean rideableUnderWater() {
+//        return true;
+//    }
 
     @Override
     protected float tickHeadTurn(float pYRot, float pAnimStep) {
@@ -255,7 +268,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         if (!hasPassenger())
             return false;
 
-        var entity = getPassenger();
+        var entity = getControllingPassenger();
         return entity.xxa != 0.0 || entity.zza != 0.0;
     }
 
@@ -274,14 +287,8 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return getControllingPassenger() instanceof LivingEntity;
     }
 
-    public LivingEntity getPassenger() {
-        if (getControllingPassenger() instanceof LivingEntity livingEntity)
-            return livingEntity;
-        return null;
-    }
-
     public ItemStack getPassengerItem(EquipmentSlot slot) {
-        return hasPassenger() ? getPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
+        return hasPassenger() ? getControllingPassenger().getItemBySlot(slot) : ItemStack.EMPTY;
     }
 
     public void jump() {
@@ -329,22 +336,23 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 //    }
 
     private void travelWithPassenger(Vec3 travelVector) {
-        var entity = getPassenger();
+        var entity = getControllingPassenger();
+        if(entity == null) return;
         setRotationMatchingPassenger(entity);
 
 //        if(entity.yya > 0)
 //            jumpScale = 1.0F;
 
-        if (jumpScale > 0.0F && !isJumping() && onGround)
+        if (jumpScale > 0.0F && !isJumping() && onGround())
             jump(entity);
 
-        this.flyingSpeed = getSpeed() * 0.1F;
+//        this.flyingSpeed = getSpeed() * 0.1F;
 
         if (isControlledByLocalInstance())
             super.travel(new Vec3(entity.xxa, travelVector.y, entity.zza));
         else setDeltaMovement(Vec3.ZERO);
 
-        if (onGround) {
+        if (onGround()) {
             jumpScale = 0.0F;
             isJumping = false;
         }

@@ -26,7 +26,7 @@ public class ChassisCore {
     public static final PlayerSkinStorage SKIN_STORAGE = PlayerSkinStorage.INSTANCE;
 
     public ChassisCore() {
-        AzureLib.initialize();
+//        AzureLib.initialize();
         register();
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

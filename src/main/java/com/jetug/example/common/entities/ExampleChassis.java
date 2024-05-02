@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +61,7 @@ public class ExampleChassis extends WearableChassis {
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
-        if (damageSource.isFall()) {
+        if (damageSource.is(DamageTypes.FALL)) {
             damageArmor(damageSource, damage);
             return false;
         } else return super.hurt(damageSource, damage);
@@ -130,7 +131,7 @@ public class ExampleChassis extends WearableChassis {
             controller.setAnimationSpeed(1);
             RawAnimation animation = null;
 
-            var passenger = getPassenger();
+            var passenger = getControllingPassenger();
 
             if (passenger != null) {
                 if (passenger.attackAnim > 0) {
@@ -155,9 +156,8 @@ public class ExampleChassis extends WearableChassis {
             controller.setAnimationSpeed(1);
             RawAnimation animation;
 
-            if (!hasPassenger()) return PlayState.STOP;
-
-            var passenger = getPassenger();
+            var passenger = getControllingPassenger();
+            if (passenger == null) return PlayState.STOP;
 
             if (this.isWalking()) {
                 if (passenger.isShiftKeyDown()) {

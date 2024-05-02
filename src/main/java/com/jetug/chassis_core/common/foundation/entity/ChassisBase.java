@@ -66,8 +66,8 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
             RIGHT_LEG_ARMOR,
     };
     protected final TickTimer timer = new TickTimer();
-    protected final boolean isClientSide = level.isClientSide;
-    protected final boolean isServerSide = !level.isClientSide;
+    protected final boolean isClientSide = level().isClientSide;
+    protected final boolean isServerSide = !level().isClientSide;
     private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType())));
     public HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
     public Collection<String> bonesToHide = new ArrayList<>();

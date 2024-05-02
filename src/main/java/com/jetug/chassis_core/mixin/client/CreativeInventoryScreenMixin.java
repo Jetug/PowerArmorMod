@@ -62,7 +62,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
         super(screenHandler, playerInventory, textComponent);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
         var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
@@ -72,7 +72,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
         }
     }
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
+    @Inject(method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V", at = @At("TAIL"))
     public void drawBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY, CallbackInfo ci) {
 
         var poseStack = graphics.pose();
@@ -84,7 +84,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
         RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_BOTTOM_TABS);
         graphics.blit(PLAYER_INVENTORY_BOTTOM_TABS, getRight() - TABS_WIDTH, getBottom() - 4, 0, 0, TABS_WIDTH, 32);
 
-        GuiUtils.drawChassisIcon(graphics, poseStack, getRight() - 30 - 16, getBottom() + 4);
+        GuiUtils.drawChassisIcon(graphics, getRight() - 30 - 16, getBottom() + 4);
     }
 
     @Unique

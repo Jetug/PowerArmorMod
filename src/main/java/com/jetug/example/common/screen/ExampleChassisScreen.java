@@ -4,6 +4,7 @@ import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.client.gui.screen.ChassisScreen;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
 import com.jetug.example.common.container.ExampleChassisMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,10 +26,16 @@ public class ExampleChassisScreen extends ChassisScreen<ExampleChassisMenu> {
         super.init();
     }
 
+
     @Override
-    protected void renderEntity(WearableChassis powerArmor) {
+    protected void renderEntity(GuiGraphics graphics, WearableChassis powerArmor) {
         float scale = 1.0F / Math.max(1.0E-4F, powerArmor.getScale());
-        InventoryScreen.renderEntityInInventory(this.leftPos + 32, this.topPos + 73, (int) (scale * 23.0F),
-                (float) (this.leftPos + 51) - this.mousePosX, (float) (this.topPos + 75 - 50) - this.mousePosY, powerArmor);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics,
+                this.leftPos + 32,
+                this.topPos + 73,
+                (int) (scale * 23.0F),
+                (float) (this.leftPos + 51) - this.mousePosX,
+                (float) (this.topPos + 75 - 50) - this.mousePosY,
+                powerArmor);
     }
 }

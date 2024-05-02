@@ -1,7 +1,10 @@
 package com.jetug.chassis_core.client.gui.ui;
 
+import com.jetug.chassis_core.mixin.client.CreativeInventoryScreenMixin;
+import com.jetug.chassis_core.mixin.client.InventoryScreenMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
@@ -27,16 +30,16 @@ public abstract class IconButton extends AbstractButton {
         this.iconY = iconY;
     }
 
-    protected void renderIcon(PoseStack pPoseStack) {
-        this.blit(pPoseStack, this.x + 2, this.y, this.iconX, this.iconY, 18, 18);
+    protected void renderIcon(GuiGraphics graphics, ResourceLocation resourceLocation) {
+        graphics.blit(resourceLocation, this.getX() + 2, this.getY(), this.iconX, this.iconY, 18, 18);
     }
 
-    @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-    }
+    public void renderToolTip(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {}
 
     @Override
-    public void renderButton(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+//        super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -49,9 +52,27 @@ public abstract class IconButton extends AbstractButton {
             j += this.width * 3;
         }
 
-        this.blit(pPoseStack, this.x, this.y, j, 166, this.width, this.height);
-        this.renderIcon(pPoseStack);
+        pGuiGraphics.blit(texture, this.getX(), this.getY(), j, 166, this.width, this.height);
+        this.renderIcon(pGuiGraphics, texture);
     }
+
+//    @Override
+//    public void renderButton(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//        RenderSystem.setShaderTexture(0, texture);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        int j = 0;
+//        if (!this.active) {
+//            j += this.width * 2;
+//        } else if (this.selected) {
+//            j += this.width * 1;
+//        } else if (this.isHoveredOrFocused()) {
+//            j += this.width * 3;
+//        }
+//
+//        graphics.blit(texture, this.getX(), this.getY(), j, 166, this.width, this.height);
+//        this.renderIcon(graphics, texture);
+//    }
 
     public boolean isSelected() {
         return this.selected;
@@ -64,9 +85,9 @@ public abstract class IconButton extends AbstractButton {
     public boolean isShowingTooltip() {
         return this.isHovered;
     }
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-        this.defaultButtonNarrationText(pNarrationElementOutput);
-    }
+//
+//    @Override
+//    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+//        this.defaultButtonNarrationText(pNarrationElementOutput);
+//    }
 }

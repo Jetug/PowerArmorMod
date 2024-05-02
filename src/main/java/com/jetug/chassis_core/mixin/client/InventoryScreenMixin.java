@@ -29,6 +29,7 @@ import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -61,7 +62,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     @Shadow
     public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
@@ -72,24 +73,23 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         }
     }
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
-    public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
+    @Inject(method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V", at = @At("TAIL"))
+    public void drawBackground(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY, CallbackInfo callbackInfo) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, PLAYER_INVENTORY_TABS);
-        blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
+        graphics.blit(PLAYER_INVENTORY_TABS, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("TAIL"))
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo callbackInfo) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
         Lighting.setupFor3DItems();
-        itemRenderer.renderAndDecorateItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,
+        graphics.renderItem(CRAFTING_TABLE.getDefaultInstance(), leftPos + TOP_TAB_ICON_POS_1.x,
                 topPos + TOP_TAB_ICON_POS_1.y);
         Lighting.setupForFlatItems();
-        GuiUtils.drawChassisIcon(this, poseStack, leftPos + TOP_TAB_ICON_POS_2.x, topPos + TOP_TAB_ICON_POS_2.y);
+        GuiUtils.drawChassisIcon(graphics, leftPos + TOP_TAB_ICON_POS_2.x, topPos + TOP_TAB_ICON_POS_2.y);
     }
 }

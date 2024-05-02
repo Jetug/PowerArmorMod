@@ -1,6 +1,6 @@
 package com.jetug.chassis_core.client.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,21 +21,20 @@ public class ArmorStationScreen<T extends AbstractContainerMenu> extends GuiBase
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(pPoseStack);
-        super.render(pPoseStack, mouseX, mouseY, delta);
-        renderTooltip(pPoseStack, mouseX, mouseY);
+    public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float delta) {
+        renderBackground(pGuiGraphics);
+        super.render(pGuiGraphics, mouseX, mouseY, delta);
+        renderTooltip(pGuiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         setShader(GameRenderer::getPositionTexShader);
         setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        setShaderTexture(0, guiResource);
 
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(guiResource, x, y, 0, 0, imageWidth, imageHeight);
         //blit(pPoseStack, x + 160, y + 5, 178, 6, 6, 6);
     }
 }
