@@ -25,7 +25,7 @@ public class ForgeIngameGuiMixin extends Gui {
         if (PlayerUtils.isLocalWearingChassis()) ci.cancel();
     }
 
-    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"), remap = false)
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;setSeed(J)V"))
     public void render(PoseStack poseStack, float partialTick, CallbackInfo ci) {
         IGuiOverlay overlay = (gui, poseStack1, partialTick1, screenWidth, screenHeight) -> {
             var minecraft = Minecraft.getInstance();
