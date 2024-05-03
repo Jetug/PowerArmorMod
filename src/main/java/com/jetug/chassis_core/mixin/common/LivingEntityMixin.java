@@ -20,7 +20,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(pEntityType, pLevel);
     }
 
-    @Inject(method = "getDamageAfterArmorAbsorb", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F", at = @At("HEAD"), cancellable = true)
     protected void getDamageAfterArmorAbsorb(DamageSource pDamageSource, float pDamageAmount, CallbackInfoReturnable<Float> cir) {
 //        var r1 = isWearingChassis(this);
 //        var r2 =getEntityChassis(this);

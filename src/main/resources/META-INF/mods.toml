@@ -4,7 +4,7 @@ license = "The MIT License"
 [[mods]]
 modId = "chassis_core"
 version = "${file.jarVersion}"
-displayName = "Chassis core"
+displayName = "Chassis Core"
 logoFile = "chassis_core.png"
 authors = "Jetug"
 description = '''Core for exoskeleton armor mods'''

@@ -20,7 +20,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19.2-2.2.1'
+version = '1.19.2-2.2.2'
 group = 'com.jetug.chassis_core'
 archivesBaseName = 'chassis_core'
 

@@ -61,7 +61,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
         super(screenHandler, playerInventory, textComponent);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
         var rect = new Rectangle(getRight() - 51, getBottom(), 25, TAB_HEIGHT);
@@ -71,7 +71,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
         }
     }
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
+    @Inject(method = "renderBg(Lcom/mojang/blaze3d/vertex/PoseStack;FII)V", at = @At("TAIL"))
     public void drawBackground(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, CallbackInfo callbackInfo) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

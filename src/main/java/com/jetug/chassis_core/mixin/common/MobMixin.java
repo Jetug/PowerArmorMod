@@ -17,7 +17,7 @@ public abstract class MobMixin {
     @Shadow
     private LivingEntity target;
 
-    @Inject(method = "setTarget", at = @At("TAIL"))
+    @Inject(method = "setTarget(Lnet/minecraft/world/entity/LivingEntity;)V", at = @At("TAIL"))
     public void setTarget(LivingEntity pTarget, CallbackInfo ci) {
         if (pTarget instanceof Player player && isWearingChassis(player)) {
             target = (LivingEntity) player.getVehicle();

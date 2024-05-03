@@ -61,7 +61,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     @Shadow
     public abstract boolean mouseClicked(double pMouseX, double pMouseY, int pButton);
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"))
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
@@ -72,7 +72,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         }
     }
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
+    @Inject(method = "renderBg(Lcom/mojang/blaze3d/vertex/PoseStack;FII)V", at = @At("TAIL"))
     public void drawBackground(PoseStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
@@ -82,7 +82,7 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
         blit(matrices, this.leftPos, this.topPos - 28, 0, 0, 57, 32);
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("TAIL"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         if (!PlayerUtils.isLocalWearingChassis()) return;
 
