@@ -100,7 +100,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         init();
     }
 
-    protected static ChassisEquipment getAsChassisEquipment(ItemStack itemStack) {
+    public static ChassisEquipment getAsChassisEquipment(ItemStack itemStack) {
         return (ChassisEquipment) itemStack.getItem();
     }
 

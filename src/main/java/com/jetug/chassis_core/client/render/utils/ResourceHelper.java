@@ -16,15 +16,15 @@ public class ResourceHelper {
         return removeExtension(getName(path));
     }
 
+    public static ResourceLocation getChassisResource(String path, String extension) {
+        var chassis = PlayerUtils.getLocalPlayerChassis();
+        return getChassisResource(chassis, path, extension);
+    }
+
     public static ResourceLocation getChassisResource(ChassisBase chassis, String path, String extension) {
         var name = chassis.getModelId();
         var modId = ForgeRegistries.ENTITY_TYPES.getKey(chassis.getType()).getNamespace();
 
         return new ResourceLocation(modId, path + name + extension);
-    }
-
-    public static ResourceLocation getChassisResource(String path, String extension) {
-        var chassis = PlayerUtils.getLocalPlayerChassis();
-        return getChassisResource(chassis, path, extension);
     }
 }
