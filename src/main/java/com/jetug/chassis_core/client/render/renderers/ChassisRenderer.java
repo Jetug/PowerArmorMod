@@ -90,7 +90,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
             var equipmentBones = animatable.getEquipmentBones(bone.getName());
             bonesToRender.addAll(equipmentBones);
 
-            for (GeoBone childBone : bonesToRender) {
+            for (var childBone : bonesToRender) {
                 this.renderRecursively(poseStack, animatable, childBone, renderType, bufferSource, buffer,
                         isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
             }

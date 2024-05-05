@@ -1,6 +1,8 @@
 package com.jetug.chassis_core.client.render.layers;
 
+import com.jetug.chassis_core.common.foundation.entity.HandEntity;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -9,14 +11,21 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
 @SuppressWarnings("ConstantConditions")
-public class EquipmentLayer<T extends WearableChassis> extends LayerBase<T> {
-    public EquipmentLayer(GeoRenderer<T> entityRendererIn) {
+public class HandEquipmentLayer<T extends HandEntity> extends LayerBase<T> {
+    public HandEquipmentLayer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, T entity, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource,
+    public void render(PoseStack poseStack, T hand, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource,
                        VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+
+        if(!PlayerUtils.isLocalWearingChassis()) return;
+        var entity = PlayerUtils.getLocalPlayerChassis();
+
+        poseStack.pushPose();
+        poseStack.translate(-0.5D, -0.5D, -0.5D);
+
         for (var part : entity.getEquipment()) {
             if (entity.isEquipmentVisible(part)) {
                 var stack = entity.getEquipment(part);
@@ -26,8 +35,11 @@ public class EquipmentLayer<T extends WearableChassis> extends LayerBase<T> {
                 var texture = item.getTexture(stack);
 
                 if (texture == null) return;
-                renderLayer(poseStack, entity, bakedModel, bufferSource, partialTick, packedLight, texture);
+//                    render(poseStack, bufferSource, packedLight, entity, partialTick, texture);
+                renderLayer(poseStack, hand, bakedModel, bufferSource, partialTick, packedLight, texture);
             }
         }
+
+        poseStack.popPose();
     }
 }

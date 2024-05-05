@@ -1,6 +1,8 @@
 package com.jetug.chassis_core.client.render.renderers;
 
 import com.jetug.chassis_core.client.model.HandModel;
+import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
+import com.jetug.chassis_core.client.render.layers.HandEquipmentLayer;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.common.foundation.entity.HandEntity;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
@@ -9,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.GeoObjectRenderer;
+import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +34,7 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 
     public CustomHandRenderer(GeoModel<HandEntity> model) {
         super(model);
-        //addRenderLayer(new EquipmentLayer<>(this));
+        addRenderLayer(new HandEquipmentLayer<>(this));
     }
 
     public static void doSafe(Runnable runnable) {
@@ -41,41 +44,6 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
             e.printStackTrace();
         }
     }
-
-//    public void render(HandEntity animatable, PoseStack poseStack, MultiBufferSource bufferSource, float partialTick, int packedLight) {
-//        currentChassis = animatable;
-//        var texture = getTextureLocation(animatable);
-//        if(texture == null) return;
-////        //poseStack.pushPose();
-////        poseStack.scale(1.0f, 1.0f, 1.0f);
-////        poseStack.translate(0.0d, 0.0d, 0.0d);
-//        super.render(animatable, poseStack, bufferSource, partialTick,  packedLight);
-//        //poseStack.popPose();
-//
-//        //super.render(animatable, poseStack, bufferSource, packedLight);
-//    }
-
-//    @Override
-//    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-//        super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-//    }
-
-//    @Override
-//    public void renderChildBones(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
-//                                 float red, float green, float blue, float alpha) {
-//        if (bone.childBonesAreHiddenToo())
-//            return;
-//
-//        doSafe(() -> {
-//            var bonesToRender = new ArrayList<>(bone.childBones);
-//            var equipmentBones = currentChassis.getEquipmentBones(bone.name);
-//            bonesToRender.addAll(equipmentBones);
-//
-//            for (GeoBone childBone : bonesToRender) {
-//                renderRecursively(childBone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-//            }
-//        });
-//    }
 
     public static void registerHandRenderer() {
         handRenderer = new CustomHandRenderer(handModel);
@@ -95,6 +63,27 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
         if (Objects.equals(bone.getName(), "right_arm_pov")) {
             bone.setRotX(((float) Math.PI / 90));
         }
+
+//        if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), "right_arm_pov")){
+//            var chassis = PlayerUtils.getLocalPlayerChassis();
+//            if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
+//                var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
+//                var config = armor.getConfig();
+//                var armorBone = GeoUtils.getBone(config.getModelLocation(), "pov_right_forearm_armor");
+//
+//                poseStack.pushPose();
+//                RenderUtils.translateMatrixToBone(poseStack, bone);
+//                RenderUtils.translateToPivotPoint(poseStack, bone);
+//                RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+//                RenderUtils.scaleMatrixForBone(poseStack, bone);
+//                RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+//
+//                renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
+//                        isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+//
+//                poseStack.popPose();
+//            }
+//        }
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
                 isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
