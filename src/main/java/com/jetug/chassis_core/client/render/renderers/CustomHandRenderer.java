@@ -74,21 +74,20 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                 if(armorBone == null) return;
 
                 poseStack.pushPose();
-
-
-                armorBone.updatePivot(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
-                RenderUtils.translateMatrixToBone(poseStack, bone);
-                RenderUtils.translateToPivotPoint(poseStack, bone);
-                RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+                {
+                    armorBone.updatePivot(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                    RenderUtils.translateMatrixToBone(poseStack, bone);
+                    RenderUtils.translateToPivotPoint(poseStack, bone);
+                    RenderUtils.rotateMatrixAroundBone(poseStack, bone);
 //                RenderUtils.scaleMatrixForBone(poseStack, bone);
-                RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+                    RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
-                poseStack.translate(8.8 / 16f, -22.36776 / 16f, -3.53463 / 16f);
-                poseStack.translate(-10 / 16f, 0 / 16f, 0 / 16f);
+                    poseStack.translate((8.8 - 5) / 16f, (-22.36776 - 5) / 16f, (-3.53463) / 16f);
+//                poseStack.translate(-5 / 16f, 0 / 16f, 0 / 16f);
 
-                renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
-                        isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-
+                    renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
+                            isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                }
                 poseStack.popPose();
             }
         }
