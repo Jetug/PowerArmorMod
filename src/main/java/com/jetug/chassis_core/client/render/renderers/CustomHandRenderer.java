@@ -86,7 +86,12 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //                    RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
 //                    armorBone.setRotX(((float) Math.PI / 90));
-                    poseStack.translate((-8.8) / 16f, (-22.36776) / 16f, (3.53463 ) / 16f);
+
+//                    poseStack.translate(armorBone.getPivotX() / 16f, -armorBone.getPivotY() / 16f, armorBone.getPivotZ() / 16f);
+
+//                    poseStack.translate((armorBone.getPivotX() + 0.5) / 16f, (-armorBone.getPivotY() + 0) / 16f, (armorBone.getPivotZ() + 0.5) / 16f);
+                    poseStack.translate((armorBone.getPivotX() + X) / 16f, (-armorBone.getPivotY() + Y) / 16f, (armorBone.getPivotZ() + Z) / 16f);
+//                    poseStack.translate((-8.8) / 16f, (-22.36776) / 16f, (3.53463 ) / 16f);
 //                    poseStack.translate((8.8 + -17) / 16f, (-22.36776 + 0) / 16f, (-3.53463 + 7) / 16f);
 //                poseStack.translate(-5 / 16f, 0 / 16f, 0 / 16f);
 

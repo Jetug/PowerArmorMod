@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.jetug.chassis_core.client.events.InputEvents.*;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -31,7 +32,7 @@ public class PlayerEvents {
 //        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
         poseStack.mulPose(Axis.ZP.rotationDegrees(90));
 //        poseStack.mulPose(Axis.YP.rotationDegrees(90));
-        poseStack.translate(-0.5, 0, -0.8); //-0.6
+        poseStack.translate(-0.2 + X, 0.1 + Y, -0.6 + Z); //-0.6
 
         CustomHandRenderer.getHandRenderer().render(
                 poseStack,

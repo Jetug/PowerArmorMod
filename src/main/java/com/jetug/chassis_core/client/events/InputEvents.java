@@ -50,12 +50,12 @@ public class InputEvents {
             }
             else {
                 switch (event.getKey()) {
-                    case GLFW.GLFW_KEY_X -> X++;
-                    case GLFW.GLFW_KEY_Y -> Y++;
-                    case GLFW.GLFW_KEY_Z -> Z++;
-                    case GLFW.GLFW_KEY_C -> X--;
-                    case GLFW.GLFW_KEY_U -> Y--;
-                    case GLFW.GLFW_KEY_V -> Z--;
+                    case GLFW.GLFW_KEY_X -> X += 0.1;
+                    case GLFW.GLFW_KEY_Y -> Y += 0.1;
+                    case GLFW.GLFW_KEY_Z -> Z += 0.1;
+                    case GLFW.GLFW_KEY_C -> X -= 0.1;
+                    case GLFW.GLFW_KEY_U -> Y -= 0.1;
+                    case GLFW.GLFW_KEY_V -> Z -= 0.1;
                 }
             }
         }
