@@ -19,6 +19,8 @@ import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.phys.Vec3;
+import org.checkerframework.checker.units.qual.C;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -82,11 +84,21 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //                RenderUtils.scaleMatrixForBone(poseStack, bone);
                     RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
-                    poseStack.translate((8.8 - 5) / 16f, (-22.36776 - 5) / 16f, (-3.53463) / 16f);
+//                    poseStack.translate((8.8 - 5) / 16f, (-22.36776 - 5) / 16f, (-3.53463) / 16f);
 //                poseStack.translate(-5 / 16f, 0 / 16f, 0 / 16f);
 
-                    renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
-                            isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                    for (var cube : armorBone.getCubes()) {
+                        poseStack.pushPose();
+
+                        var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
+                                cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
+
+                        renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                        poseStack.popPose();
+                    }
+
+//                    renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
+//                            isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
                 }
                 poseStack.popPose();
             }
@@ -131,18 +143,22 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
         poseStack.popPose();
     }
 
-//    @Override
-//    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-//        if (bone.isHidden())
-//            return;
-//
-//        for (var cube : bone.getCubes()) {
-//            poseStack.pushPose();
-//            renderCube(poseStack, cube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-//            poseStack.popPose();
-//        }
-//    }
-//
+    @Override
+    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (bone.isHidden())
+            return;
+
+        for (var cube : bone.getCubes()) {
+            poseStack.pushPose();
+
+            var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
+                    cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
+
+            renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            poseStack.popPose();
+        }
+    }
+
 //    @Override
 //    public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 ////        RenderUtils.translateToPivotPoint(poseStack, cube);
