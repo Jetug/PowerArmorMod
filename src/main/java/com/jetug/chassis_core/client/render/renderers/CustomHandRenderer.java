@@ -28,8 +28,9 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static com.jetug.chassis_core.common.data.constants.ChassisPart.RIGHT_ARM_ARMOR;
-import static com.jetug.chassis_core.common.foundation.entity.ChassisBase.getAsChassisEquipment;
+import static com.jetug.chassis_core.client.events.InputEvents.*;
+import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
+import static com.jetug.chassis_core.common.foundation.entity.ChassisBase.*;
 
 @SuppressWarnings("unchecked")
 public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
@@ -62,9 +63,9 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                                   int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
 
-        if (Objects.equals(bone.getName(), RIGHT_HAND_BONE)) {
-            bone.setRotX(((float) Math.PI / 90));
-        }
+//        if (Objects.equals(bone.getName(), RIGHT_HAND_BONE)) {
+//            bone.setRotX(((float) Math.PI / 90));
+//        }
 
         if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
             var chassis = PlayerUtils.getLocalPlayerChassis();
@@ -77,14 +78,16 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 
                 poseStack.pushPose();
                 {
-                    armorBone.updatePivot(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
-                    RenderUtils.translateMatrixToBone(poseStack, bone);
-                    RenderUtils.translateToPivotPoint(poseStack, bone);
+//                    armorBone.updatePivot(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+//                    RenderUtils.translateMatrixToBone(poseStack, bone);
+//                    RenderUtils.translateToPivotPoint(poseStack, bone);
                     RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-//                RenderUtils.scaleMatrixForBone(poseStack, bone);
-                    RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+////                RenderUtils.scaleMatrixForBone(poseStack, bone);
+//                    RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
-//                    poseStack.translate((8.8 - 5) / 16f, (-22.36776 - 5) / 16f, (-3.53463) / 16f);
+//                    armorBone.setRotX(((float) Math.PI / 90));
+                    poseStack.translate((-8.8) / 16f, (-22.36776) / 16f, (3.53463 ) / 16f);
+//                    poseStack.translate((8.8 + -17) / 16f, (-22.36776 + 0) / 16f, (-3.53463 + 7) / 16f);
 //                poseStack.translate(-5 / 16f, 0 / 16f, 0 / 16f);
 
                     for (var cube : armorBone.getCubes()) {
@@ -143,21 +146,21 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
         poseStack.popPose();
     }
 
-    @Override
-    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if (bone.isHidden())
-            return;
-
-        for (var cube : bone.getCubes()) {
-            poseStack.pushPose();
-
-            var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
-                    cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
-
-            renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            poseStack.popPose();
-        }
-    }
+//    @Override
+//    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//        if (bone.isHidden())
+//            return;
+//
+//        for (var cube : bone.getCubes()) {
+//            poseStack.pushPose();
+//
+//            var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
+//                    cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
+//
+//            renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+//            poseStack.popPose();
+//        }
+//    }
 
 //    @Override
 //    public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {

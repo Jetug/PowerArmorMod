@@ -4,6 +4,7 @@ import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.client.render.layers.PlayerSkinStorage;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import com.jetug.chassis_core.common.network.PacketHandler;
+import com.jetug.example.common.registery.ChassisArmorItems;
 import com.jetug.example.common.registery.ContainerRegistry;
 import com.jetug.example.common.registery.EntityTypes;
 import mod.azure.azurelib.AzureLib;
@@ -45,5 +46,6 @@ public class ChassisCore {
         ItemRegistry.register(MOD_EVENT_BUS);
         ContainerRegistry.register(MOD_EVENT_BUS);
         EntityTypes.register(MOD_EVENT_BUS);
+        ChassisArmorItems.register(MOD_EVENT_BUS);
     }
 }

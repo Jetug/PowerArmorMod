@@ -30,6 +30,7 @@ public class PlayerEvents {
         poseStack.pushPose();
 //        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
         poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+//        poseStack.mulPose(Axis.YP.rotationDegrees(90));
         poseStack.translate(-0.5, 0, -0.8); //-0.6
 
         CustomHandRenderer.getHandRenderer().render(

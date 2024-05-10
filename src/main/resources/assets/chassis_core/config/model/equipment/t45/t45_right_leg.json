@@ -1,0 +1,25 @@
+{
+  "part": "right_leg",
+  "model": "chassis_core:geo/power_armor/t45.geo.json",
+  "texture": {
+    "default": "chassis_core:textures/power_armor/t45.png"
+  },
+
+  "uv": [155, 155, 155, 155],
+  "hide" : ["right_toes_frame"],
+
+  "attachments": [
+    {
+      "frame": "right_upper_leg",
+      "armor": "right_upper_leg_armor"
+    },
+    {
+      "frame": "right_lower_leg",
+      "armor": "right_lower_leg_armor"
+    },
+    {
+      "frame": "right_toes",
+      "armor": "right_toes_armor"
+    }
+  ]
+}

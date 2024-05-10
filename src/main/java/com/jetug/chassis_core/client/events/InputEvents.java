@@ -5,6 +5,7 @@ import com.jetug.chassis_core.client.utils.KeyUtils;
 import com.jetug.chassis_core.common.input.CommonInputHandler;
 import com.jetug.chassis_core.common.input.KeyAction;
 import com.jetug.chassis_core.common.network.actions.InputAction;
+import mod.azure.azurelib.core.math.functions.limit.Min;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,6 +21,11 @@ import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.stopWearing
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
+    public static float X = 0;
+    public static float Y = 0;
+    public static float Z = 0;
+
+
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onKeyInput(InputEvent.Key event) {
@@ -34,6 +40,25 @@ public class InputEvents {
             action = KeyAction.RELEASE;
         else
             action = KeyAction.REPEAT;
+
+
+        if(event.getAction() == GLFW.GLFW_PRESS){
+            if(Minecraft.getInstance().player.isShiftKeyDown()){
+                switch (event.getKey()) {
+
+                }
+            }
+            else {
+                switch (event.getKey()) {
+                    case GLFW.GLFW_KEY_X -> X++;
+                    case GLFW.GLFW_KEY_Y -> Y++;
+                    case GLFW.GLFW_KEY_Z -> Z++;
+                    case GLFW.GLFW_KEY_C -> X--;
+                    case GLFW.GLFW_KEY_U -> Y--;
+                    case GLFW.GLFW_KEY_V -> Z--;
+                }
+            }
+        }
 
         handleInput(event.getKey(), action);
         //CommonInputHandler.onKeyInput(InputKey.getByKey(event.getKey()), action, getLocalPlayer());
