@@ -34,6 +34,7 @@ public class S2CCassisPacket {
     public static void handle(S2CCassisPacket message, Supplier<NetworkEvent.Context> context) {
         var player = Minecraft.getInstance().player;
         var data = message.getArmorData();
+        if(player == null) return;
         var entity = player.level.getEntity(data.entityId);
 
         if (entity instanceof WearableChassis powerArmor)

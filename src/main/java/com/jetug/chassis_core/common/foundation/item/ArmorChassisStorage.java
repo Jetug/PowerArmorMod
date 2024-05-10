@@ -35,9 +35,9 @@ public class ArmorChassisStorage extends Item {
 
 
     @Override
-    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        ItemStack trueStack = playerIn.getItemInHand(hand);
-        if (!playerIn.level.isClientSide
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
+        var trueStack = player.getItemInHand(hand);
+        if (!player.level.isClientSide
                 && hand == InteractionHand.MAIN_HAND
                 && target instanceof WearableChassis
                 && (trueStack.getTag() == null
@@ -51,8 +51,8 @@ public class ArmorChassisStorage extends Item {
             newTag.putString(CHASSIS_ENTITY_ID, Registry.ENTITY_TYPE.getKey(target.getType()).toString());
             trueStack.setTag(newTag);
 
-            playerIn.swing(hand);
-            playerIn.level.playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
+            player.swing(hand);
+            player.level.playSound(player, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
             target.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.SUCCESS;
         }
