@@ -63,9 +63,9 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                                   int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
 
-//        if (Objects.equals(bone.getName(), RIGHT_HAND_BONE)) {
-//            bone.setRotX(((float) Math.PI / 90));
-//        }
+        if (Objects.equals(bone.getName(), RIGHT_HAND_BONE)) {
+            bone.setRotX(((float) Math.PI / 90));
+        }
 
         if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
             var chassis = PlayerUtils.getLocalPlayerChassis();
