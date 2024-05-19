@@ -300,7 +300,9 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     }
 
     public Collection<ItemStack> getVisibleEquipment() {
-        return returnCollection(getEquipment(), (part) -> isEquipmentVisible(part) ? getEquipment(part) : null);
+        return returnCollection(getEquipment(),
+                (part) -> isEquipmentVisible(part) ?
+                        getEquipment(part) : null);
     }
 
     public Collection<EquipmentConfig> getItemConfigs() {
