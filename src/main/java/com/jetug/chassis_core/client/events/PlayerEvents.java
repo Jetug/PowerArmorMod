@@ -32,7 +32,8 @@ public class PlayerEvents {
 //        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
         poseStack.mulPose(Axis.ZP.rotationDegrees(90));
 //        poseStack.mulPose(Axis.YP.rotationDegrees(90));
-        poseStack.translate(-0.2 + X, 0.1 + Y, -0.6 + Z); //-0.6
+//        poseStack.translate(-0.2 + X, 0.1 + Y, -0.6 + Z); //-0.6
+        poseStack.translate(-0.2, 0.1, -0.6);
 
         CustomHandRenderer.getHandRenderer().render(
                 poseStack,
@@ -41,7 +42,6 @@ public class PlayerEvents {
                 null,
                 null,
                 event.getPackedLight());
-
         poseStack.popPose();
         event.setCanceled(true);
     }

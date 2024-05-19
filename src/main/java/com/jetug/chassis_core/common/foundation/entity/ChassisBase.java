@@ -17,6 +17,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -69,7 +71,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     protected final boolean isClientSide = level().isClientSide;
     protected final boolean isServerSide = !level().isClientSide;
     private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType())));
-    public HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
+    private final HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
     public Collection<String> bonesToHide = new ArrayList<>();
     public SimpleContainer inventory;
     protected float totalDefense;
@@ -136,6 +138,26 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return inventorySize;
     }
 
+    public void damageArmor(DamageSource damageSource, float damage) {
+        if (isServerSide) {
+            if (!damageSource.is(DamageTypes.FALL)) {
+                damageArmorItem(HELMET, damageSource, damage);
+                damageArmorItem(BODY_ARMOR, damageSource, damage);
+                damageArmorItem(LEFT_ARM_ARMOR, damageSource, damage);
+                damageArmorItem(RIGHT_ARM_ARMOR, damageSource, damage);
+            }
+            damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
+            damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
+        }
+    }
+
+    public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
+        var itemStack = getEquipment(chassisPart);
+
+        if (itemStack.getItem() instanceof ChassisArmor armorItem)
+            armorItem.damageArmor(itemStack, (int) damage);
+    }
+
 //    public ArrayList<String> getHiddenBones(){
 //        var hidden = new ArrayList<String>();
 //        for(var item : getVisibleEquipment()) {
@@ -187,11 +209,20 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return val != null ? val : 0;
     }
 
+    private int tickTimer = 10;
+
     @Override
     public void tick() {
         super.tick();
         syncDataWithClient();
         syncDataWithServer();
+
+        if(isClientSide) {
+            if (tickTimer == 0) {
+                tickTimer = 10;
+                updateBones();
+            } else tickTimer--;
+        }
     }
 
     @Override
