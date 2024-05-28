@@ -29,21 +29,20 @@ public class PlayerEvents {
 
         var poseStack = event.getPoseStack();
         poseStack.pushPose();
-//        poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(90));
-//        poseStack.mulPose(Axis.YP.rotationDegrees(90));
-//        poseStack.translate(-0.2 + X, 0.1 + Y, -0.6 + Z); //-0.6
-        poseStack.translate(-0.2, 0.1, -0.6);
+        {
+            poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+            poseStack.translate(-0.15, -0.1, -0.5);
 
-        CustomHandRenderer.getHandRenderer().render(
-                poseStack,
-                getLocalPlayerChassis().getHandEntity(),
-                event.getMultiBufferSource(),
-                null,
-                null,
-                event.getPackedLight());
+            CustomHandRenderer.getHandRenderer().render(
+                    poseStack,
+                    getLocalPlayerChassis().getHandEntity(),
+                    event.getMultiBufferSource(),
+                    null,
+                    null,
+                    event.getPackedLight());
+        }
         poseStack.popPose();
-        event.setCanceled(true);
+//        event.setCanceled(true);
     }
 
 //    @OnlyIn(Dist.CLIENT)

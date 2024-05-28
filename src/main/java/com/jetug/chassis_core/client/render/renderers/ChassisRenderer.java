@@ -50,8 +50,8 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
 //        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
-//        addRenderLayer(new EquipmentLayer<>(this));
-//        addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
+        addRenderLayer(new EquipmentLayer<>(this));
+        addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
 
     @Override

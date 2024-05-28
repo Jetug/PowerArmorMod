@@ -80,7 +80,7 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //                    poseStack.translate(armorBone.getPivotX() / 16f, -armorBone.getPivotY() / 16f, armorBone.getPivotZ() / 16f);
 
 //                    poseStack.translate((armorBone.getPivotX() + 0.5) / 16f, (-armorBone.getPivotY() + 0) / 16f, (armorBone.getPivotZ() + 0.5) / 16f);
-                    poseStack.translate((armorBone.getPivotX() + 0.8) / 16f, (-armorBone.getPivotY() + 0.35) / 16f, (armorBone.getPivotZ() + 1.05) / 16f);
+                    poseStack.translate((armorBone.getPivotX() + 0.8 + X) / 16f, (-armorBone.getPivotY() + 0.35 + Y) / 16f, (armorBone.getPivotZ() - 1.05 + Z) / 16f);
 //                    poseStack.translate((armorBone.getPivotX() + X) / 16f, (-armorBone.getPivotY() + Y) / 16f, (armorBone.getPivotZ() + Z) / 16f);
 //                    poseStack.translate((armorBone.getPivotX()) / 16f, (-armorBone.getPivotY()) / 16f, (armorBone.getPivotZ()) / 16f);
 
@@ -93,9 +93,6 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                         }
                         poseStack.popPose();
                     }
-
-//                    renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
-//                            isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
                 }
                 poseStack.popPose();
             }
@@ -104,28 +101,28 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                     isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-//    @Override
-//    public void renderChildBones(PoseStack poseStack, HandEntity animatable, GeoBone bone, RenderType renderType,
-//                                 MultiBufferSource bufferSource, VertexConsumer buffer,
-//                                 boolean isReRender, float partialTick, int packedLight, int packedOverlay,
-//                                 float red, float green, float blue, float alpha) {
-//        if (!bone.isHidingChildren()) {
-//            var bonesToRender = new ArrayList<>(bone.getChildBones());
-//
-//            if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
-//                var chassis = PlayerUtils.getLocalPlayerChassis();
-//                if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
-//                    var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
-//                    var config = armor.getConfig();
-//                    var armorBone = GeoUtils.getBone(config.getModelLocation(), "pov_right_forearm_armor");
-//                    bonesToRender.add(armorBone);
-//                }
-//            }
-//
-//            for (GeoBone childBone : bonesToRender) {
-//                this.renderRecursively(poseStack, animatable, childBone, renderType, bufferSource, buffer,
-//                        isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-//            }
-//        }
-//    }
+    @Override
+    public void renderChildBones(PoseStack poseStack, HandEntity animatable, GeoBone bone, RenderType renderType,
+                                 MultiBufferSource bufferSource, VertexConsumer buffer,
+                                 boolean isReRender, float partialTick, int packedLight, int packedOverlay,
+                                 float red, float green, float blue, float alpha) {
+        if (!bone.isHidingChildren()) {
+            var bonesToRender = new ArrayList<>(bone.getChildBones());
+
+            if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
+                var chassis = PlayerUtils.getLocalPlayerChassis();
+                if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
+                    var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
+                    var config = armor.getConfig();
+                    var armorBone = GeoUtils.getBone(config.getModelLocation(), "pov_right_forearm_armor");
+                    bonesToRender.add(armorBone);
+                }
+            }
+
+            for (GeoBone childBone : bonesToRender) {
+                this.renderRecursively(poseStack, animatable, childBone, renderType, bufferSource, buffer,
+                        isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+            }
+        }
+    }
 }
