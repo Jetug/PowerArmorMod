@@ -369,7 +369,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         for (var stack : getVisibleEquipment()) {
             var item = getAsChassisEquipment(stack);
             var config = item.getConfig();
-
+            if(config == null) continue;
             addAll(bonesToHide, config.hide);
 
             for (var attachment : config.attachments) {
