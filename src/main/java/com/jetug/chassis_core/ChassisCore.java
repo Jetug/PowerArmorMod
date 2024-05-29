@@ -1,13 +1,11 @@
 package com.jetug.chassis_core;
 
 import com.jetug.chassis_core.client.KeyBindings;
-import com.jetug.chassis_core.client.render.layers.PlayerSkinStorage;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
 import com.jetug.chassis_core.common.network.PacketHandler;
 import com.jetug.example.common.registery.ChassisArmorItems;
 import com.jetug.example.common.registery.ContainerRegistry;
 import com.jetug.example.common.registery.EntityTypes;
-import mod.azure.azurelib.AzureLib;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -24,10 +22,8 @@ public class ChassisCore {
     public static final String MOD_ID = "chassis_core";
     public static final Logger LOGGER = LogManager.getLogger();
     public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-    public static final PlayerSkinStorage SKIN_STORAGE = PlayerSkinStorage.INSTANCE;
 
     public ChassisCore() {
-//        AzureLib.initialize();
         register();
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

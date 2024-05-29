@@ -3,9 +3,7 @@ package com.jetug.chassis_core.client.render.renderers;
 import com.jetug.chassis_core.client.model.ChassisModel;
 import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
 import com.jetug.chassis_core.client.render.layers.HeldItemLayer;
-import com.jetug.chassis_core.client.render.layers.ScaledPlayerSkinLayer;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
-import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import static com.jetug.chassis_core.client.events.InputEvents.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
 import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
