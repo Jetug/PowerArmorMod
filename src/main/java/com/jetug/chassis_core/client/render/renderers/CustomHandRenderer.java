@@ -37,11 +37,6 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
     protected static final HandModel handModel = new HandModel();
     public static final String RIGHT_HAND_BONE = "right_arm_pov";
     protected static CustomHandRenderer handRenderer;
-    protected HandEntity currentChassis;
-
-//    static {
-//        AnimationController.addModelFetcher(animatable -> animatable instanceof HandEntity ? handModel : null);
-//    }
 
     public CustomHandRenderer(GeoModel<HandEntity> model) {
         super(model);
@@ -62,11 +57,6 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                                   VertexConsumer buffer, boolean isReRender, float partialTick,
                                   int packedLight, int packedOverlay,
                                   float red, float green, float blue, float alpha) {
-
-//        if (Objects.equals(bone.getName(), RIGHT_HAND_BONE)) {
-//            bone.setRotX(((float) Math.PI / 90));
-//        }
-
         if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
             var chassis = PlayerUtils.getLocalPlayerChassis();
             if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
@@ -90,103 +80,29 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //                    poseStack.translate(armorBone.getPivotX() / 16f, -armorBone.getPivotY() / 16f, armorBone.getPivotZ() / 16f);
 
 //                    poseStack.translate((armorBone.getPivotX() + 0.5) / 16f, (-armorBone.getPivotY() + 0) / 16f, (armorBone.getPivotZ() + 0.5) / 16f);
-                    poseStack.translate((armorBone.getPivotX() + X) / 16f, (-armorBone.getPivotY() + Y) / 16f, (armorBone.getPivotZ() + Z) / 16f);
-//                    poseStack.translate((-8.8) / 16f, (-22.36776) / 16f, (3.53463 ) / 16f);
-//                    poseStack.translate((8.8 + -17) / 16f, (-22.36776 + 0) / 16f, (-3.53463 + 7) / 16f);
-//                poseStack.translate(-5 / 16f, 0 / 16f, 0 / 16f);
+//                    poseStack.translate((armorBone.getPivotX() + 0.8 + X) / 16f, (-armorBone.getPivotY() + 0.35 + Y) / 16f, (armorBone.getPivotZ() - 1.05 + Z) / 16f);
+                    poseStack.translate((armorBone.getPivotX() + 0.8) / 16f, (-armorBone.getPivotY() + 0.35) / 16f, (armorBone.getPivotZ() - 1.05) / 16f);
+//                    poseStack.translate((armorBone.getPivotX() + X) / 16f, (-armorBone.getPivotY() + Y) / 16f, (armorBone.getPivotZ() + Z) / 16f);
+//                    poseStack.translate((armorBone.getPivotX()) / 16f, (-armorBone.getPivotY()) / 16f, (armorBone.getPivotZ()) / 16f);
 
                     for (var cube : armorBone.getCubes()) {
                         poseStack.pushPose();
-
-                        var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
-                                cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
-
-                        renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                        {
+                            var newCube = new GeoCube(cube.quads(), new Vec3(0, 0, 0),
+                                    cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
+                            renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                        }
                         poseStack.popPose();
                     }
-
-//                    renderRecursively(poseStack, animatable, armorBone, renderType, bufferSource, buffer,
-//                            isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
                 }
                 poseStack.popPose();
             }
         }
-//        else {
-//            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
-//                    isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-//        }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
                     isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-
-//        customRenderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
-//                isReRender, partialTick, packedLight, packedOverlay, new Rgba(red, green, blue, alpha));
-    }
-
-    public void customRenderRecursively(PoseStack poseStack, HandEntity animatable, GeoBone bone, RenderType renderType,
-                                        MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender,
-                                        float partialTick, int packedLight, int packedOverlay, Rgba rgba) {
-//        if (bone.isTrackingMatrices()) {
-//            var poseState = new Matrix4f(poseStack.last().pose());
-//            var localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.objectRenderTranslations);
-//
-//            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
-//            bone.setLocalSpaceMatrix(RenderUtils.translateMatrix(localMatrix, getRenderOffset(this.animatable, 1).toVector3f()));
-//        }
-
-        originalRenderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer,
-                isReRender, partialTick, packedLight, packedOverlay, rgba);
-    }
-
-    private void originalRenderRecursively(PoseStack poseStack, HandEntity animatable, GeoBone bone, RenderType renderType,
-                                           MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender,
-                                           float partialTick, int packedLight, int packedOverlay, Rgba rgba) {
-        poseStack.pushPose();
-//        RenderUtils.prepMatrixForBone(poseStack, bone);
-        renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, rgba.r(), rgba.g(), rgba.b(), rgba.a());
-
-        if (!isReRender) applyRenderLayersForBone(poseStack, getAnimatable(), bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
-
-        renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
-                packedLight, packedOverlay, rgba.r(), rgba.g(), rgba.b(), rgba.a());
-        poseStack.popPose();
     }
 
 //    @Override
-//    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-//        if (bone.isHidden())
-//            return;
-//
-//        for (var cube : bone.getCubes()) {
-//            poseStack.pushPose();
-//
-//            var newCube = new GeoCube(cube.quads(), new Vec3(0,0,0),
-//                    cube.rotation(), cube.size(), cube.inflate(), cube.mirror());
-//
-//            renderCube(poseStack, newCube, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-//            poseStack.popPose();
-//        }
-//    }
-
-//    @Override
-//    public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-////        RenderUtils.translateToPivotPoint(poseStack, cube);
-////        RenderUtils.rotateMatrixAroundCube(poseStack, cube);
-////        RenderUtils.translateAwayFromPivotPoint(poseStack, cube);
-//
-//        var normalisedPoseState = poseStack.last().normal();
-//        var poseState = new Matrix4f(poseStack.last().pose());
-//
-//        for (var quad : cube.quads()) {
-//            if (quad == null) continue;
-//
-//            var normal = normalisedPoseState.transform(new Vector3f(quad.normal()));
-//
-//            RenderUtils.fixInvertedFlatCube(cube, normal);
-//            createVerticesOfQuad(quad, poseState, normal, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-//        }
-//    }
-
-    //    @Override
 //    public void renderChildBones(PoseStack poseStack, HandEntity animatable, GeoBone bone, RenderType renderType,
 //                                 MultiBufferSource bufferSource, VertexConsumer buffer,
 //                                 boolean isReRender, float partialTick, int packedLight, int packedOverlay,

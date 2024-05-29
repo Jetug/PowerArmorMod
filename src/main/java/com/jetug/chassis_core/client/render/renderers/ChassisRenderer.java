@@ -5,25 +5,33 @@ import com.jetug.chassis_core.client.render.layers.EquipmentLayer;
 import com.jetug.chassis_core.client.render.layers.HeldItemLayer;
 import com.jetug.chassis_core.client.render.layers.ScaledPlayerSkinLayer;
 import com.jetug.chassis_core.common.foundation.entity.WearableChassis;
+import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.util.ClientUtils;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.joml.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
+import static com.jetug.chassis_core.client.events.InputEvents.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
 import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -32,6 +40,8 @@ import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
     protected Collection<String> bonesToHide;
+    private ItemDisplayContext transformType;
+    private MultiBufferSource bufferSource;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
         this(renderManager, new ChassisModel<>());
@@ -39,7 +49,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
+//        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
@@ -59,6 +69,8 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     public void defaultRender(PoseStack poseStack, T animatable, MultiBufferSource bufferSource,
                               @Nullable RenderType renderType, @Nullable VertexConsumer buffer,
                               float yaw, float partialTick, int packedLight) {
+        this.bufferSource = bufferSource;
+        this.transformType = transformType;
         if (isInvisible(animatable)) return;
         super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, yaw, partialTick, packedLight);
     }
@@ -74,10 +86,43 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
 //                    poseStack, animatable, bufferSource,
 //                    null, null, packedLight);
 //        }
+        var client = Minecraft.getInstance();
 
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
-                packedLight, packedOverlay, red, green, blue, alpha);
+        if(animatable.hasPlayerPassenger() && Objects.equals(bone.getName(), "head")){
+            bone.setHidden(true);
+            bone.setChildrenHidden(false);
 
+            if(animatable.getPlayerPassenger() instanceof AbstractClientPlayer player) {
+                var playerRenderer = (PlayerRenderer) client.getEntityRenderDispatcher().getRenderer(player);
+                var playerModel = playerRenderer.getModel();
+
+                poseStack.pushPose();
+                {
+                    RenderUtils.prepMatrixForBone(poseStack, bone);
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+//                poseStack.translate(X, -4 + Y, Z);
+                    poseStack.translate(0, -4, 0);
+
+                    var playerSkin = ((LocalPlayer) ClientUtils.getClientPlayer()).getSkinTextureLocation();
+                    var arm = this.bufferSource.getBuffer(RenderType.entitySolid(playerSkin));
+                    var sleeve = this.bufferSource.getBuffer(RenderType.entityTranslucent(playerSkin));
+
+                    playerModel.head.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                    playerModel.head.setRotation(0, 0, 0);
+                    playerModel.head.render(poseStack, arm, packedLight, packedOverlay, 1, 1, 1, 1);
+
+                    playerModel.hat.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                    playerModel.hat.setRotation(0, 0, 0);
+                    playerModel.hat.render(poseStack, sleeve, packedLight, packedOverlay, 1, 1, 1, 1);
+                }
+                poseStack.popPose();
+            }
+        }
+
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource,
+                this.bufferSource.getBuffer(renderType), isReRender,
+                partialTick, packedLight, packedOverlay,
+                red, green, blue, alpha);
     }
 
     @Override

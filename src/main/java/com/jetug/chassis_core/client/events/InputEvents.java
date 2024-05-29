@@ -25,7 +25,6 @@ public class InputEvents {
     public static float Y = 0;
     public static float Z = 0;
 
-
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onKeyInput(InputEvent.Key event) {
@@ -50,12 +49,12 @@ public class InputEvents {
             }
             else {
                 switch (event.getKey()) {
-                    case GLFW.GLFW_KEY_X -> X += 0.1;
-                    case GLFW.GLFW_KEY_Y -> Y += 0.1;
-                    case GLFW.GLFW_KEY_Z -> Z += 0.1;
-                    case GLFW.GLFW_KEY_C -> X -= 0.1;
-                    case GLFW.GLFW_KEY_U -> Y -= 0.1;
-                    case GLFW.GLFW_KEY_V -> Z -= 0.1;
+                    case GLFW.GLFW_KEY_X -> X += 0.05f;
+                    case GLFW.GLFW_KEY_Y -> Y += 0.05f;
+                    case GLFW.GLFW_KEY_Z -> Z += 0.05f;
+                    case GLFW.GLFW_KEY_C -> X -= 0.05f;
+                    case GLFW.GLFW_KEY_U -> Y -= 0.05f;
+                    case GLFW.GLFW_KEY_V -> Z -= 0.05f;
                 }
             }
         }

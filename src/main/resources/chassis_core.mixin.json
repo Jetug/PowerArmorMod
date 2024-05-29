@@ -6,6 +6,7 @@
     "client.ClientPacketListenerMixin",
     "client.CreativeInventoryScreenMixin",
     "client.ForgeIngameGuiMixin",
+    "client.GameRendererMixin",
     "client.InventoryScreenMixin"
   ],
   "injectors": {

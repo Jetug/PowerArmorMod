@@ -97,22 +97,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return true;
     }
 
-    public void damageArmor(DamageSource damageSource, float damage) {
-        if (isServerSide) {
-            if (damageSource.is(DamageTypes.FALL)) {
-                damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
-                damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
-            } else {
-                damageArmorItem(HELMET, damageSource, damage);
-                damageArmorItem(BODY_ARMOR, damageSource, damage);
-                damageArmorItem(LEFT_ARM_ARMOR, damageSource, damage);
-                damageArmorItem(RIGHT_ARM_ARMOR, damageSource, damage);
-                damageArmorItem(LEFT_LEG_ARMOR, damageSource, damage);
-                damageArmorItem(RIGHT_LEG_ARMOR, damageSource, damage);
-            }
-        }
-    }
-
     @Override
     public void aiStep() {
         super.aiStep();
@@ -221,14 +205,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
-//        ChassisCore.LOGGER.debug("damageArmorItem" + isClientSide);
-        var itemStack = getEquipment(chassisPart);
-
-        if (itemStack.getItem() instanceof ChassisArmor armorItem)
-            armorItem.damageArmor(itemStack, (int) damage);
     }
 
     @Nullable
