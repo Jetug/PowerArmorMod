@@ -26,9 +26,7 @@ public class ChassisCore {
     public ChassisCore() {
         register();
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            MOD_EVENT_BUS.addListener(KeyBindings::register);
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MOD_EVENT_BUS.addListener(KeyBindings::register));
 
         EVENT_BUS.register(this);
         MOD_EVENT_BUS.addListener(this::onCommonSetup);

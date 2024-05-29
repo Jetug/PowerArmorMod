@@ -1,6 +1,5 @@
 package com.jetug.chassis_core.common.util.helpers;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

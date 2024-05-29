@@ -37,7 +37,6 @@ import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
     protected Collection<String> bonesToHide;
-    private ItemDisplayContext transformType;
     private MultiBufferSource bufferSource;
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager) {
@@ -46,7 +45,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-//        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
@@ -67,7 +65,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                               @Nullable RenderType renderType, @Nullable VertexConsumer buffer,
                               float yaw, float partialTick, int packedLight) {
         this.bufferSource = bufferSource;
-        this.transformType = transformType;
         if (isInvisible(animatable)) return;
         super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, yaw, partialTick, packedLight);
     }

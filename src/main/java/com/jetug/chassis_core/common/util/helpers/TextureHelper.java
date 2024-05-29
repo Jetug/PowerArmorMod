@@ -1,34 +1,15 @@
 package com.jetug.chassis_core.common.util.helpers;
 
-import com.google.gson.JsonParser;
-import com.ibm.icu.impl.Pair;
 import com.jetug.chassis_core.ChassisCore;
-import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.UUID;
 
 import static com.jetug.chassis_core.common.util.helpers.BufferedImageHelper.*;
-import static com.jetug.chassis_core.common.util.helpers.texture.PlayerSkins.getSkin;
-import static org.apache.logging.log4j.Level.ERROR;
 
 
 public class TextureHelper {
