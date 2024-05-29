@@ -42,7 +42,7 @@ public class PlayerEvents {
                     event.getPackedLight());
         }
         poseStack.popPose();
-//        event.setCanceled(true);
+        event.setCanceled(true);
     }
 
 //    @OnlyIn(Dist.CLIENT)
