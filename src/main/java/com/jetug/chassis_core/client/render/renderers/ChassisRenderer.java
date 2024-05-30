@@ -41,10 +41,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     protected Collection<String> bonesToHide;
     private MultiBufferSource bufferSource;
 
-    public ChassisRenderer(EntityRendererProvider.Context renderManager) {
-        this(renderManager, new ChassisModel<>());
-    }
-
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
         addRenderLayer(new EquipmentLayer<>(this));
