@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import static com.jetug.chassis_core.client.events.InputEvents.*;
 import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
 import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
@@ -43,13 +42,8 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     private ItemDisplayContext transformType;
     private MultiBufferSource bufferSource;
 
-    public ChassisRenderer(EntityRendererProvider.Context renderManager) {
-        this(renderManager, new ChassisModel<>());
-    }
-
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-//        addRenderLayer(new ScaledPlayerSkinLayer<>(this));
         addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
