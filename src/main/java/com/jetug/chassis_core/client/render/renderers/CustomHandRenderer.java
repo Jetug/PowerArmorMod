@@ -49,9 +49,8 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
             var chassis = PlayerUtils.getLocalPlayerChassis();
             if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
                 var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
-                var config = armor.getConfig();
-                var armorBone = GeoUtils.getBone(config.getModelLocation(), "right_forearm_armor");
-
+                if(armor.getConfig() == null) return;
+                var armorBone = GeoUtils.getBone(armor.getConfig().getModelLocation(), "right_forearm_armor");
                 if(armorBone == null) return;
 
                 poseStack.pushPose();

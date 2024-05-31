@@ -159,7 +159,8 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         return Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
-    private static void renderHumanoidPart(PoseStack poseStack, GeoBone bone, int packedLight, int packedOverlay, HumanoidModel humanoidModel, VertexConsumer head) {
+    private static void renderHumanoidPart(PoseStack poseStack, GeoBone bone, int packedLight, int packedOverlay,
+                                           HumanoidModel humanoidModel, VertexConsumer head) {
         humanoidModel.head.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
         humanoidModel.head.setRotation(0, 0, 0);
         humanoidModel.head.render(poseStack, head, packedLight, packedOverlay, 1, 1, 1, 1);
