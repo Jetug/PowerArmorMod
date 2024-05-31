@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import static com.jetug.chassis_core.common.data.constants.Bones.LEFT_HAND;
 import static com.jetug.chassis_core.common.data.constants.Bones.RIGHT_HAND;
+import static mod.azure.azurelib.util.RenderUtils.*;
 import static net.minecraft.world.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.world.entity.EquipmentSlot.OFFHAND;
 
@@ -78,7 +79,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
     }
 
     private void renderHead(PoseStack poseStack, T animatable, GeoBone bone, int packedLight, int packedOverlay) {
-        if(!animatable.isInvisible() && Objects.equals(bone.getName(), "head") && animatable.hasPassenger()) {
+        if(!animatable.isInvisible() && Objects.equals(bone.getName(), "head_frame") && animatable.hasPassenger()) {
             var passenger = animatable.getControllingPassenger();
 
             if(getEntityRenderDispatcher().getRenderer(passenger) instanceof LivingEntityRenderer humanoidRenderer &&
@@ -89,8 +90,13 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                 poseStack.pushPose();
                 {
                     RenderUtils.prepMatrixForBone(poseStack, bone);
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-                    poseStack.translate(0, -4, 0);
+//                    translateMatrixToBone(poseStack, bone);
+//                    translateToPivotPoint(poseStack, bone);
+//                    rotateMatrixAroundBone(poseStack, bone);
+//                    scaleMatrixForBone(poseStack, bone);
+//                    translateAwayFromPivotPoint(poseStack, bone);
+//                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+//                    poseStack.translate(0, -4, 0);
 
                     var skin = humanoidRenderer.getTextureLocation(passenger);
                     var head = this.bufferSource.getBuffer(RenderType.entitySolid(skin));
