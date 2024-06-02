@@ -73,6 +73,10 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return DEFAULT_ICON;
     }
 
+    public boolean renderHand(){
+        return true;
+    }
+
     @Override
     public void tick() {
         super.tick();

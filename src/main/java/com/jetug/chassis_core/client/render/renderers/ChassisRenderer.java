@@ -19,6 +19,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +72,11 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                                   int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         bone.setHidden(bonesToHide.contains(bone.getName()));
 
-        renderHead(poseStack, animatable, bone, packedLight, packedOverlay);
+        if(Objects.equals(bone.getName(), "head_frame")) {
+            bone.setHidden(true);
+            bone.setChildrenHidden(false);
+            renderHead(poseStack, animatable, bone, packedLight, packedOverlay);
+        }
 
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource,
                 this.bufferSource.getBuffer(renderType), isReRender,
@@ -78,14 +84,13 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                 red, green, blue, alpha);
     }
 
-    private void renderHead(PoseStack poseStack, T animatable, GeoBone bone, int packedLight, int packedOverlay) {
-        if(!animatable.isInvisible() && Objects.equals(bone.getName(), "head_frame") && animatable.hasPassenger()) {
+    protected void renderHead(PoseStack poseStack, T animatable, GeoBone bone, int packedLight, int packedOverlay) {
+        if (!animatable.isInvisible() && animatable.hasPassenger()) {
             var passenger = animatable.getControllingPassenger();
 
-            if(getEntityRenderDispatcher().getRenderer(passenger) instanceof LivingEntityRenderer humanoidRenderer &&
+            if (getEntityRenderDispatcher().getRenderer(passenger) instanceof LivingEntityRenderer humanoidRenderer &&
                     humanoidRenderer.getModel() instanceof HumanoidModel humanoidModel) {
-                bone.setHidden(true);
-                bone.setChildrenHidden(false);
+
 
                 poseStack.pushPose();
                 {
@@ -109,6 +114,7 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
             }
         }
     }
+
     @Override
     public void renderChildBones(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType,
                                  MultiBufferSource bufferSource, VertexConsumer buffer,
@@ -164,5 +170,12 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         humanoidModel.head.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
         humanoidModel.head.setRotation(0, 0, 0);
         humanoidModel.head.render(poseStack, head, packedLight, packedOverlay, 1, 1, 1, 1);
+    }
+
+    @Override
+    protected void renderNameTag(T entity, Component displayName, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        if(entity.getControllingPassenger() instanceof Player player) {
+            super.renderNameTag(entity, player.getName(), poseStack, buffer, packedLight);
+        }
     }
 }

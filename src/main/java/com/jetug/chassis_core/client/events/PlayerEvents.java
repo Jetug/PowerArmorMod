@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import static com.jetug.chassis_core.client.events.InputEvents.*;
 import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.*;
+import static com.jetug.chassis_core.common.util.helpers.PlayerUtils.getLocalPlayerChassis;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class PlayerEvents {
@@ -25,7 +26,7 @@ public class PlayerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent()
     public static void onRenderHand(RenderArmEvent event) {
-        if (!isLocalWearingChassis()) return;
+        if (!isLocalWearingChassis() || !getLocalPlayerChassis().renderHand()) return;
 
         var poseStack = event.getPoseStack();
         poseStack.pushPose();

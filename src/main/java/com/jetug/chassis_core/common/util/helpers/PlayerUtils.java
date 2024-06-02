@@ -47,8 +47,10 @@ public class PlayerUtils {
     }
 
     public static void stopWearingArmor(Player player) {
-        player.stopRiding();
-        doServerAction(ActionType.DISMOUNT);
-        player.setInvisible(false);
+        if(PlayerUtils.isWearingChassis(player)) {
+            player.stopRiding();
+            doServerAction(ActionType.DISMOUNT);
+            player.setInvisible(false);
+        }
     }
 }
