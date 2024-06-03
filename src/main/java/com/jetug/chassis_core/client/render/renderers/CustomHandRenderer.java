@@ -62,15 +62,11 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 ////                RenderUtils.scaleMatrixForBone(poseStack, bone);
 //                    RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
 
-//                    armorBone.setRotX(((float) Math.PI / 90));
-
-//                    poseStack.translate(armorBone.getPivotX() / 16f, -armorBone.getPivotY() / 16f, armorBone.getPivotZ() / 16f);
-
-//                    poseStack.translate((armorBone.getPivotX() + 0.5) / 16f, (-armorBone.getPivotY() + 0) / 16f, (armorBone.getPivotZ() + 0.5) / 16f);
 //                    poseStack.translate((armorBone.getPivotX() + 0.8 + X) / 16f, (-armorBone.getPivotY() + 0.35 + Y) / 16f, (armorBone.getPivotZ() - 1.05 + Z) / 16f);
-                    poseStack.translate((armorBone.getPivotX() + 0.8) / 16f, (-armorBone.getPivotY() + 0.35) / 16f, (armorBone.getPivotZ() - 1.05) / 16f);
-//                    poseStack.translate((armorBone.getPivotX() + X) / 16f, (-armorBone.getPivotY() + Y) / 16f, (armorBone.getPivotZ() + Z) / 16f);
-//                    poseStack.translate((armorBone.getPivotX()) / 16f, (-armorBone.getPivotY()) / 16f, (armorBone.getPivotZ()) / 16f);
+                    poseStack.translate(
+                            ( armorBone.getPivotX() + 0.8 ) / 16f,
+                            (-armorBone.getPivotY() + 0.35) / 16f,
+                            ( armorBone.getPivotZ() - 1.05) / 16f);
 
                     for (var cube : armorBone.getCubes()) {
                         poseStack.pushPose();
