@@ -20,7 +20,8 @@ public class ContainerUtils {
         for (int slot = 0; slot < prevContainer.getContainerSize(); slot++) {
             var prevStack = prevContainer.getItem(slot);
             var curStack = curContainer.getItem(slot);
-            if (!ItemStack.matches(prevStack, curStack)) return false;
+            if (!ItemStack.matches(prevStack, curStack) )
+                return false;
         }
 
         return true;

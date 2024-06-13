@@ -214,8 +214,9 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     @Override
     public void tick() {
         super.tick();
+
         syncDataWithClient();
-        syncDataWithServer();
+//        syncDataWithServer();
 
         if(isClientSide) {
             if (tickTimer == 0) {
@@ -250,10 +251,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 
     @Override
     public void containerChanged(@NotNull Container container) {
-        if (previousContainer == null || !isContainersEqual(previousContainer, container)) {
-            containerRealyChanged(container);
+//        if (previousContainer == null || !isContainersEqual(previousContainer, container)) {
+            containerReallyChanged(container);
             previousContainer = copyContainer(container);
-        }
+//        }
     }
 
     @Nullable
@@ -267,7 +268,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
         return chassisId.get();
     }
 
-    public void containerRealyChanged(Container container) {
+    public void containerReallyChanged(Container container) {
         updateParams();
         serializedInventory = serializeInventory(inventory);
         MinecraftForge.EVENT_BUS.post(new ContainerChangedEvent(this));
