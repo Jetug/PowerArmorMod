@@ -154,8 +154,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     public void damageArmorItem(String chassisPart, DamageSource damageSource, float damage) {
         var itemStack = getEquipment(chassisPart);
 
-        if (itemStack.getItem() instanceof ChassisArmor armorItem)
+        if (itemStack.getItem() instanceof ChassisArmor armorItem) {
             armorItem.damageArmor(itemStack, (int) damage);
+            setEquipment(chassisPart, itemStack);
+        }
     }
 
 //    public ArrayList<String> getHiddenBones(){
