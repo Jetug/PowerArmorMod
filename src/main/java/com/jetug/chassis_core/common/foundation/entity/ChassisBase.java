@@ -253,10 +253,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 
     @Override
     public void containerChanged(@NotNull Container container) {
-//        if (previousContainer == null || !isContainersEqual(previousContainer, container)) {
+        if (previousContainer == null || !isContainersEqual(previousContainer, container)) {
             containerReallyChanged(container);
             previousContainer = copyContainer(container);
-//        }
+        }
     }
 
     @Nullable
