@@ -42,6 +42,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     public static final int EFFECT_DURATION = 9;
     public static final HandEntity HAND_ENTITY = new HandEntity();
     public static final ResourceLocation DEFAULT_ICON = resourceLocation("textures/item/chassis.png");
+    public static final float STEP_HEIGHT = 0.5f;
     public final Speedometer speedometer = new Speedometer(this);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected boolean isJumping;
@@ -315,6 +316,18 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 //        }
 //    }
 
+    @Override
+    public float getStepHeight() {
+        if(hasPlayerPassenger())
+            return STEP_HEIGHT;
+        return super.getStepHeight();
+    }
+
+    public float maxUpStep() {
+        float f = super.maxUpStep();
+        return !hasPlayerPassenger() ? Math.max(f, 1.0F) : f;
+    }
+
     private void travelWithPassenger(Vec3 travelVector) {
         var entity = getControllingPassenger();
         if(entity == null) return;
@@ -359,7 +372,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     private void setRotationMatchingPassenger(LivingEntity livingEntity) {
         this.yRotO = getYRot();
         this.setYRot(livingEntity.getYRot());
-        this.setXRot(livingEntity.getXRot() * 0.5F);
+        this.setXRot(livingEntity.getXRot() * STEP_HEIGHT);
         this.setRot(getYRot(), getXRot());
     }
 }
