@@ -26,12 +26,17 @@ public abstract class GameRendererMixin implements AutoCloseable {
 
     @Inject(method = "bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
     private void bobView(PoseStack pPoseStack, float pPartialTicks, CallbackInfo ci) {
-        if (this.minecraft.getCameraEntity() instanceof Player player && PlayerUtils.isWearingChassis(player)) {
+        if (this.minecraft.getCameraEntity() instanceof Player player &&
+                PlayerUtils.isWearingChassis(player)) {
             var chassis = PlayerUtils.getEntityChassis(player);
+            assert chassis != null;
             float speed = chassis.walkDist - chassis.walkDistO;
             float f1 = -(chassis.walkDist + speed * pPartialTicks);
-            float bob = 0.8f;//Mth.lerp(pPartialTicks, player.oBob, player.bob);
-            pPoseStack.translate(Mth.sin(f1 * (float)Math.PI) * bob * 0.5F, -Math.abs(Mth.cos(f1 * (float)Math.PI) * bob), 0.0F);
+            float bob = Mth.lerp(pPartialTicks, chassis.oBob, chassis.bob);
+            pPoseStack.translate(
+                    Mth.sin(f1 * (float)Math.PI) * bob * 0.5F,
+                    -Math.abs(Mth.cos(f1 * (float)Math.PI) * bob),
+                    0.0F);
             pPoseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f1 * (float)Math.PI) * bob * 3.0F));
             pPoseStack.mulPose(Axis.XP.rotationDegrees(Math.abs(Mth.cos(f1 * (float)Math.PI - 0.2F) * bob) * 5.0F));
             ci.cancel();
