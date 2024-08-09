@@ -68,7 +68,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return ChassisBase.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.20D)
+                .add(Attributes.MOVEMENT_SPEED, 0.1D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.JUMP_STRENGTH, 0.5D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
