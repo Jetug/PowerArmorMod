@@ -30,7 +30,7 @@ public abstract class GameRendererMixin implements AutoCloseable {
             var chassis = PlayerUtils.getEntityChassis(player);
             float speed = chassis.walkDist - chassis.walkDistO;
             float f1 = -(chassis.walkDist + speed * pPartialTicks);
-            float bob = Mth.lerp(pPartialTicks, player.oBob, player.bob);
+            float bob = 0.8f;//Mth.lerp(pPartialTicks, player.oBob, player.bob);
             pPoseStack.translate(Mth.sin(f1 * (float)Math.PI) * bob * 0.5F, -Math.abs(Mth.cos(f1 * (float)Math.PI) * bob), 0.0F);
             pPoseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f1 * (float)Math.PI) * bob * 3.0F));
             pPoseStack.mulPose(Axis.XP.rotationDegrees(Math.abs(Mth.cos(f1 * (float)Math.PI - 0.2F) * bob) * 5.0F));
