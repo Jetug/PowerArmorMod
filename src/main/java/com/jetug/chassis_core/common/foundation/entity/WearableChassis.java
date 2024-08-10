@@ -1,5 +1,6 @@
 package com.jetug.chassis_core.common.foundation.entity;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.Global;
@@ -19,10 +20,7 @@ import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.jetug.chassis_core.common.data.constants.ChassisPart.*;
 import static com.jetug.chassis_core.common.data.constants.Resources.resourceLocation;
@@ -56,13 +55,19 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     public float bob;
     public float oBob;
 
-    public WearableChassis(EntityType<? extends ChassisBase> type, Level worldIn) {
-        super(type, worldIn);
+    public static final EntityDimensions STANDING_DIMENSIONS = EntityDimensions.scalable(1.0f, 2.3f);
+    public static final EntityDimensions CROUCHING_DIMENSIONS = EntityDimensions.scalable(1.0f, 2.0f);
+
+    protected final Map<Pose, EntityDimensions> POSES = ImmutableMap.<Pose, EntityDimensions>builder()
+            .put(Pose.STANDING, getStandingDimensions())
+            .put(Pose.CROUCHING, getCrouchingDimensions())
+            .build();
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return POSES.getOrDefault(pPose, STANDING_DIMENSIONS);
     }
 
-    public WearableChassis(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
-        super(pEntityType, pLevel, partIdMap);
-    }
 
     public static AttributeSupplier.Builder createAttributes() {
         return ChassisBase.createLivingAttributes()
@@ -74,25 +79,25 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D);
     }
 
-    public HandEntity getHandEntity() {
-        return HAND_ENTITY;
-    }
-
-    public ResourceLocation getIcon() {
-        return DEFAULT_ICON;
-    }
-
-    public boolean renderHand(){
-        return true;
-    }
-
     @Override
     public void tick() {
         super.tick();
         speedometer.tick();
         timer.tick();
+        updatePose();
     }
 
+    @Override
+    public boolean canSprint() {
+        return true;
+    }
+
+    @Override
+    public float getStepHeight() {
+        if(hasPlayerPassenger())
+            return STEP_HEIGHT;
+        return super.getStepHeight();
+    }
 
     @Override
     public boolean hurt(DamageSource damageSource, float damage) {
@@ -115,17 +120,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         updateBobing();
         super.aiStep();
         if (hasPassenger()) this.yHeadRot = this.getYRot();
-    }
-
-    public void updateBobing() {
-        this.oBob = this.bob;
-
-        float f;
-        if (this.onGround() && !this.isDeadOrDying() && !this.isSwimming())
-            f = Math.min(0.1F, (float) this.getDeltaMovement().horizontalDistance());
-        else f = 0.0F;
-
-        this.bob += (f - this.bob) * 0.4F;
     }
 
 //    @Override
@@ -178,7 +172,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         var passenger = getControllingPassenger();
         if (passenger == null) return;
 
-        var yOffset = passenger.isShiftKeyDown() ? 1.2f : 1.0f;
+        var yOffset = 1.0f;
         var posY = getY() + getPassengersRidingOffset() + entity.getMyRidingOffset() - yOffset;
         entity.setPos(getX(), posY, getZ());
 
@@ -240,6 +234,19 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return null;
     }
 
+
+    public HandEntity getHandEntity() {
+        return HAND_ENTITY;
+    }
+
+    public ResourceLocation getIcon() {
+        return DEFAULT_ICON;
+    }
+
+    public boolean renderHand(){
+        return true;
+    }
+
     public void openGUI(Player player) {
         Global.referenceMob = this;
 
@@ -250,12 +257,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         }
     }
 
-    @Nullable
-    protected abstract MenuProvider getMenuProvider();
-
-    @Nullable
-    protected abstract MenuProvider getStantionMenuProvider();
-
     public void openStationGUI(Player player) {
         Global.referenceMob = this;
         var provider = getStantionMenuProvider();
@@ -263,6 +264,65 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         if (isServerSide && provider != null) {
             player.openMenu(provider);
         }
+    }
+
+    public EntityDimensions getStandingDimensions(){
+        return STANDING_DIMENSIONS;
+    }
+
+    public EntityDimensions getCrouchingDimensions(){
+        return CROUCHING_DIMENSIONS;
+    }
+
+    public WearableChassis(EntityType<? extends ChassisBase> type, Level worldIn) {
+        super(type, worldIn);
+    }
+
+    public WearableChassis(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
+        super(pEntityType, pLevel, partIdMap);
+    }
+
+    @Nullable
+    protected abstract MenuProvider getMenuProvider();
+
+    @Nullable
+    protected abstract MenuProvider getStantionMenuProvider();
+
+    protected float getCrouchingSpeed(){
+        return getSpeedAttribute() / 2f;
+    }
+
+    protected float getSprintingSpeed(){
+        return getSpeedAttribute() * 1.5f;
+    }
+
+    protected void updatePose() {
+        Pose pose;
+        if (hasPlayerPassenger() && getPlayerPassenger().isShiftKeyDown()) {
+            pose = Pose.CROUCHING;
+            setSpeed(getCrouchingSpeed());
+
+        } else {
+            pose = Pose.STANDING;
+            if(hasPlayerPassenger() && getPlayerPassenger().isSprinting())
+                setSpeed(getSprintingSpeed());
+            else
+                setSpeed(getSpeedAttribute());
+        }
+
+        this.setPose(pose);
+    }
+
+
+    protected void updateBobing() {
+        this.oBob = this.bob;
+
+        float f;
+        if (this.onGround() && !this.isDeadOrDying() && !this.isSwimming())
+            f = Math.min(0.1F, (float) this.getDeltaMovement().horizontalDistance());
+        else f = 0.0F;
+
+        this.bob += (f - this.bob) * 0.4F;
     }
 
     public Boolean isWalking() {
@@ -335,13 +395,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
 //        }
 //    }
-
-    @Override
-    public float getStepHeight() {
-        if(hasPlayerPassenger())
-            return STEP_HEIGHT;
-        return super.getStepHeight();
-    }
 
     public float maxUpStep() {
         float f = super.maxUpStep();

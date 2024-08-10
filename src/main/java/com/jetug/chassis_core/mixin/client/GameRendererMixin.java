@@ -1,8 +1,11 @@
 package com.jetug.chassis_core.mixin.client;
 
+import com.jetug.chassis_core.common.util.GlobalMixinData;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -15,10 +18,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 import java.util.UUID;
+
+import static com.jetug.chassis_core.common.util.GlobalMixinData.*;
+import static com.jetug.chassis_core.common.util.GlobalMixinData.CURRENT;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin implements AutoCloseable {
@@ -27,7 +34,9 @@ public abstract class GameRendererMixin implements AutoCloseable {
     @Inject(method = "bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
     private void bobView(PoseStack pPoseStack, float pPartialTicks, CallbackInfo ci) {
         if (this.minecraft.getCameraEntity() instanceof Player player &&
-                PlayerUtils.isWearingChassis(player)) {
+                PlayerUtils.isWearingChassis(player) &&
+                CURRENT == BobType.HAND
+        ) {
             var chassis = PlayerUtils.getEntityChassis(player);
             assert chassis != null;
             float speed = chassis.walkDist - chassis.walkDistO;
@@ -41,5 +50,25 @@ public abstract class GameRendererMixin implements AutoCloseable {
             pPoseStack.mulPose(Axis.XP.rotationDegrees(Math.abs(Mth.cos(f1 * (float)Math.PI - 0.2F) * bob) * 5.0F));
             ci.cancel();
         }
+    }
+
+    @Inject(method = "renderItemInHand(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/Camera;F)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;resetProjectionMatrix(Lorg/joml/Matrix4f;)V"))
+    private void setHandBobType(PoseStack matrices, Camera camera, float tickDelta, CallbackInfo ci) {
+        CURRENT = BobType.HAND;
+    }
+
+    @Inject(method = "renderItemInHand(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/Camera;F)V", at = @At("TAIL"))
+    private void setFinishRenderHand(PoseStack pPoseStack, Camera pActiveRenderInfo, float pPartialTicks, CallbackInfo ci) {
+        CURRENT = BobType.NONE;
+    }
+
+    @Inject(method = "renderLevel", at = @At("HEAD"))
+    private void setCameraBobType(float tickDelta, long limitTime, PoseStack matrices, CallbackInfo ci) {
+        CURRENT = BobType.CAMERA;
+    }
+    @Inject(method = "renderLevel", at = @At("TAIL"))
+    private void setFinishRenderWorld(float tickDelta, long limitTime, PoseStack matrices, CallbackInfo ci) {
+        CURRENT = BobType.NONE;
     }
 }
