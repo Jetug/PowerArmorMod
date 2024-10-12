@@ -18,7 +18,6 @@ import static com.jetug.chassis_core.common.util.helpers.EntityHelper.clearItemT
 import static com.jetug.chassis_core.common.util.helpers.EntityHelper.entityFromItem;
 
 public class ChassisItem<T extends WearableChassis> extends Item {
-
     private final EntityType.EntityFactory<T> factory;
     private final RegistryObject<EntityType<T>> type;
 

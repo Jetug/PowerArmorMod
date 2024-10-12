@@ -2,11 +2,15 @@ package com.jetug.chassis_core;
 
 import com.jetug.chassis_core.client.KeyBindings;
 import com.jetug.chassis_core.common.foundation.registery.ItemRegistry;
+import com.jetug.chassis_core.common.network.FrameworkPacketHandler;
 import com.jetug.chassis_core.common.network.PacketHandler;
 import com.jetug.example.common.registery.ChassisArmorItems;
 import com.jetug.example.common.registery.ContainerRegistry;
 import com.jetug.example.common.registery.EntityTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -25,15 +29,16 @@ public class ChassisCore {
 
     public ChassisCore() {
         register();
-
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MOD_EVENT_BUS.addListener(KeyBindings::register));
-
         EVENT_BUS.register(this);
         MOD_EVENT_BUS.addListener(this::onCommonSetup);
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(PacketHandler::register);
+        event.enqueueWork(() -> {
+            FrameworkPacketHandler.init();
+            PacketHandler.register();
+        });
     }
 
     private void register() {

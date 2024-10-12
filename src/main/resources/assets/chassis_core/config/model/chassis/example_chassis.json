@@ -1,14 +1,14 @@
 {
   "attachments": [
     {
-      "part": "head",
+      "part": "ntgl:head",
       "bones": [
         "head",
         "head_frame"
       ]
     },
     {
-      "part": "body",
+      "part": "ntgl:body",
       "bones": [
         "body_top",
         "body_bottom",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "part": "left_arm",
+      "part": "ntgl:left_arm",
       "bones": [
         "left_shoulder",
         "left_shoulder_frame",
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "part": "right_arm",
+      "part": "ntgl:right_arm",
       "bones": [
         "right_shoulder",
         "right_shoulder_frame",
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "part": "left_leg",
+      "part": "ntgl:left_leg",
       "bones": [
         "left_upper_leg",
         "left_lower_leg",
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "part": "right_leg",
+      "part": "ntgl:right_leg",
       "bones": [
         "right_toes",
         "right_lower_leg",
@@ -63,13 +63,13 @@
       ]
     },
     {
-      "part": "fusion_core",
+      "part": "ntgl:fusion_core",
       "bones": [
         "valve"
       ]
     },
     {
-      "part": "jetpack",
+      "part": "ntgl:jetpack",
       "bones": [
         "back_slot"
       ]

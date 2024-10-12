@@ -20,7 +20,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.20.1-2.5.3'
+version = '1.20.1-2.6.0'
 group = 'com.jetug.chassis_core'
 archivesBaseName = 'chassis_core'
 
@@ -94,6 +94,10 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    mavenLocal()
+    maven {
+        url "https://www.cursemaven.com"
+    }
     //maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     maven {url 'https://libs.azuredoom.com:4443/mods'}
 }
@@ -103,6 +107,7 @@ dependencies {
     implementation fg.deobf("mod.azure.azurelib:azurelib-neo-1.20.1:2.0.20")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation fg.deobf('curse.maven:framework-549225:4718251')
 }
 
 mixin {

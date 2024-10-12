@@ -50,7 +50,7 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
             if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
                 var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
                 if(armor.getConfig() == null) return;
-                var armorBone = GeoUtils.getBone(armor.getConfig().getModelLocation(), "right_forearm_armor");
+                var armorBone = GeoUtils.getBone(armor.getConfig().getModel(), "right_forearm_armor");
                 if(armorBone == null) return;
 
                 poseStack.pushPose();
@@ -98,7 +98,7 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
 //                if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
 //                    var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
 //                    var config = armor.getConfig();
-//                    var armorBone = GeoUtils.getBone(config.getModelLocation(), "pov_right_forearm_armor");
+//                    var armorBone = GeoUtils.getBone(config.getModel(), "pov_right_forearm_armor");
 //                    bonesToRender.add(armorBone);
 //                }
 //            }

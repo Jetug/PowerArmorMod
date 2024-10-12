@@ -27,7 +27,6 @@ public class ModResourceManager {
     private static final String FRAME_DIR = CONFIG_DIR + "chassis";
     private static final String ITEM_DIR = CONFIG_DIR + "item";
 
-    private final Map<String, EquipmentConfig> equipmentConfig = new HashMap<>();
     private final Map<String, ItemConfig> itemConfig = new HashMap<>();
     private final Map<String, ChassisConfig> frameConfig = new HashMap<>();
 
@@ -56,47 +55,13 @@ public class ModResourceManager {
     }
 
     @Nullable
-    public EquipmentConfig getEquipmentConfig(String itemId) {
-        return equipmentConfig.get(itemId);
-    }
-
-    @Nullable
     public ChassisConfig getFrameConfig(String frameId) {
         return frameConfig.get(frameId);
     }
 
     public void loadConfigs() {
-        loadEquipment();
         loadFrame();
         loadItem();
-    }
-
-    private void loadEquipment() {
-        for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR).keySet()) {
-            var settings = getConfig(config, EquipmentConfig.class);
-            if (settings == null) continue;
-
-            if (isNotEmpty(settings.parent)) {
-                var parent = getConfig(new ResourceLocation(settings.parent), EquipmentConfig.class);
-
-                try {
-                    var fields = settings.getClass().getFields();
-                    for (var field : fields) {
-                        var obj = field.get(settings);
-
-                        var isEmptyString = (obj instanceof String str && str.equals(""));
-
-                        if (obj == null || isEmptyString || isEmptyArray(obj)) {
-                            field.set(settings, parent.getClass().getField(field.getName()).get(parent));
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            equipmentConfig.put(settings.name, settings);
-        }
     }
 
     private void loadFrame() {
@@ -112,18 +77,6 @@ public class ModResourceManager {
             var settings = getConfig(config, ItemConfig.class);
             if (settings != null)
                 itemConfig.put(settings.name, settings);
-        }
-    }
-
-    @Nullable
-    private EquipmentConfig getEquipmentConfig(ResourceLocation resourceLocation) {
-        try {
-            var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, EquipmentConfig.class);
-            settings.name = getResourceName(resourceLocation);
-            return settings;
-        } catch (Exception e) {
-            return null;
         }
     }
 

@@ -3,8 +3,8 @@ package com.jetug.chassis_core.common.foundation.entity;
 import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
+import com.jetug.chassis_core.common.config.Equipment;
 import com.jetug.chassis_core.common.data.json.ChassisConfig;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
@@ -308,7 +308,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
                         getEquipment(part) : null);
     }
 
-    public Collection<EquipmentConfig> getItemConfigs() {
+    public Collection<Equipment> getItemConfigs() {
         return returnCollection(getVisibleEquipment(), (equipment) -> ((ChassisEquipment) equipment.getItem()).getConfig());
     }
 
@@ -413,7 +413,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
                         && !StackUtils.hasAttachment(stack, attachment.armor))
                     continue;
 
-                var bone = GeoUtils.getBone(config.getModelLocation(), attachment.armor);
+                var bone = GeoUtils.getBone(config.getModel(), attachment.armor);
                 if (bone == null) continue;
 
                 if (!bonesToRender.containsKey(attachment.frame))

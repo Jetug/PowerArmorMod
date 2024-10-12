@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 public class EquipmentModel<T extends ChassisEquipment> extends GeoModel<T> {
     @Override
     public ResourceLocation getModelResource(T item) {
-        return item.getConfig().getModelLocation();
+        return item.getConfig().getModel();
     }
 
     @Override
     public ResourceLocation getTextureResource(T item) {
-        return item.getConfig().getTextureLocation(StackUtils.DEFAULT);
+        return item.getConfig().getTexture(StackUtils.DEFAULT);
     }
 
     @Override

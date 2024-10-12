@@ -8,6 +8,10 @@
   "uv": [155, 0, 155, 155],
   "hide": ["body_bottom_frame"],
 
+  "mods" : [
+    "jetpack"
+  ],
+
   "attachments": [
     {
       "frame": "body_top",
@@ -21,9 +25,5 @@
       "frame": "body_bottom",
       "armor": "body_bottom_armor"
     }
-  ],
-
-  "mods" : [
-    "jetpack"
   ]
 }

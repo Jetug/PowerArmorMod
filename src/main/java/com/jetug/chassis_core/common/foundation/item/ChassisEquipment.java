@@ -1,12 +1,11 @@
 package com.jetug.chassis_core.common.foundation.item;
 
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
+import com.jetug.chassis_core.common.config.Equipment;
+import com.jetug.chassis_core.common.config.NetworkManager;
 import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,16 +17,15 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.jetug.chassis_core.client.ClientConfig.modResourceManager;
 import static com.jetug.chassis_core.common.foundation.item.StackUtils.DEFAULT;
 import static com.jetug.chassis_core.common.foundation.item.StackUtils.getVariant;
 import static mod.azure.azurelib.util.AzureLibUtil.createInstanceCache;
 
-public class ChassisEquipment extends Item implements GeoItem {
+public class ChassisEquipment extends Item implements GeoItem, IConfigProvider<Equipment> {
     public final String part;
     private final AnimatableInstanceCache cache = createInstanceCache(this);
     private final Lazy<String> name = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ITEMS.getKey(this)));
-    private final Lazy<EquipmentConfig> config = Lazy.of(() -> modResourceManager.getEquipmentConfig(getName()));
+    private Equipment config;
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public ChassisEquipment(Properties pProperties, String part) {
@@ -38,13 +36,18 @@ public class ChassisEquipment extends Item implements GeoItem {
     @Nullable
     public ResourceLocation getTexture(ItemStack stack) {
         var variant = getVariant(stack);
-        var value = getConfig().getTextureLocation(variant);
-        return value != null ? value : getConfig().getTextureLocation(DEFAULT);
+        return getConfig().getTexture(variant);
     }
 
     @Nullable
-    public EquipmentConfig getConfig() {
-        return config.get();
+    public Equipment getConfig() {
+        return config;
+    }
+
+    @Override
+    public void setConfig(NetworkManager.Supplier<Equipment> supplier) {
+        this.config = supplier.getConfig();
+
     }
 
     public String getName() {

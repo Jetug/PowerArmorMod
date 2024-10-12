@@ -68,7 +68,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         return POSES.getOrDefault(pPose, STANDING_DIMENSIONS);
     }
 
-
     public static AttributeSupplier.Builder createAttributes() {
         return ChassisBase.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 1000.0D)
@@ -121,16 +120,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         super.aiStep();
         if (hasPassenger()) this.yHeadRot = this.getYRot();
     }
-
-//    @Override
-//    public boolean isInvisible() {
-//        var clientPlayer = Minecraft.getInstance().player;
-//        var pov = Minecraft.getInstance().options.getCameraType();
-//
-//        if (hasPassenger(clientPlayer) && pov == CameraType.FIRST_PERSON)
-//            return true;
-//        return super.isInvisible();
-//    }
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
@@ -312,7 +301,6 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
 
         this.setPose(pose);
     }
-
 
     protected void updateBobing() {
         this.oBob = this.bob;
