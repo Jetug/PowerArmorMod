@@ -1,24 +1,28 @@
 package com.jetug.chassis_core.common.config;
 
-import com.google.common.base.Preconditions;
-import com.google.gson.JsonObject;
 import com.jetug.chassis_core.common.config.holders.BodyPart;
-import com.jetug.chassis_core.common.data.annotation.Optional;
 import com.jetug.chassis_core.common.data.json.EquipmentAttachment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.jetug.chassis_core.common.foundation.item.StackUtils.DEFAULT;
 
-public class Equipment implements INBTSerializable<CompoundTag>{
-    public static final String TYPE = "Type";
+public class Equipment implements INBTSerializable<CompoundTag> {
     public static final String PARENT = "Parent";
+    public static final String PART = "Part";
+    public static final String MODEL = "Model";
+    public static final String TEXTURE = "Texture";
+    public static final String UV = "UV";
+    public static final String HIDE = "Hide";
+    public static final String ATTACHMENTS = "Attachments";
 
 //    private final Lazy<ResourceLocation> modelLocation = Lazy.of(this::getModelResource);
 //    private final Lazy<Map<String, ResourceLocation>> textureLocation = Lazy.of(this::initTextureResource);
@@ -36,12 +40,12 @@ public class Equipment implements INBTSerializable<CompoundTag>{
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putString(PARENT, this.parent);
-        tag.putString("Model", this.model.toString());
-        tag.put("Texture", NbtUtils.serializeMap(texture));
-        tag.putIntArray("UV", uv);
-        tag.putString("Part", part.getId().toString());
-        tag.put("Hide", NbtUtils.serializeArray(hide));
-        tag.put("Attachments", NbtUtils.serializeArray(attachments));
+        tag.putString(PART, part.getId().toString());
+        tag.putString(MODEL, this.model.toString());
+        tag.put(TEXTURE, NbtUtils.serializeMap(texture));
+        tag.putIntArray(UV, uv);
+        tag.put(HIDE, NbtUtils.serializeArray(hide));
+        tag.put(ATTACHMENTS, NbtUtils.serializeArray(attachments));
         return tag;
     }
 
@@ -50,23 +54,23 @@ public class Equipment implements INBTSerializable<CompoundTag>{
         if (tag.contains(PARENT, Tag.TAG_ANY_NUMERIC)) {
             this.parent = tag.getString(PARENT);
         }
-        if (tag.contains("Model", Tag.TAG_STRING)) {
-            this.model = ResourceLocation.tryParse(tag.getString("Model"));
+        if (tag.contains(PART, Tag.TAG_STRING)) {
+            this.part = BodyPart.getPart(tag.getString(PART));
         }
-        if (tag.contains("Texture", Tag.TAG_COMPOUND)) {
-            this.texture = NbtUtils.deserializeReaourceMap(tag.getCompound("Texture"));
+        if (tag.contains(MODEL, Tag.TAG_STRING)) {
+            this.model = ResourceLocation.tryParse(tag.getString(MODEL));
         }
-        if (tag.contains("UV", Tag.TAG_INT_ARRAY)) {
-            this.uv = tag.getIntArray("UV");
+        if (tag.contains(TEXTURE, Tag.TAG_COMPOUND)) {
+            this.texture = NbtUtils.deserializeReaourceMap(tag.getCompound(TEXTURE));
         }
-        if (tag.contains("Part", Tag.TAG_STRING)) {
-            this.part = BodyPart.getPart(tag.getString("Part"));
+        if (tag.contains(UV, Tag.TAG_INT_ARRAY)) {
+            this.uv = tag.getIntArray(UV);
         }
-        if (tag.contains("Hide", Tag.TAG_COMPOUND)) {
-            this.hide = NbtUtils.deserializeStringArray(tag.getCompound("Hide"));
+        if (tag.contains(HIDE, Tag.TAG_COMPOUND)) {
+            this.hide = NbtUtils.deserializeStringArray(tag.getCompound(HIDE));
         }
-        if (tag.contains("Attachments", Tag.TAG_ANY_NUMERIC)) {
-            this.attachments = NbtUtils.deserializeAttachmentArray(tag.getCompound("Attachments"));
+        if (tag.contains(ATTACHMENTS, Tag.TAG_ANY_NUMERIC)) {
+            this.attachments = NbtUtils.deserializeAttachmentArray(tag.getCompound(ATTACHMENTS));
         }
     }
 
@@ -104,7 +108,6 @@ public class Equipment implements INBTSerializable<CompoundTag>{
 //            object.addProperty("trailLengthMultiplier", this.trailLengthMultiplier);
 //        return object;
 //    }
-
 
 
     public static Equipment create(CompoundTag tag) {

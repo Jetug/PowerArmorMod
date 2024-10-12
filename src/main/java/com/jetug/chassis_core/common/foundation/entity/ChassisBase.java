@@ -4,6 +4,7 @@ import com.jetug.chassis_core.client.ClientConfig;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import com.jetug.chassis_core.common.config.Equipment;
+import com.jetug.chassis_core.common.config.holders.BodyPart;
 import com.jetug.chassis_core.common.data.json.ChassisConfig;
 import com.jetug.chassis_core.common.events.ContainerChangedEvent;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
@@ -51,11 +52,11 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 
     static {
         var i = 0;
-        PART_IDS.put(HELMET, i++);
-        PART_IDS.put(BODY_ARMOR, i++);
-        PART_IDS.put(LEFT_ARM_ARMOR, i++);
+        PART_IDS.put(HELMET         , i++);
+        PART_IDS.put(BODY_ARMOR     , i++);
+        PART_IDS.put(LEFT_ARM_ARMOR , i++);
         PART_IDS.put(RIGHT_ARM_ARMOR, i++);
-        PART_IDS.put(LEFT_LEG_ARMOR, i++);
+        PART_IDS.put(LEFT_LEG_ARMOR , i++);
         PART_IDS.put(RIGHT_LEG_ARMOR, i++);
     }
 
@@ -78,13 +79,13 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     protected float totalToughness;
     protected int inventorySize = 6;
     protected HashMap<String, Integer> partIdMap = PART_IDS;
-    protected String[] armorParts = new String[]{
-            HELMET,
-            BODY_ARMOR,
-            LEFT_ARM_ARMOR,
-            RIGHT_ARM_ARMOR,
-            LEFT_LEG_ARMOR,
-            RIGHT_LEG_ARMOR,
+    protected BodyPart[] armorParts = new BodyPart[]{
+            BodyPart. HEAD      ,
+            BodyPart. BODY      ,
+            BodyPart. LEFT_ARM  ,
+            BodyPart. RIGHT_ARM ,
+            BodyPart. LEFT_LEG  ,
+            BodyPart. RIGHT_LEG ,
     };
     private ChassisConfig config = null;
     private ListTag serializedInventory;

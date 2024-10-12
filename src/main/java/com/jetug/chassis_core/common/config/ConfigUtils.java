@@ -3,6 +3,7 @@ package com.jetug.chassis_core.common.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jetug.chassis_core.ChassisCore;
+import com.jetug.chassis_core.common.config.holders.BodyPart;
 import com.jetug.chassis_core.common.data.annotation.Validator;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +32,7 @@ public class ConfigUtils {
     public static final Gson GSON_INSTANCE = Util.make(() -> {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(ResourceLocation.class, JsonDeserializers.RESOURCE_LOCATION);
-        builder.registerTypeAdapter(ResourceLocation.class, JsonDeserializers.BODY_PART);
+        builder.registerTypeAdapter(BodyPart.class, JsonDeserializers.BODY_PART);
         builder.excludeFieldsWithModifiers(Modifier.TRANSIENT);
         return builder.create();
     });
