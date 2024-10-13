@@ -38,19 +38,19 @@ public abstract class NetworkManager<T extends Item & IConfigProvider, Y extends
     protected void apply(Map<T, Y> objects, ResourceManager resourceManager, ProfilerFiller profiler) {
         var builder = ImmutableMap.<ResourceLocation, Y>builder();
 
-        objects.forEach((item, gun) -> {
+        objects.forEach((item, equipment) -> {
             Validate.notNull(ITEMS.getKey(item));
-            builder.put(ITEMS.getKey(item), gun);
-            item.setConfig(new Supplier<>(gun));
+            builder.put(ITEMS.getKey(item), equipment);
+            item.setConfig(new Supplier<>(equipment));
         });
 
         this.registeredConfigs = builder.build();
     }
 
     /**
-     * A simple wrapper for a gun object to pass to GunItem. This is to indicate to developers that
-     * Gun instances shouldn't be changed on GunItems as they are controlled by NetworkEquipmentManager.
-     * Changes to gun properties should be made through the JSON file.
+     * A simple wrapper for a config object to pass to GunItem. This is to indicate to developers that
+     * Equipment instances shouldn't be changed on GunItems as they are controlled by NetworkEquipmentManager.
+     * Changes to config properties should be made through the JSON file.
      */
     public static class Supplier<S extends INBTSerializable<CompoundTag>> {
         private final S config;

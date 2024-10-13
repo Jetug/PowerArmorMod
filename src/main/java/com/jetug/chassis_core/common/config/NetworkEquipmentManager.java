@@ -44,7 +44,7 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
 
     @Override
     protected String getPath() {
-        return "equipment";
+        return "config";
     }
 
     /**
@@ -54,9 +54,9 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
      */
     public void writeRegisteredConfigs(FriendlyByteBuf buffer) {
         buffer.writeVarInt(this.registeredConfigs.size());
-        this.registeredConfigs.forEach((id, gun) -> {
+        this.registeredConfigs.forEach((id, equipment) -> {
             buffer.writeResourceLocation(id);
-            buffer.writeNbt(gun.serializeNBT());
+            buffer.writeNbt(equipment.serializeNBT());
         });
     }
 
@@ -74,8 +74,8 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
 
             for (int i = 0; i < size; i++) {
                 var id = buffer.readResourceLocation();
-                var gun = Equipment.create(buffer.readNbt());
-                builder.put(id, gun);
+                var equipment = Equipment.create(id, buffer.readNbt());
+                builder.put(id, equipment);
             }
             return builder.build();
         }
@@ -89,7 +89,7 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
     /**
      * Updates registered guns from data provided by the server
      *
-     * @return true if all registered guns were able to update their corresponding gun item
+     * @return true if all registered guns were able to update their corresponding config item
      */
     private static boolean updateRegisteredConfigs(Map<ResourceLocation, Equipment> registeredConfigs) {
         clientRegisteredConfigs.clear();
@@ -110,7 +110,7 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
     /**
      * Gets a map of all the registered guns objects. Note, this is an immutable map.
      *
-     * @return a map of registered gun objects
+     * @return a map of registered config objects
      */
     public Map<ResourceLocation, Equipment> getRegisteredConfigs() {
         return this.registeredConfigs;
@@ -145,10 +145,10 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
     }
 
     /**
-     * Gets the network gun manager. This will be null if the client isn't running an integrated
+     * Gets the network config manager. This will be null if the client isn't running an integrated
      * server or the client is connected to a dedicated server.
      *
-     * @return the network gun manager
+     * @return the network config manager
      */
     @Nullable
     public static NetworkEquipmentManager get() {

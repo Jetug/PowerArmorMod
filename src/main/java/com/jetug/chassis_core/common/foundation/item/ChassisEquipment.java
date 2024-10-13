@@ -22,15 +22,13 @@ import static com.jetug.chassis_core.common.foundation.item.StackUtils.getVarian
 import static mod.azure.azurelib.util.AzureLibUtil.createInstanceCache;
 
 public class ChassisEquipment extends Item implements GeoItem, IConfigProvider<Equipment> {
-    public final String part;
     private final AnimatableInstanceCache cache = createInstanceCache(this);
     private final Lazy<String> name = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ITEMS.getKey(this)));
     private Equipment config;
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
-    public ChassisEquipment(Properties pProperties, String part) {
+    public ChassisEquipment(Properties pProperties) {
         super(pProperties);
-        this.part = part;
     }
 
     @Nullable

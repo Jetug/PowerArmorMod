@@ -84,29 +84,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                 red, green, blue, alpha);
     }
 
-    protected void renderHead(PoseStack poseStack, T animatable, GeoBone bone, int packedLight, int packedOverlay) {
-        if (!animatable.isInvisible() && animatable.hasPassenger()) {
-            var passenger = animatable.getControllingPassenger();
-
-            if (getEntityRenderDispatcher().getRenderer(passenger) instanceof LivingEntityRenderer humanoidRenderer &&
-                    humanoidRenderer.getModel() instanceof HumanoidModel humanoidModel) {
-
-                poseStack.pushPose();
-                {
-                    RenderUtils.prepMatrixForBone(poseStack, bone);
-
-                    var skin = humanoidRenderer.getTextureLocation(passenger);
-                    var head = this.bufferSource.getBuffer(RenderType.entitySolid(skin));
-                    var hat = this.bufferSource.getBuffer(RenderType.entityTranslucent(skin));
-
-                    renderHumanoidPart(poseStack, bone, packedLight, packedOverlay, humanoidModel, head);
-                    renderHumanoidPart(poseStack, bone, packedLight, packedOverlay, humanoidModel, hat);
-                }
-                poseStack.popPose();
-            }
-        }
-    }
-
     @Override
     public void renderChildBones(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType,
                                  MultiBufferSource bufferSource, VertexConsumer buffer,
@@ -135,6 +112,36 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         bonesToHide = animatable.getBonesToHide();
     }
 
+    @Override
+    protected void renderNameTag(T entity, Component displayName, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        if(entity.getControllingPassenger() instanceof Player player) {
+            super.renderNameTag(entity, player.getName(), poseStack, buffer, packedLight);
+        }
+    }
+
+    protected void renderHead(PoseStack poseStack, T animatable, GeoBone bone, int packedLight, int packedOverlay) {
+        if (!animatable.isInvisible() && animatable.hasPassenger()) {
+            var passenger = animatable.getControllingPassenger();
+
+            if (getEntityRenderDispatcher().getRenderer(passenger) instanceof LivingEntityRenderer humanoidRenderer &&
+                    humanoidRenderer.getModel() instanceof HumanoidModel humanoidModel) {
+
+                poseStack.pushPose();
+                {
+                    RenderUtils.prepMatrixForBone(poseStack, bone);
+
+                    var skin = humanoidRenderer.getTextureLocation(passenger);
+                    var head = this.bufferSource.getBuffer(RenderType.entitySolid(skin));
+                    var hat = this.bufferSource.getBuffer(RenderType.entityTranslucent(skin));
+
+                    renderHumanoidPart(poseStack, bone, packedLight, packedOverlay, humanoidModel, head);
+                    renderHumanoidPart(poseStack, bone, packedLight, packedOverlay, humanoidModel, hat);
+                }
+                poseStack.popPose();
+            }
+        }
+    }
+
     protected ItemStack getItemForBone(GeoBone bone, T animatable) {
         if (animatable == null || !animatable.hasPassenger()) return null;
 
@@ -152,11 +159,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         return animatable.hasPassenger(clientPlayer) && pov == CameraType.FIRST_PERSON;
     }
 
-    @NotNull
-    private static EntityRenderDispatcher getEntityRenderDispatcher() {
-        return Minecraft.getInstance().getEntityRenderDispatcher();
-    }
-
     private static void renderHumanoidPart(PoseStack poseStack, GeoBone bone, int packedLight, int packedOverlay,
                                            HumanoidModel humanoidModel, VertexConsumer head) {
         humanoidModel.head.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
@@ -164,10 +166,8 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
         humanoidModel.head.render(poseStack, head, packedLight, packedOverlay, 1, 1, 1, 1);
     }
 
-    @Override
-    protected void renderNameTag(T entity, Component displayName, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        if(entity.getControllingPassenger() instanceof Player player) {
-            super.renderNameTag(entity, player.getName(), poseStack, buffer, packedLight);
-        }
+    @NotNull
+    private static EntityRenderDispatcher getEntityRenderDispatcher() {
+        return Minecraft.getInstance().getEntityRenderDispatcher();
     }
 }

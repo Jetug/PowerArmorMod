@@ -3,6 +3,7 @@ package com.jetug.chassis_core.client.render.renderers;
 import com.jetug.chassis_core.client.model.HandModel;
 import com.jetug.chassis_core.client.render.layers.HandEquipmentLayer;
 import com.jetug.chassis_core.client.render.utils.GeoUtils;
+import com.jetug.chassis_core.common.config.holders.BodyPart;
 import com.jetug.chassis_core.common.foundation.entity.HandEntity;
 import com.jetug.chassis_core.common.util.helpers.PlayerUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -47,8 +48,8 @@ public class CustomHandRenderer extends GeoObjectRenderer<HandEntity> {
                                   float red, float green, float blue, float alpha) {
         if(PlayerUtils.isLocalWearingChassis() && Objects.equals(bone.getName(), RIGHT_HAND_BONE)){
             var chassis = PlayerUtils.getLocalPlayerChassis();
-            if(chassis.isEquipmentVisible(RIGHT_ARM_ARMOR)){
-                var armor = getAsChassisEquipment(chassis.getEquipment(RIGHT_ARM_ARMOR));
+            if(chassis.isEquipmentVisible(BodyPart.LEFT_ARM)){
+                var armor = getAsChassisEquipment(chassis.getEquipment(BodyPart.LEFT_ARM));
                 if(armor.getConfig() == null) return;
                 var armorBone = GeoUtils.getBone(armor.getConfig().getModel(), "right_forearm_armor");
                 if(armorBone == null) return;

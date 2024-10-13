@@ -7,15 +7,14 @@ import com.jetug.chassis_core.common.network.PacketHandler;
 import com.jetug.example.common.registery.ChassisArmorItems;
 import com.jetug.example.common.registery.ContainerRegistry;
 import com.jetug.example.common.registery.EntityTypes;
-import net.minecraft.resources.ResourceLocation;
+import com.jetug.example.common.registery.ModItemTabs;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +33,10 @@ public class ChassisCore {
         MOD_EVENT_BUS.addListener(this::onCommonSetup);
     }
 
+    public static boolean isDebugging() {
+        return !FMLEnvironment.production;
+    }
+
     private void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             FrameworkPacketHandler.init();
@@ -46,5 +49,6 @@ public class ChassisCore {
         ContainerRegistry.register(MOD_EVENT_BUS);
         EntityTypes.register(MOD_EVENT_BUS);
         ChassisArmorItems.register(MOD_EVENT_BUS);
+        ModItemTabs.register(MOD_EVENT_BUS);
     }
 }

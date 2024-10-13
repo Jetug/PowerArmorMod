@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.common.network;
 
 import com.jetug.chassis_core.ChassisCore;
+import com.jetug.chassis_core.common.config.CustomEquipmentManager;
 import com.jetug.chassis_core.common.config.NetworkEquipmentManager;
 import com.jetug.chassis_core.common.network.packet.S2CMessageUpdateEquipment;
 import com.mrcrayfish.framework.api.FrameworkAPI;
@@ -21,5 +22,6 @@ public class FrameworkPacketHandler {
                 .build();
 
         FrameworkAPI.registerLoginData(new ResourceLocation(ChassisCore.MOD_ID, "network_equipment_manager"), NetworkEquipmentManager.LoginData::new);
+        FrameworkAPI.registerLoginData(new ResourceLocation(ChassisCore.MOD_ID, "network_equipment_manager"), CustomEquipmentManager.LoginData::new);
     }
 }

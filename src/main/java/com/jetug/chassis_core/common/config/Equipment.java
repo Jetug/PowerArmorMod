@@ -1,6 +1,7 @@
 package com.jetug.chassis_core.common.config;
 
 import com.jetug.chassis_core.common.config.holders.BodyPart;
+import com.jetug.chassis_core.common.data.annotation.Ignored;
 import com.jetug.chassis_core.common.data.json.EquipmentAttachment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -8,12 +9,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.jetug.chassis_core.common.foundation.item.StackUtils.DEFAULT;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createResource;
+import static com.jetug.chassis_core.common.util.helpers.TextureHelper.cropTexture;
 
 public class Equipment implements INBTSerializable<CompoundTag> {
     public static final String PARENT = "Parent";
@@ -27,14 +27,17 @@ public class Equipment implements INBTSerializable<CompoundTag> {
 //    private final Lazy<ResourceLocation> modelLocation = Lazy.of(this::getModelResource);
 //    private final Lazy<Map<String, ResourceLocation>> textureLocation = Lazy.of(this::initTextureResource);
 
-    public String parent;
-    public BodyPart part;
-    public ResourceLocation model;
-    public Map<String, ResourceLocation> texture;
-    public int[] uv;
-    public String[] hide = new String[0];
-    public EquipmentAttachment[] attachments;
-    public String[] mods = new String[0];
+    @Ignored
+    private Map<String, ResourceLocation> croppedTexture;
+
+    private String parent;
+    private BodyPart part;
+    private ResourceLocation model;
+    private Map<String, ResourceLocation> texture;
+    private int[] uv;
+    private String[] hide = new String[0];
+    private EquipmentAttachment[] attachments;
+    private String[] mods = new String[0];
 
     @Override
     public CompoundTag serializeNBT() {
@@ -86,6 +89,22 @@ public class Equipment implements INBTSerializable<CompoundTag> {
         return projectile;
     }
 
+    private void initTextureResource(String name) {
+        var result = new HashMap<String, ResourceLocation>();
+        texture.forEach((key, value) -> result.put(key, handleTexture(name, key, value)));
+        croppedTexture = result;
+    }
+
+    private ResourceLocation handleTexture(String name, String variant, ResourceLocation location) {
+        if (uv == null || uv.length < 4) return location;
+
+        var croppedTexture = cropTexture(location, uv[0], uv[1], uv[2], uv[3]);
+        if (croppedTexture != null) {
+            location = createResource(name + "_" + variant, croppedTexture);
+        }
+        return location;
+    }
+
 //    public JsonObject toJsonObject() {
 //        Preconditions.checkArgument(this.damage >= 0.0F, "Damage must be more than or equal to zero");
 //        Preconditions.checkArgument(this.size >= 0.0F, "Projectile size must be more than or equal to zero");
@@ -110,10 +129,11 @@ public class Equipment implements INBTSerializable<CompoundTag> {
 //    }
 
 
-    public static Equipment create(CompoundTag tag) {
-        var ammo = new Equipment();
-        ammo.deserializeNBT(tag);
-        return ammo;
+    public static Equipment create(ResourceLocation id, CompoundTag tag) {
+        var config = new Equipment();
+        config.deserializeNBT(tag);
+        config.initTextureResource(id.getPath());
+        return config;
     }
 
     public String getParent() {

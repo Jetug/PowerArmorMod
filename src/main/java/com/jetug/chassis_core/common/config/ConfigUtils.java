@@ -63,24 +63,24 @@ public class ConfigUtils {
                     var path = resourceLocation.getPath().substring(0, resourceLocation.getPath().length() - FILE_TYPE_LENGTH_VALUE);
                     var splitPath = path.split("/");
 
-                    // Makes sure the file name matches exactly with the id of the gun
+                    // Makes sure the file name matches exactly with the id of the config
                     if (!id.getPath().equals(splitPath[splitPath.length - 1]))
                         return;
 
-                    // Also check if the mod id matches with the gun's registered namespace
+                    // Also check if the mod id matches with the config's registered namespace
                     if (!id.getNamespace().equals(resourceLocation.getNamespace()))
                         return;
 
                     manager.getResource(resourceLocation).ifPresent(resource ->
                     {
                         try (var reader = new BufferedReader(new InputStreamReader(resource.open(), StandardCharsets.UTF_8))) {
-                            var gun = GsonHelper.fromJson(GSON_INSTANCE, reader, yClass);
+                            var equipment = GsonHelper.fromJson(GSON_INSTANCE, reader, yClass);
 
-                            if (Validator.isValidObject(gun)) {
-                                map.put((T) item, gun);
+                            if (Validator.isValidObject(equipment)) {
+                                map.put((T) item, equipment);
                             }
                             else {
-                                ChassisCore.LOGGER.error("Couldn't load data file {} as it is missing or malformed. Using default gun data", resourceLocation);
+                                ChassisCore.LOGGER.error("Couldn't load data file {} as it is missing or malformed. Using default config data", resourceLocation);
                                 map.putIfAbsent((T) item, yClass.getDeclaredConstructor().newInstance());
                             }
                         }

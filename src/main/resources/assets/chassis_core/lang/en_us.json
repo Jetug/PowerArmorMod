@@ -37,5 +37,6 @@
   "key.dash": "Dash",
   "key.leave": "Exit armor",
   "container.armor_station": "Armor station",
-  "container.casting_table": "Casting table"
+  "container.casting_table": "Casting table",
+  "itemGroup.chassis_core": "Chassis Core"
 }

@@ -2,7 +2,6 @@ package com.jetug.chassis_core.client.resources;
 
 import com.google.gson.Gson;
 import com.jetug.chassis_core.common.data.json.ChassisConfig;
-import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import com.jetug.chassis_core.common.data.json.ItemConfig;
 import com.jetug.chassis_core.common.data.json.ModelConfigBase;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,7 @@ import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResou
 
 public class ModResourceManager {
     private static final String CONFIG_DIR = "config/model/";
-    private static final String EQUIPMENT_DIR = CONFIG_DIR + "equipment";
+    private static final String EQUIPMENT_DIR = CONFIG_DIR + "config";
     private static final String FRAME_DIR = CONFIG_DIR + "chassis";
     private static final String ITEM_DIR = CONFIG_DIR + "item";
 
