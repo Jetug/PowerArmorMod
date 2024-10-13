@@ -44,7 +44,7 @@ public class NetworkEquipmentManager extends NetworkManager<ChassisEquipment, Eq
 
     @Override
     protected String getPath() {
-        return "config";
+        return "equipment";
     }
 
     /**
