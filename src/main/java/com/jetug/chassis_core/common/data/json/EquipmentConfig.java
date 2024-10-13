@@ -1,9 +1,8 @@
 package com.jetug.chassis_core.common.data.json;
 
+import com.jetug.chassis_core.common.config.holders.BodyPart;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,14 +13,14 @@ import static com.jetug.chassis_core.common.util.helpers.TextureHelper.cropTextu
 
 public class EquipmentConfig extends ModelConfigBase {
     private HashMap<String, ResourceLocation> croppedTextures;
-    public String parent;
-    public ResourceLocation model;
-    public HashMap<String, ResourceLocation> texture;
-    public int[] uv;
-    public String part;
-    public String[] hide = new String[0];
-    public EquipmentAttachment[] attachments;
-    public String[] mods = new String[0];
+    private String parent;
+    private BodyPart part;
+    private ResourceLocation model;
+    private HashMap<String, ResourceLocation> texture;
+    private int[] uv;
+    private String[] hide = new String[0];
+    private EquipmentAttachment[] attachments = new EquipmentAttachment[0];
+    private String[] mods = new String[0];
 
     @Nullable
     public Collection<String> getArmorBone(String chassisBone) {
@@ -41,6 +40,34 @@ public class EquipmentConfig extends ModelConfigBase {
 
     public Collection<String> getAllVariants() {
         return croppedTextures.keySet();
+    }
+
+    public HashMap<String, ResourceLocation> getCroppedTextures() {
+        return croppedTextures;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public BodyPart getPart() {
+        return part;
+    }
+
+    public int[] getUv() {
+        return uv;
+    }
+
+    public String[] getHide() {
+        return hide;
+    }
+
+    public EquipmentAttachment[] getAttachments() {
+        return attachments;
+    }
+
+    public String[] getMods() {
+        return mods;
     }
 
     public ResourceLocation getModel() {

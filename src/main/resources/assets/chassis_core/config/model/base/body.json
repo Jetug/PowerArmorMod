@@ -1,5 +1,5 @@
 {
-  "part": "body",
+  "part": "ntgl:body",
   "model": "chassis_core:geo/power_armor/",
   "texture": {
     "default": "chassis_core:textures/power_armor/"
