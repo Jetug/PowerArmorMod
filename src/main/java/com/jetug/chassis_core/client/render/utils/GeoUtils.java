@@ -26,7 +26,7 @@ public class GeoUtils {
             var boneNames = config.getArmorBone(boneName);
 
             for (var name : boneNames) {
-                var armorBone = GeoUtils.getBone(config.getModelLocation(), name);
+                var armorBone = GeoUtils.getBone(config.getModel(), name);
                 if (armorBone != null) result.add(armorBone);
             }
         }

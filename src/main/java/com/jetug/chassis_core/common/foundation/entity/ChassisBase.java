@@ -413,7 +413,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
                         && !StackUtils.hasAttachment(stack, attachment.armor))
                     continue;
 
-                var bone = GeoUtils.getBone(config.getModelLocation(), attachment.armor);
+                var bone = GeoUtils.getBone(config.getModel(), attachment.armor);
                 if (bone == null) continue;
 
                 if (!bonesToRender.containsKey(attachment.frame))

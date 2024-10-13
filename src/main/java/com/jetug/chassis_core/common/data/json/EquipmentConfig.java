@@ -13,12 +13,11 @@ import static com.jetug.chassis_core.common.util.helpers.TextureHelper.createRes
 import static com.jetug.chassis_core.common.util.helpers.TextureHelper.cropTexture;
 
 public class EquipmentConfig extends ModelConfigBase {
+    private HashMap<String, ResourceLocation> croppedTextures;
     public String parent;
-    public String model;
-    private final Lazy<ResourceLocation> modelLocation = Lazy.of(this::getModelResource);
-    public HashMap<String, String> texture;
+    public ResourceLocation model;
+    public HashMap<String, ResourceLocation> texture;
     public int[] uv;
-    private final Lazy<HashMap<String, ResourceLocation>> textureLocation = Lazy.of(this::initTextureResource);
     public String part;
     public String[] hide = new String[0];
     public EquipmentAttachment[] attachments;
@@ -28,34 +27,37 @@ public class EquipmentConfig extends ModelConfigBase {
     public Collection<String> getArmorBone(String chassisBone) {
         var result = new ArrayList<String>();
         for (var attachment : attachments) {
-
             if (Objects.equals(attachment.frame, chassisBone))
                 result.add(attachment.armor);
-
         }
         return result;
     }
 
+    public void onFinishLoading(){
+        croppedTextures = texture;
+        var t = new Thread(this::initTextureResource);
+        t.start();
+    }
+
     public Collection<String> getAllVariants() {
-        return textureLocation.get().keySet();
+        return croppedTextures.keySet();
     }
 
-    public ResourceLocation getModelLocation() {
-        return modelLocation.get();
+    public ResourceLocation getModel() {
+        return model;
     }
 
-    public ResourceLocation getTextureLocation(String tag) {
-        return textureLocation.get().get(tag);
+    public ResourceLocation getTexture(String tag) {
+        return croppedTextures.get(tag);
     }
 
-    private HashMap<String, ResourceLocation> initTextureResource() {
+    private void initTextureResource() {
         var result = new HashMap<String, ResourceLocation>();
         texture.forEach((key, value) -> result.put(key, handleTexture(key, value)));
-        return result;
+        croppedTextures = result;
     }
 
-    private ResourceLocation handleTexture(String variant, String path) {
-        var location = new ResourceLocation(path);
+    private ResourceLocation handleTexture(String variant, ResourceLocation location) {
         if (uv == null || uv.length < 4) return location;
 
         var croppedTexture = cropTexture(location, uv[0], uv[1], uv[2], uv[3]);
@@ -66,6 +68,6 @@ public class EquipmentConfig extends ModelConfigBase {
     }
 
     private ResourceLocation getModelResource() {
-        return new ResourceLocation(model);
+        return model;
     }
 }

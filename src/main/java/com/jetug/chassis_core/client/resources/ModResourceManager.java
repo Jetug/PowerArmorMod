@@ -15,11 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.jetug.chassis_core.client.render.utils.ResourceHelper.getResourceName;
+import static com.jetug.chassis_core.common.config.JsonDeserializers.GSON_INSTANCE;
 
 public class ModResourceManager {
     private static final String CONFIG_DIR = "config/model/";
@@ -72,22 +72,22 @@ public class ModResourceManager {
     }
 
     private void loadEquipment() {
-        for (ResourceLocation config : getJsonResources(EQUIPMENT_DIR).keySet()) {
-            var settings = getConfig(config, EquipmentConfig.class);
-            if (settings == null) continue;
+        for (ResourceLocation file : getJsonResources(EQUIPMENT_DIR).keySet()) {
+            var config = getConfig(file, EquipmentConfig.class);
+            if (config == null) continue;
 
-            if (isNotEmpty(settings.parent)) {
-                var parent = getConfig(new ResourceLocation(settings.parent), EquipmentConfig.class);
+            if (isNotEmpty(config.parent)) {
+                var parent = getConfig(new ResourceLocation(config.parent), EquipmentConfig.class);
 
                 try {
-                    var fields = settings.getClass().getFields();
+                    var fields = config.getClass().getFields();
                     for (var field : fields) {
-                        var obj = field.get(settings);
+                        var obj = field.get(config);
 
                         var isEmptyString = (obj instanceof String str && str.equals(""));
 
                         if (obj == null || isEmptyString || isEmptyArray(obj)) {
-                            field.set(settings, parent.getClass().getField(field.getName()).get(parent));
+                            field.set(config, parent.getClass().getField(field.getName()).get(parent));
                         }
                     }
                 } catch (Exception e) {
@@ -95,7 +95,8 @@ public class ModResourceManager {
                 }
             }
 
-            equipmentConfig.put(settings.name, settings);
+            config.onFinishLoading();
+            equipmentConfig.put(config.name, config);
         }
     }
 
@@ -119,7 +120,7 @@ public class ModResourceManager {
     private EquipmentConfig getEquipmentConfig(ResourceLocation resourceLocation) {
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, EquipmentConfig.class);
+            var settings = GSON_INSTANCE.fromJson(readIn, EquipmentConfig.class);
             settings.name = getResourceName(resourceLocation);
             return settings;
         } catch (Exception e) {
@@ -143,7 +144,7 @@ public class ModResourceManager {
     private <T extends ModelConfigBase> T getConfig(ResourceLocation resourceLocation, Class<T> classOfT) {
         try {
             var readIn = getBufferedReader(resourceLocation);
-            var settings = new Gson().fromJson(readIn, classOfT);
+            var settings = GSON_INSTANCE.fromJson(readIn, classOfT);
             settings.name = getResourceName(resourceLocation);
             return settings;
         } catch (Exception e) {

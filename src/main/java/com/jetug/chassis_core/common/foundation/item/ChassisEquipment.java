@@ -3,10 +3,8 @@ package com.jetug.chassis_core.common.foundation.item;
 import com.jetug.chassis_core.client.render.utils.ResourceHelper;
 import com.jetug.chassis_core.common.data.json.EquipmentConfig;
 import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,8 +36,8 @@ public class ChassisEquipment extends Item implements GeoItem {
     @Nullable
     public ResourceLocation getTexture(ItemStack stack) {
         var variant = getVariant(stack);
-        var value = getConfig().getTextureLocation(variant);
-        return value != null ? value : getConfig().getTextureLocation(DEFAULT);
+        var value = getConfig().getTexture(variant);
+        return value != null ? value : getConfig().getTexture(DEFAULT);
     }
 
     @Nullable
