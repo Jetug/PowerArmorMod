@@ -1,14 +1,14 @@
 {
   "attachments": [
     {
-      "part": "ntgl:head",
+      "part": "chassis_core:head",
       "bones": [
         "head",
         "head_frame"
       ]
     },
     {
-      "part": "ntgl:body",
+      "part": "chassis_core:body",
       "bones": [
         "body_top",
         "body_bottom",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "part": "ntgl:left_arm",
+      "part": "chassis_core:left_arm",
       "bones": [
         "left_shoulder",
         "left_shoulder_frame",
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "part": "ntgl:right_arm",
+      "part": "chassis_core:right_arm",
       "bones": [
         "right_shoulder",
         "right_shoulder_frame",
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "part": "ntgl:left_leg",
+      "part": "chassis_core:left_leg",
       "bones": [
         "left_upper_leg",
         "left_lower_leg",
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "part": "ntgl:right_leg",
+      "part": "chassis_core:right_leg",
       "bones": [
         "right_toes",
         "right_lower_leg",
@@ -63,13 +63,13 @@
       ]
     },
     {
-      "part": "ntgl:fusion_core",
+      "part": "chassis_core:fusion_core",
       "bones": [
         "valve"
       ]
     },
     {
-      "part": "ntgl:jetpack",
+      "part": "chassis_core:jetpack",
       "bones": [
         "back_slot"
       ]

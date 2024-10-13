@@ -7,9 +7,18 @@ import net.minecraft.world.item.ItemStack;
 public class ChassisArmor extends DamageableItem {
     public final ChassisArmorMaterial material;
 
-    public ChassisArmor(Properties pProperties, ChassisArmorMaterial material, String part) {
-        super(pProperties.durability(material.getDurabilityForSlot(part)), part);
+    public ChassisArmor(Properties properties, ChassisArmorMaterial material) {
+        super(properties);
         this.material = material;
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        if(getConfig() == null)
+            return super.getMaxDamage(stack);
+
+        var part = getConfig().getPart();
+        return material.getDurabilityForSlot(part);
     }
 
     public static boolean hasArmor(ItemStack itemStack) {
@@ -21,6 +30,7 @@ public class ChassisArmor extends DamageableItem {
     }
 
     public float getDamageAfterAbsorb(float damage) {
+        var part = getConfig().getPart();
         return CombatRules.getDamageAfterAbsorb(damage, material.getDefenseForSlot(part), material.getToughness());
     }
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.jetug.chassis_core.ChassisCore;
 import com.jetug.chassis_core.Global;
+import com.jetug.chassis_core.common.config.holders.BodyPart;
 import com.jetug.chassis_core.common.foundation.item.ChassisArmor;
 import com.jetug.chassis_core.common.foundation.item.ChassisEquipment;
 import com.jetug.chassis_core.common.util.helpers.Speedometer;
@@ -227,7 +228,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
     }
 
     @Nullable
-    public ChassisEquipment getEquipmentItem(String part) {
+    public ChassisEquipment getEquipmentItem(BodyPart part) {
         var stack = getEquipment(part);
         if (!stack.isEmpty())
             return (ChassisEquipment) stack.getItem();
@@ -278,7 +279,7 @@ public abstract class WearableChassis extends ChassisBase implements GeoEntity {
         super(type, worldIn);
     }
 
-    public WearableChassis(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<String, Integer> partIdMap) {
+    public WearableChassis(EntityType<? extends LivingEntity> pEntityType, Level pLevel, HashMap<BodyPart, Integer> partIdMap) {
         super(pEntityType, pLevel, partIdMap);
     }
 

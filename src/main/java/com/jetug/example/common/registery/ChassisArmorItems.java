@@ -23,22 +23,22 @@ public class ChassisArmorItems {
     );
 
     public static final RegistryObject<Item> EXAMPLE_HELMET = ITEMS.register("t45_helmet", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.HELMET));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
     public static final RegistryObject<Item> EXAMPLE_BODY = ITEMS.register("t45_body", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.BODY_ARMOR));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
     public static final RegistryObject<Item> EXAMPLE_RIGHT_ARM = ITEMS.register("t45_right_arm", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.RIGHT_ARM_ARMOR));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
     public static final RegistryObject<Item> EXAMPLE_LEFT_ARM = ITEMS.register("t45_left_arm", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.LEFT_ARM_ARMOR));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
     public static final RegistryObject<Item> EXAMPLE_RIGHT_LEG = ITEMS.register("t45_right_leg", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.RIGHT_LEG_ARMOR));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
     public static final RegistryObject<Item> EXAMPLE_LEFT_LEG = ITEMS.register("t45_left_leg", () ->
-            new ChassisArmor(new Item.Properties(), EXAMPLE, ChassisPart.LEFT_LEG_ARMOR));
+            new ChassisArmor(new Item.Properties(), EXAMPLE));
 
 
     public static void register(IEventBus eventBus) {
