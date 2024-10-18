@@ -19,7 +19,8 @@ public class EquipmentSlot extends Slot {
     @Override
     public boolean mayPlace(ItemStack stack) {
         if(stack.getItem() instanceof ChassisEquipment item){
-            var part = item.getConfig().getPart();
+            var config = item.getConfig();
+            var part = config.getPart();
             var equalSlots = part == bodyPart;
             return super.mayPlace(stack) && equalSlots;
         }

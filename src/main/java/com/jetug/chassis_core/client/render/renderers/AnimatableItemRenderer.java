@@ -38,15 +38,15 @@ public class AnimatableItemRenderer<T extends IConfigProvider & GeoAnimatable> e
     protected void renderAttachments(ItemStack stack, T item) {
         var config = item.getConfig();
 
-        if (config != null) {
-            var allMods = config.mods;
-            var visibleMods = StackUtils.getAttachments(stack);
-
-            for (var name : allMods)
-                getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(true));
-            for (var name : visibleMods)
-                getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(false));
-        }
+//        if (config != null) {
+//            var allMods = config.mods;
+//            var visibleMods = StackUtils.getAttachments(stack);
+//
+//            for (var name : allMods)
+//                getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(true));
+//            for (var name : visibleMods)
+//                getGeoModel().getBone(name).ifPresent((bone) -> bone.setHidden(false));
+//        }
     }
 
     @Override

@@ -1,4 +1,5 @@
 {
+  "parent": "chassis_core:config/model/base/body.json",
   "part": "chassis_core:body",
 
   "model": "chassis_core:geo/power_armor/t45.geo.json",

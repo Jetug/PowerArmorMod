@@ -95,13 +95,6 @@ public class ChassisRenderer<T extends WearableChassis> extends GeoEntityRendere
                 poseStack.pushPose();
                 {
                     RenderUtils.prepMatrixForBone(poseStack, bone);
-//                    translateMatrixToBone(poseStack, bone);
-//                    translateToPivotPoint(poseStack, bone);
-//                    rotateMatrixAroundBone(poseStack, bone);
-//                    scaleMatrixForBone(poseStack, bone);
-//                    translateAwayFromPivotPoint(poseStack, bone);
-//                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-//                    poseStack.translate(0, -4, 0);
 
                     var skin = humanoidRenderer.getTextureLocation(passenger);
                     var head = this.bufferSource.getBuffer(RenderType.entitySolid(skin));
