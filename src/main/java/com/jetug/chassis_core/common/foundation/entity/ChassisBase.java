@@ -73,8 +73,8 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     protected final boolean isServerSide = !level().isClientSide;
     private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType())));
 
-    private final HashMap<String, ArrayList<GeoBone>> attachmentForBone = new HashMap<>();
-    private final HashMap<String, ResourceLocation> textureForBone = new HashMap<>();
+    public final HashMap<String, ArrayList<GeoBone>> attachmentForBone = new HashMap<>();
+    public final HashMap<String, ResourceLocation> textureForBone = new HashMap<>();
 
     public Collection<String> bonesToHide = new ArrayList<>();
     public SimpleContainer inventory;
@@ -413,6 +413,7 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     protected void updateBones() {
         attachmentForBone.clear();
         bonesToHide.clear();
+        textureForBone.clear();
 
         for (var stack : getVisibleEquipment()) {
             var item = getAsChassisEquipment(stack);

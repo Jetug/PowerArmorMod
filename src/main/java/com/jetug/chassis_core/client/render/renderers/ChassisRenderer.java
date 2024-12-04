@@ -9,6 +9,7 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import mod.azure.azurelib.util.RenderUtils;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +78,48 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
+    public void defaultRenderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
+        RenderUtils.translateMatrixToBone(poseStack, bone);
+        RenderUtils.translateToPivotPoint(poseStack, bone);
+        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+        RenderUtils.scaleMatrixForBone(poseStack, bone);
+
+        if (bone.isTrackingMatrices()) {
+            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.entityRenderTranslations);
+
+            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
+            bone.setLocalSpaceMatrix(RenderUtils.translateMatrix(localMatrix, getRenderOffset(this.animatable, 1).toVector3f()));
+            bone.setWorldSpaceMatrix(RenderUtils.translateMatrix(new Matrix4f(localMatrix), this.animatable.position().toVector3f()));
+        }
+
+        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+
+        this.textureOverride = getTextureOverrideForBone(bone, this.animatable, partialTick);
+        ResourceLocation texture = this.textureOverride == null ? getTextureLocation(this.animatable) : this.textureOverride;
+        RenderType renderTypeOverride = getRenderTypeOverrideForBone(bone, this.animatable, texture, bufferSource, partialTick);
+
+        if (texture != null && renderTypeOverride == null)
+            renderTypeOverride = getRenderType(this.animatable, texture, bufferSource, partialTick);
+
+        if (renderTypeOverride != null)
+            buffer = bufferSource.getBuffer(renderTypeOverride);
+
+        if (!boneRenderOverride(poseStack, bone, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha))
+            super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+
+        if (renderTypeOverride != null)
+            buffer = bufferSource.getBuffer(getRenderType(this.animatable, getTextureLocation(this.animatable), bufferSource, partialTick));
+
+        if (!isReRender)
+            applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+
+        renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+        poseStack.popPose();
+    }
+
     @Override
     public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType,
                                   MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick,
@@ -88,7 +132,7 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
             renderHead(poseStack, animatable, bone, packedLight, packedOverlay);
         }
 
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource,
+        defaultRenderRecursively(poseStack, animatable, bone, renderType, bufferSource,
                 this.bufferSource.getBuffer(renderType), isReRender,
                 partialTick, packedLight, packedOverlay,
                 red, green, blue, alpha);
@@ -100,6 +144,11 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
                                  boolean isReRender, float partialTick, int packedLight, int packedOverlay,
                                  float red, float green, float blue, float alpha) {
         if (!bone.isHidingChildren()) {
+            var tt = animatable.textureForBone;
+            var ss = animatable.attachmentForBone;
+            var a = ss;
+            var s = tt;
+
             var bonesToRender = new ArrayList<>(bone.getChildBones());
             var equipmentBones = animatable.getAttachmentForBone(bone.getName());
             bonesToRender.addAll(equipmentBones);
@@ -111,9 +160,12 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
         }
     }
 
-    @Override
+//    @Override
     protected @Nullable ResourceLocation getTextureOverrideForBone(GeoBone bone, T animatable, float partialTick) {
-        var texture = animatable.getTextureForBone(bone.getName());
+        var tt = animatable.textureForBone;
+        var texture = tt.get(bone.getName());
+        var ss = animatable.attachmentForBone;
+        var a = ss;
         return texture;
     }
 

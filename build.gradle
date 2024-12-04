@@ -94,13 +94,12 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    //maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
-    maven {url 'https://libs.azuredoom.com:4443/mods'}
+    maven { url 'https://maven.azuredoom.com/mods' }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    implementation fg.deobf("mod.azure.azurelib:azurelib-neo-1.20.1:2.0.20")
+    implementation fg.deobf("mod.azure.azurelib:azurelib-neo-1.20.1:2.0.30")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
