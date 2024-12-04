@@ -35,7 +35,7 @@ public class EquipmentConfig extends ModelConfigBase {
 
     public void onFinishLoading(){
         croppedTextures = texture;
-        initTextureResource();
+//        initTextureResource();
 //        var t = new Thread(this::initTextureResource);
 //        t.start();
     }

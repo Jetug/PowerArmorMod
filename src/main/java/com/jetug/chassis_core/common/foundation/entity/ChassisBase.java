@@ -14,6 +14,7 @@ import com.jetug.chassis_core.common.util.helpers.timer.TickTimer;
 import mod.azure.azurelib.cache.object.GeoBone;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
@@ -71,7 +72,10 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
     protected final boolean isClientSide = level().isClientSide;
     protected final boolean isServerSide = !level().isClientSide;
     private final Lazy<String> chassisId = Lazy.of(() -> ResourceHelper.getResourceName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType())));
-    private final HashMap<String, ArrayList<GeoBone>> bonesToRender = new HashMap<>();
+
+    private final HashMap<String, ArrayList<GeoBone>> attachmentForBone = new HashMap<>();
+    private final HashMap<String, ResourceLocation> textureForBone = new HashMap<>();
+
     public Collection<String> bonesToHide = new ArrayList<>();
     public SimpleContainer inventory;
     protected float totalDefense;
@@ -201,9 +205,15 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
 //    private final Map<String, EquipmentConfig> history = new HashMap<>();
 
     @OnlyIn(Dist.CLIENT)
-    public Collection<GeoBone> getEquipmentBones(String frameBoneName) {
-        var result = bonesToRender.get(frameBoneName);
+    public Collection<GeoBone> getAttachmentForBone(String chassisBone) {
+        var result = attachmentForBone.get(chassisBone);
         return result == null ? new ArrayList<>() : result;
+    }
+
+    @Nullable
+    @OnlyIn(Dist.CLIENT)
+    public ResourceLocation getTextureForBone(String bone) {
+        return textureForBone.get(bone);
     }
 
     public Integer getPartId(String chassisPart) {
@@ -397,9 +407,11 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
             updateBones();
     }
 
+
+
     @OnlyIn(Dist.CLIENT)
     protected void updateBones() {
-        bonesToRender.clear();
+        attachmentForBone.clear();
         bonesToHide.clear();
 
         for (var stack : getVisibleEquipment()) {
@@ -416,9 +428,13 @@ public class ChassisBase extends EmptyLivingEntity implements ContainerListener 
                 var bone = GeoUtils.getBone(config.getModel(), attachment.armor);
                 if (bone == null) continue;
 
-                if (!bonesToRender.containsKey(attachment.frame))
-                    bonesToRender.put(attachment.frame, arrayListOf(bone));
-                else bonesToRender.get(attachment.frame).add(bone);
+                var variant = StackUtils.getVariant(stack);
+
+                textureForBone.put(attachment.armor, config.getTexture(variant));
+
+                if (!attachmentForBone.containsKey(attachment.frame))
+                    attachmentForBone.put(attachment.frame, arrayListOf(bone));
+                else attachmentForBone.get(attachment.frame).add(bone);
             }
         }
     }
