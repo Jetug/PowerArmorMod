@@ -43,7 +43,7 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
 
     public ChassisRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
-        addRenderLayer(new EquipmentLayer<>(this));
+//        addRenderLayer(new EquipmentLayer<>(this));
         addRenderLayer(new HeldItemLayer<>(this, this::getItemForBone));
     }
 
@@ -162,10 +162,16 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
 
 //    @Override
     protected @Nullable ResourceLocation getTextureOverrideForBone(GeoBone bone, T animatable, float partialTick) {
-        var tt = animatable.textureForBone;
-        var texture = tt.get(bone.getName());
-        var ss = animatable.attachmentForBone;
-        var a = ss;
+        var texture = animatable.getTextureForBone(bone.getName());
+
+        if(texture == null){
+            var parent =  bone.getParent();
+            while (parent != null && texture == null){
+                texture = animatable.getTextureForBone(parent.getName());
+                parent =  parent.getParent();
+            }
+        }
+
         return texture;
     }
 
@@ -187,13 +193,6 @@ public class ChassisRenderer<T extends WearableChassis> extends DynamicGeoEntity
                 poseStack.pushPose();
                 {
                     RenderUtils.prepMatrixForBone(poseStack, bone);
-//                    translateMatrixToBone(poseStack, bone);
-//                    translateToPivotPoint(poseStack, bone);
-//                    rotateMatrixAroundBone(poseStack, bone);
-//                    scaleMatrixForBone(poseStack, bone);
-//                    translateAwayFromPivotPoint(poseStack, bone);
-//                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-//                    poseStack.translate(0, -4, 0);
 
                     var skin = humanoidRenderer.getTextureLocation(passenger);
                     var head = this.bufferSource.getBuffer(RenderType.entitySolid(skin));
